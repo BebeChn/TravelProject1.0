@@ -15,7 +15,7 @@ public partial class TravelContext : DbContext
     {
     }
 
-    public virtual DbSet<User> Users { get; set; }
+    public virtual DbSet<Product> Products { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
@@ -23,27 +23,14 @@ public partial class TravelContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<User>(entity =>
+        modelBuilder.Entity<Product>(entity =>
         {
-            entity.HasKey(e => e.UserId).HasName("PK__User__1788CCACFDE75CD6");
+            entity.HasKey(e => e.ProductId).HasName("PK__Products__B40CC6EDE73A3A60");
 
-            entity.ToTable("User");
-
-            entity.Property(e => e.UserId).HasColumnName("UserID");
-            entity.Property(e => e.Address).HasMaxLength(50);
-            entity.Property(e => e.Age).HasComputedColumnSql("(datediff(year,[Birthday],getdate()))", false);
-            entity.Property(e => e.Birthday).HasColumnType("date");
-            entity.Property(e => e.CreateDate)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime");
-            entity.Property(e => e.Email).HasMaxLength(50);
-            entity.Property(e => e.Gender)
-                .HasMaxLength(1)
-                .IsUnicode(false)
-                .IsFixedLength();
-            entity.Property(e => e.Password).HasMaxLength(64);
-            entity.Property(e => e.Phone).HasMaxLength(20);
-            entity.Property(e => e.UserName).HasMaxLength(30);
+            entity.Property(e => e.ProductId).HasColumnName("ProductID");
+            entity.Property(e => e.CategoryId).HasColumnName("CategoryID");
+            entity.Property(e => e.Price).HasColumnType("money");
+            entity.Property(e => e.ProductName).HasMaxLength(50);
         });
 
         OnModelCreatingPartial(modelBuilder);
