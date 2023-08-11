@@ -8,6 +8,7 @@ namespace TravelProject1._0.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
+
         }
     }
 }
