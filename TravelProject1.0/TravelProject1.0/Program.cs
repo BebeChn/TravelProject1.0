@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using TravelProject1._0.Data;
+using TravelProject1._0.Models;
 
 namespace TravelProject1._0
 {
@@ -11,6 +12,9 @@ namespace TravelProject1._0
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            builder.Services.AddDbContext<TravelUsersContext>(options => {
+                options.UseSqlServer(builder.Configuration.GetConnectionString("TravelUsers"));
+            });
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(connectionString));

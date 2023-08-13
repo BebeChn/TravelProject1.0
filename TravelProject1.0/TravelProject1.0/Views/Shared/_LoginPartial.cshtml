@@ -2,7 +2,14 @@
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
 
+<button class="btn btn-outline-dark me-2"  type="submit">
+    <i class="bi-cart-fill me-1"></i>
+    Cart
+    <span class="badge bg-dark text-white  rounded-pill">0</span>
+</button>
+
 <ul class="navbar-nav">
+
 @if (SignInManager.IsSignedIn(User))
 {
     <li class="nav-item">
@@ -17,7 +24,13 @@
 else
 {
     <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Register</a>
+        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">
+                <button class="btn btn-outline-dark" type="submit" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    <i class="fa-regular fa-hand-point-up"></i>
+                    Register
+                    <span class="badge bg-dark text-white rounded-pill"></span>
+                </button>
+            </a>
     </li>
     <li class="nav-item">
             <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">
