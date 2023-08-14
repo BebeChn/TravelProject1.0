@@ -7,15 +7,18 @@ namespace TravelProject1._0.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        public TravelUsersContext _context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, TravelUsersContext context)
         {
             _logger = logger;
+            _context = context;
         }
-
+     
         public IActionResult Index()
         {
-            return View();
+            var product = _context.Products.OrderByDescending(p => p.ProductId);
+            return View(product);
         }
 
         public IActionResult Privacy()
