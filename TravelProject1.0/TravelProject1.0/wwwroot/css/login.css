@@ -8,14 +8,9 @@
     border-radius: 22px;
     outline: none;
     color: rgb(19, 23, 27);
-<<<<<<< HEAD
     width: 250px;
 }
 
-=======
-    width:250px;
-}
->>>>>>> a7a69aa (route)
 .passwordstyle {
     display: block;
     margin: 20px auto;
@@ -28,10 +23,7 @@
     color: rgb(19, 23, 27);
     width: 250px;
 }
-<<<<<<< HEAD
 
-=======
->>>>>>> a7a69aa (route)
 .dup {
     display: block;
     margin: 20px auto;
@@ -45,18 +37,10 @@
     width: 250px;
     background-color: deepskyblue;
     color: black;
-<<<<<<< HEAD
-=======
-}
-
-.dup {
-    width: 150px;
->>>>>>> a7a69aa (route)
     border: 2px solid #070505;
     cursor: pointer;
 }
 
-<<<<<<< HEAD
     .dup:hover {
         background-color: #ffc446;
     }
@@ -68,26 +52,12 @@
 }
 
 .forgetstyle {
-=======
-
-.dup:hover {
-        background-color: #ffc446;
-}
-
-.labelstyle {
-    text-align:center;
-    width:790px;
-    justify-content:center;
-    
-}
-.forgetstyle{
->>>>>>> a7a69aa (route)
     text-align: center;
     width: 1100px;
     justify-content: center;
 }
-.reg 
-{
+
+.reg {
     display: block;
     margin: 20px auto;
     text-align: center;
@@ -98,14 +68,12 @@
     outline: none;
     color: rgb(19, 23, 27);
     width: 250px;
-    background-color:deepskyblue;
+    background-color: deepskyblue;
     color: black;
-}
-.reg{
-    width: 150px;
     border: 2px solid #070505;
     cursor: pointer;
 }
-.reg:hover {
+
+    .reg:hover {
         background-color: #ffc446;
-}
+    }
