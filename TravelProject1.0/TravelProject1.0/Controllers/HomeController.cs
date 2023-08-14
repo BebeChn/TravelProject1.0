@@ -8,11 +8,25 @@ namespace TravelProject1._0.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+<<<<<<< HEAD
+        public TravelUsersContext _context;
+
+        public HomeController(ILogger<HomeController> logger, TravelUsersContext context)
+=======
         private readonly TravelUsersContext _context;
         public HomeController(ILogger<HomeController> logger)
+>>>>>>> main
         {
             _logger = logger;
+            _context = context;
         }
+<<<<<<< HEAD
+     
+        public IActionResult Index()
+        {
+            var product = _context.Products.OrderByDescending(p => p.ProductId);
+            return View(product);
+=======
 
         public IActionResult Index(int? PId)
         {
@@ -31,6 +45,7 @@ namespace TravelProject1._0.Controllers
             //}
 
             return View();
+>>>>>>> main
         }
 
         public IActionResult Privacy()

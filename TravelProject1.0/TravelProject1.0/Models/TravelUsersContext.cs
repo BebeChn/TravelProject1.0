@@ -15,10 +15,18 @@ public partial class TravelUsersContext : DbContext
     {
     }
 
+<<<<<<< HEAD
+    public virtual DbSet<Product> Products { get; set; }
+
+
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+=======
     public virtual DbSet<Category> Categories { get; set; }
     public virtual DbSet<Product> Products { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+>>>>>>> main
     {
         if (!optionsBuilder.IsConfigured)
         {
@@ -26,6 +34,18 @@ public partial class TravelUsersContext : DbContext
             optionsBuilder.UseSqlServer(Config.GetConnectionString("TravelUsers"));
         }
     }
+<<<<<<< HEAD
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Product>(entity =>
+        {
+            entity.HasKey(e => e.ProductId).HasName("PK__Products__B40CC6ED7B285354");
+
+            entity.Property(e => e.ProductId).HasColumnName("ProductID");
+            entity.Property(e => e.CategoryId).HasColumnName("CategoryID");
+            entity.Property(e => e.Price).HasColumnType("money");
+            entity.Property(e => e.ProductName).HasMaxLength(50);
+=======
     
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -39,6 +59,7 @@ public partial class TravelUsersContext : DbContext
             entity.Property(e => e.CategoryId).HasColumnName("CategoryID");
             entity.Property(e => e.CategoryName).HasMaxLength(10);
             entity.Property(e => e.Describe).HasMaxLength(200);
+>>>>>>> main
         });
 
         OnModelCreatingPartial(modelBuilder);
