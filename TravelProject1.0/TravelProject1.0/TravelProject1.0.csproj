@@ -13,12 +13,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Properties\css\login.css" />
-    <Content Include="Properties\css\site.css" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="bundleconfig.json" />
+    <None Include="wwwroot\css\login.css" />
+    <None Include="wwwroot\css\login.min.css" />
+    <None Include="wwwroot\css\site.css" />
   </ItemGroup>
 
   <ItemGroup>
