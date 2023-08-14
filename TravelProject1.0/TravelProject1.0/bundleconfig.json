@@ -4,5 +4,11 @@
     "inputFiles": [
       "wwwroot/css/login.css"
     ]
+  },
+  {
+    "outputFileName": "Properties/css/login.min.css",
+    "inputFiles": [
+      "Properties/css/login.css"
+    ]
   }
 ]

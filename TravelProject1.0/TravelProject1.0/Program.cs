@@ -12,7 +12,13 @@ namespace TravelProject1._0
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+<<<<<<< HEAD
             
+=======
+            builder.Services.AddDbContext<TravelUsersContext>(options => {
+                options.UseSqlServer(builder.Configuration.GetConnectionString("TravelUsers"));
+            });
+>>>>>>> main
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(connectionString));

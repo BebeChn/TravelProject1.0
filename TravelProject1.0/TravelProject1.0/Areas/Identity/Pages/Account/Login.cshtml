@@ -4,36 +4,29 @@
 @{
     ViewData["Title"] = "Log in";
 }
-@section Styles
-    {
+
+@section Styles{
     <link href="~/css/login.min.css" rel="stylesheet" />
-
-
 }
+
 <h1>@ViewData["Title"]</h1>
 <div class="row">
     <div class="col">
-
-        <form id="account" method="post" class="back ">
+        <form id="account" method="post">
             <h2 style="text-align:center">登入</h2>
-
             <div>
                 <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
                 <div class="form-floating mb-3">
-                    <label asp-for="Input.Email" class="labelstyle " for="bindinput" style="text-align:center">Email:</label>
-                    <input asp-for="Input.Email" class=" form-label accountstyle" autocomplete="username" aria-required="true" placeholder="請輸入帳號" id="bindinput" name="bindinput" />
-
-                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+                    <label asp-for="Input.Email" class="form-label labelstyle" style="text-align:center">Email:</label>
+                    <input asp-for="Input.Email" class="form-control accountstyle" autocomplete="username" aria-required="true" placeholder="請輸入帳號" />
+                    <span asp-validation-for="Input.Email" class="text-danger" style="text-align:center;display:block"></span>
                 </div>
                 <div class="form-floating mb-3">
-                    <label asp-for="Input.Password" class="labelstyle ">Password:</label>
-                    <input asp-for="Input.Password" class="passwordstyle" autocomplete="current-password" aria-required="true" placeholder="請輸入密碼" />
-                    <div style=”text-align: center;>
-                        <span asp-validation-for="Input.Password" class="text-danger"> </span>
-                    </div>
+                    <label asp-for="Input.Password" class="form-label labelstyle ">Password:</label>
+                    <input asp-for="Input.Password" class="form-control passwordstyle" autocomplete="current-password" aria-required="true" placeholder="請輸入密碼" />
+                    <span asp-validation-for="Input.Password" class="text-danger" style="text-align:center;display:block"></span>
                 </div>
             </div>
-
             <div class="checkbox mb-3 forgetstyle">
                 <label asp-for="Input.RememberMe ">
                     <input class="form-check-input" asp-for="Input.RememberMe" style="text-align:center" />
@@ -41,20 +34,18 @@
                 </label>
                 <a id="forgot-password" asp-page="./ForgotPassword">忘記密碼</a>
             </div>
-
             <div>
-                <button id="login-submit" type="submit" class="dup">登入</button>
-                <a class="nav-link" asp-area="Identity" asp-page="/Account/Register">
-                    <button type="button" class="reg">註冊會員</button>
-                </a>
+                <button id="login-submit" type="submit" class="dup">Log in</button>
             </div>
-            <div class=" mb-3 forgetstyle">
+            <div class="mb-3 forgetstyle">
+                <p>
+                    <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">註冊帳號</a>
+                </p>
                 <p>
                     <a id="resend-confirmation" asp-page="./ResendEmailConfirmation">寄送電子郵件認證</a>
                 </p>
             </div>
         </form>
-
     </div>
     @* <div class="col-md-6 col-md-offset-2">
     <section>
