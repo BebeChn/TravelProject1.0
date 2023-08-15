@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using TravelProject1._0.Data;
 
 namespace TravelProject1._0.Models;
 
@@ -19,7 +21,7 @@ public partial class TravelUsersContext : DbContext
     public virtual DbSet<Category> Categories { get; set; }
     public virtual DbSet<Product> Products { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 
     {
         if (!optionsBuilder.IsConfigured)

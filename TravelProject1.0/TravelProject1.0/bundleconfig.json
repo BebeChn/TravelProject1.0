@@ -10,5 +10,11 @@
     "inputFiles": [
       "Properties/css/login.css"
     ]
+  },
+  {
+    "outputFileName": "wwwroot/css/Register.min.css",
+    "inputFiles": [
+      "wwwroot/css/Register.css"
+    ]
   }
 ]

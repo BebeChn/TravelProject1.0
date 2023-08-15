@@ -9,11 +9,12 @@
     outline: none;
     color: rgb(19, 23, 27);
     width: 250px;
+    height:150px;
 }
 
 .passwordstyle {
     display: block;
-    margin: 20px auto;
+    margin: 20px 125px;
     text-align: center;
     background-color: #fad384;
     padding: 12px;
@@ -22,6 +23,7 @@
     outline: none;
     color: rgb(19, 23, 27);
     width: 250px;
+    height: 150px;
 }
 
 .dup {
@@ -34,7 +36,7 @@
     border-radius: 22px;
     outline: none;
     color: rgb(19, 23, 27);
-    width: 250px;
+    width: 150px;
     background-color: deepskyblue;
     color: black;
     border: 2px solid #070505;

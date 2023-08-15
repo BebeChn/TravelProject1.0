@@ -10,13 +10,21 @@
 
   <ItemGroup>
     <Content Remove="bundleconfig.json" />
+    <Content Remove="wwwroot\css\login - 複製.min.css" />
+    <Content Remove="wwwroot\css\Register.css" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="bundleconfig.json" />
+    <None Include="wwwroot\css\Register.css" />
+    <None Include="wwwroot\css\Register.min.css" />
     <None Include="wwwroot\css\login.css" />
     <None Include="wwwroot\css\login.min.css" />
     <None Include="wwwroot\css\site.css" />
+    <None Include="wwwroot\lib\image\foreast.jpeg" />
+    <None Include="wwwroot\lib\image\mountain.jpeg" />
+    <None Include="wwwroot\lib\image\mountain2.jpeg" />
+    <None Include="wwwroot\lib\image\mountain3.jpeg" />
   </ItemGroup>
 
   <ItemGroup>
