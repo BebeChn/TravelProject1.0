@@ -16,5 +16,11 @@
     "inputFiles": [
       "wwwroot/css/Register.css"
     ]
+  },
+  {
+    "outputFileName": "wwwroot/css/Transport.min.css",
+    "inputFiles": [
+      "wwwroot/css/Transport.css"
+    ]
   }
 ]
