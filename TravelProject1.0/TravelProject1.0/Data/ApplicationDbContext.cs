@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace TravelProject1._0.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+    public class ApplicationDbContext : IdentityDbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
