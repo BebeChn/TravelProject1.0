@@ -22,5 +22,11 @@
     "inputFiles": [
       "wwwroot/css/Transport.css"
     ]
+  },
+  {
+    "outputFileName": "wwwroot/css/Book.min.css",
+    "inputFiles": [
+      "wwwroot/css/Book.css"
+    ]
   }
 ]
