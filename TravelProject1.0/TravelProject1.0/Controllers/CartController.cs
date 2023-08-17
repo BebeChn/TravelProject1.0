@@ -1,11 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace TravelProject1._0.Areas.Admin.Controllers
+namespace TravelProject1._0.Controllers
 {
     public class CartController : Controller
     {
-        [Area("Admin")]
-        public IActionResult Index()
+        public IActionResult AddCart()
         {
             return View();
         }
