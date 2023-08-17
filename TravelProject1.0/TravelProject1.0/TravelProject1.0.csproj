@@ -40,6 +40,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Areas\AdminManger\Controllers\" />
+    <Folder Include="Areas\AdminManger\Data\" />
+    <Folder Include="Areas\AdminManger\Models\" />
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Areas\Admin\Models\" />
     <Folder Include="Partials\" />
