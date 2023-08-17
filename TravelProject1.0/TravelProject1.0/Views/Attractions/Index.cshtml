@@ -1,0 +1,146 @@
+﻿@section Styles{
+    <link href="~/css/attractions.css" rel="stylesheet" />
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <img class="img-title" src="~/lib/image/mountain.jpeg" />
+        </div>
+        <div class="col-md-8">
+            <img class="img-title" src="~/lib/image/mountain.jpeg" />
+        </div>
+    </div>
+</div>
+
+<div class="container attractions">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="accordion" id="accordionExample">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            所有商品種類
+                        </button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            <div>景點門票</div>
+                            <div>展覽</div>
+                            <div>戶外活動</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-9">
+            @*排序*@
+            <div class="row div-sort">
+                <div class="col-md-3">
+                    <h3 class="sort-title">排序：</h3>
+                </div>
+                <div class="col-md-3">
+                    <button class="btn btn-sort">熱門程度</button>
+                </div>
+                <div class="col-md-3">
+                    <button class="btn btn-sort">金額高低</button>
+                </div>
+                <div class="col-md-3">
+                    <button class="btn btn-sort">使用者評價</button>
+                </div>
+            </div>
+
+            @*景點商品*@
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card">
+                        <img class="img-attractions" src="~/lib/image/mountain3.jpeg" />
+                        <div class="card-body">
+                            <h4 class="card-title">苗栗觀光地區門票</h4>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                            <span class="sell">已售出人數：</span>
+                        </div>
+                        <div class="card-end">
+                            <span class="attractions-price">NT799</span>
+                            <button class="btn btn-attractions">查看門票</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <img class="img-attractions" src="~/lib/image/mountain3.jpeg" />
+                        <div class="card-body">
+                            <h4 class="card-title">桃園景點</h4>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                            <span class="sell">已售出人數：</span>
+                        </div>
+                        <div class="card-end">
+                            <span class="attractions-price">NT799</span>
+                            <button class="btn btn-attractions">查看門票</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <img class="img-attractions" src="~/lib/image/mountain3.jpeg" />
+                        <div class="card-body">
+                            <h4 class="card-title">宜蘭景點</h4>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                            <span class="sell">已售出人數：</span>
+                        </div>
+                        <div class="card-end">
+                            <span class="attractions-price">NT799</span>
+                            <button class="btn btn-attractions">查看門票</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card">
+                        <img class="img-attractions" src="~/lib/image/mountain3.jpeg" />
+                        <div class="card-body">
+                            <h4 class="card-title">彰化八卦山一日遊</h4>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                            <span class="sell">已售出人數：</span>
+                        </div>
+                        <div class="card-end">
+                            <span class="attractions-price">NT799</span>
+                            <button class="btn btn-attractions">查看門票</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <img class="img-attractions" src="~/lib/image/mountain3.jpeg" />
+                        <div class="card-body">
+                            <h4 class="card-title">台南甜死人吃吃走走</h4>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                            <span class="sell">已售出人數：</span>
+                        </div>
+                        <div class="card-end">
+                            <span class="attractions-price">NT799</span>
+                            <button class="btn btn-attractions">查看門票</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <img class="img-attractions" src="~/lib/image/mountain3.jpeg" />
+                        <div class="card-body">
+                            <h4 class="card-title">綠島</h4>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                            <span class="sell">已售出人數：</span>
+                        </div>
+                        <div class="card-end">
+                            <span class="attractions-price">NT799</span>
+                            <button class="btn btn-attractions">查看門票</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
