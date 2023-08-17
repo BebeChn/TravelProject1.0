@@ -13,7 +13,7 @@ namespace TravelProject1._0
         public async Task SendEmailAsync(string email, string subject, string htmlMessage)
         {
             var mail = new MailMessage();
-            mail.From = new MailAddress("fastic55123@gmail.com");
+            mail.From = new MailAddress("allen955103@gmail.com");
             mail.To.Add(email);
             mail.Subject = subject;
             mail.IsBodyHtml = true;
@@ -23,7 +23,7 @@ namespace TravelProject1._0
             //SmtpClient client = new SmtpClient("smtp.live.com");
             client.Port = 587;
             client.UseDefaultCredentials = false;
-            client.Credentials = new NetworkCredential("fastic55123@gmail.com", "hylcdxxmkiffwdjc");
+            client.Credentials = new NetworkCredential("allen955103@gmail.com", "bgcbdgblcslutury");
             client.EnableSsl = true;
             client.Send(mail);
         }

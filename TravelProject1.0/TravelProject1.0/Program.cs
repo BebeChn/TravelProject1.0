@@ -1,13 +1,17 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
+using NToastNotify;
 using TravelProject1._0.Data;
 using TravelProject1._0.Models;
+
+using AspNetCoreHero.ToastNotification.Extensions;
 
 namespace TravelProject1._0
 {
     public class Program
     {
+      
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
@@ -56,6 +60,9 @@ namespace TravelProject1._0
 
             builder.Services.AddSession();
             var app = builder.Build();
+          
+
+           
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -77,9 +84,9 @@ namespace TravelProject1._0
             app.UseSession();
 
             app.UseAuthorization();
+            
 
-           
-                app.MapControllerRoute(
+            app.MapControllerRoute(
                   name: "areas",
                   pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
                 );
