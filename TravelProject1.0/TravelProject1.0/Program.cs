@@ -22,8 +22,8 @@ namespace TravelProject1._0
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
             builder.Services.AddDbContext<TravelUsersContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("TravelUsers")));
-            
-            builder.Services.AddDefaultIdentity<IdentityUser > (options => options.SignIn.RequireConfirmedAccount = true)
+
+            builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             builder.Services.AddTransient<IEmailSender, EmailSender>();
@@ -54,7 +54,7 @@ namespace TravelProject1._0
                 options.SlidingExpiration = true;
             });
 
-
+            builder.Services.AddSession();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -74,7 +74,16 @@ namespace TravelProject1._0
 
             app.UseRouting();
 
+            app.UseSession();
+
             app.UseAuthorization();
+
+           
+                app.MapControllerRoute(
+                  name: "areas",
+                  pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+                );
+           
 
             app.MapControllerRoute(
                 name: "default",

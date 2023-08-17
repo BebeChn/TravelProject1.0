@@ -8,9 +8,8 @@ namespace TravelProject1._0.Models;
 
 public partial class TravelUsersContext : DbContext
 {
-    public TravelUsersContext()
-    {
-    }
+    public TravelUsersContext() { }
+  
 
     public TravelUsersContext(DbContextOptions<TravelUsersContext> options)
         : base(options)
