@@ -11,8 +11,8 @@ namespace TravelProject1._0.Controllers
 
         public TravelUsersContext _context;
 
- 
-      
+
+
         public HomeController(ILogger<HomeController> logger, TravelUsersContext context)
 
         {
@@ -27,15 +27,16 @@ namespace TravelProject1._0.Controllers
             return View(product);
 
         }
-          public IActionResult Privacy()
-          {
-                return View();
-            }
-
-            [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-            public IActionResult Error()
-            {
-                return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-            }
+        public IActionResult Privacy()
+        {
+            return View();
         }
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+    }
 }
+

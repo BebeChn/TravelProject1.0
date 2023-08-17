@@ -17,12 +17,12 @@
             <div>
                 <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
                 <div class="form-floating mb-3">
-                    <label asp-for="Input.Email" class="form-label labelstyle" style="text-align:center">Email:</label>
-                    <input asp-for="Input.Email" class="form-control accountstyle" autocomplete="username" aria-required="true" placeholder="請輸入帳號" />
-                    <span asp-validation-for="Input.Email" class="text-danger" style="text-align:center;display:block"></span>
+                    <label asp-for="Input.UserName" class="form-label labelstyle" style="text-align:center">帳號</label>
+                    <input asp-for="Input.UserName" class="form-control accountstyle" autocomplete="username" aria-required="true" placeholder="請輸入帳號" />
+                    <span asp-validation-for="Input.UserName" class="text-danger" style="text-align:center;display:block"></span>
                 </div>
                 <div class="form-floating mb-3">
-                    <label asp-for="Input.Password" class="form-label labelstyle ">Password:</label>
+                    <label asp-for="Input.Password" class="form-label labelstyle ">密碼</label>
                     <input asp-for="Input.Password" class="form-control passwordstyle" autocomplete="current-password" aria-required="true" placeholder="請輸入密碼" />
                     <span asp-validation-for="Input.Password" class="text-danger" style="text-align:center;display:block"></span>
                 </div>
@@ -35,7 +35,7 @@
                 <a id="forgot-password" asp-page="./ForgotPassword">忘記密碼</a>
             </div>
             <div>
-                <button id="login-submit" type="submit" class="dup">Log in</button>
+                <button id="login-submit" type="submit" class="dup">登入</button>
             </div>
             <div class="mb-3 forgetstyle">
                 <p>

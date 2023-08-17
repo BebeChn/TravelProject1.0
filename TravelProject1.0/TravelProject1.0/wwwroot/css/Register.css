@@ -32,7 +32,7 @@
 }
 .inputstyle {
     display: block;
-    margin: 20px auto;
+    margin: 10px auto;
     text-align: center;
     background-color: #fad384;
     padding: 12px;
@@ -41,6 +41,7 @@
     outline: none;
     color: rgb(19, 23, 27);
     width: 250px;
+    height: 150px;
 }
 
 .submitstyles {
@@ -53,17 +54,28 @@
     border-radius: 22px;
     outline: none;
     color: rgb(19, 23, 27);
-    width: 250px;
+    width: 150px;
 }
 
-.buttonstyle {
+.dup {
     display: block;
     margin: 20px auto;
     text-align: center;
-    background-color: paleturquoise;
+    background-color: #fad384;
     padding: 12px;
     font-size: 15px;
     border-radius: 22px;
     outline: none;
     color: rgb(19, 23, 27);
+    width: 150px;
+    background-color: deepskyblue;
+    color: black;
+    border: 2px solid #070505;
+    cursor: pointer;
+}
+
+.labelstyle {
+    text-align: center;
+    width:750px;
+    justify-content: center;
 }

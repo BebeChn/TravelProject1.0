@@ -24,27 +24,25 @@
     <div style="background-color:aliceblue"></div>
 </div>
 <div class="row">
-    <div class="col-md-4">
+    <div class="col">
         <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-           
-           
             <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-            <div class="form-floatin mb-3">
-                <label asp-for="Input.Email">Email</label>
-                <input asp-for="Input.Email" class="form-control inputstyle" style="text-align:center autocomplete="username" aria-required="true" placeholder="請輸入電子郵件" />
-                <span asp-validation-for="Input.Email" class="text-danger" style="text-align:center;display:block"></span>
+            <div class="form-floating mb-3">
+                <label asp-for="Input.UsernName" class="labelstyle" style="text-align:center">帳號</label>
+                <input asp-for="Input.UsernName" class="form-control inputstyle"  autocomplete="username" aria-required="true" placeholder="請輸入帳號" />
+                <span asp-validation-for="Input.UsernName" class="text-danger" style="text-align:center;display:block"></span>
             </div>
-            <div class="form-floatin mb-3">
-                <label asp-for="Input.Password">Password</label>
-                <input asp-for="Input.Password" class="form-control inputstyle" style="text-align:center autocomplete="new-password" aria-required="true" placeholder="請輸入密碼" />
+            <div class="form-floating mb-3">
+                <label asp-for="Input.Password" class="labelstyle">密碼</label>
+                <input asp-for="Input.Password" class="form-control inputstyle"  autocomplete="new-password" aria-required="true" placeholder="請輸入密碼" />
                 <span asp-validation-for="Input.Password" class="text-danger" style="text-align:center;display:block"></span>
             </div>
-            <div class="form-floatinmb-3">
-                <label asp-for="Input.ConfirmPassword">Confirm Password</label>
-                <input asp-for="Input.ConfirmPassword" class="form-control inputstyle" style="text-align:center autocomplete="new-password" aria-required="true" placeholder="重複輸入密碼" />
+            <div class="form-floatin mb-3">
+                <label asp-for="Input.ConfirmPassword" class="labelstyle">重複輸入密碼</label>
+                <input asp-for="Input.ConfirmPassword" class="form-control inputstyle" autocomplete="new-password" aria-required="true" placeholder="重複輸入密碼" />
                 <span asp-validation-for="Input.ConfirmPassword" class="text-danger" style="text-align:center;display:block"></span>
             </div>
-            <button id="registerSubmit" type="submit" class="submitstyles" style="text-align:center">Register</button>
+            <button id="registerSubmit" type="submit" class="dup" style="text-align:center">下一步</button>
         </form>
     </div>
    @* <div class="col-md-6 col-md-offset-2">
