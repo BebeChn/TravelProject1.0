@@ -23,7 +23,7 @@ namespace TravelProject1._0
             //SmtpClient client = new SmtpClient("smtp.live.com");
             client.Port = 587;
             client.UseDefaultCredentials = false;
-            client.Credentials = new NetworkCredential("fastic55123@gmail.com", "55123fastic");
+            client.Credentials = new NetworkCredential("fastic55123@gmail.com", "hylcdxxmkiffwdjc");
             client.EnableSsl = true;
             client.Send(mail);
         }
