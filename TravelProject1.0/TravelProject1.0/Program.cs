@@ -22,8 +22,8 @@ namespace TravelProject1._0
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
             builder.Services.AddDbContext<TravelUsersContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("TravelUsers")));
-            
-            builder.Services.AddDefaultIdentity<IdentityUser > (options => options.SignIn.RequireConfirmedAccount = true)
+
+            builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             builder.Services.AddTransient<IEmailSender, EmailSender>();
