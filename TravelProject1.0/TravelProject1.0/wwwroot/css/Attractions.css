@@ -1,0 +1,106 @@
+﻿.img-title {
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+}
+
+.attractions {
+    margin-top: 20px;
+}
+
+.accordion-button {
+    background-color: #4E76EE;
+    color: white;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.accordion-body div {
+    font-size: 20px;
+}
+
+.div-sort {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.sort-title {
+    font-weight: bold;
+    font-size: 36px;
+}
+
+.btn-sort {
+    background-color: cornflowerblue;
+    color: white;
+    border-radius: 5px;
+    font-size: 20px;
+    transition: all 0.3s ease;
+}
+
+    .btn-sort:hover {
+        background-color: #4E76EE;
+        color: white;
+        font-size: 26px;
+    }
+
+.attractions .row {
+    margin-bottom: 10px;
+}
+
+.card {
+    justify-content: center;
+    border: 2px solid red;
+    margin-bottom: 10px;
+    width: 100%;
+    height: 100%;
+    transition:all 0.3s ease;
+}
+
+.img-attractions {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+}
+
+.card-title {
+    font-weight: bold;
+}
+
+.card-text {
+    text-align: justify;
+}
+
+.sell {
+    color: red;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.card-end {
+    margin: 0 auto;
+    margin: auto;
+    text-align: center;
+    margin-bottom: 5px;
+}
+
+.attractions-price {
+    font-weight: bold;
+    font-size: 24px;
+    color: red;
+}
+
+.btn-attractions {
+    background-color: orangered;
+    color: white;
+    margin-top: 10px;
+    width: 100%;
+    font-weight: bold;
+    font-size: 20px;
+    transition: all 0.3s ease;
+}
+
+    .btn-attractions:hover {
+        background-color: red;
+        color: white;
+        font-size: 26px;
+    }

@@ -5,7 +5,10 @@
     ViewData["Title"] = "商品瀏覽";
 
 }
-
+@section Styles
+{
+    <link href="~/lib/toastr.js/toastr.min.css" rel="stylesheet" />
+}
 <h1 class="display-4"></h1>
 @*旋轉木馬*@
 <div id="carouselExampleIndicators" class="carousel slide">
@@ -40,11 +43,11 @@
     <ul class="list-group mt-3">
             <li class="list-group-item align-items-center" style="width:450px">
                 <span class="badge bg-primary rounded-pill">14</span>
-                A list item
+                黃金會員享雙重優惠
             </li>
             <li class="list-group-item d-flex align-items-center" style="width:450px">
                 <span class="badge bg-primary rounded-pill">14</span>
-                A list item
+                單筆消費含10000以上,點數加倍送
             </li>
             <li class="list-group-item d-flex align-items-center" style="width:450px">
                 <span class="badge bg-primary rounded-pill">14</span>
@@ -101,9 +104,21 @@
                     <h5 class="card-title">"@Html.DisplayFor(model=>item.ProductName)"</h5>
                     <h6 class="card-subtitle mb-2 text-muted">"@Html.DisplayFor(model=>item.Price)"</h6>
                     <a href="#" class="card-link">選擇方案</a>
+                    <a class="stretched-link text-dark" onclick="ShowMessage()"
+                       >加入購物車</a>
                 </div>
             </div>
             </div>
         }
 </div>
 
+
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>
+    <script>
+        function ShowMessage() {
+            toastr["success"]("商品已加入購物車！");
+        }
+    </script>
+}
