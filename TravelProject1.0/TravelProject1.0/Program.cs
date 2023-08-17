@@ -54,7 +54,7 @@ namespace TravelProject1._0
                 options.SlidingExpiration = true;
             });
 
-
+            builder.Services.AddSession();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -74,7 +74,16 @@ namespace TravelProject1._0
 
             app.UseRouting();
 
+            app.UseSession();
+
             app.UseAuthorization();
+
+           
+                app.MapControllerRoute(
+                  name: "areas",
+                  pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+                );
+           
 
             app.MapControllerRoute(
                 name: "default",

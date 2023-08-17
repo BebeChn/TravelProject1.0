@@ -6,7 +6,7 @@
 
 }
 
-<h1 class="display-4">Welcome</h1>
+<h1 class="display-4"></h1>
 @*旋轉木馬*@
 <div id="carouselExampleIndicators" class="carousel slide">
     <div class="carousel-indicators">
@@ -99,7 +99,7 @@
                 <div class="card-body">
                     <img src="~/lib/image/snowboard.jpg" class="card-img-top" alt="..." />
                     <h5 class="card-title">"@Html.DisplayFor(model=>item.ProductName)"</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">NT1099起</h6>
+                    <h6 class="card-subtitle mb-2 text-muted">"@Html.DisplayFor(model=>item.Price)"</h6>
                     <a href="#" class="card-link">選擇方案</a>
                 </div>
             </div>
