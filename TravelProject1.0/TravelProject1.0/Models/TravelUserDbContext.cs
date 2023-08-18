@@ -5,7 +5,12 @@ namespace TravelProject1._0.Models
 {
     public class TravelUserDbContext : IdentityDbContext
     {
+       
         public TravelUserDbContext() { }
+        public TravelUserDbContext(DbContextOptions<TravelUserDbContext> options)
+           : base(options)
+        {
+        }
         public DbSet<Admin> Admin { get; set; }
         public DbSet<Cart> Carts { get; set; }
         public DbSet<Category> Category { get; set; }
