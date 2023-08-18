@@ -30,5 +30,8 @@ namespace TravelProject1._0.Models
         [Column(TypeName = "nvarchar")]
         [MaxLength(2000)]
         public string PlanDescription3 { get; set; }
+
+        public virtual Product Product { get; set; }
+         
     }
 }

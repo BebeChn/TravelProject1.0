@@ -8,6 +8,7 @@ namespace TravelProject1._0.Models
     public class Product
     {
         public Product() { }
+        
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ProductId { get; set; }
@@ -19,19 +20,21 @@ namespace TravelProject1._0.Models
         [MaxLength(50)]
         public string ProductName { get; set; }
 
-
+        [Column(TypeName = "decimal(16,2)")]
         public decimal Price { get; set; }
 
         [Column(TypeName = "nvarchar")]
-        [MaxLength(20000)]
+        [MaxLength(2000)]
         public string? ProductDescription { get; set; }
        
         [Column(TypeName = "nvarchar")]
-        [MaxLength(20000)]
+        [MaxLength(2000)]
         public string? ProductDescription2 { get; set; }
        
         [Column(TypeName = "nvarchar")]
-        [MaxLength(20000)]
+        [MaxLength(2000)]
         public string? ProductDescription3 { get; set; }
+
+        public virtual Category Categories { get; set; }   
     }
 }

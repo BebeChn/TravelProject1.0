@@ -13,8 +13,7 @@ namespace TravelProject1._0
        
         public async Task SendEmailAsync(string email, string subject, string htmlMessage)
         {
-			try
-			{
+			
                 var mail = new MailMessage();
                 mail.From = new MailAddress("allen955103@gmail.com");
                 mail.To.Add(email);
@@ -31,11 +30,9 @@ namespace TravelProject1._0
                 client.EnableSsl = true;
                 client.Send(mail);
             }
-			catch (Exception ex)
-			{
+			
 
-				throw;
-			}
-        }
+				
+        
     }
 }

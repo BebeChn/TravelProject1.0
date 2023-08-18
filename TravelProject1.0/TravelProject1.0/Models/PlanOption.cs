@@ -8,12 +8,18 @@ namespace TravelProject1._0.Models
     {
         
         public PlanOption() { }
+        
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int OptionID { get; set; }
-        [ForeignKey(nameof(PlanCalendar)]
+        
+        [ForeignKey(nameof(PlanCalendar))]
         public int CalendarID  { get; set; }
 
         public int Quantity { get; set; }
+
+        public virtual PlanCalendar PlanCalendar { get; set; }  
+        
+        
     }
 }

@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using NToastNotify;
-using TravelProject1._0.Data;
 using TravelProject1._0.Models;
 
 using AspNetCoreHero.ToastNotification.Extensions;
@@ -16,20 +15,16 @@ namespace TravelProject1._0
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddDbContext<TravelUsersContext>(options =>
-            {
-                options.UseSqlServer(builder.Configuration.GetConnectionString("TravelUsers"));
-            });
+          
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+            builder.Services.AddDbContext<TravelUserDbContext>(options =>
                 options.UseSqlServer(connectionString));
 
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-            builder.Services.AddDbContext<TravelUsersContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("TravelUsers")));
+           
 
             builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+                .AddEntityFrameworkStores<TravelUserDbContext>();
 
             builder.Services.AddTransient<IEmailSender, EmailSender>();
 
