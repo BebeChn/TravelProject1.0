@@ -1,21 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Runtime.InteropServices;
 
-namespace TravelProject1._0.Models;
-
-public partial class Product
+namespace TravelProject1._0.Models
 {
-    public int ProductId { get; set; }
+    [Table("Product")]
+    public class Product
+    {
+        public Product() { }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int ProductId { get; set; }
 
-    public int CategoryId { get; set; }
+        [ForeignKey(nameof(Category))]
+        public int CategoryId { get; set; }
 
-    public string ProductName { get; set; } = null!;
+        [Column(TypeName = "nvarchar")]
+        [MaxLength(50)]
+        public string ProductName { get; set; }
 
-    public decimal Price { get; set; }
 
-    public string? Describe { get; set; }
+        public decimal Price { get; set; }
 
-    public string? Describe1 { get; set; }
-
-    public string? Describe2 { get; set; }
+        [Column(TypeName = "nvarchar")]
+        [MaxLength(20000)]
+        public string? ProductDescription { get; set; }
+       
+        [Column(TypeName = "nvarchar")]
+        [MaxLength(20000)]
+        public string? ProductDescription2 { get; set; }
+       
+        [Column(TypeName = "nvarchar")]
+        [MaxLength(20000)]
+        public string? ProductDescription3 { get; set; }
+    }
 }
