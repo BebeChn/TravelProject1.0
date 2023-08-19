@@ -5,8 +5,6 @@ namespace TravelProject1._0.Areas.Admin.Controllers
     [Area("Admin")]
     public class AdminController : Controller
     {
-
-
         public IActionResult Admin()
         {
             return View();
