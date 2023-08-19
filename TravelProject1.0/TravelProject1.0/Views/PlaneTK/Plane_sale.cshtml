@@ -1,77 +1,10 @@
-﻿@{
-    Layout = "Views/Shared/_Layout";
-}
-
-
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous">
-    </script>
-    <script src="https://kit.fontawesome.com/ea5c2c7c03.js" crossorigin="anonymous"></script>
-
-    <style>
-        .solid {
-            font-weight: bold;
-            color: #000;
-        }
-
-        .foo {
-            font-weight: bold;
-            background-color: #85bdc6;
-        }
-    </style>
-</head>
-
-<body>
-
-
+﻿
     <div class="container">
         <br>
     </div>
     <!--頁首-->
     <header class="container-fluid row">
         <!--區塊-->
-        <ul class="nav justify-content-start  col-10">
-            <li class="nav-item">
-                <a class="nav-link solid" href="#">
-                    <img src="https://cdn.kkday.com/pc-web/assets/img/kkday_logo_final.svg">
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link solid" href="#">首頁</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link solid" href="#">機票</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link solid" href="#">住宿</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link solid" href="#">景點</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link solid" href="#">交通</a>
-            </li>
-        </ul>
-        <!--右 購物車 人像-->
-        <nav class=" navbar container-fluid  justify-content-end col-2   ">
-            <form class="    ">
-                <button class="btn me-2" type="button">
-                    <img width="44" height="34" src="./pic/shopping.png">
-                </button>
-                <button class="btn  me-2 justify-content-end" type="button">
-                    <img width="44" height="34" src="./pic/peo1.png">
-                </button>
-            </form>
-        </nav>
         <!--區塊-->
     </header>
     <!--頁首底-->
@@ -124,16 +57,13 @@
                     <li class="nav-item solid">
                     </li>
                     <li class="nav-item solid">
-                        <a class="btn btn-outline-secondary   " href="http://127.0.0.1:5500/admin.html">排序</a>
+                        <a class="btn btn-outline-secondary   " href="http://127.0.0.1:5500/admin.html">方案</a>
                     </li>
                     <li class="nav-item solid">
-                        <a class="btn btn-outline-secondary   " href="http://127.0.0.1:5500/admin.html">熱門程度</a>
+                        <a class="btn btn-outline-secondary   " href="http://127.0.0.1:5500/admin.html">說明</a>
                     </li>
                     <li class="nav-item solid">
-                        <a class="btn btn-outline-secondary   " href="http://127.0.0.1:5500/admin.html">時間從早到晚</a>
-                    </li>
-                    <li class="nav-item solid">
-                        <a class="btn btn-outline-secondary   " href="http://127.0.0.1:5500/admin.html">價格低到高</a>
+                        <a class="btn btn-outline-secondary   " href="http://127.0.0.1:5500/admin.html">評價</a>
                     </li>
                 </ul>
             </span>
@@ -204,6 +134,56 @@
     </div>
     <!--第三段底-->
     <!--第四段頭-->
+    <!--說明-->
+        <h1 class="solid">說明</h1>
+        <div class="container-fluid   " style="width: 70rem;">
+        <ul>
+            <li>此商品 1 人即可成行，機位為需求單，報名時先行提供每位旅客的正確護照中英文名單，以利服務人員第一時間為您確認機位狀況。</li>
+            <li>此方案售價使用最低優惠票價銷售，如遇航班機位較滿可能會有需要加價或無法需求的情形，可選擇同意加價或更改出發日期或退費，訂購時請留意<br></li>
+            <li>機票一經確認若須取消或延期若有費用產生，另行收取，實際費用金額依客服回覆為主。</li>
+            <li>本行程需「團進團出」，不可延回、不得退票及延期使用。</li>
+        </ul>
+        </div>
+    <!--說明底-->
+    <!--方案-->
+<div class="card" style="width: 70rem;">
+            <div class="card-body">
+                <h5 class="card-title">方案1</h5>
+        <h6 class="card-subtitle mb-2 text-body-secondary">韓國大邱計劃機票</h6>
+                <p class="card-text">
+
+                </p>
+                <p>此商品 1 人即可成行，機位為需求單，報名時先行提供每位旅客的正確護照中英文名單，以利服務人員第一時間為您確認機位狀況。<br></p>
+
+                <a class="btn btn-outline-secondary   " href="https://localhost:7025/PlaneTK/Plane_sale">購入</a>
+            </div>
+        </div>
+
+<div class="card" style="width: 70rem;">
+            <div class="card-body">
+        <h5 class="card-title">方案2</h5>
+        <h6 class="card-subtitle mb-2 text-body-secondary">韓國首爾計劃機票</h6>
+                <p class="card-text">
+
+                </p>
+               <p>此商品 1 人即可成行，機位為需求單，報名時先行提供每位旅客的正確護照中英文名單，以利服務人員第一時間為您確認機位狀況。<br></p>
+
+                <a class="btn btn-outline-secondary   " href="https://localhost:7025/PlaneTK/Plane_sale">購入</a>
+            </div>
+        </div>
+
+<div class="card" style="width: 70rem;">
+            <div class="card-body">
+                <h5 class="card-title">方案3</h5>
+                <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6>
+                <p class="card-text">
+                </p>
+                 <p>此商品 1 人即可成行，機位為需求單，報名時先行提供每位旅客的正確護照中英文名單，以利服務人員第一時間為您確認機位狀況。<br></p>
+
+                <a class="btn btn-outline-secondary   " href="https://localhost:7025/PlaneTK/Plane_sale">購入</a>
+            </div>
+        </div>
+        <!--方案-->
     <div class="container-fluid   " style="width: 70rem;">
         <h1 class="solid">顧客評價</h1>
         <!--顧客評價-->
@@ -243,5 +223,3 @@
         <!--顧客評價底-->
     </div>
     <!--第四段底-->
-
-</body>
