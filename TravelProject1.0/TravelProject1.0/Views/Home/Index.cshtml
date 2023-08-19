@@ -117,30 +117,21 @@
     <div id="app">
         <div class="container">
             <div class="row">
-                <div class="col-3" v-for="p in showProduct">
+                <div class="col-3" v-for="p in products">
                     <div class="card">
-                        <img :src="p.img" class="card-img-top">
+                    <img :src=p.image class="card-img-top">
                         <div class="card-body">
-                            <h5 class="card-title">{{p.name}}</h5>
-                            <h3 class="card-title">{{p.price}}</h3>
-                            <p class="card-text">{{p.desc}}</p>
+                        <h5 class="card-title">
+                            {{p.productName}}
+                        </h5>
+                        <h3 class="card-title">{{p.price}}</h3>
+                        <p class="card-text">{{p.productId}}</p>
                         <a class="stretched-link text-dark" onclick="ShowMessage()">加入購物車</a>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="d-flex justify-content-center mt-5">
-                <paginate :page-count="total"
-                          :container-class="'pagination'"
-                          :page-class="'page-item'"
-                          :page-link-class="'page-link'"
-                          :prev-class="'page-item'"
-                          :prev-link-class="'page-link'"
-                          :next-class="'page-link'"
-                          :next-link-class="'page-item'"
-                          :click-handler="changePage">
-                      </paginate>
-            </div>
+        
         </div>
 
     </div>
@@ -148,47 +139,36 @@
     
 
 
-</script>
 
 
 @section Scripts {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
     <script>
         function ShowMessage() {
             toastr["success"]("商品已加入購物車！");
         }
-
-        Vue.component('paginate', VuejsPaginate);
         let app = new Vue({
-            data: {
-                currentPage: 1,
-                itemPerPage: 8,
+            data: {    
                 products: [],
             },
             el: "#app",
             computed: {
-                showProduct: function () {
-                    var start = (this.currentPage - 1) * this.itemPerPage;
-                    var end = start + this.itemPerPage;
-                    return this.products.slice(start, end);
-                },
-                total: function () {
-                    return Math.ceil(this.products.length / this.itemPerPage);
-                }
             },
             mounted: function () {
-                this.getProducts();
-            },
-            methods: {
-                getProducts: function () {
-                    let self = this;
-                    fetch("").then(x => x.json()).then(z => self.products = z)
+                let _this = this;
+                fetch("https://localhost:7025/api/ProductApi/GetImge")
+                    .then(response => {
+                        return response.json();
+                    }).then(data => {
+                        console.log(data);
+                        _this.products = data;
+                    })
                 },
-                changePage: function (num) {
-                    this.currentPage = num;
-                }
+            methods: {
+
             }
         });
-        var app2 = Vue.createApp(vueApp).mount("#app");
+        // var app2 = Vue.createApp(app).mount("#app");
     </script>
 }
