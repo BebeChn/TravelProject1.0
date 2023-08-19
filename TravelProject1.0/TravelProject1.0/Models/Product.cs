@@ -28,9 +28,9 @@ public partial class Product
     [MaxLength(2000)]
     public string? ShortDescription { get; set; }
 
-    public virtual ICollection<Cart> Carts { get; set; } = new List<Cart>();
+    public virtual ICollection<Cart> Carts { get; set; } 
 
     public virtual Category Category { get; set; } = null!;
 
-    public virtual ICollection<Plan> Plans { get; set; } = new List<Plan>();
+    public virtual ICollection<Plan> Plans { get; set; } 
 }

@@ -19,5 +19,5 @@ public partial class Category
     [MaxLength(2000)]
     public string Description { get; set; } = null!;
 
-    public virtual ICollection<Product> Products { get; set; } = new List<Product>();
+    public virtual ICollection<Product> Products { get; set; }
 }

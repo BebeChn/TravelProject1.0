@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace TravelProject1._0.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -378,6 +380,17 @@ namespace TravelProject1._0.Migrations
                         principalTable: "Plan",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Categories",
+                columns: new[] { "Id", "Description", "Name" },
+                values: new object[,]
+                {
+                    { 1, "飛機", "機票票卷" },
+                    { 2, "住宿", "住宿票卷" },
+                    { 3, "交通", "交通票卷" },
+                    { 4, "景點", "景點票卷" }
                 });
 
             migrationBuilder.CreateIndex(
