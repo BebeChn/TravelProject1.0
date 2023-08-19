@@ -1,4 +1,9 @@
-﻿<div class="row">
+﻿@section Styles{
+	<link href="~/css/book-plan.css" rel="stylesheet" />
+}
+
+
+<div class="row">
     <div id="carouselExampleIndicators" class="carousel slide col-12">
         <div class="carousel-indicators">
             <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
@@ -7,13 +12,13 @@
         </div>
         <div class="carousel-inner" style="height: 700px; width: 1300px;">
             <div class="carousel-item active">
-                <img src="~/lib/image/foreast.jpeg" class="d-block w-100" alt="..." />
+                <img src="~/lib/image/mountain2.jpeg" class="img-product" />
             </div>
             <div class="carousel-item">
-                <img src="~/lib/image/foreast.jpeg" class="d-block w-100" alt="..." />
+                <img src="~/lib/image/mountain2.jpeg" class="img-product" />
             </div>
             <div class="carousel-item">
-                <img src="~/lib/image/foreast.jpeg" class="d-block w-100" alt="..." />
+                <img src="~/lib/image/mountain2.jpeg" class="img-product" />
             </div>
 
         </div>
@@ -29,62 +34,121 @@
 </div>
 <hr>
 
+<div class="container">    
+    <nav>
+        <ul class="pagination">
+            <li class="page-item active" aria-current="page">
+                <button class="btn btn-switch page-1">ALL</button>
+            </li>
+            <li class="page-item active" aria-current="page">
+                <button class="btn btn-switch page-2">商品方案</button>
+            </li>
+            <li class="page-item active" aria-current="page">
+                <button class="btn btn-switch page-3">商品說明</button>
+            </li>
+            <li class="page-item active" aria-current="page">
+                <button class="btn btn-switch page-4">購買需知</button>
+            </li>
+            <li class="page-item active" aria-current="page">
+                <button class="btn btn-switch page-5">已購評價</button>
+            </li>
+        </ul>
+    </nav>
+</div>
 
-<div class="row border border-info border border-5 ">
-    <div class="col-7">
-        <h1>苗栗公主大飯店兩天一夜</h1>
-        <p>內容敘述</p>
-    </div>
-    <div class="col-1">
-        <br>
-        <p>已售出人數</p>
-    </div>
-    <div class="col-4" style="background-color:rgba(151, 143, 143, 0.651)">
-        <h2>住宿特色</h2>
-        <p>NT 1099</p>
-        <button type="button" class="btn btn-warning" style="background-color: rgb(236, 219, 126);">選擇方案</button>
+<br>
+
+@* 商品方案 *@
+<div class="container plan">
+    @* 方案選擇 *@
+    <div class="row">
+        <div class="col-md-8 offset-2 text-center">
+            <h2 class="title">嚴選住宿</h2>
+            <div class="">
+                <p>暖色調裝潢、大量原木傢俱與石材建築，明亮採光與淡淡香氛，給你最舒適的放鬆體驗！</p>
+                <p>高鐵假期限時優惠活動詳見活動網站，搶先預訂！</p>
+            </div>
+        </div>
     </div>
 </div>
 
 <hr>
 
-<div class="row border border-info border border-5" style="background-color:rgba(151, 143, 143, 0.651)">
-
-    <div class="col-9 row">
-        <div class="col-4"><img src="./single.jpg" alt="單人房" width="250px" height="150px"></div>
-        <div class="col-8">
-            <h3>單人房</h3>
-            <p>敘述xxxxxxxxxxxxx</p>
-        </div>
-    </div>
-
-    <div class="col-3">
-        <br>
-        <h5>NT2099</h5>
-        <br>
-        <button type="button" class="btn btn-warning" style="background-color: rgb(236, 219, 126);">選擇方案</button>
-    </div>
-</div>
-
 <br>
-
-<div class="row border border-info border border-5" style="background-color:rgba(151, 143, 143, 0.651)">
-
-    <div class="col-9 row">
-        <div class="col-4"><img src="./twin_superior.jpg" alt="雙人房" width="250px" height="150px"></div>
-        <div class="col-8">
-            <h3>雙人房</h3>
-            <p>敘述xxxxxxxxxxxxx</p>
+<div class="container">
+<div class="card">
+    <div class="row">
+        <div class="col-md-9">
+            <div class="card-body">
+                <h3 class="card-title">苗栗公主大飯店</h3>
+                <p class="card-text">描述</p>
+            </div>
+        </div>
+        <div class="col-md-3 card-end">
+                <button class="btn btn-plan btn-top" style="margin-top:10%;">方案選擇</button>
         </div>
     </div>
-
-    <div class="col-3">
-        <br>
-        <h5>NT2099</h5>
-        <br>
-        <button type="button" class="btn btn-warning" style="background-color: rgb(236, 219, 126);">選擇方案</button>
-    </div>
 </div>
+
+
+
+    <div class="card">
+        <div class="row">
+            <div class="col-md-3">
+                <img class="img-plan" src="~/lib/image/mountain2.jpeg" />
+            </div>
+            <div class="col-md-7">
+                <div class="card-body">
+                    <h3 class="card-title">單人房</h3>
+                    <p class="card-text">
+                        嬰幼兒 0 - 5 歲不含高鐵車位、飯店床位及備品、早餐（現場依身高加購）
+
+                        孩童 6 - 11 歲不佔床，選購時請選擇【兒童】價位，含高鐵車位、不含飯店床位及備品、早餐（現場依身高加購）;孩童 6 - 11 歲佔床，選購時請選擇【學生】價位，含高鐵車位、飯店床位及備品、早餐
+
+                        滿 65 歲以上年長者，選購時請選擇【長者】價位（只適用於中華民國籍）
+
+                        請於訂單備註提供去程及回程高鐵票所需三個班次時間（ex: 去程 230/1122/432；回程 230/332/442）
+
+                        限出發日為入住日，若回程日須延後回程請於訂單備註中填寫預計回程日期，回程日須於出發日起 7 日內
+
+                        若有續住需求請先與 THM102day 客服聯繫確認是否有房
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-2 card-end">
+                <div class="plan-price">NT 1699起</div>
+                <button class="btn btn-plan btn-top">方案選擇</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="row">
+                <div class="col-md-3">
+                    <img class="img-plan" src="~/lib/image/mountain2.jpeg" />
+                </div>
+                <div class="col-md-7">
+                    <div class="card-body">
+                        <h3 class="card-title">雙人房</h3>
+                        <p class="card-text">
+                            嬰幼兒 0 - 5 歲不含高鐵車位、飯店床位及備品、早餐（現場依身高加購）
+
+                            孩童 6 - 11 歲不佔床，選購時請選擇【兒童】價位，含高鐵車位、不含飯店床位及備品、早餐（現場依身高加購）;孩童 6 - 11 歲佔床，選購時請選擇【學生】價位，含高鐵車位、飯店床位及備品、早餐
+
+                            滿 65 歲以上年長者，選購時請選擇【長者】價位（只適用於中華民國籍）
+
+                            請於訂單備註提供去程及回程高鐵票所需三個班次時間（ex: 去程 230/1122/432；回程 230/332/442）
+
+                            限出發日為入住日，若回程日須延後回程請於訂單備註中填寫預計回程日期，回程日須於出發日起 7 日內
+
+                            若有續住需求請先與 THM102day 客服聯繫確認是否有房
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-2 card-end">
+                    <div class="plan-price">NT 2099起</div>
+                    <button class="btn btn-plan btn-top">方案選擇</button>
+                </div>
+            </div>
 
 <hr>
 
@@ -102,9 +166,9 @@
         <br>
         <div class="row">
             <div class="col-1"></div>
-            <div class="col-4"><button type="button" class="btn btn-warning" style="background-color: rgb(236, 219, 126);">加入購物車</button></div>
+                        <div class="col-4"><button type="button" class="btn btn-warning btn-top" style="background-color: rgb(236, 219, 126);">加入購物車</button></div>
             <div class="col-2"></div>
-            <div class="col-4"><button type="button" class="btn btn-warning" style="background-color: rgb(236, 219, 126);">立即訂購</button></div>
+                        <div class="col-4"><button type="button" class="btn btn-warning btn-top" style="background-color: rgb(236, 219, 126);">立即訂購</button></div>
             <div class="col-1"></div>
         </div>
     </div>
@@ -123,5 +187,5 @@
     </div>
 </div>
 
-
+</div>
 <hr>
