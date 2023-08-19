@@ -17,14 +17,14 @@ namespace TravelProject1._0
 
           
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-            builder.Services.AddDbContext<TravelUserDbContext>(options =>
+            builder.Services.AddDbContext<TravelUserContext>(options =>
                 options.UseSqlServer(connectionString));
 
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
            
 
             builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<TravelUserDbContext>();
+                .AddEntityFrameworkStores<TravelUserContext>();
 
             builder.Services.AddTransient<IEmailSender, EmailSender>();
 

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using NToastNotify;
 using System.Diagnostics;
 using TravelProject1._0.Models;
+using TravelProject1._0.Models.ProductDTO;
 
 namespace TravelProject1._0.Controllers
 {
@@ -10,20 +11,21 @@ namespace TravelProject1._0.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
+        private readonly TravelUserContext _db;
+
        
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, TravelUserContext travelUserDbContext)
 
         {
             _logger = logger;
-       
-           
+            _db=travelUserDbContext;
         }
 
 
-        public IActionResult Index()
+        public IActionResult Index(int id)
         {
-          
+            
             return View();
 
         }
