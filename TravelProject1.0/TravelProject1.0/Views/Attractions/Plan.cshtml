@@ -1,5 +1,16 @@
 ﻿@section Styles{
     <link href="~/css/attractions-plan.css" rel="stylesheet" />
+    <style>
+        .btn-settle{
+            width:100%;
+            background-color: #4EEEC6;
+            color:white;
+        }
+        .btn-settle:hover{
+                background-color: darkturquoise;
+                color:white;
+        }
+    </style>
 }
 
 @*選轉木馬*@
@@ -91,7 +102,21 @@
                 <div class="col-md-2 card-end">
                     <button class="btn btn-heart"><i class="fa-solid fa-heart fa-2xl"></i></button>
                     <div class="plan-price">NT 699</div>
-                    <button class="btn btn-plan">選擇</button>
+                    <button class="btn btn-plan" data-bs-toggle="collapse" data-bs-target="#planCollapse" aria-expanded="true" aria-controls="planCollapse">選擇</button>
+                </div>
+                <div id="planCollapse" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+                    <div class="row accordion-body">
+                        <div class="col-md-6">
+                            <h4>選擇日期</h4>
+                            <div></div>
+                        </div>
+                        <div class="col-md-6">
+                            <h4 class="">選擇項目</h4>
+                            <label class="">數量：</label>
+                            <input type="text" />
+                            <button class="btn btn-settle">結帳</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
