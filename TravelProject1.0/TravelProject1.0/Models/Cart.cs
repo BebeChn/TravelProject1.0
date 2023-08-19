@@ -1,31 +1,28 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace TravelProject1._0.Models
+namespace TravelProject1._0.Models;
+[Table("Cart")]
+public partial class Cart
 {
-    [Table("Cart")]
-    [PrimaryKey(nameof(ProductId),(nameof(Id)),nameof(ShoppingCartID))]
-    public class Cart
-    {
-        
-        public Cart() { }
+    public Cart() { }
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    [MaxLength(50)]
+    public int Id { get; set; }
 
-        [ForeignKey(nameof(IdentityUser))]
-        [Column(TypeName = "nvarchar")]
-        [MaxLength(450)]
-        public string Id { get; set; }
+    [ForeignKey("Product")]
+    public int ProductId { get; set; }
+    [Column(TypeName = "nvarchar")]
+    [MaxLength(450)]
+    [ForeignKey("User")]
+    public string UserId { get; set; }
 
-        [ForeignKey(nameof(Product))]
-        public int ProductId { get; set; }
-        
-        public int ShoppingCartID { get; set; }
-   
-        public int Quantity { get; set; }   
+    public int Quantity { get; set; }
 
-        public virtual IdentityUser IdentityUser { get; set; }
+    public virtual User User { get; set; } = null!;
 
-        public virtual Product Product { get; set; }
-    }
+    public virtual Product Product { get; set; } = null!;
 }
