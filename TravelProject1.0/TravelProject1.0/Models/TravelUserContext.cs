@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection.Metadata;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace TravelProject1._0.Models;
 
-public partial class TravelUserContext : IdentityDbContext<User,Role,string,UserClaim,UserRole,UserLogin,RoleClaim,UserToken>
+public partial class TravelUserContext : IdentityDbContext<User, Role, string, UserClaim, UserRole, UserLogin, RoleClaim, UserToken>
 {
     public TravelUserContext()
     {
@@ -51,7 +52,13 @@ public partial class TravelUserContext : IdentityDbContext<User,Role,string,User
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        
+        modelBuilder.Entity<Category>().HasData(new Category { Id = 1, Name = "機票票卷", Description = "飛機" });
+        modelBuilder.Entity<Category>().HasData(new Category { Id = 2, Name = "住宿票卷", Description = "住宿" });
+        modelBuilder.Entity<Category>().HasData(new Category { Id = 3, Name = "交通票卷", Description = "交通" });
+        modelBuilder.Entity<Category>().HasData(new Category { Id = 4, Name = "景點票卷", Description = "景點" });
+
+
+
         OnModelCreatingPartial(modelBuilder);
         base.OnModelCreating(modelBuilder);
     }

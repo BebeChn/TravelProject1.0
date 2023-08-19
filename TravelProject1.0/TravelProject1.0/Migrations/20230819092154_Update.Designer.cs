@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TravelProject1._0.Models;
 
@@ -11,9 +12,11 @@ using TravelProject1._0.Models;
 namespace TravelProject1._0.Migrations
 {
     [DbContext(typeof(TravelUserContext))]
-    partial class TravelUserContextModelSnapshot : ModelSnapshot
+    [Migration("20230819092154_Update")]
+    partial class Update
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -116,32 +119,6 @@ namespace TravelProject1._0.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Description = "飛機",
-                            Name = "機票票卷"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Description = "住宿",
-                            Name = "住宿票卷"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Description = "交通",
-                            Name = "交通票卷"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Description = "景點",
-                            Name = "景點票卷"
-                        });
                 });
 
             modelBuilder.Entity("TravelProject1._0.Models.Order", b =>
