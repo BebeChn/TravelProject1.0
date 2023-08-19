@@ -1,5 +1,22 @@
 ﻿@section Styles{
     <link href="~/css/attractions-plan.css" rel="stylesheet" />
+    <style>
+        .img-map {
+            width: 100%;
+            border-radius: 10px;
+        }
+
+        .btn-settle {
+            width: 100%;
+            background-color: #4EEEC6;
+            color: white;
+        }
+
+            .btn-settle:hover {
+                background-color: darkturquoise;
+                color: white;
+            }
+    </style>
 }
 
 @*選轉木馬*@
@@ -91,7 +108,21 @@
                 <div class="col-md-2 card-end">
                     <button class="btn btn-heart"><i class="fa-solid fa-heart fa-2xl"></i></button>
                     <div class="plan-price">NT 699</div>
-                    <button class="btn btn-plan">選擇</button>
+                    <button class="btn btn-plan" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">選擇</button>
+                </div>
+                <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+                    <div class="row accordion-body">
+                        <div class="col-md-6">
+                            <h4>選擇日期</h4>
+                            <div></div>
+                        </div>
+                        <div class="col-md-6">
+                            <h4 class="">選擇項目</h4>
+                            <label class="">數量：</label>
+                            <input type="text" />
+                            <button class="btn btn-settle">結帳</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -109,7 +140,22 @@
                 <div class="col-md-2 card-end">
                     <button class="btn btn-heart"><i class="fa-solid fa-heart fa-2xl"></i></button>
                     <div class="plan-price">NT 1299</div>
-                    <button class="btn btn-plan">選擇</button>
+                    <button class="btn btn-plan" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">選擇</button>
+                </div>
+                <div id="collapseTwo" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+                    <div class="row accordion-body">
+                        <div class="col-md-6">
+                            <h4>選擇日期</h4>
+                            <div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h4 class="">選擇項目</h4>
+                            <label class="label-quantity">數量：</label>
+                            <input class="inp-quantity" type="text" />
+                            <button class="btn btn-settle">結帳</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -127,7 +173,21 @@
                 <div class="col-md-2 card-end">
                     <button class="btn btn-heart"><i class="fa-solid fa-heart fa-2xl"></i></button>
                     <div class="plan-price">NT 9999</div>
-                    <button class="btn btn-plan">選擇</button>
+                    <button class="btn btn-plan" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">選擇</button>
+                </div>
+                <div id="collapseThree" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+                    <div class="row accordion-body">
+                        <div class="col-md-6">
+                            <h4>選擇日期</h4>
+                            <div></div>
+                        </div>
+                        <div class="col-md-6">
+                            <h4 class="">選擇項目</h4>
+                            <label class="">數量：</label>
+                            <input type="text" />
+                            <button class="btn btn-settle">結帳</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -138,7 +198,7 @@
 <div class="container caption">
     <div>
         <div class="row product-descripts">
-            <div class="col-md-8 offset-2 text-center">
+            <div class="col-md-8 text-center">
                 <h2 class="title">商品說明</h2>
                 <div class="row">
                     <div class="col-md-4">
@@ -148,6 +208,9 @@
                         <p class="sub-descripts">場次設定僅供參考使用，非上車時間，如用車時間為 12:15，請選擇 12:00 場次；如用車時間為 23:40，請選擇 23:00 場次，以此類推，但實際接送時間將依照旅客航班資訊為主。</p>
                     </div>
                 </div>
+            </div>
+            <div class="col-md-4">
+                <img class="img-map" src="~/lib/image/mountain2.jpeg" />
             </div>
         </div>
 

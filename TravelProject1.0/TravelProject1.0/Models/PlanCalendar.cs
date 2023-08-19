@@ -1,25 +1,24 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace TravelProject1._0.Models
+namespace TravelProject1._0.Models;
+[Table("Planalendar")]
+public partial class PlanCalendar
 {
-    [Table("PlanCalendar")]
-    public class PlanCalendar
-    {
-        public PlanCalendar() { }
-        
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int CalenderId { get; set; }
-        
-        [ForeignKey(nameof(Plan))]
-        public int PlanId { get; set; }
+   
+    public PlanCalendar() { }
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int Id { get; set; }
 
-        public DateTime Date { get; set; }
+    [ForeignKey("Plan")]
+    public int PlanId { get; set; }
 
-        [Column(TypeName = "decimal(16,2)")]
-        public decimal  Price { get; set; }
+    public DateTime Date { get; set; }
 
-        public virtual Plan Plan { get; set; }
-    }
+    public decimal Price { get; set; }
+
+    public virtual Plan Plan { get; set; } = null!;
 }

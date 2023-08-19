@@ -1,40 +1,36 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Runtime.InteropServices;
 
-namespace TravelProject1._0.Models
+namespace TravelProject1._0.Models;
+[Table("Products")]
+public partial class Product
 {
-    [Table("Product")]
-    public class Product
-    {
-        public Product() { }
-        
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int ProductId { get; set; }
+    public Product() { }
+    [Key]
+    public int Id { get; set; }
 
-        [ForeignKey(nameof(Category))]
-        public int CategoryId { get; set; }
+    [ForeignKey("Category")]
+    public int CategoryId { get; set; }
+    [Column(TypeName = "nvarchar")]
+    [MaxLength(450)]
+    public string Name { get; set; } = null!;
 
-        [Column(TypeName = "nvarchar")]
-        [MaxLength(50)]
-        public string ProductName { get; set; }
+    public decimal Price { get; set; }
+    [Column(TypeName = "nvarchar")]
+    [MaxLength(2000)]
+    public string? MainDescription { get; set; }
+    [Column(TypeName = "nvarchar")]
+    [MaxLength(2000)]
+    public string? SubDescription { get; set; }
+    [Column(TypeName = "nvarchar")]
+    [MaxLength(2000)]
+    public string? ShortDescription { get; set; }
 
-        [Column(TypeName = "decimal(16,2)")]
-        public decimal Price { get; set; }
+    public virtual ICollection<Cart> Carts { get; set; } = new List<Cart>();
 
-        [Column(TypeName = "nvarchar")]
-        [MaxLength(2000)]
-        public string? ProductDescription { get; set; }
-       
-        [Column(TypeName = "nvarchar")]
-        [MaxLength(2000)]
-        public string? ProductDescription2 { get; set; }
-       
-        [Column(TypeName = "nvarchar")]
-        [MaxLength(2000)]
-        public string? ProductDescription3 { get; set; }
+    public virtual Category Category { get; set; } = null!;
 
-        public virtual Category Categories { get; set; }   
-    }
+    public virtual ICollection<Plan> Plans { get; set; } = new List<Plan>();
 }

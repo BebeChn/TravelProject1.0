@@ -5,24 +5,21 @@ namespace TravelProject1._0.Areas.Admin.Controllers
     [Area("Admin")]
     public class AdminController : Controller
     {
-        public IActionResult Index()
+        public IActionResult Admin()
         {
             return View();
         }
 
-        public IActionResult UserManage()
+        public IActionResult Merchandise()
         {
             return View();
         }
 
-        public IActionResult OrdersManage()
+        public IActionResult Order()
         {
             return View();
         }
 
-        public IActionResult ProductsManage()
-        {
-            return View();
-        }
+
     }
 }
