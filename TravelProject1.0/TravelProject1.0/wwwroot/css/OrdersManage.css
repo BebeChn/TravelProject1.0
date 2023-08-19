@@ -1,0 +1,127 @@
+﻿/*統計*/
+.statistics {
+    margin-bottom: 10px;
+}
+
+.statistics-title {
+    font-size: 24px;
+}
+
+.btn-statistics {
+    background-color: limegreen;
+    color: white;
+    font-size: 20px;
+    transition: all 0.3s ease;
+}
+
+    .btn-statistics:hover {
+        background-color: lime;
+        color: white;
+        font-size: 24px;
+    }
+
+/*搜尋*/
+.orders-search {
+    text-align: end;
+}
+
+.search-title {
+    font-weight: bold;
+    font-size: 24px;
+}
+
+.inp-search {
+    background-color: black;
+    color: white;
+    height: 40px;
+    border-radius: 10px;
+}
+
+.btn-search:hover {
+    color: green;
+}
+
+/*列表*/
+.menu {
+    margin-top: 20px;
+    background-color: black;
+    width: 100%;
+    border-radius: 10px;
+    text-align: center;
+    justify-content: center;
+}
+
+.item {
+    width: 100%;
+    color: white;
+    font-size: 20px;
+    line-height: 60px;
+    transition: all 0.3s ease;
+}
+
+    .item:hover {
+        background-color: red;
+        color: white;
+        font-size: 26px;
+    }
+
+.sub-menu {
+    background-color: gray;
+    display: none;
+}
+
+.sub-item {
+    color: white;
+    width: 100%;
+    font-size: 18px;
+    transition: all 0.3s ease;
+}
+
+    .sub-item:hover {
+        background-color: red;
+        color: white;
+        font-size: 22px;
+    }
+
+/*訂單*/
+.orders {
+    margin-top: 20px;
+    justify-content: space-evenly;
+    text-align: center;
+}
+
+.orders-log {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+    .orders-log tr {
+        border-bottom: 1px solid black;
+    }
+
+    .orders-log th {
+        font-weight: bold;
+        font-size: 20px;
+        background-color: red;
+        color: white;
+        height: 50px;
+        border-bottom: 5px solid black;
+    }
+
+    .orders-log td {
+        font-size: 18px;
+        height: 50px;
+    }
+
+.btn-details {
+    background-color: orange;
+    color: white;
+    font-size: 18px;
+    transition: all 0.3s ease;
+}
+
+    .btn-details:hover {
+        background-color: orangered;
+        color: white;
+        font-size: 22px;
+    }

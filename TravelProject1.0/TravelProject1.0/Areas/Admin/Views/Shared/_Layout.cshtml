@@ -23,18 +23,14 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">機票</a>
+                            <a class="nav-link text-dark" asp-area="Admin" asp-controller="Admin" asp-action="Index">首頁</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">住宿</a>
+                            <a class="nav-link text-dark" asp-area="Admin" asp-controller="Admin" asp-action="UserManage">使用者管理</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">景點</a>
+                            <a class="nav-link text-dark" asp-area="Admin" asp-controller="Admin" asp-action="OrdersManage">訂單管理</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Transport" asp-action="Index">交通</a>
-                        </li>
-                       
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>
@@ -49,9 +45,14 @@
 
     <footer class="border-top footer text-muted">
         <div style="background-color:gainsboro">
-        <div class="container">
-            &copy; 2023 - TravelProject1._0 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
+            <div class="container">
+                <div>
+                    關於我們<a asp-area="" asp-controller="Home" asp-action="Privacy"></a>
+                    付款方式<a asp-area="" asp-controller="Home" asp-action="Privacy"></a>
+                    隱私權政策<a asp-area="" asp-controller="Home" asp-action="Privacy"></a>
+                    條款與細則<a asp-area="" asp-controller="Home" asp-action="Privacy"></a>
+                </div>
+            </div>
         </div>
         <div style="background-color: rgb(78, 198, 238);padding: 2px;"></div>
     </footer>

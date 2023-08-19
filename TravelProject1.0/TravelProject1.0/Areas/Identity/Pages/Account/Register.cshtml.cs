@@ -81,7 +81,7 @@ namespace TravelProject1._0.Areas.Identity.Pages.Account
 
             [Required(ErrorMessage ="帳號未填寫")]
             [Display(Name = "帳號")]
-            public string UsernName { get; set; }
+            public string UserName { get; set; }
 
 
 
@@ -120,8 +120,8 @@ namespace TravelProject1._0.Areas.Identity.Pages.Account
             {
                 var user = CreateUser();
 
-                await _userStore.SetUserNameAsync(user, Input.UsernName, CancellationToken.None);
-                await _emailStore.SetUserNameAsync(user, Input.UsernName, CancellationToken.None);
+                await _userStore.SetUserNameAsync(user, Input.UserName, CancellationToken.None);
+                await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)

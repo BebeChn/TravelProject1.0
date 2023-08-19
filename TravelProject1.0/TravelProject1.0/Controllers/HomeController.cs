@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using NToastNotify;
 using System.Diagnostics;
 using TravelProject1._0.Models;
 
@@ -9,29 +10,28 @@ namespace TravelProject1._0.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
-        public TravelUsersContext _context;
+       
 
-
-
-        public HomeController(ILogger<HomeController> logger, TravelUsersContext context)
+        public HomeController(ILogger<HomeController> logger)
 
         {
             _logger = logger;
-            _context = context;
+       
+           
         }
 
 
         public IActionResult Index()
         {
-            var product = _context.Products.OrderByDescending(p => p.ProductId);
-            return View(product);
+          
+            return View();
 
         }
         public IActionResult Privacy()
         {
             return View();
         }
-
+        
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
