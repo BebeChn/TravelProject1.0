@@ -12,8 +12,8 @@ using TravelProject1._0.Models;
 namespace TravelProject1._0.Migrations
 {
     [DbContext(typeof(TravelUserContext))]
-    [Migration("20230819075208_initial")]
-    partial class initial
+    [Migration("20230819085509_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -119,6 +119,32 @@ namespace TravelProject1._0.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "飛機",
+                            Name = "機票票卷"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "住宿",
+                            Name = "住宿票卷"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "交通",
+                            Name = "交通票卷"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Description = "景點",
+                            Name = "景點票卷"
+                        });
                 });
 
             modelBuilder.Entity("TravelProject1._0.Models.Order", b =>

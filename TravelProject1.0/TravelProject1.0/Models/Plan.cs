@@ -23,7 +23,9 @@ public partial class Plan
 
   
 
-    public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
+
+    public virtual ICollection<OrderDetail> OrderDetails { get; set; } 
+
 
     public virtual Product Product { get; set; } = null!;
 }
