@@ -9,23 +9,10 @@ namespace TravelProject1._0.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-
-        private readonly TravelUserContext _db;
-
-       
-
-        public HomeController(ILogger<HomeController> logger, TravelUserContext travelUserDbContext)
-
-        {
-            _logger = logger;
-            _db=travelUserDbContext;
-        }
-
 
         public IActionResult Index(int id)
         {
-            
+
             return View();
 
         }
@@ -33,7 +20,7 @@ namespace TravelProject1._0.Controllers
         {
             return View();
         }
-        
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
