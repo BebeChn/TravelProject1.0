@@ -5,6 +5,7 @@ using NToastNotify;
 using TravelProject1._0.Models;
 
 using AspNetCoreHero.ToastNotification.Extensions;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace TravelProject1._0
 {
@@ -30,6 +31,18 @@ namespace TravelProject1._0
 
             builder.Services.AddControllersWithViews();
 
+            builder.Services.AddAuthentication(option =>
+            {
+                option.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme; //默?身份??方案
+                option.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                option.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                option.DefaultForbidScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                option.DefaultSignOutScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            }).AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, option =>
+            {
+                option.LoginPath = "/User/Login";//如果?有找到用?信息---身份??失?--授?也失?了---就跳?到指定的Action
+                option.AccessDeniedPath = "/Home/NoAuthority";
+            });
             //builder.Services.ConfigureApplicationCookie(options =>
             //{
             //    options.Cookie.HttpOnly = true;
