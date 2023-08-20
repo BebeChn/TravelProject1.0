@@ -2,34 +2,35 @@
 	<link href="~/css/book-plan.css" rel="stylesheet" />
 }
 
-
-<div class="row">
-    <div id="carouselExampleIndicators" class="carousel slide col-12">
-        <div class="carousel-indicators">
-            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+<div class="container">
+    <div class="row">
+        <div id="carouselExampleIndicators" class="carousel slide col-12">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            </div>
+            <div class="carousel-inner" style="height: 700px; width: 1300px;">
+                <div class="carousel-item active">
+                    <img src="~/lib/image/mountain2.jpeg" class="img-product" />
+                </div>
+                <div class="carousel-item">
+                    <img src="~/lib/image/mountain2.jpeg" class="img-product" />
+                </div>
+                <div class="carousel-item">
+                    <img src="~/lib/image/mountain2.jpeg" class="img-product" />
+                </div>
+    
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
         </div>
-        <div class="carousel-inner" style="height: 700px; width: 1300px;">
-            <div class="carousel-item active">
-                <img src="~/lib/image/mountain2.jpeg" class="img-product" />
-            </div>
-            <div class="carousel-item">
-                <img src="~/lib/image/mountain2.jpeg" class="img-product" />
-            </div>
-            <div class="carousel-item">
-                <img src="~/lib/image/mountain2.jpeg" class="img-product" />
-            </div>
-
-        </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
     </div>
 </div>
 <hr>
@@ -76,19 +77,19 @@
 
 <br>
 <div class="container">
-<div class="card">
-    <div class="row">
-        <div class="col-md-9">
-            <div class="card-body">
-                <h3 class="card-title">苗栗公主大飯店</h3>
-                <p class="card-text">描述</p>
+    <div class="card">
+        <div class="row">
+            <div class="col-md-9">
+                 <div class="card-body">
+                        <h3 class="card-title">苗栗公主大飯店</h3>
+                        <p class="card-text">描述</p>
+                </div>
             </div>
-        </div>
-        <div class="col-md-3 card-end">
-                <button class="btn btn-plan btn-top" style="margin-top:10%;">方案選擇</button>
+                <div class="col-md-3 card-end">
+                    <button class="btn btn-plan btn-top" style="margin-top:10%;">方案選擇</button>
+                 </div>
         </div>
     </div>
-</div>
 
 
 
@@ -117,9 +118,35 @@
             </div>
             <div class="col-md-2 card-end">
                 <div class="plan-price">NT 1699起</div>
-                <button class="btn btn-plan btn-top">方案選擇</button>
+                <button class="btn btn-plan btn-top" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">方案選擇</button>
             </div>
+                <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        @* 手風琴 *@
+                    <div class="row border border-secondary">
+                        <div class="col-5 border border-info border border-5" style="background-color:rgba(151, 143, 143, 0.651)">日暦</div>
+                        <div class="col-2"></div>
+                        <div class="col-5 border border-info border border-5" style="background-color:rgba(151, 143, 143, 0.651)">
+                            <h4>數量</h4>
+                            <h4>金額</h4>
+                            <br>
+                            <div class="row">
+                                <div class="col-1"></div>
+                                <div class="col-4"><button type="button" class="btn btn-warning btn-top" style="background-color: rgb(236, 219, 126);">加入購物車</button></div>
+                                <div class="col-2"></div>
+                                <div class="col-4"><button type="button" class="btn btn-warning btn-top" style="background-color: rgb(236, 219, 126);">立即訂購</button></div>
+                                <div class="col-1"></div>
+                            </div>
+                        </div>
+                    </div>
+                        @* 手風琴 *@
+                    </div>
+                </div>
+            
         </div>
+    </div>
+</div>
+
 
         <div class="card">
             <div class="row">
@@ -146,46 +173,191 @@
                 </div>
                 <div class="col-md-2 card-end">
                     <div class="plan-price">NT 2099起</div>
-                    <button class="btn btn-plan btn-top">方案選擇</button>
+            <button class="btn btn-plan btn-top" data-bs-toggle="collapse" data-bs-target="#collapseOne1" aria-expanded="true" aria-controls="collapseOne">方案選擇</button>
+                 </div>
+        </div>
+        <div id="collapseOne1" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+            <div class="accordion-body">
+                @* 手風琴 *@
+                <div class="row border border-secondary">
+                    <div class="col-5 border border-info border border-5" style="background-color:rgba(151, 143, 143, 0.651)">日暦</div>
+                    <div class="col-2"></div>
+                    <div class="col-5 border border-info border border-5" style="background-color:rgba(151, 143, 143, 0.651)">
+                        <h4>數量</h4>
+                        <h4>金額</h4>
+                        <br>
+                        <div class="row">
+                            <div class="col-1"></div>
+                            <div class="col-4"><button type="button" class="btn btn-warning btn-top" style="background-color: rgb(236, 219, 126);">加入購物車</button></div>
+                            <div class="col-2"></div>
+                            <div class="col-4"><button type="button" class="btn btn-warning btn-top" style="background-color: rgb(236, 219, 126);">立即訂購</button></div>
+                            <div class="col-1"></div>
+                        </div>
+                    </div>
                 </div>
+                @* 手風琴 *@
             </div>
-
+        </div>
+    </div>
 <hr>
 
 
 
 <br>
 
-<div class="row border border-secondary">
-    <div class="col-5 border border-info border border-5" style="background-color:rgba(151, 143, 143, 0.651)">日暦</div>
-    <div class="col-2"></div>
-    <div class="col-5 border border-info border border-5" style="background-color:rgba(151, 143, 143, 0.651)">
-        <h4>數量</h4>
-        <h4>人數</h4>
-        <h4>金額</h4>
-        <br>
+<div class="container">
+    <div>
+        <div class="row product-descripts">
+            <div class="col-md-8 text-center">
+                <h2 class="title">商品說明</h2>
+                   <div class="row">
+                       <div class="col-md-4">
+                               <img class="img-caption" src="~/lib/image/mountain.jpeg" />
+                       </div>
+                       <div class="col-md-8">
+                           <p class="sub-descripts">
+                               - 提供雙人房入住 1 晚
+                               - 延遲退房至 14:00
+                               - 不含早餐
+                               - 提供入住客人於住宿期間可無限次到 2 樓餐吧享用餐飲 85 折優惠（早餐除外，恕無法與館內其他優惠方案同時使用）
+                           </p>
+                       </div>
+                   </div>
+            </div>
+                        <div class="col-md-4">
+		    	            	<img class="google-map" src="~/lib/image/foreast.jpeg" />
+                            @* google地圖 *@
+                        </div>
+        </div>
+<hr>
         <div class="row">
-            <div class="col-1"></div>
-                        <div class="col-4"><button type="button" class="btn btn-warning btn-top" style="background-color: rgb(236, 219, 126);">加入購物車</button></div>
-            <div class="col-2"></div>
-                        <div class="col-4"><button type="button" class="btn btn-warning btn-top" style="background-color: rgb(236, 219, 126);">立即訂購</button></div>
-            <div class="col-1"></div>
+            <div>
+                <h2 class="sub-title">兌換方式 :</h2>
+                <p class="sub-descripts">現場請出示電子憑證</p>
+            </div>
+
+            <div>
+                <h4 class="sub-title">最新資訊 :</h4>
+                <p class="sub-descripts">
+                    <h3>
+                    此專案限旅遊同業訂購(如下):
+                    </h3>
+                    <hr>
+                    觀光旅遊從業人員:旅宿業、旅行社、觀光遊樂業及媒體記者
+                    <br>
+                    交通運輸業從業人員:市區汽車客運業、公路汽車客運業、鐵路運輸業、大眾捷運系統運輸業、運輸業船舶運送業及民用航空運輸業
+                    
+                    
+                    純住房<br />
+                    專案售價:$2,999<br />
+                    專案內容:
+                    雅緻家庭房住宿一晚<br />
+
+                    一泊一食<br />
+                    專案售價:$3,999<br />
+                    專案內容:<br />
+                    雅緻家庭房住宿一晚
+                    翌日雙人自助早餐
+
+                    一泊二食<br />
+                    專案售價:$4,999<br />
+                    雅緻家庭房住宿一晚
+                    翌日雙人自助早餐
+                    皇樓中餐廳雙人晚餐
+
+                    加人加價:<br />
+                    不分成人或孩童，每加一人含早餐NT$399；早餐加晚餐NT$999
+
+                    加碼優惠:<br />
+                    當月壽星入住，免費升等至豪華家庭房
+                    9-11月入住加贈摩天輪搭乘券
+                    
+                    <h4 class="sub-title">票卷介紹 :</h4>
+                    <p class="sub-descripts">需要按照預訂日期及當天開放時間內使用，逾期失效</p>
+
+                    <h4 class="sub-title">購買須知 :</h4>
+                    <p class="sub-descripts">此專案限持有中華民國國民身分證、台灣護照或外僑居留證者使用，入住時若無法出示相關證件，須於飯店現場補足差額。</p>
+                 </p>
+            </div>
         </div>
     </div>
 </div>
 
-<div class="row ">
-    <h2 class="col-12">體驗地點</h2>
-    <div class="border border-secondary">
-        <h4 class="col-12 ">
-            地點名稱:和逸飯店‧台南西門館
-            <h5>地址: Taiwan Tainan City West Central District Section 1 Ximen Road 和逸飯店‧台南西門館</h5>
-        </h4>
-        <div class="col-12 border border-secondary">
-            <img src="./MAP.PNG" alt="google map">
+
+<div class="container rating">
+    <h2 class="title">已購評價</h2>
+    <hr>
+    <div class="card">
+        <div class="row">
+            <div class="col-md-2">
+                <img class="img-user" src="~/lib/image/mountain.jpeg" />
+            </div>
+            <div class="col-md-10">
+                <div class="card-body">
+                    <h5 class="card-title">陳先生</h5>
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    <p>2023/08/04</p>
+                    <div>
+                        <p class="card-text">設備先進，平板多功能。 服務人員都很親切的打招呼.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="row">
+            <div class="col-md-2">
+                <img class="img-user" src="~/lib/image/mountain.jpeg" />
+            </div>
+            <div class="col-md-10">
+                <div class="card-body">
+                    <h5 class="card-title">黃先生</h5>
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    <p>2023/08/04</p>
+                    <div>
+                        <p class="card-text">設備先進，平板多功能。 服務人員都很親切的打招呼.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="row">
+            <div class="col-md-2">
+                <img class="img-user" src="~/lib/image/mountain.jpeg" />
+            </div>
+            <div class="col-md-10">
+                <div class="card-body">
+                    <h5 class="card-title">王先生</h5>
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    <p>2023/08/04</p>
+                    <div>
+                        <p class="card-text">設備先進，平板多功能。 服務人員都很親切的打招呼.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="row">
+            <div class="col-md-2">
+                <img class="img-user" src="~/lib/image/mountain.jpeg" />
+            </div>
+            <div class="col-md-10">
+                <div class="card-body">
+                    <h5 class="card-title">李先生</h5>
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    <p>2023/08/04</p>
+                    <div>
+                        <p class="card-text">設備先進，平板多功能。 服務人員都很親切的打招呼.</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
-</div>
 <hr>
