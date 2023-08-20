@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace TravelProject1._0.Models;
 
@@ -18,9 +19,10 @@ public partial class User
     public DateTime? Birthday { get; set; }
 
     public int? Age { get; set; }
-
+    [Required]
+    [EmailAddress]
     public string? Email { get; set; }
-
+    [Required]
     public string Password { get; set; } = null!;
 
     public int? Points { get; set; }
