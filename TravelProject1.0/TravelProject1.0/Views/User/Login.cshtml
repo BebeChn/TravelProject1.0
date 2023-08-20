@@ -1,0 +1,26 @@
+﻿
+@section Styles
+{
+    
+}
+
+@{
+    ViewData["Title"] = "會員登入";
+}
+
+<h1>會員登入</h1>
+
+
+  
+    <div class="pico">
+        <form action="@Url.Action("Login")" method="post" class="login">
+            <h1 class="font">登入</h1>
+            <label>帳號:</label>
+            <input class="inputstyle" type="text" placeholder="請輸入帳號" id="UserID" name="UserID" required="required" />
+            <label>密碼:</label>
+        <input class="inputstyle" type="Password" placeholder="請輸入密碼" id="password" name="password" required="required" />
+            <input class="submitstyle" type="submit" value="提交" />
+         
+        </form>
+      </div>
+

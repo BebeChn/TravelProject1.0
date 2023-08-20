@@ -9,5 +9,8 @@ namespace TravelProject1._0.Areas.Admin.Controllers
         {
             return View();
         }
+
+        
+
     }
 }
