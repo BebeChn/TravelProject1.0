@@ -15,48 +15,30 @@ namespace TravelProject1._0
         {
             var builder = WebApplication.CreateBuilder(args);
 
-          
+
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-            builder.Services.AddDbContext<TravelUserContext>(options =>
-                options.UseSqlServer(connectionString));
+
+          
+
+            builder.Services.AddDbContext<TravelProjectContext>(options => {
+                options.UseSqlServer(builder.Configuration.GetConnectionString("TravelProject"));
+            });
 
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-           
-
-            builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<TravelUserContext>();
-
+         
             builder.Services.AddTransient<IEmailSender, EmailSender>();
 
             builder.Services.AddControllersWithViews();
 
-            builder.Services.Configure<IdentityOptions>(options =>
-            {
-                options.Password.RequireDigit = true;
-                options.Password.RequireLowercase = true;
-                options.Password.RequireNonAlphanumeric = true;
-                options.Password.RequireUppercase = true;
-                options.Password.RequiredLength = 8;
-                options.Password.RequiredUniqueChars = 1;
-                options.SignIn.RequireConfirmedEmail = true;
-                options.SignIn.RequireConfirmedAccount = true;
-
-                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
-                options.Lockout.MaxFailedAccessAttempts = 3;
-                options.Lockout.AllowedForNewUsers = true;
-
-                options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
-                options.User.RequireUniqueEmail = true;
-            });
-            builder.Services.ConfigureApplicationCookie(options =>
-            {
-                options.Cookie.HttpOnly = true;
-                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-                options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
-                options.LoginPath = "/Identity/Account/Login";
-                options.AccessDeniedPath = "/Identity/Account/AccessDenied";
-                options.SlidingExpiration = true;
-            });
+            //builder.Services.ConfigureApplicationCookie(options =>
+            //{
+            //    options.Cookie.HttpOnly = true;
+            //    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+            //    options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+            //    options.LoginPath = "/Identity/Account/Login";
+            //    options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+            //    options.SlidingExpiration = true;
+            //});
 
             builder.Services.AddSession();
             var app = builder.Build();
@@ -77,7 +59,7 @@ namespace TravelProject1._0
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            
             app.UseSession();
 
             app.UseAuthorization();
@@ -90,7 +72,7 @@ namespace TravelProject1._0
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
-            app.MapRazorPages();
+           
 
             app.Run();
         }

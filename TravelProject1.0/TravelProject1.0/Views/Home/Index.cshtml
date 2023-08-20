@@ -1,4 +1,4 @@
-﻿@model IEnumerable<TravelProject1._0.Models.Product>
+﻿ @model IEnumerable<TravelProject1._0.Models.Product>
 
 
 @{
@@ -10,8 +10,8 @@
     <link href="~/lib/toastr.js/toastr.min.css" rel="stylesheet" />
 }
 <h1 class="display-4"></h1>
-@*旋轉木馬*@
-<div id="carouselExampleIndicators" class="carousel slide">
+@* 旋轉木馬
+ *@ <div id="carouselExampleIndicators" class="carousel slide">
     <div class="carousel-indicators">
         <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
         <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
@@ -93,9 +93,9 @@
 </div>
 </div>
 
-@* <div class="row" style="margin-top:10px">
+ <div class="row" style="margin-top:10px">
     <div>■熱門景點 </div>
-@foreach(var item in Model){
+@* @foreach(var item in Model){
 
             <div class="col-md-3">
             <div class="card" style="width: 15rem;">
@@ -110,8 +110,8 @@
             </div>
             </div>
         }
-</div> *@
-
+</div>
+ *@
 
 
     <div id="app">
@@ -169,6 +169,6 @@
 
             }
         });
-        // var app2 = Vue.createApp(app).mount("#app");
+      // var app2 = Vue.createApp(app).mount("#app");
     </script>
-}
+} 
