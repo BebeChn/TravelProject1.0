@@ -15,7 +15,10 @@ namespace TravelProject1._0.Models.DTO
         [Required(ErrorMessage = "密碼為必填")]
         public string Password { get; set; } = null!;
 
-        
+        public string? Gender { get; set; }
+
+        public string Phone { get; set; } = null!;
+
         public bool 記住我 { get; set; } 
     }
 }
