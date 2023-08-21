@@ -36,7 +36,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers
             return View();
         }
 
-        //查詢
+
         [HttpGet]
         public async Task<IEnumerable<AdminDTO>> AdminGET()
         {
@@ -50,32 +50,98 @@ namespace TravelProject1._0.Areas.Admin.Controllers
                 Email = x.Email,
             });
         }
-        //api/Admin/AdminPOST
-        //關鍵字
+
         [HttpPost]
-        public async Task<IEnumerable<AdminDTO>> AdminPOST(AdminDTO AdminDTO)
+        public async Task<IEnumerable<AdminDTO>> AdminSearch(AdminDTO AdminDTO)
         {
-            return _db.Users.Where(y=>
-            y.UserId== AdminDTO.UserId||
-            y.Name.Contains(AdminDTO.Name)||
-            y.Gender.Contains( AdminDTO.Gender)||
-            y.Address.Contains(AdminDTO.Address)||
+            return _db.Users.Where(y =>
+            y.UserId == AdminDTO.UserId ||
+            y.Name.Contains(AdminDTO.Name) ||
+            y.Gender.Contains(AdminDTO.Gender) ||
+            y.Address.Contains(AdminDTO.Address) ||
             y.Email.Contains(AdminDTO.Email)
             ).Select(x => new AdminDTO
-            {   
+            {
                 UserId = x.UserId,
                 Name = x.Name,
-                Address = x.Address,
                 Gender = x.Gender,
+                Address = x.Address,
                 Email = x.Email,
             });
+        }
 
-             
+        [HttpGet("{id}")]
+        public async Task<AdminDTO> AdminGETID(int id)
+        {
+            if (_db.Users == null)
+            {
+                return null;
+            }
+            var User = await _db.Users.FindAsync(id);
+            AdminDTO UserDTO = new AdminDTO
+            {
+                UserId = User.UserId,
+                Name = User.Name,
+                Gender = User.Gender,
+                Address = User.Address,
+                Email = User.Email,
+            };
+            return UserDTO;
         }
 
 
+        [HttpPut("{id}")]
+        public async Task<string> AdminPUT(int id, AdminDTO AdminDTO)
+        {
+            if (id != AdminDTO.UserId)
+            {
+                return "修改失敗";
+            }
+            var User = await _db.Users.FindAsync(id);
+            User.Name = AdminDTO.Name;
+            User.Gender = AdminDTO.Gender;
+            User.Address = AdminDTO.Address;
+            User.Email = AdminDTO.Email;
+            _db.Entry(User).State = EntityState.Modified;
+
+            try
+            {
+                await _db.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                    throw;
+            }
+
+            return "成功";
+        }
 
 
+        
+
+        [HttpDelete("{id}")]
+        public async Task<string> AdminDELETE(int id)
+        {
+            if (_db.Users == null)
+            {
+                return "刪除失敗";
+            }
+            var Users = await _db.Users.FindAsync(id);
+            if (Users == null)
+            {
+                return "刪除失敗";
+            }
+            try
+            {
+                _db.Users.Remove(Users);
+                await _db.SaveChangesAsync();
+            }
+            catch
+            {
+                return "刪除關聯失敗";
+            }
+            return "刪除成功";
+        }
 
     }
 }

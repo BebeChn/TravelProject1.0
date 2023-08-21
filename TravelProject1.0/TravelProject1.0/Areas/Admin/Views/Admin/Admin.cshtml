@@ -29,7 +29,7 @@
                 @*<img src="./pic/search.png" width="100" height="60">*@
                 <!--輸入關鍵字-->
                 <input class="form-control" type="text" placeholder="Search" aria-label="Search"
-                    v-model="Filter"    @@keyup="filterUser">
+                       v-model="filter" @@keyup="filterUser">
                 <button class="btn btn-outline-secondary " style="color :#1e2154" type="submit">
                     <Fieldset>搜尋</Fieldset>
                 </button>
@@ -53,6 +53,7 @@
         <!--顯示管理內容-->
         <div class="col-10">
             <table class="table table-bordered">
+                <thead>
                 <tr>
                     <td>ID</td>
                     <td>姓名</td>
@@ -60,13 +61,19 @@
                     <td>地址</td>
                     <td>信箱</td>
                 </tr>
+                </thead>
+                <tbody>
                 <tr v-for="item in AdminDTOes">
                     <template v-if="item.Edit==true">
                         <td>{{item.userId}}</td>
-                        <td><input v-model="item.Name" /></td>
-                        <td><input v-model="item.Gender" /></td>
-                        <td><input v-model="item.Address" /></td>
-                        <td><input v-model="item.Email" /></td>
+                        <td><input v-model="item.name" /></td>
+                        <td><input v-model="item.gender" /></td>
+                        <td><input v-model="item.address" /></td>
+                        <td><input v-model="item.email" /></td>
+                        <td>
+                            <button type="button" class="btn btn-success" @@click="update(item)">更新</button>
+                            <button type="button" class="btn btn-info" @@click="cancel">取消</button>
+                        </td>
                     </template>
                     <template v-else>
                         <td>{{item.userId}}</td>
@@ -74,8 +81,13 @@
                         <td>{{item.gender}}</td>
                         <td>{{item.address}}</td>
                         <td>{{item.email}}</td>
+                        <td>
+                            <button type="button" class="btn btn-primary" @@click="edit(item.UserId)">修改</button>
+                                <button type="button" class="btn btn-danger" @@click="deleteUsr(item.userId)">刪除</button>
+                        </td>
                     </template>
                 </tr>
+                </tbody>
             </table>
         </div>
         <!--顯示更多內容-->
@@ -97,11 +109,15 @@
             data(){
                 return{
                     AdminDTOes:[],
-                        Filter:'',
-                        Name:'',
-                        Gender:'',
-                        Address:'',
-                        Email:'',
+                        filter:'',
+                        name:'',
+                        gender:'',
+                        address:'',
+                        email:'',
+                        originalname:'',
+                        originalgender:'',
+                        originaladdress:'',
+                        originalemail: '',
                 };
             },
              mounted:function(){
@@ -110,13 +126,14 @@
                     _this.filterUser();
             },
          methods:{
-            filterUser: function () {
+                 filterUser: function () {
                         //alert("篩選");
                         let _this=this;
                         var request={};
+                        //axios.GET(`${baseAddress}/api/Admin/AdminGET`)
                         request.UserId=isNaN(_this.filterUser)?-1:Number(_this.Filter);
-                        request.Name = request.Address = request.Email;
-                        axios.post(`${baseAddress}/api/Admin/AdminGET`, request)
+                        request.Name = request.Address = request.Email = _this.filter;
+                        axios.post(`${baseAddress}/api/Admin/AdminSearch`, request)
                         .then(response=>{
                             _this.AdminDTOes=response.data;
                             for (var i = 0; i < _this.AdminDTOes.Length;i++){
@@ -126,16 +143,68 @@
                         })
                         .catch(err => {
                             alert(err);
+                         });
+                       },
+                    edit: function (UserId) {
+                         //alert("edit");
+                         let _this=this;
+                        for (var i = 0; i < _this.AdminDTOes.length; i++) {
+                            var item = _this.AdminDTOes[i];
+                            if (item.UserId == UserId) {
+                                item.Edit = true;
+                                _this.originalname =  item.name
+                                _this.originalgender = item.gender
+                                _this.originaladdress =item.address
+                                _this.originalemail = item.email
+                            }
+                        }
+                    },
+                update: function (item) {
+                        //alert("update");
+                        let _this=this;
+                        var request={};
+
+                        request.UserId = item.userId;
+                　　    request.name = item.name;
+                        request.gender = item.gender;
+                        request.address = item.address;
+                        request.email = item.email;
+                        axios.put(`${baseAddress}/api/Admin/AdminPUT/${item.userId}`, request).then(response=>{
+                            alert(response.data);
+                            _this.filterUser();
+                        }).catch(err=>{
+                            alert(err);
                         });
-                        
-                 },
-                edit:function(){
-                         alert("edit");
-                },
-                deleteUser:function(){
-                        alert("delete");
+                    },
+                    cancel: function () {
+                        //alert("cancel")
+                        let _this=this;
+                        for (var i = 0; i < _this.AdminDTOes.length; i++) {
+                            var item = _this.AdminDTOes[i];
+                            if (item.Edit == true) {
+                                item.Edit = false;
+                                item.name = _this.originalname
+                                item.gender = _this.originalgender
+                                item.address = _this.originaladdress
+                                item.email = _this.originalemail
+                            }
+                        }
+                    },
+                    deleteUsr: function (userId) {
+                        //alert("delete");
+                        var ret=confirm("確定要刪除嗎");
+                        let _this=this;
+
+                        if(ret==true){
+                            axios.delete(`${baseAddress}/api/Admin/AdminDELETE/${userId}`).then(response => {
+                                alert(response.data);
+                                _this.filterUser();
+                            }).catch(err => {
+                                alert(err);
+                            })
+                        }
+                    },
                 }
-            }
         };
 
             var app = Vue.createApp(vueApp).mount("#app");
