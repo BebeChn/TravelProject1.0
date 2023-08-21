@@ -1,6 +1,6 @@
 .accountstyle {
     display: block;
-    margin: 20px auto;
+    margin: 20px;
     text-align: center;
     background-color: #fad384;
     padding: 12px;
@@ -8,13 +8,13 @@
     border-radius: 22px;
     outline: none;
     color: rgb(19, 23, 27);
-    width: 250px;
-    height:150px;
+    width: 200px;
+    height:50px;
 }
 
 .passwordstyle {
     display: block;
-    margin: 20px auto;
+    margin: 20px ;
     text-align: center;
     background-color: #fad384;
     padding: 12px;
@@ -22,8 +22,8 @@
     border-radius: 22px;
     outline: none;
     color: rgb(19, 23, 27);
-    width: 250px;
-    height: 150px;
+    width: 200px;
+    height: 50px;
 }
 
 .dup {

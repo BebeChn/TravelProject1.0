@@ -34,19 +34,20 @@ namespace TravelProject1._0.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(UserDTO user)
         {
-            var userselect = _context.Users.Where(u => (u.Email == user.Email && u.Password == user.Password)).SingleOrDefault();
+            if (ModelState.IsValid) {
+                var userselect = _context.Users.Where(u => (u.Email == user.Email && u.Password == user.Password)).SingleOrDefault();
 
-            if (userselect != null)
-            {
-                var claims = new List<Claim>()//身份驗證訊息
-                    {
+                if (userselect != null)
+                 {
+                      var claims = new List<Claim>()//身份驗證訊息
+                      {
                         new Claim(ClaimTypes.Name,$"{user.Name}"),
                         new Claim("Email",user.Email),
 
-                    };
+                };
 
-                ClaimsPrincipal userPrincipal = new ClaimsPrincipal(new ClaimsIdentity(claims, "Customer"));
-                HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, userPrincipal, new AuthenticationProperties
+               ClaimsPrincipal userPrincipal = new ClaimsPrincipal(new ClaimsIdentity(claims, "Customer"));
+               HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, userPrincipal, new AuthenticationProperties
                 {
                     ExpiresUtc = DateTime.UtcNow.AddMinutes(30),//過期時間;30分鐘
 
@@ -58,7 +59,8 @@ namespace TravelProject1._0.Controllers
             {
                 base.ViewBag.Msg = "用戶或密碼錯誤";
             }
-            return await Task.FromResult<IActionResult>(View());
+            
+            }return await Task.FromResult<IActionResult>(View());
         }
         public async Task<IActionResult> Logout()
         {
