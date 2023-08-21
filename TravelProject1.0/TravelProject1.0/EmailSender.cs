@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity.UI.Services;
-using System;
-using System.IO;
-using System.Linq;
+using Microsoft.Extensions.Options;
 using System.Net;
 using System.Net.Mail;
-using System.Threading.Tasks;
+
 
 namespace TravelProject1._0
 {
@@ -32,7 +30,9 @@ namespace TravelProject1._0
             }
 			
 
-				
-        
+         
     }
+
+
 }
+

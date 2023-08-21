@@ -14,17 +14,26 @@
         <form action="@Url.Action("Login")" method="post" class="login">
             <h1 class="font">登入</h1>
         
-        <label asp-for="@Model.Email">帳號:</label>
-        <input class="inputstyle" type="text" placeholder="請輸入帳號" asp-for="@Model.Email" />
+        <label asp-for="@Model.Email" class="labelstyle">帳號:</label>
+        <input class="accountstyle" type="text" placeholder="請輸入帳號" asp-for="@Model.Email" />
         <span asp-validation-for="@Model.Email" class="text-danger"></span>
        
-        <label  asp-for="@Model.Password">密碼:</label>
-        <input class="inputstyle" type="Password" placeholder="請輸入密碼" asp-for="@Model.Password" />
+        <label asp-for="@Model.Password" name="password" class="labelstyle">密碼:</label>
+        <input class="passwordstyle" type="Password" placeholder="請輸入密碼" asp-for="@Model.Password" />
         <span asp-validation-for="@Model.Password" class="text-danger"></span>
-       
-        <input class="submitstyle" type="submit" value="提交" />
 
-        <input value="註冊" />
+        <div class="checkbox mb-3">
+            <label asp-for="@Model.RememberMe" class="labelstyle">
+                <input class="form-check-input" asp-for="@Model.RememberMe" />
+                @Html.DisplayNameFor(m=>m.RememberMe)
+            </label >
+            <a id="forgot-password">忘記密碼</a>
+
+        </div>
+
+        <input class="dup" type="submit" value="登入" />
+
+        <input class="dup" value="註冊" type="submit" />
         </form>
       </div>
 
