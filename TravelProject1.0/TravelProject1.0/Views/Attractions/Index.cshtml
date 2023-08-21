@@ -3,10 +3,10 @@
 }
 
 <div class="container">
-        <img class="img-title" src="~/lib/image/mountain.jpeg" />
+    <img class="img-title" src="~/lib/image/mountain.jpeg" />
 </div>
 
-<div class="container attractions">
+<div id="app" class="container attractions">
     <div class="row">
         <div class="col-md-3">
             <div class="accordion" id="accordionExample">
@@ -46,94 +46,48 @@
 
             @*景點商品*@
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-4" v-for="a in attractions">
                     <div class="card">
                         <img class="img-attractions" src="~/lib/image/mountain3.jpeg" />
                         <div class="card-body">
-                            <h4 class="card-title">苗栗觀光地區門票</h4>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                            <h4 class="card-title">{{a.name}}</h4>
+                            <p class="card-text">{{a.mainDescribe}}</p>
                             <span class="sell">已售出人數：</span>
                         </div>
                         <div class="card-end">
-                            <span class="attractions-price">NT799</span>
-                            <button class="btn btn-attractions">查看門票</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card">
-                        <img class="img-attractions" src="~/lib/image/mountain3.jpeg" />
-                        <div class="card-body">
-                            <h4 class="card-title">桃園景點</h4>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                            <span class="sell">已售出人數：</span>
-                        </div>
-                        <div class="card-end">
-                            <span class="attractions-price">NT799</span>
-                            <button class="btn btn-attractions">查看門票</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card">
-                        <img class="img-attractions" src="~/lib/image/mountain3.jpeg" />
-                        <div class="card-body">
-                            <h4 class="card-title">宜蘭景點</h4>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                            <span class="sell">已售出人數：</span>
-                        </div>
-                        <div class="card-end">
-                            <span class="attractions-price">NT799</span>
+                            <span class="attractions-price">NT {{a.price}}</span>
                             <button class="btn btn-attractions">查看門票</button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="card">
-                        <img class="img-attractions" src="~/lib/image/mountain3.jpeg" />
-                        <div class="card-body">
-                            <h4 class="card-title">彰化八卦山一日遊</h4>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                            <span class="sell">已售出人數：</span>
-                        </div>
-                        <div class="card-end">
-                            <span class="attractions-price">NT799</span>
-                            <button class="btn btn-attractions">查看門票</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card">
-                        <img class="img-attractions" src="~/lib/image/mountain3.jpeg" />
-                        <div class="card-body">
-                            <h4 class="card-title">台南甜死人吃吃走走</h4>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                            <span class="sell">已售出人數：</span>
-                        </div>
-                        <div class="card-end">
-                            <span class="attractions-price">NT799</span>
-                            <button class="btn btn-attractions">查看門票</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card">
-                        <img class="img-attractions" src="~/lib/image/mountain3.jpeg" />
-                        <div class="card-body">
-                            <h4 class="card-title">綠島</h4>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                            <span class="sell">已售出人數：</span>
-                        </div>
-                        <div class="card-end">
-                            <span class="attractions-price">NT799</span>
-                            <button class="btn btn-attractions">查看門票</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </div>
+
+@section Scripts{
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+    <script>
+        var baseAddress = "https://localhost:7025";
+
+        var app = new Vue({
+            el: '#app',
+            data: {
+                attractions: []
+            },
+            mounted: function () {
+                var _this = this;
+                fetch(`${baseAddress}/api/AttractionsApi/GetCategoryByAttractions`, { method: 'GET' })
+                    .then(response => {
+                        if (response.ok) return response.json();
+                    }).then(data => {
+                        _this.attractions = data;
+                        console.log(data);
+                    }).catch(error => {
+                        alert(error);
+                    })
+            }
+        })
+    </script>
+}
