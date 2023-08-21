@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel;
 
-namespace TravelProject1._0.ViewModel
+namespace TravelProject1._0.Models.DTO
 {
-    public class AdminViewModel
+    public class AdminDTO
     {
         [DisplayName("ID")]
         public int UserId { get; set; }
@@ -14,6 +14,5 @@ namespace TravelProject1._0.ViewModel
         public string? Address { get; set; }
         [DisplayName("信箱")]
         public string? Email { get; set; }
-
     }
 }
