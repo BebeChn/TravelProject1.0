@@ -1,4 +1,4 @@
-﻿
+﻿@model TravelProject1._0.Models.DTO.UserDTO
 @{
     ViewData["Title"] = "Register";
 }
@@ -9,24 +9,24 @@
     <div class="panel-heading"></div>
     <div class="panel-body">
         <div class="form-group">
-            <label>Email:</label>
-            <input type="text" class="form-control">
+            <label asp-for="@Model.Email">Email:</label>
+            <input asp-validation-for="" type="text" class="form-control">
         </div>
         <div class="form-group">
-            <label>密碼:</label>
-            <input type="password" class="form-control">
+                <label asp-for="@Model.Password">密碼:</label>
+            <input asp-validation-for="" type="password" class="form-control">
         </div>
         <div class="form-group">
-            <label>姓名:</label>
-            <input type="text" class="form-control">
+                <label asp-for="@Model.Name">姓名:</label>
+            <input asp-validation-for="" type="text" class="form-control">
         </div>
         <div class="form-group">
-            <label>性別:</label>
+                <label asp-for="@Model.Gender">性別:</label>
             <input type="checkbox"/>男
             <input type="checkbox" />女
         </div>
         <div class="form-group">
-            <label>Phone:</label>
+            <label asp-for="@Model.Phone">Phone:</label>
             <input type="text" class="form-control">
         </div>
 

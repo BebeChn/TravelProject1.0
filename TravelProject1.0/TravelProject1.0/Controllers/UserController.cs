@@ -7,6 +7,7 @@ using TravelProject1._0.Models.DTO;
 using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore;
 using System.Text;
+using NuGet.Protocol;
 
 namespace TravelProject1._0.Controllers
 {
@@ -70,34 +71,34 @@ namespace TravelProject1._0.Controllers
             return View();
         }
         [HttpPost]
-       public IActionResult Register(string username, string password)
+        public IActionResult Register(UserDTO user)
         {
             // 檢查用戶名與用法是否為空
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+            if (string.IsNullOrEmpty(user.Name) || string.IsNullOrEmpty(user.Password))
             {
-                ViewBag.Message = "Username and password are required.";
+                ViewBag.Message = "帳號或密碼已被使用";
                 return View();
             }
             string salt = GenerateSalt();
 
-                // 對密碼進行加鹽
-            string hashedPassword = HashPassword(password, salt);
+            // 對密碼進行加鹽
+            string hashedPassword = HashPassword(user.Password, salt);
 
-                 // 創建用戶實體
-                 User newUser = new User
-                 {
-                 Name = username,
-                 PasswordHash = hashedPassword,
-                 Salt = salt
-                 };
+            // 創建用戶實體
+            User newUser = new User
+            {
+                Name = user.Name,
+                PasswordHash =user.PasswordHash,
+                Salt =user.Salt,
+            };
 
             // 添加用戶到資料庫
-                     _context.Users.Add(newUser);
-                     _context.SaveChanges();
+            _context.Users.Add(newUser);
+            _context.SaveChanges();
 
-                   ViewBag.Message = "User registered successfully.";
-                    return View();
-        }   
+            ViewBag.Message = "會員成功註冊.";
+            return View();
+        }  
         // 生成隨機鹽
         private string GenerateSalt()
         {
@@ -124,6 +125,17 @@ namespace TravelProject1._0.Controllers
                 return Convert.ToBase64String(hashBytes);
             }
         }
+        public IActionResult SendEmail(string username, string password)
+        {
+            return View();
+        }
+        public IActionResult ResetPassword(string username, string password)
+        {
+            return View();
+        }
+        
+
+        
     }
 }
 
