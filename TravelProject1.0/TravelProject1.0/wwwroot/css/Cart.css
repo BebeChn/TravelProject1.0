@@ -1,0 +1,27 @@
+﻿table thead tr th {
+    text-align: center;
+}
+
+table tbody tr td {
+    text-align: center;
+}
+
+.inp-checkbox {
+    width: 50%;
+    height: 50%;
+}
+
+.btn-delete {
+    background-color: red;
+    color: white;
+}
+
+.total {
+    text-align: end;
+}
+
+.btn-buy {
+    text-align: end;
+    background-color: blue;
+    color: white;
+}
