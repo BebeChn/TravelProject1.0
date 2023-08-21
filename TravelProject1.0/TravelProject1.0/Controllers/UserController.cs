@@ -4,13 +4,20 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using TravelProject1._0.Models;
 using TravelProject1._0.Models.DTO;
-
+using System.Security.Cryptography;
+using Microsoft.EntityFrameworkCore;
+using System.Text;
+using NuGet.Protocol;
+using Microsoft.CodeAnalysis.Elfie.Diagnostics;
+using Microsoft.Data.SqlClient;
+using System.Data;
 
 namespace TravelProject1._0.Controllers
 {
-
+  
     public class UserController : Controller
     {
+       
 
         private readonly ILogger<HomeController> _logger;
         private readonly TravelProjectContext _context;
@@ -31,19 +38,27 @@ namespace TravelProject1._0.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(UserDTO user)
         {
-            var userselect = _context.Users.Where(u => (u.Email == user.Email && u.Password == user.Password)).SingleOrDefault();
+            if (ModelState.IsValid) {
+                var userselect = _context.Users.Select(u => u.Email == user.Email).SingleOrDefault();
 
-            if (userselect != null)
-            {
-                var claims = new List<Claim>()//身份驗證訊息
-                    {
+                if (userselect == null)
+                {
+                    return View("Login");
+
+                }
+                string pw =Request.Form["password"].ToString();
+                if (user.Password== HashPassword(pw,user.Salt))
+                {
+                
+                    var claims = new List<Claim>()//身份驗證訊息
+                      {
                         new Claim(ClaimTypes.Name,$"{user.Name}"),
                         new Claim("Email",user.Email),
 
-                    };
+                       };
 
-                ClaimsPrincipal userPrincipal = new ClaimsPrincipal(new ClaimsIdentity(claims, "Customer"));
-                HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, userPrincipal, new AuthenticationProperties
+               ClaimsPrincipal userPrincipal = new ClaimsPrincipal(new ClaimsIdentity(claims, "Customer"));
+               HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, userPrincipal, new AuthenticationProperties
                 {
                     ExpiresUtc = DateTime.UtcNow.AddMinutes(30),//過期時間;30分鐘
 
@@ -55,7 +70,8 @@ namespace TravelProject1._0.Controllers
             {
                 base.ViewBag.Msg = "用戶或密碼錯誤";
             }
-            return await Task.FromResult<IActionResult>(View());
+            
+            }return await Task.FromResult<IActionResult>(View());
         }
         public async Task<IActionResult> Logout()
         {
@@ -67,24 +83,74 @@ namespace TravelProject1._0.Controllers
         {
             return View();
         }
-        //public IActionResult Register(User UserID)
-        //{
+        [HttpPost]
+        public IActionResult Register(UserDTO user)
+        {
+            // 檢查用戶名與用法是否為空
+            if (string.IsNullOrEmpty(user.Name) || string.IsNullOrEmpty(user.Password))
+            {
+                ViewBag.Message = "帳號或密碼已被使用";
+                return View();
+            }
+            string salt = GenerateSalt();
 
-        //    if (ModelState.IsValid)
-        //    {
+            // 對密碼進行加鹽
+            string hashedPassword = HashPassword(user.Password, salt);
 
-        //        return View();
-        //    }
-        //    return View();
-        //    //var user = _context.User.Where(m => m.Id == User.UserID).FirstOrDefault();
-        //    //if (user == null)
-        //    //{
-        //    //    _context.UserDTO.Add(user);
-        //    //    _context.SaveChanges();
-        //    //    return RedirectToAction("Login");
-        //    //}
-        //    //return View();
-        //}
+            // 創建用戶實體
+            User newUser = new User
+            {
+                Name = user.Name,
+                Gender = user.Gender,
+                Email = user.Email,
+                PasswordHash = hashedPassword,
+                Salt =salt,
+            };
+
+            // 添加用戶到資料庫
+            _context.Users.Add(newUser);
+            _context.SaveChanges();
+
+            ViewBag.Message = "會員成功註冊.";
+            return View();
+        }  
+        // 生成隨機鹽
+        private string GenerateSalt()
+        {
+            byte[] saltBytes = new byte[16];
+            using (var ran = RandomNumberGenerator.Create())
+            {
+                ran.GetBytes(saltBytes);
+            }
+            
+            return Convert.ToBase64String(saltBytes);
+        }
+
+        // 使用SHA-256哈希密碼並加鹽
+        private string HashPassword(string password, string salt)
+        {
+            using (var SHA256 = SHA256Managed.Create())
+            {
+                // 將密碼轉換成二進位
+                string passwordWithSalt = password + salt;
+                byte[] passwordBytes = Encoding.UTF8.GetBytes(passwordWithSalt);
+                // 計算密碼哈希
+                byte[] hashBytes = SHA256.ComputeHash(passwordBytes);
+                // 將密碼哈希轉換為Base64编碼的字串
+                return Convert.ToBase64String(hashBytes);
+            }
+        }
+        public IActionResult SendEmail(string username, string password)
+        {
+            return View();
+        }
+        public IActionResult ResetPassword(string username, string password)
+        {
+            return View();
+        }
+        
+
+        
     }
 }
 
