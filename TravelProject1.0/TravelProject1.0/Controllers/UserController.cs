@@ -8,12 +8,16 @@ using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore;
 using System.Text;
 using NuGet.Protocol;
+using Microsoft.CodeAnalysis.Elfie.Diagnostics;
+using Microsoft.Data.SqlClient;
+using System.Data;
 
 namespace TravelProject1._0.Controllers
 {
-
+  
     public class UserController : Controller
     {
+       
 
         private readonly ILogger<HomeController> _logger;
         private readonly TravelProjectContext _context;
@@ -35,16 +39,23 @@ namespace TravelProject1._0.Controllers
         public async Task<IActionResult> Login(UserDTO user)
         {
             if (ModelState.IsValid) {
-                var userselect = _context.Users.Where(u => (u.Email == user.Email && u.Password == user.Password)).SingleOrDefault();
+                var userselect = _context.Users.Select(u => u.Email == user.Email).SingleOrDefault();
 
-                if (userselect != null)
-                 {
-                      var claims = new List<Claim>()//身份驗證訊息
+                if (userselect == null)
+                {
+                    return View("Login");
+
+                }
+                string pw =Request.Form["password"].ToString();
+                if (user.Password== HashPassword(pw,user.Salt))
+                {
+                
+                    var claims = new List<Claim>()//身份驗證訊息
                       {
                         new Claim(ClaimTypes.Name,$"{user.Name}"),
                         new Claim("Email",user.Email),
 
-                };
+                       };
 
                ClaimsPrincipal userPrincipal = new ClaimsPrincipal(new ClaimsIdentity(claims, "Customer"));
                HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, userPrincipal, new AuthenticationProperties
@@ -90,8 +101,10 @@ namespace TravelProject1._0.Controllers
             User newUser = new User
             {
                 Name = user.Name,
-                PasswordHash =user.PasswordHash,
-                Salt =user.Salt,
+                Gender = user.Gender,
+                Email = user.Email,
+                PasswordHash = hashedPassword,
+                Salt =salt,
             };
 
             // 添加用戶到資料庫
@@ -105,9 +118,9 @@ namespace TravelProject1._0.Controllers
         private string GenerateSalt()
         {
             byte[] saltBytes = new byte[16];
-            using (var rng = new RNGCryptoServiceProvider())
+            using (var ran = RandomNumberGenerator.Create())
             {
-                rng.GetBytes(saltBytes);
+                ran.GetBytes(saltBytes);
             }
             
             return Convert.ToBase64String(saltBytes);
@@ -116,14 +129,14 @@ namespace TravelProject1._0.Controllers
         // 使用SHA-256哈希密碼並加鹽
         private string HashPassword(string password, string salt)
         {
-            using (var sha256 = SHA256.Create())
+            using (var SHA256 = SHA256Managed.Create())
             {
-                // 将密碼轉換成二進位
+                // 將密碼轉換成二進位
                 string passwordWithSalt = password + salt;
                 byte[] passwordBytes = Encoding.UTF8.GetBytes(passwordWithSalt);
                 // 計算密碼哈希
-                byte[] hashBytes = sha256.ComputeHash(passwordBytes);
-                // 將密碼哈希轉換為Base64编馬的字符串
+                byte[] hashBytes = SHA256.ComputeHash(passwordBytes);
+                // 將密碼哈希轉換為Base64编碼的字串
                 return Convert.ToBase64String(hashBytes);
             }
         }

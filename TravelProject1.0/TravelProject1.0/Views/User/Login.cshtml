@@ -18,7 +18,7 @@
         <input class="accountstyle" type="text" placeholder="請輸入帳號" asp-for="@Model.Email" />
         <span asp-validation-for="@Model.Email" class="text-danger"></span>
        
-        <label asp-for="@Model.Password" class="labelstyle">密碼:</label>
+        <label asp-for="@Model.Password" name="password" class="labelstyle">密碼:</label>
         <input class="passwordstyle" type="Password" placeholder="請輸入密碼" asp-for="@Model.Password" />
         <span asp-validation-for="@Model.Password" class="text-danger"></span>
 
