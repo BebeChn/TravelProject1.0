@@ -25,11 +25,13 @@ namespace TravelProject1._0.Controllers
 
         private readonly ILogger<HomeController> _logger;
         private readonly TravelProjectContext _context;
-        public UserController(ILogger<HomeController> logger, TravelProjectContext context)
+        private readonly EmailSender _sender;
+        public UserController(ILogger<HomeController> logger, TravelProjectContext context, EmailSender sender)
 
         {
             _logger = logger;
             _context = context;
+            _sender = sender;
         }
         public IActionResult Index()
         {
@@ -42,7 +44,7 @@ namespace TravelProject1._0.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(string username, string password)
         {
-            if (ModelState.IsValid) {
+           
                 var userselect = _context.Users.Select(u => u.Email == username).SingleOrDefault();
 
                 if (userselect == null)
@@ -52,14 +54,13 @@ namespace TravelProject1._0.Controllers
                 }
                 string pw = Request.Form["password"].ToString();
                 UserDTO userDTO = new UserDTO();
-                if (password == HashPassword(pw, userDTO.Salt))
+                if (userDTO.PasswordHash== HashPassword(pw, userDTO.Salt))
                 {
 
                     var claims = new List<Claim>()//身份驗證訊息
-                      {
+                     {
                         new Claim(ClaimTypes.Name,$"{userDTO.Name}"),
                         new Claim("Email",userDTO.Email),
-
                        };
 
                     ClaimsPrincipal userPrincipal = new ClaimsPrincipal(new ClaimsIdentity(claims, "Customer"));
@@ -76,7 +77,7 @@ namespace TravelProject1._0.Controllers
                     base.ViewBag.Msg = "用戶或密碼錯誤";
                 }
 
-            } return await Task.FromResult<IActionResult>(View());
+             return await Task.FromResult<IActionResult>(View());
         }
         public async Task<IActionResult> Logout()
         {
@@ -108,6 +109,8 @@ namespace TravelProject1._0.Controllers
                 Name = user.Name,
                 Gender = user.Gender,
                 Email = user.Email,
+                Birthday = user.Birthday,
+                Password=user.Password,
                 PasswordHash = hashedPassword,
                 Salt = salt,
             };
@@ -145,10 +148,7 @@ namespace TravelProject1._0.Controllers
                 return Convert.ToBase64String(hashBytes);
             }
         }
-        public IActionResult SendEmail(string username, string password)
-        {
-            return View();
-        }
+      
         public IActionResult ResetPassword()
         {
             return View();
@@ -161,116 +161,89 @@ namespace TravelProject1._0.Controllers
         {
             return View();
         }
-        //[ValidateAntiForgeryToken]
-        //public ActionResult SendMailToken(/*SendMailTokenIn inModel*/)
+
+        // Custom method to validate the user
+        private bool IsValidUser(string username, string password)
+        {
+            // Perform your custom validation logic here
+            return (username == "example" && password == "password");
+        }
+
+        private void AuthenticateUser(string username)
+        {
+            // Perform your custom user authentication and session setup here
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.Name, username),
+                new Claim(ClaimTypes.Role, "User")
+            };
+
+            var identity = new ClaimsIdentity(claims, "custom");
+            var principal = new ClaimsPrincipal(identity);
+
+            HttpContext.SignInAsync("custom", principal);
+        }
+        [HttpGet]
+        public IActionResult SendVerificationCode()
+        {
+            return View();
+        }
+
+        //[HttpPost]
+        //public async Task<IActionResult> SendVerificationCode(string email)
         //{
-        //SendMailTokenOut outModel = new SendMailTokenOut();
-
-
-        //if (string.IsNullOrEmpty(inModel.UserID))
-        //{
-        //outModel.ErrMsg = "請輸入帳號";
-        //return Json(outModel);
-        //}
-
-
-
-
-
-
-        //    using (SqlConnection conn = new SqlConnection(strConn))
+        //    var user = _context.Users.FirstOrDefault(u => u.Email == email);
+        //    if (user != null)
         //    {
+        //        // Generate a verification code
+        //        string verificationCode = GenerateVerificationCode();
+        //        user.VerificationCode = verificationCode;
+        //        _context.SaveChanges();
 
-        //        conn.Open();
+        //        // Send the verification code via email
+        //        await _sender.SendEmailAsync(email, "Verification Code", $"Your verification code: {verificationCode}");
 
-
-        //        string sql = "select * from Member where UserID = @UserID";
-        //        SqlCommand cmd = new SqlCommand();
-        //        cmd.CommandText = sql;
-        //        cmd.Connection = conn;
-
-        //        // 使用參數化填值
-        //        cmd.Parameters.AddWithValue("@UserID", inModel.UserID);
-
-        //        // 執行資料庫查詢動作
-        //        SqlDataAdapter adpt = new SqlDataAdapter();
-        //        adpt.SelectCommand = cmd;
-        //        DataSet ds = new DataSet();
-        //        adpt.Fill(ds);
-        //        DataTable dt = ds.Tables[0];
-
-        //        if (dt.Rows.Count > 0)
-        //        {
-        //            取出會員信箱
-        //            string UserEmail = dt.Rows[0]["UserEmail"].ToString();
-
-        //            // 取得系統自定密鑰，在 Web.config 設定
-        //            string SecretKey = ConfigurationManager.AppSettings["SecretKey"];
-
-        //            // 產生帳號+時間驗證碼
-        //            string sVerify = inModel.UserID + "|" + DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
-
-        //            // 將驗證碼使用 3DES 加密
-        //            TripleDESCryptoServiceProvider DES = new TripleDESCryptoServiceProvider();
-        //            MD5 md5 = new MD5CryptoServiceProvider();
-        //            byte[] buf = Encoding.UTF8.GetBytes(SecretKey);
-        //            byte[] result = md5.ComputeHash(buf);
-        //            string md5Key = BitConverter.ToString(result).Replace("-", "").ToLower().Substring(0, 24);
-        //            DES.Key = UTF8Encoding.UTF8.GetBytes(md5Key);
-        //            DES.Mode = CipherMode.ECB;
-        //            ICryptoTransform DESEncrypt = DES.CreateEncryptor();
-        //            byte[] Buffer = UTF8Encoding.UTF8.GetBytes(sVerify);
-        //            sVerify = Convert.ToBase64String(DESEncrypt.TransformFinalBlock(Buffer, 0, Buffer.Length)); // 3DES 加密後驗證碼
-
-        //            // 將加密後密碼使用網址編碼處理
-        //            sVerify = HttpUtility.UrlEncode(sVerify);
-
-        //            // 網站網址
-        //            string webPath = Request.Url.Scheme + "://" + Request.Url.Authority + Url.Content("~/");
-
-        //            // 從信件連結回到重設密碼頁面
-        //            string receivePage = "Member/ResetPwd";
-
-        //            // 信件內容範本
-        //            string mailContent = "請點擊以下連結，返回網站重新設定密碼，逾期 30 分鐘後，此連結將會失效。<br><br>";
-        //            mailContent = mailContent + "<a href='" + webPath + receivePage + "?verify=" + sVerify + "'  target='_blank'>點此連結</a>";
-
-        //            // 信件主題
-        //            string mailSubject = "[測試] 重設密碼申請信";
-
-        //            // Google 發信帳號密碼
-        //            string GoogleMailUserID = ConfigurationManager.AppSettings["GoogleMailUserID"];
-        //            string GoogleMailUserPwd = ConfigurationManager.AppSettings["GoogleMailUserPwd"];
-
-        //            // 使用 Google Mail Server 發信
-        //            string SmtpServer = "smtp.gmail.com";
-        //            int SmtpPort = 587;
-        //            MailMessage mms = new MailMessage();
-        //            mms.From = new MailAddress(GoogleMailUserID);
-        //            mms.Subject = mailSubject;
-        //            mms.Body = mailContent;
-        //            mms.IsBodyHtml = true;
-        //            mms.SubjectEncoding = Encoding.UTF8;
-        //            mms.To.Add(new MailAddress(UserEmail));
-        //            using (SmtpClient client = new SmtpClient(SmtpServer, SmtpPort))
-        //            {
-        //                client.EnableSsl = true;
-        //                client.Credentials = new NetworkCredential(GoogleMailUserID, GoogleMailUserPwd);//寄信帳密 
-        //                client.Send(mms); //寄出信件
-        //            }
-        //            outModel.ResultMsg = "請於 30 分鐘內至你的信箱點擊連結重新設定密碼，逾期將無效";
-        //        }
-        //        else
-        //        {
-        //            outModel.ErrMsg = "查無此帳號";
-        //        }
+        //        return RedirectToAction("VerifyCode");
         //    }
-
-        //    // 回傳 Json 給前端
-        //    return Json(outModel);
+        //    else
+        //    {
+        //        ModelState.AddModelError("", "User with this email does not exist.");
+        //        return View();
+        //    }
         //}
 
+        //private string GenerateVerificationCode()
+        //{
+        //    // Generate a random verification code
+        //    return new Random().Next(1000, 9999).ToString();
+        //}
+
+        //[HttpGet]
+        //public IActionResult VerifyCode()
+        //{
+        //    return View();
+        //}
+
+        //[HttpPost]
+        //public IActionResult VerifyCode(string code)
+        //{
+        //    // Validate the verification code
+        //    var user = _context.Users.FirstOrDefault(u => u.VerificationCode == code);
+        //    if (user != null)
+        //    {
+        //        // Code is valid, you can proceed with further actions
+        //        // For example, mark the email as verified or allow password reset
+        //        return RedirectToAction("Index", "Home");
+        //    }
+        //    else
+        //    {
+        //        ModelState.AddModelError("", "Invalid verification code.");
+        //        return View();
+        //    }
+        //}
     }
- }
+
+
+}
 
 
