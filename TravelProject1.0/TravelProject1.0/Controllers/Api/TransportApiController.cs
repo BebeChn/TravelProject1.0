@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using TravelProject1._0.Models;
 using TravelProject1._0.Models.DTO;
 
@@ -22,6 +23,7 @@ namespace TravelProject1._0.Controllers.Api
         {
             return _dbContext.Products.Where(c => c.Id == 3).Select(p => new TransportDTO
             {
+                ProductId = p.ProductId,
                 Name = p.Name,
                 Price = p.Price,
                 MainDescribe = p.MainDescribe,

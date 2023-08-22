@@ -25,7 +25,7 @@ public partial class TravelProjectContext : DbContext
 
     public virtual DbSet<OrderDetail> OrderDetails { get; set; }
 
-    public virtual DbSet<Plan> Plans { get; set; }
+    public virtual DbSet<Plan> Plan { get; set; }
 
     public virtual DbSet<PlanCalendar> PlanCalendars { get; set; }
 
