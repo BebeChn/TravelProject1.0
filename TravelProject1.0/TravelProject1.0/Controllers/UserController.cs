@@ -25,13 +25,13 @@ namespace TravelProject1._0.Controllers
 
         private readonly ILogger<HomeController> _logger;
         private readonly TravelProjectContext _context;
-        private readonly EmailSender _sender;
-        public UserController(ILogger<HomeController> logger, TravelProjectContext context, EmailSender sender)
+        //private readonly EmailSender _sender;
+        public UserController(ILogger<HomeController> logger, TravelProjectContext context/*, EmailSender sender*/)
 
         {
             _logger = logger;
             _context = context;
-            _sender = sender;
+            //_sender = sender;
         }
         public IActionResult Index()
         {
