@@ -42,7 +42,7 @@ namespace TravelProject1._0.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(string username, string password)
         {
-            if (ModelState.IsValid) {
+           
                 var userselect = _context.Users.Select(u => u.Email == username).SingleOrDefault();
 
                 if (userselect == null)
@@ -52,14 +52,13 @@ namespace TravelProject1._0.Controllers
                 }
                 string pw = Request.Form["password"].ToString();
                 UserDTO userDTO = new UserDTO();
-                if (password == HashPassword(pw, userDTO.Salt))
+                if (userDTO.PasswordHash== HashPassword(pw, userDTO.Salt))
                 {
 
                     var claims = new List<Claim>()//身份驗證訊息
-                      {
+                     {
                         new Claim(ClaimTypes.Name,$"{userDTO.Name}"),
                         new Claim("Email",userDTO.Email),
-
                        };
 
                     ClaimsPrincipal userPrincipal = new ClaimsPrincipal(new ClaimsIdentity(claims, "Customer"));
@@ -76,7 +75,7 @@ namespace TravelProject1._0.Controllers
                     base.ViewBag.Msg = "用戶或密碼錯誤";
                 }
 
-            } return await Task.FromResult<IActionResult>(View());
+             return await Task.FromResult<IActionResult>(View());
         }
         public async Task<IActionResult> Logout()
         {
@@ -108,6 +107,8 @@ namespace TravelProject1._0.Controllers
                 Name = user.Name,
                 Gender = user.Gender,
                 Email = user.Email,
+                Birthday = user.Birthday,
+                Password=user.Password,
                 PasswordHash = hashedPassword,
                 Salt = salt,
             };
@@ -161,25 +162,42 @@ namespace TravelProject1._0.Controllers
         {
             return View();
         }
+
+        // Custom method to validate the user
+        private bool IsValidUser(string username, string password)
+        {
+            // Perform your custom validation logic here
+            return (username == "example" && password == "password");
+        }
+
+        private void AuthenticateUser(string username)
+        {
+            // Perform your custom user authentication and session setup here
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.Name, username),
+                new Claim(ClaimTypes.Role, "User")
+            };
+
+            var identity = new ClaimsIdentity(claims, "custom");
+            var principal = new ClaimsPrincipal(identity);
+
+            HttpContext.SignInAsync("custom", principal);
+        }
         //[ValidateAntiForgeryToken]
         //public ActionResult SendMailToken(/*SendMailTokenIn inModel*/)
         //{
-        //SendMailTokenOut outModel = new SendMailTokenOut();
+        //    SendMailTokenOut outModel = new SendMailTokenOut();
 
-
-        //if (string.IsNullOrEmpty(inModel.UserID))
-        //{
-        //outModel.ErrMsg = "請輸入帳號";
-        //return Json(outModel);
-        //}
-
-
-
-
-
-
-        //    using (SqlConnection conn = new SqlConnection(strConn))
+        //    if (string.IsNullOrEmpty(inModel.UserID))
         //    {
+        //        outModel.ErrMsg = "請輸入帳號";
+        //        return Json(outModel);
+        //    }
+        //    IConfigurationRoot Config=new ConfigurationBuilder().SetBasePath(AppDomain.CurrentDomain.BaseDirectory).AddJsonFile("appsettings").Build();
+        //    string strConn = Config.GetConnectionString("TravelProject");
+        //        using (SqlConnection conn = new SqlConnection(strConn))
+        //         {
 
         //        conn.Open();
 
@@ -201,7 +219,7 @@ namespace TravelProject1._0.Controllers
 
         //        if (dt.Rows.Count > 0)
         //        {
-        //            取出會員信箱
+        //            //取出會員信箱
         //            string UserEmail = dt.Rows[0]["UserEmail"].ToString();
 
         //            // 取得系統自定密鑰，在 Web.config 設定
@@ -271,6 +289,6 @@ namespace TravelProject1._0.Controllers
         //}
 
     }
- }
+}
 
 

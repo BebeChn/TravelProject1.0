@@ -11,6 +11,7 @@ namespace TravelProject1._0.Models.DTO
         [EmailAddress]
         public string Email { get; set; }
 
+        public DateTime? Birthday { get; set; }
 
         [Required(ErrorMessage = "密碼為必填")]
         [DataType(DataType.Password)]
