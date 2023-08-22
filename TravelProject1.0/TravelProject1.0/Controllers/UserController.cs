@@ -25,11 +25,13 @@ namespace TravelProject1._0.Controllers
 
         private readonly ILogger<HomeController> _logger;
         private readonly TravelProjectContext _context;
-        public UserController(ILogger<HomeController> logger, TravelProjectContext context)
+        private readonly EmailSender _sender;
+        public UserController(ILogger<HomeController> logger, TravelProjectContext context, EmailSender sender)
 
         {
             _logger = logger;
             _context = context;
+            _sender = sender;
         }
         public IActionResult Index()
         {
@@ -146,10 +148,7 @@ namespace TravelProject1._0.Controllers
                 return Convert.ToBase64String(hashBytes);
             }
         }
-        public IActionResult SendEmail(string username, string password)
-        {
-            return View();
-        }
+      
         public IActionResult ResetPassword()
         {
             return View();
@@ -184,111 +183,67 @@ namespace TravelProject1._0.Controllers
 
             HttpContext.SignInAsync("custom", principal);
         }
-        //[ValidateAntiForgeryToken]
-        //public ActionResult SendMailToken(/*SendMailTokenIn inModel*/)
+        [HttpGet]
+        public IActionResult SendVerificationCode()
+        {
+            return View();
+        }
+
+        //[HttpPost]
+        //public async Task<IActionResult> SendVerificationCode(string email)
         //{
-        //    SendMailTokenOut outModel = new SendMailTokenOut();
-
-        //    if (string.IsNullOrEmpty(inModel.UserID))
+        //    var user = _context.Users.FirstOrDefault(u => u.Email == email);
+        //    if (user != null)
         //    {
-        //        outModel.ErrMsg = "請輸入帳號";
-        //        return Json(outModel);
+        //        // Generate a verification code
+        //        string verificationCode = GenerateVerificationCode();
+        //        user.VerificationCode = verificationCode;
+        //        _context.SaveChanges();
+
+        //        // Send the verification code via email
+        //        await _sender.SendEmailAsync(email, "Verification Code", $"Your verification code: {verificationCode}");
+
+        //        return RedirectToAction("VerifyCode");
         //    }
-        //    IConfigurationRoot Config=new ConfigurationBuilder().SetBasePath(AppDomain.CurrentDomain.BaseDirectory).AddJsonFile("appsettings").Build();
-        //    string strConn = Config.GetConnectionString("TravelProject");
-        //        using (SqlConnection conn = new SqlConnection(strConn))
-        //         {
-
-        //        conn.Open();
-
-
-        //        string sql = "select * from Member where UserID = @UserID";
-        //        SqlCommand cmd = new SqlCommand();
-        //        cmd.CommandText = sql;
-        //        cmd.Connection = conn;
-
-        //        // 使用參數化填值
-        //        cmd.Parameters.AddWithValue("@UserID", inModel.UserID);
-
-        //        // 執行資料庫查詢動作
-        //        SqlDataAdapter adpt = new SqlDataAdapter();
-        //        adpt.SelectCommand = cmd;
-        //        DataSet ds = new DataSet();
-        //        adpt.Fill(ds);
-        //        DataTable dt = ds.Tables[0];
-
-        //        if (dt.Rows.Count > 0)
-        //        {
-        //            //取出會員信箱
-        //            string UserEmail = dt.Rows[0]["UserEmail"].ToString();
-
-        //            // 取得系統自定密鑰，在 Web.config 設定
-        //            string SecretKey = ConfigurationManager.AppSettings["SecretKey"];
-
-        //            // 產生帳號+時間驗證碼
-        //            string sVerify = inModel.UserID + "|" + DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
-
-        //            // 將驗證碼使用 3DES 加密
-        //            TripleDESCryptoServiceProvider DES = new TripleDESCryptoServiceProvider();
-        //            MD5 md5 = new MD5CryptoServiceProvider();
-        //            byte[] buf = Encoding.UTF8.GetBytes(SecretKey);
-        //            byte[] result = md5.ComputeHash(buf);
-        //            string md5Key = BitConverter.ToString(result).Replace("-", "").ToLower().Substring(0, 24);
-        //            DES.Key = UTF8Encoding.UTF8.GetBytes(md5Key);
-        //            DES.Mode = CipherMode.ECB;
-        //            ICryptoTransform DESEncrypt = DES.CreateEncryptor();
-        //            byte[] Buffer = UTF8Encoding.UTF8.GetBytes(sVerify);
-        //            sVerify = Convert.ToBase64String(DESEncrypt.TransformFinalBlock(Buffer, 0, Buffer.Length)); // 3DES 加密後驗證碼
-
-        //            // 將加密後密碼使用網址編碼處理
-        //            sVerify = HttpUtility.UrlEncode(sVerify);
-
-        //            // 網站網址
-        //            string webPath = Request.Url.Scheme + "://" + Request.Url.Authority + Url.Content("~/");
-
-        //            // 從信件連結回到重設密碼頁面
-        //            string receivePage = "Member/ResetPwd";
-
-        //            // 信件內容範本
-        //            string mailContent = "請點擊以下連結，返回網站重新設定密碼，逾期 30 分鐘後，此連結將會失效。<br><br>";
-        //            mailContent = mailContent + "<a href='" + webPath + receivePage + "?verify=" + sVerify + "'  target='_blank'>點此連結</a>";
-
-        //            // 信件主題
-        //            string mailSubject = "[測試] 重設密碼申請信";
-
-        //            // Google 發信帳號密碼
-        //            string GoogleMailUserID = ConfigurationManager.AppSettings["GoogleMailUserID"];
-        //            string GoogleMailUserPwd = ConfigurationManager.AppSettings["GoogleMailUserPwd"];
-
-        //            // 使用 Google Mail Server 發信
-        //            string SmtpServer = "smtp.gmail.com";
-        //            int SmtpPort = 587;
-        //            MailMessage mms = new MailMessage();
-        //            mms.From = new MailAddress(GoogleMailUserID);
-        //            mms.Subject = mailSubject;
-        //            mms.Body = mailContent;
-        //            mms.IsBodyHtml = true;
-        //            mms.SubjectEncoding = Encoding.UTF8;
-        //            mms.To.Add(new MailAddress(UserEmail));
-        //            using (SmtpClient client = new SmtpClient(SmtpServer, SmtpPort))
-        //            {
-        //                client.EnableSsl = true;
-        //                client.Credentials = new NetworkCredential(GoogleMailUserID, GoogleMailUserPwd);//寄信帳密 
-        //                client.Send(mms); //寄出信件
-        //            }
-        //            outModel.ResultMsg = "請於 30 分鐘內至你的信箱點擊連結重新設定密碼，逾期將無效";
-        //        }
-        //        else
-        //        {
-        //            outModel.ErrMsg = "查無此帳號";
-        //        }
+        //    else
+        //    {
+        //        ModelState.AddModelError("", "User with this email does not exist.");
+        //        return View();
         //    }
-
-        //    // 回傳 Json 給前端
-        //    return Json(outModel);
         //}
 
+        //private string GenerateVerificationCode()
+        //{
+        //    // Generate a random verification code
+        //    return new Random().Next(1000, 9999).ToString();
+        //}
+
+        //[HttpGet]
+        //public IActionResult VerifyCode()
+        //{
+        //    return View();
+        //}
+
+        //[HttpPost]
+        //public IActionResult VerifyCode(string code)
+        //{
+        //    // Validate the verification code
+        //    var user = _context.Users.FirstOrDefault(u => u.VerificationCode == code);
+        //    if (user != null)
+        //    {
+        //        // Code is valid, you can proceed with further actions
+        //        // For example, mark the email as verified or allow password reset
+        //        return RedirectToAction("Index", "Home");
+        //    }
+        //    else
+        //    {
+        //        ModelState.AddModelError("", "Invalid verification code.");
+        //        return View();
+        //    }
+        //}
     }
+
+
 }
 
 

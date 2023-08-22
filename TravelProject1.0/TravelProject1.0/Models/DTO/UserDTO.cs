@@ -27,5 +27,8 @@ namespace TravelProject1._0.Models.DTO
         public string PasswordHash { get; set; } = null!;
 
         public string Salt { get; set; } = null!;
+
+        public string VerificationCode { get; set; } = null!;
+        
     }
 }
