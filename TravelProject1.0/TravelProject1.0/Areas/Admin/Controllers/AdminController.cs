@@ -1,9 +1,13 @@
 ﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Globalization;
+using System.Linq;
 using TravelProject1._0.Models;
 using TravelProject1._0.Models.DTO;
 using TravelProject1._0.ViewModel;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace TravelProject1._0.Areas.Admin.Controllers
 {
@@ -48,10 +52,13 @@ namespace TravelProject1._0.Areas.Admin.Controllers
                 Name = x.Name,
                 UserId = x.UserId,
                 Email = x.Email,
-            });
+               
+                
+            }); 
+
         }
 
-        [HttpPost]
+    [HttpPost]
         public async Task<IEnumerable<AdminDTO>> AdminSearch(AdminDTO AdminDTO)
         {
             return _db.Users.Where(y =>
@@ -60,6 +67,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers
             y.Gender.Contains(AdminDTO.Gender) ||
             y.Address.Contains(AdminDTO.Address) ||
             y.Email.Contains(AdminDTO.Email)
+            || y.CreateDate==(AdminDTO.CreateDate)
             ).Select(x => new AdminDTO
             {
                 UserId = x.UserId,
@@ -67,6 +75,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers
                 Gender = x.Gender,
                 Address = x.Address,
                 Email = x.Email,
+                CreateDate = x.CreateDate,
             });
         }
 
@@ -102,6 +111,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers
             User.Gender = AdminDTO.Gender;
             User.Address = AdminDTO.Address;
             User.Email = AdminDTO.Email;
+            User.CreateDate = AdminDTO.CreateDate;
             _db.Entry(User).State = EntityState.Modified;
 
             try
@@ -143,5 +153,30 @@ namespace TravelProject1._0.Areas.Admin.Controllers
             return "刪除成功";
         }
 
+
+
+
+        //日期低高
+        public async Task<IEnumerable<AdminDTO>> Datelower()
+        {
+            return _db.Users.OrderBy(y => y.CreateDate)
+                .Select(z => new AdminDTO
+                {
+                    CreateDate = z.CreateDate,
+
+                });
+        }
+
+        //日期高低
+        public async Task<IEnumerable<AdminDTO>> Datehigh()
+        {
+            return _db.Users.OrderByDescending(y => y.CreateDate)
+                .Select(z => new AdminDTO
+                {
+                    CreateDate = z.CreateDate,
+
+                
+                });
+        }
     }
 }

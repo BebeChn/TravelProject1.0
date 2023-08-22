@@ -30,7 +30,7 @@
                 <!--輸入關鍵字-->
                 <input class="form-control" type="text" placeholder="Search" aria-label="Search"
                        v-model="filter" @@keyup="filterUser">
-                <button class="btn btn-outline-secondary " style="color :#1e2154" type="submit">
+                <button class="btn btn-outline-secondary " style="color :#1e2154" type="submit" >
                     <Fieldset>搜尋</Fieldset>
                 </button>
             </form>
@@ -60,6 +60,7 @@
                     <td>性別</td>
                     <td>地址</td>
                     <td>信箱</td>
+                    <td>日期</td>
                 </tr>
                 </thead>
                 <tbody>
@@ -70,6 +71,7 @@
                         <td><input v-model="item.gender" /></td>
                         <td><input v-model="item.address" /></td>
                         <td><input v-model="item.email" /></td>
+                        <td><input v-model="item.createDate" /></td>
                         <td>
                             <button type="button" class="btn btn-success" @@click="update(item)">更新</button>
                             <button type="button" class="btn btn-info" @@click="cancel">取消</button>
@@ -81,6 +83,7 @@
                         <td>{{item.gender}}</td>
                         <td>{{item.address}}</td>
                         <td>{{item.email}}</td>
+                        <td>{{item.createDate}}</td>
                         <td>
                             <button type="button" class="btn btn-primary" @@click="edit(item.UserId)">修改</button>
                                 <button type="button" class="btn btn-danger" @@click="deleteUsr(item.userId)">刪除</button>
@@ -93,6 +96,8 @@
         <!--顯示更多內容-->
         <div class="col-10">
         </div>
+        <br />
+        <br />
 </div>
 
 
@@ -114,6 +119,7 @@
                         gender:'',
                         address:'',
                         email:'',
+                        //createDate:'',
                         originalname:'',
                         originalgender:'',
                         originaladdress:'',
@@ -169,7 +175,8 @@
                         request.gender = item.gender;
                         request.address = item.address;
                         request.email = item.email;
-                        axios.put(`${baseAddress}/api/Admin/AdminPUT/${item.userId}`, request).then(response=>{
+                        request.CreateDate = item.CreateDate;
+                        axios.put(`${baseAddress}/api/Admin/AdminPUT/${item.userId}`, request).then(response => {
                             alert(response.data);
                             _this.filterUser();
                         }).catch(err=>{
