@@ -1,4 +1,8 @@
-﻿@section Styles{
+﻿@{
+    ViewData["Title"] = "交通";
+}
+
+@section Styles{
     <link href="~/css/transport.css" rel="stylesheet" />
 }
 
@@ -32,17 +36,14 @@
         <div class="col-md-9">
             <div class="sort">
                 <div class="row">
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <h3 class="sort-title">排序：</h3>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <button class="btn btn-sort">熱門程度</button>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <button class="btn btn-sort" v-on:click="orderbyPrice">金額高低</button>
-                    </div>
-                    <div class="col-md-3">
-                        <button class="btn btn-sort">距離最近</button>
                     </div>
                 </div>
             </div>
@@ -55,11 +56,13 @@
                     <div class="col-md-7 card-body">
                         <h5 class="card-title">{{t.name}}</h5>
                         <p class="card-text">{{t.mainDescribe}}</p>
-                        <span class="sell">已售出人數：</span>
                     </div>
                     <div class="col-md-2 card-end">
                         <span class="product-price">NT {{t.price}}</span>
-                        <button class="btn btn-product">查看價格</button>
+                        <a asp-action="Plan" >
+                            
+                            <button class="btn btn-product">查看價格</button>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -71,7 +74,6 @@
     <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
     <script>
         var baseAddress = "https://localhost:7025";
-
         var app = new Vue({
             el: '#app',
             data: {
@@ -94,7 +96,7 @@
             },
             methods: {
                 //價格排序
-                orderbyPrice: function (e) {
+                orderbyPrice: function () {
                     var _this = this;
                     _this.count++;
                     console.log(_this.count);
@@ -117,7 +119,10 @@
                                 alert(error);
                             })
                     }
-                }
+                },
+
+                //傳遞參數
+
             }
         })
     </script>
