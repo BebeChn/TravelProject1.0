@@ -10,9 +10,9 @@ namespace TravelProject1._0.Controllers.Api
     [ApiController]
     public class AttractionsApiController : ControllerBase
     {
-        private readonly TravelProjectContext _dbContext;
+        private readonly TravelProjectAzureContext _dbContext;
 
-        public AttractionsApiController(TravelProjectContext dbContext)
+        public AttractionsApiController(TravelProjectAzureContext dbContext)
         {
             _dbContext = dbContext;
         }
@@ -25,7 +25,7 @@ namespace TravelProject1._0.Controllers.Api
             {
                 ProductId = p.ProductId,
                 Id = p.Id,
-                Name = p.Name,
+                ProductName = p.ProductName,
                 Price = p.Price,
                 MainDescribe = p.MainDescribe
             });

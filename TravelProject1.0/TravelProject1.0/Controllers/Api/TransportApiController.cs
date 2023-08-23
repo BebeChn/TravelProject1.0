@@ -10,9 +10,9 @@ namespace TravelProject1._0.Controllers.Api
     [ApiController]
     public class TransportApiController : ControllerBase
     {
-        private readonly TravelProjectContext _dbContext;
+        private readonly TravelProjectAzureContext _dbContext;
 
-        public TransportApiController(TravelProjectContext dbContext)
+        public TransportApiController(TravelProjectAzureContext dbContext)
         {
             _dbContext = dbContext;
         }
@@ -24,7 +24,7 @@ namespace TravelProject1._0.Controllers.Api
             return _dbContext.Products.Where(c => c.Id == 3).Select(p => new TransportDTO
             {
                 ProductId = p.ProductId,
-                Name = p.Name,
+                ProductName = p.ProductName,
                 Price = p.Price,
                 MainDescribe = p.MainDescribe,
             });
@@ -36,7 +36,7 @@ namespace TravelProject1._0.Controllers.Api
         {
             return _dbContext.Products.Where(w => w.Id == 3).OrderBy(o => o.Price).Select(p => new TransportDTO
             {
-                Name = p.Name,
+                ProductName = p.ProductName,
                 Price = p.Price,
                 MainDescribe = p.MainDescribe
             });
@@ -46,7 +46,7 @@ namespace TravelProject1._0.Controllers.Api
         {
             return _dbContext.Products.Where(w => w.Id == 3).OrderByDescending(o => o.Price).Select(p => new TransportDTO
             {
-                Name = p.Name,
+                ProductName = p.ProductName,
                 Price = p.Price,
                 MainDescribe = p.MainDescribe
             });

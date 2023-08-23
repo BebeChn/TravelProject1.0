@@ -10,19 +10,19 @@ namespace TravelProject1._0.Controllers.Api
     [ApiController]
     public class ProductApiController : ControllerBase
     {
-        private readonly TravelProjectContext _db;
+        private readonly TravelProjectAzureContext _db;
 
-        public ProductApiController(TravelProjectContext travelProjectContext)
+        public ProductApiController(TravelProjectAzureContext db)
 
         {
-            _db = travelProjectContext;
+            _db = db;
         }
         public async Task<List<ProductDTO>> GetImge(int id)
         {
             var Product = _db.Products.Select(x =>
             new ProductDTO
             {
-                Name = x.Name,
+                ProductName = x.ProductName,
                 Price = x.Price,
                 ProductId = x.Id,
                 Image = "/lib/image/foreast.jpeg"

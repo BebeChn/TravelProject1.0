@@ -2,6 +2,8 @@
 {
     public class TransportPlanDTO
     {
+        public string ProductName { get; set; } = null!;
+
         public string? MainDescribe { get; set; }
 
         public string? SubDescribe { get; set; }

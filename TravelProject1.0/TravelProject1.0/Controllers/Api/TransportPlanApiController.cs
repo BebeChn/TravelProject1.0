@@ -9,8 +9,8 @@ namespace TravelProject1._0.Controllers.Api
     [ApiController]
     public class TransportPlanApiController : ControllerBase
     {
-        private readonly TravelProjectContext _dbContext;
-        public TransportPlanApiController(TravelProjectContext dbContext)
+        private readonly TravelProjectAzureContext _dbContext;
+        public TransportPlanApiController(TravelProjectAzureContext dbContext)
         {
             _dbContext = dbContext;
         }
@@ -27,13 +27,13 @@ namespace TravelProject1._0.Controllers.Api
             {
 
                 ProductId = product.Id,
-                Name = product.Name,
+                ProductName = product.ProductName,
                 MainDescribe = product.MainDescribe,
                 SubDescribe = product.SubDescribe,
                 ShortDescribe = product.ShortDescribe
             };
 
-            var result = _dbContext.Plan.Where(p => p.PlanId == id).Select(p => new TransportPlanDTO
+            var result = _dbContext.Plans.Where(p => p.PlanId == id).Select(p => new TransportPlanDTO
             {
                 PlanId = p.PlanId,
                 Name = p.Name,

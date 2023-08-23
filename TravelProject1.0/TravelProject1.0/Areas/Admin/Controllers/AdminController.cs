@@ -17,9 +17,9 @@ namespace TravelProject1._0.Areas.Admin.Controllers
 
     public class AdminController : Controller
     {
-        private readonly TravelProjectContext _db;
+        private readonly TravelProjectAzureContext _db;
 
-        public AdminController(TravelProjectContext db)
+        public AdminController(TravelProjectAzureContext db)
         {
             _db = db;
         }
