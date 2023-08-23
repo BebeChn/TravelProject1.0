@@ -1,7 +1,7 @@
-﻿
+﻿@model TravelProject1._0.Models.DTO.UserDTO
 @section Styles
 {
-    
+    <link href="~/css/login.min.css" rel="stylesheet" />
 }
 
 @{
@@ -10,17 +10,59 @@
 
 <h1>會員登入</h1>
 
-
-  
-    <div class="pico">
+    <div id="app" class="pico">
         <form action="@Url.Action("Login")" method="post" class="login">
             <h1 class="font">登入</h1>
-            <label>帳號:</label>
-            <input class="inputstyle" type="text" placeholder="請輸入帳號" id="UserID" name="UserID" required="required" />
-            <label>密碼:</label>
-        <input class="inputstyle" type="Password" placeholder="請輸入密碼" id="password" name="password" required="required" />
-            <input class="submitstyle" type="submit" value="提交" />
-         
+       
+        <label asp-for="@Model.Email" class="labelstyle">帳號:</label>
+        <input class="accountstyle" type="text" placeholder="請輸入帳號" asp-for="@Model.Email" />
+        <span asp-validation-for="@Model.Email" class="text-danger"></span>
+        
+        <label asp-for="@Model.Password" name="password" class="labelstyle">密碼:</label>
+        <input class="passwordstyle" type="Password" placeholder="請輸入密碼" asp-for="@Model.Password" />
+        <span asp-validation-for="@Model.Password" class="text-danger"></span>
+
+        <div class="checkbox mb-3">
+            <label asp-for="@Model.RememberMe" class="labelstyle">
+                <input class="form-check-input" asp-for="@Model.RememberMe" />
+                @Html.DisplayNameFor(m=>m.RememberMe)
+            </label >
+            <a id="forgot-password">忘記密碼</a>
+
+        </div>
+
+        <input class="dup" type="submit" value="登入" />
+
+        <input class="dup" value="註冊" type="submit" asp-controller="User" asp-action="Register" />
         </form>
       </div>
 
+@section Scripts {
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script>
+       
+        let app = new Vue({
+            data: {
+               
+            },
+            el: "#app",
+            computed: {
+            },
+            mounted: function () {
+                let _this = this;
+                fetch("")
+                    .then(response => {
+                        return response.json();
+                    }).then(data => {
+                        console.log(data);
+                        _this.products = data;
+                    })
+            },
+            methods: {
+
+            }
+        });
+              // var app2 = Vue.createApp(app).mount("#app");
+    </script>
+}

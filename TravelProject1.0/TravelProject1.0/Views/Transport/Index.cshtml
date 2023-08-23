@@ -1,4 +1,8 @@
-﻿@section Styles{
+﻿@{
+    ViewData["Title"] = "交通";
+}
+
+@section Styles{
     <link href="~/css/transport.css" rel="stylesheet" />
 }
 
@@ -6,7 +10,7 @@
     <img class="img" src="~/lib/image/mountain.jpeg" />
 </div>
 
-<div class="container">
+<div id="app" class="container">
     <div class="row">
         <div class="col-md-3">
             <div class="accordion" id="accordionExample">
@@ -32,85 +36,93 @@
         <div class="col-md-9">
             <div class="sort">
                 <div class="row">
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <h3 class="sort-title">排序：</h3>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <button class="btn btn-sort">熱門程度</button>
                     </div>
-                    <div class="col-md-3">
-                        <button class="btn btn-sort">金額高低</button>
-                    </div>
-                    <div class="col-md-3">
-                        <button class="btn btn-sort">距離最近</button>
+                    <div class="col-md-4">
+                        <button class="btn btn-sort" v-on:click="orderbyPrice">金額高低</button>
                     </div>
                 </div>
             </div>
 
-            <div class="card">
+            <div class="card" v-for="t in transport">
                 <div class="row">
                     <div class="col-md-3 card-img">
                         <img class="img-transportation" src="~/lib/image/mountain2.jpeg" />
                     </div>
                     <div class="col-md-7 card-body">
-                        <h5 class="card-title">機場接送</h5>
-                        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                        <span class="sell">已售出人數：</span>
+                        <h5 class="card-title">{{t.productName}}</h5>
+                        <p class="card-text">{{t.mainDescribe}}</p>
                     </div>
                     <div class="col-md-2 card-end">
-                        <span class="product-price">NT999</span>
-                        <button class="btn btn-product">查看價格</button>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="row">
-                    <div class="col-md-3 card-img">
-                        <img class="img-transportation" src="~/lib/image/mountain2.jpeg" />
-                    </div>
-                    <div class="col-md-7 card-body">
-                        <h5 class="card-title">湯瑪士小火車</h5>
-                        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                        <span class="sell">已售出人數：</span>
-                    </div>
-                    <div class="col-md-2 card-end">
-                        <span class="product-price">NT999</span>
-                        <button class="btn btn-product">查看價格</button>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="row">
-                    <div class="col-md-3 card-img">
-                        <img class="img-transportation" src="~/lib/image/mountain2.jpeg" />
-                    </div>
-                    <div class="col-md-7 card-body">
-                        <h5 class="card-title">日本地下鐵</h5>
-                        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                        <span class="sell">已售出人數：</span>
-                    </div>
-                    <div class="col-md-2 card-end">
-                        <span class="product-price">NT999</span>
-                        <button class="btn btn-product">查看價格</button>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="row">
-                    <div class="col-md-3 card-img">
-                        <img class="img-transportation" src="~/lib/image/mountain2.jpeg" />
-                    </div>
-                    <div class="col-md-7 card-body">
-                        <h5 class="card-title">日本電車</h5>
-                        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                        <span class="sell">已售出人數：</span>
-                    </div>
-                    <div class="col-md-2 card-end">
-                        <span class="product-price">NT999</span>
-                        <button class="btn btn-product">查看價格</button>
+                        <span class="product-price">NT {{t.price}}</span>
+                        <a asp-action="Plan" >
+                            <button class="btn btn-product">查看價格</button>
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+@section Scripts{
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+    <script>
+        var baseAddress = "https://localhost:7025";
+        var app = new Vue({
+            el: '#app',
+            data: {
+                transport: [],
+                priceOrderby: [],
+                count: 0
+            },
+            mounted: function () {
+                //取得交通種類的商品
+                var _this = this;
+                fetch(`${baseAddress}/api/TransportApi/GetCategoryByTransport`, { method: "GET" })
+                    .then(response => {
+                        if (response.ok) return response.json();
+                    }).then(data => {
+                        _this.transport = data;
+                        //console.log(data);
+                    }).catch(error => {
+                        alert(error);
+                    })
+            },
+            methods: {
+                //價格排序
+                orderbyPrice: function () {
+                    var _this = this;
+                    _this.count++;
+                    console.log(_this.count);
+                    if (_this.count % 2 != 0) {
+                        fetch(`${baseAddress}/api/TransportApi/TransportOrderbyPrice`, { method: "GET" })
+                            .then(response => {
+                                if (response.ok) return response.json();
+                            }).then(data => {
+                                _this.transport = data;
+                            }).catch(error => {
+                                alert(error);
+                            })
+                    } else {
+                        fetch(`${baseAddress}/api/TransportApi/TransportOrderByDescendingPrice`, { method: "GET" })
+                            .then(response => {
+                                if (response.ok) return response.json();
+                            }).then(data => {
+                                _this.transport = data;
+                            }).catch(error => {
+                                alert(error);
+                            })
+                    }
+                },
+
+                //傳遞參數
+
+            }
+        })
+    </script>
+}

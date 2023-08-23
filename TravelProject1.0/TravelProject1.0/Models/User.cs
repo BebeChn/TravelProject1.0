@@ -19,7 +19,7 @@ public partial class User
 
     public int? Age { get; set; }
 
-    public string? Email { get; set; }
+    public string Email { get; set; } = null!;
 
     public string Password { get; set; } = null!;
 
@@ -29,7 +29,11 @@ public partial class User
 
     public DateTime? CreateDate { get; set; }
 
-    public bool? EmailConfirmed { get; set; }
+    public bool EmailConfirmed { get; set; }
+
+    public string Salt { get; set; } = null!;
+
+    public string VerificationCode { get; set; } = null!;
 
     public virtual ICollection<Cart> Carts { get; set; } = new List<Cart>();
 

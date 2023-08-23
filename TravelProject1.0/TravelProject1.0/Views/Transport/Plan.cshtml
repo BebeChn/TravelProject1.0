@@ -1,4 +1,8 @@
-﻿@section Styles{
+﻿@{
+    ViewData["Title"] = "交通方案";
+}
+
+@section Styles{
     <link href="~/css/transport-plan.css" rel="stylesheet" />
 }
 
@@ -45,7 +49,7 @@
     <nav>
         <ul class="pagination">
             <li class=" product-li">
-                <button class="btn btn-switch page-1">ALL</button>
+                <button class="btn btn-switch page-1">全部</button>
             </li>
             <li class=" product-li">
                 <button class="btn btn-switch page-2">商品方案</button>
@@ -64,7 +68,7 @@
 </div>
 
 @*商品方案*@
-<div class="container plan">
+<div id="app" class="container plan">
     @*方案選擇*@
     <div>
         <div class="row">
@@ -77,74 +81,19 @@
             </div>
         </div>
 
-        <div class="card">
+        <div class="card" v-for="p in plan">
             <div class="row">
                 <div class="col-md-3">
                     <img class="img-plan" src="~/lib/image/mountain2.jpeg" />
                 </div>
                 <div class="col-md-7">
                     <div class="card-body">
-                        <h3 class="card-title">捷運</h3>
-                        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                        <h3 class="card-title">{{p.name}}</h3>
+                        <p class="card-text">{{p.describe}}</p>
                     </div>
                 </div>
                 <div class="col-md-2 card-end">
                     <button class="btn btn-heart"><i class="fa-solid fa-heart fa-2xl"></i></button>
-                    <div class="plan-price">NT 699</div>
-                    <button class="btn btn-plan">選擇</button>
-                </div>
-            </div>
-        </div>
-        <div class="card">
-            <div class="row">
-                <div class="col-md-3">
-                    <img class="img-plan" src="~/lib/image/mountain2.jpeg" />
-                </div>
-                <div class="col-md-7">
-                    <div class="card-body">
-                        <h3 class="card-title">高鐵</h3>
-                        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                    </div>
-                </div>
-                <div class="col-md-2 card-end">
-                    <button class="btn btn-heart"><i class="fa-solid fa-heart fa-2xl"></i></button>
-                    <div class="plan-price">NT 799</div>
-                    <button class="btn btn-plan">選擇</button>
-                </div>
-            </div>
-        </div>
-        <div class="card">
-            <div class="row">
-                <div class="col-md-3">
-                    <img class="img-plan" src="~/lib/image/mountain2.jpeg" />
-                </div>
-                <div class="col-md-7">
-                    <div class="card-body">
-                        <h3 class="card-title">遊覽車</h3>
-                        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                    </div>
-                </div>
-                <div class="col-md-2 card-end">
-                    <button class="btn btn-heart"><i class="fa-solid fa-heart fa-2xl"></i></button>
-                    <div class="plan-price">NT 899</div>
-                    <button class="btn btn-plan">選擇</button>
-                </div>
-            </div>
-        </div>
-        <div class="card">
-            <div class="row">
-                <div class="col-md-3">
-                    <img class="img-plan" src="~/lib/image/mountain2.jpeg" />
-                </div>
-                <div class="col-md-7">
-                    <div class="card-body">
-                        <h3 class="card-title">計程車</h3>
-                        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                    </div>
-                </div>
-                <div class="col-md-2 card-end">
-                    <button class="btn btn-heart"><i class="fa-solid fa-heart fa-2xl"></i></button>
-                    <div class="plan-price">NT 299</div>
                     <button class="btn btn-plan">選擇</button>
                 </div>
             </div>
@@ -323,4 +272,26 @@
 
 @section Scripts{
     <script src="~/js/transport-plan.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+    <script>
+        var baseAddress = "https://localhost:7025";
+        var app = new Vue({
+            el: '#app',
+            data: {
+                plan: [],
+                id: ''
+            },
+            mounted: function () {
+                var _this = this;
+                fetch(`${baseAddress}/api/TransportPlanApi/GetPlanByTransport/${id}`, { method: "GET" })
+                    .then(response => {
+                        if (response.ok) return response.json();
+                    }).then(data => {
+                        _this.plan = data;
+                    }).catch(error => {
+                        alert(error);
+                    })
+            }
+        })
+    </script>
 }

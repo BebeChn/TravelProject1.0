@@ -1,75 +1,65 @@
-﻿
-
-@{
-    ViewData["Title"] = "Index";
-}
-@section Styles
-    {
-    <style>
-
-    </style>
-
+﻿@section Styles{
+    <link href="~/css/cart.css" rel="stylesheet" />
 }
 
 <h1>購物車頁面</h1>
 
-
 <table class="table table-striped table-bordered table-hover">
     <thead>
         <tr>
-            <th>
-               
-            </th>
-            <th>
-               
-            </th>
-            <th>
-              
-            </th>
-            <th>
-                
-            </th>
-            <th>
-               
-            </th>
-            
-            <th></th>
+            <th>全選</th>
+            <th>商品圖片</th>
+            <th>商品名稱</th>
+            <th>數量</th>
+            <th>價格</th>
+            <th>操作</th>
         </tr>
     </thead>
     <tbody>
-        
-            <tr>
-                <td>
-                   
-                </td>
-                <td>
-                   
-                </td>
-                <td>
-                  
-                </td>
-                <td>
-                   
-                </td>
-                <td>
-                    
-                </td>
-                <td>
-                   
-                </td>
-                <td>
-                   
-                </td>
-                <td>
-                 
-                </td>
-                <td>
-                   
-                </td>
-                <td>
-               
-                </td>
-            </tr>
-       
+        <tr>
+            <td>
+                <input class="inp-checkbox" type="checkbox" />
+            </td>
+            <td>
+                <img style="width:100px;height:100px;" src="~/lib/image/mountain.jpeg" />
+            </td>
+            <td>
+                小王子飯店
+            </td>
+            <td>
+                1
+            </td>
+            <td>
+                9999
+            </td>
+            <td>
+                <button class="btn btn-delete" onclick="removeItem()">刪除</button>
+            </td>
+        </tr>
     </tbody>
 </table>
+<hr />
+<div class="total">
+    <div>
+        <span class="span-total">總金額：NT0</span>
+    </div>
+    <div>
+        <button class="btn btn-buy">前往結帳</button>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        function removeItem() {
+            var deleteItem = document.querySelectorAll('.btn-delete')[0];
+            var check = document.querySelectorAll('.inp-checkbox');
+            console.log(deleteItem);
+            for (var i = 0; i < deleteItem.length; i++) {
+                var checkBox = check[i];
+                if (checkBox.checked == true) {
+
+                }
+            }
+        }
+    </script>
+}
