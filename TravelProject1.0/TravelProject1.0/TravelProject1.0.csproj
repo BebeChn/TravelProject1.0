@@ -18,12 +18,14 @@
   <ItemGroup>
     <Content Remove="bundleconfig.json" />
     <Content Remove="wwwroot\css\Book.css" />
+    <Content Remove="wwwroot\css\CheckOut.css" />
     <Content Remove="wwwroot\css\login - 複製.min.css" />
     <Content Remove="wwwroot\css\Register.css" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="bundleconfig.json" />
+    <None Include="wwwroot\css\CheckOut.css" />
     <None Include="wwwroot\css\Register.css" />
     <None Include="wwwroot\css\Register.min.css" />
     <None Include="wwwroot\css\login.css" />
