@@ -6,8 +6,8 @@ namespace TravelProject1._0.Controllers
 {
     public class TransportController : Controller
     {
-        private readonly TravelProjectContext _dbContext;
-        public TransportController(TravelProjectContext dbContext)
+        private readonly TravelProjectAzureContext _dbContext;
+        public TransportController(TravelProjectAzureContext dbContext)
         {
             _dbContext = dbContext;
         }

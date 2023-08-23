@@ -21,12 +21,10 @@ namespace TravelProject1._0.Controllers
 
     public class UserController : Controller
     {
-
-
         private readonly ILogger<HomeController> _logger;
-        private readonly TravelProjectContext _context;
+        private readonly TravelProjectAzureContext _context;
         //private readonly EmailSender _sender;
-        public UserController(ILogger<HomeController> logger, TravelProjectContext context/*, EmailSender sender*/)
+        public UserController(ILogger<HomeController> logger, TravelProjectAzureContext context/*, EmailSender sender*/)
 
         {
             _logger = logger;
@@ -44,40 +42,40 @@ namespace TravelProject1._0.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(string username, string password)
         {
-           
-                var userselect = _context.Users.Select(u => u.Email == username).SingleOrDefault();
 
-                if (userselect == null)
-                {
-                    return View("Login");
+            var userselect = _context.Users.Select(u => u.Email == username).SingleOrDefault();
 
-                }
-                string pw = Request.Form["password"].ToString();
-                UserDTO userDTO = new UserDTO();
-                if (userDTO.PasswordHash== HashPassword(pw, userDTO.Salt))
-                {
+            if (userselect == null)
+            {
+                return View("Login");
 
-                    var claims = new List<Claim>()//身份驗證訊息
+            }
+            string pw = Request.Form["password"].ToString();
+            UserDTO userDTO = new UserDTO();
+            if (userDTO.PasswordHash == HashPassword(pw, userDTO.Salt))
+            {
+
+                var claims = new List<Claim>()//身份驗證訊息
                      {
                         new Claim(ClaimTypes.Name,$"{userDTO.Name}"),
                         new Claim("Email",userDTO.Email),
                        };
 
-                    ClaimsPrincipal userPrincipal = new ClaimsPrincipal(new ClaimsIdentity(claims, "Customer"));
-                    HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, userPrincipal, new AuthenticationProperties
-                    {
-                        ExpiresUtc = DateTime.UtcNow.AddMinutes(30),//過期時間;30分鐘
-
-                    }).Wait();
-
-                    return Redirect("/Home/Index");
-                }
-                else
+                ClaimsPrincipal userPrincipal = new ClaimsPrincipal(new ClaimsIdentity(claims, "Customer"));
+                HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, userPrincipal, new AuthenticationProperties
                 {
-                    base.ViewBag.Msg = "用戶或密碼錯誤";
-                }
+                    ExpiresUtc = DateTime.UtcNow.AddMinutes(30),//過期時間;30分鐘
 
-             return await Task.FromResult<IActionResult>(View());
+                }).Wait();
+
+                return Redirect("/Home/Index");
+            }
+            else
+            {
+                base.ViewBag.Msg = "用戶或密碼錯誤";
+            }
+
+            return await Task.FromResult<IActionResult>(View());
         }
         public async Task<IActionResult> Logout()
         {
@@ -110,7 +108,7 @@ namespace TravelProject1._0.Controllers
                 Gender = user.Gender,
                 Email = user.Email,
                 Birthday = user.Birthday,
-                Password=user.Password,
+                Password = user.Password,
                 PasswordHash = hashedPassword,
                 Salt = salt,
             };
@@ -148,7 +146,7 @@ namespace TravelProject1._0.Controllers
                 return Convert.ToBase64String(hashBytes);
             }
         }
-      
+
         public IActionResult ResetPassword()
         {
             return View();

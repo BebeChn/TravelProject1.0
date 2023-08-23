@@ -6,9 +6,9 @@ namespace TravelProject1._0.Controllers
 {
     public class PlaneTKController : Controller
     {
-        private readonly TravelProjectContext _db;
+        private readonly TravelProjectAzureContext _db;
 
-        public PlaneTKController(TravelProjectContext db)
+        public PlaneTKController(TravelProjectAzureContext db)
         {
             _db = db;
         }

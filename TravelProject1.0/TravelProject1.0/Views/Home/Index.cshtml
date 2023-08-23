@@ -1,14 +1,15 @@
-﻿ @model IEnumerable<TravelProject1._0.Models.Product>
-
+﻿@model IEnumerable<TravelProject1._0.Models.Product>
 
 @{
     ViewData["Title"] = "商品瀏覽";
 
 }
+
 @section Styles
-{
+    {
     <link href="~/lib/toastr.js/toastr.min.css" rel="stylesheet" />
 }
+
 <h1 class="display-4"></h1>
 @* 旋轉木馬
  *@ <div id="carouselExampleIndicators" class="carousel slide">
@@ -39,8 +40,8 @@
 </div>
 
 <div class="row">
-<div class="col-md-6">
-    <ul class="list-group mt-3">
+    <div class="col-md-6">
+        <ul class="list-group mt-3">
             <li class="list-group-item align-items-center" style="width:450px">
                 <span class="badge bg-primary rounded-pill">14</span>
                 黃金會員享雙重優惠
@@ -51,27 +52,27 @@
             </li>
             <li class="list-group-item d-flex align-items-center" style="width:450px">
                 <span class="badge bg-primary rounded-pill">14</span>
-                
-            </li>
-            <li class="list-group-item d-flex align-items-center" style="width:450px">
-                <span class="badge bg-primary rounded-pill">14</span>
-                A list item
-            </li>
-            <li class="list-group-item d-flex align-items-center" style="width:450px">
-                <span class="badge bg-primary rounded-pill">14</span>
-                A list item
-            </li>
-           
-    </ul>
 
-</div>
-<div class="col-md-6">
+            </li>
+            <li class="list-group-item d-flex align-items-center" style="width:450px">
+                <span class="badge bg-primary rounded-pill">14</span>
+                A list item
+            </li>
+            <li class="list-group-item d-flex align-items-center" style="width:450px">
+                <span class="badge bg-primary rounded-pill">14</span>
+                A list item
+            </li>
+
+        </ul>
+
+    </div>
+    <div class="col-md-6">
         <ul class="list-group mt-3">
 
             <li class="list-group-item d-flex align-items-center" style="width:450px">
                 <span class="badge bg-primary rounded-pill">14</span>
-            A list item
-        </li>
+                A list item
+            </li>
             <li class="list-group-item d-flex align-items-center" style="width:450px">
                 <span class="badge bg-primary rounded-pill">14</span>
                 A list item
@@ -88,30 +89,30 @@
                 <span class="badge bg-primary rounded-pill">14</span>
                 A list item
             </li>
-    </ul>
+        </ul>
 
-</div>
+    </div>
 </div>
 
- <div class="row" style="margin-top:10px">
+<div class="row" style="margin-top:10px">
     <div>■熱門景點 </div>
-@* @foreach(var item in Model){
+    @* @foreach(var item in Model){
 
-            <div class="col-md-3">
-            <div class="card" style="width: 15rem;">
-                <div class="card-body">
-                    <img src="~/lib/image/snowboard.jpg" class="card-img-top" alt="..." />
-                    <h5 class="card-title">"@Html.DisplayFor(model=>item.ProductName)"</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">"@Html.DisplayFor(model=>item.Price)"</h6>
-                    <a href="#" class="card-link">選擇方案</a>
-                    <a class="stretched-link text-dark" onclick="ShowMessage()"
-                       >加入購物車</a>
-                </div>
-            </div>
-            </div>
-        }
-</div>
- *@
+    <div class="col-md-3">
+    <div class="card" style="width: 15rem;">
+    <div class="card-body">
+    <img src="~/lib/image/snowboard.jpg" class="card-img-top" alt="..." />
+    <h5 class="card-title">"@Html.DisplayFor(model=>item.ProductName)"</h5>
+    <h6 class="card-subtitle mb-2 text-muted">"@Html.DisplayFor(model=>item.Price)"</h6>
+    <a href="#" class="card-link">選擇方案</a>
+    <a class="stretched-link text-dark" onclick="ShowMessage()"
+    >加入購物車</a>
+    </div>
+    </div>
+    </div>
+    }
+    </div>
+    *@
 
 
     <div id="app">
@@ -119,56 +120,56 @@
             <div class="row">
                 <div class="col-3" v-for="p in products">
                     <div class="card">
-                    <img :src=p.image class="card-img-top">
+                        <img :src=p.image class="card-img-top">
                         <div class="card-body">
-                        <h5 class="card-title">
-                            {{p.name}}
-                        </h5>
-                        <h3 class="card-title">{{p.price}}</h3>
-                        <p class="card-text">{{}}</p>
-                        <a class="stretched-link text-dark" onclick="ShowMessage()">來去看看</a>
+                            <h5 class="card-title">
+                                {{p.productName}}
+                            </h5>
+                            <h3 class="card-title">{{p.price}}</h3>
+                            <p class="card-text">{{}}</p>
+                            <a class="stretched-link text-dark" onclick="ShowMessage()">來去看看</a>
                         </div>
                     </div>
                 </div>
             </div>
-        
+
         </div>
 
     </div>
 
-    
 
 
 
 
-@section Scripts {
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
-    <script>
-        function ShowMessage() {
-            toastr["success"]("商品已加入購物車！");
-        }
-        let app = new Vue({
-            data: {    
-                products: [],
-            },
-            el: "#app",
-            computed: {
-            },
-            mounted: function () {
-                let _this = this;
-                fetch("https://localhost:7025/api/ProductApi/GetImge")
-                    .then(response => {
-                        return response.json();
-                    }).then(data => {
-                        console.log(data);
-                        _this.products = data;
-                    })
-                },
-            methods: {
 
+    @section Scripts {
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+        <script>
+            function ShowMessage() {
+                toastr["success"]("商品已加入購物車！");
             }
-        });
-      // var app2 = Vue.createApp(app).mount("#app");
-    </script>
-} 
+            let app = new Vue({
+                data: {
+                    products: [],
+                },
+                el: "#app",
+                computed: {
+                },
+                mounted: function () {
+                    let _this = this;
+                    fetch("https://localhost:7025/api/ProductApi/GetImge")
+                        .then(response => {
+                            return response.json();
+                        }).then(data => {
+                            console.log(data);
+                            _this.products = data;
+                        })
+                },
+                methods: {
+
+                }
+            });
+                  // var app2 = Vue.createApp(app).mount("#app");
+        </script>
+    }

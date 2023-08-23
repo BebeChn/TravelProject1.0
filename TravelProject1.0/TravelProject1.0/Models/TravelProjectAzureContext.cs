@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace TravelProject1._0.Models;
 
-public partial class TravelProjectContext : DbContext
+public partial class TravelProjectAzureContext : DbContext
 {
-    public TravelProjectContext()
+    public TravelProjectAzureContext()
     {
     }
 
-    public TravelProjectContext(DbContextOptions<TravelProjectContext> options)
+    public TravelProjectAzureContext(DbContextOptions<TravelProjectAzureContext> options)
         : base(options)
     {
     }
@@ -25,7 +25,7 @@ public partial class TravelProjectContext : DbContext
 
     public virtual DbSet<OrderDetail> OrderDetails { get; set; }
 
-    public virtual DbSet<Plan> Plan { get; set; }
+    public virtual DbSet<Plan> Plans { get; set; }
 
     public virtual DbSet<PlanCalendar> PlanCalendars { get; set; }
 
@@ -38,14 +38,22 @@ public partial class TravelProjectContext : DbContext
     public virtual DbSet<User> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=TravelProject;Integrated Security=true;TrustServerCertificate=true");
+    {
+        if (!optionsBuilder.IsConfigured)
+        {
+            IConfigurationRoot Config = new ConfigurationBuilder().SetBasePath(AppDomain.CurrentDomain.BaseDirectory).AddJsonFile("appsettings").Build();
+
+            optionsBuilder.UseSqlServer(Config.GetConnectionString("TravelProject"));
+        }
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.UseCollation("Chinese_Taiwan_Stroke_CI_AS");
+
         modelBuilder.Entity<Admin>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Admin__3214EC279F2EE9CB");
+            entity.HasKey(e => e.Id).HasName("PK__Admin__3214EC277CEED0A0");
 
             entity.ToTable("Admin");
 
@@ -63,7 +71,7 @@ public partial class TravelProjectContext : DbContext
 
         modelBuilder.Entity<Cart>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Cart__3214EC27E593C510");
+            entity.HasKey(e => e.Id).HasName("PK__Cart__3214EC278420B13A");
 
             entity.ToTable("Cart");
 
@@ -74,17 +82,17 @@ public partial class TravelProjectContext : DbContext
             entity.HasOne(d => d.Product).WithMany(p => p.Carts)
                 .HasForeignKey(d => d.ProductId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Cart__ProductID__45F365D3");
+                .HasConstraintName("FK__Cart__ProductID__71D1E811");
 
             entity.HasOne(d => d.User).WithMany(p => p.Carts)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Cart__UserID__44FF419A");
+                .HasConstraintName("FK__Cart__UserID__4D94879B");
         });
 
         modelBuilder.Entity<Category>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Category__3214EC27D5772004");
+            entity.HasKey(e => e.Id).HasName("PK__Category__3214EC27904EA672");
 
             entity.ToTable("Category");
 
@@ -95,7 +103,7 @@ public partial class TravelProjectContext : DbContext
 
         modelBuilder.Entity<Order>(entity =>
         {
-            entity.HasKey(e => e.OrderId).HasName("PK__Orders__C3905BAF5348AC5A");
+            entity.HasKey(e => e.OrderId).HasName("PK__Orders__C3905BAFF4E1F948");
 
             entity.Property(e => e.OrderId).HasColumnName("OrderID");
             entity.Property(e => e.OrderDate).HasColumnType("datetime");
@@ -104,12 +112,12 @@ public partial class TravelProjectContext : DbContext
             entity.HasOne(d => d.User).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Orders__UserID__3D5E1FD2");
+                .HasConstraintName("FK__Orders__UserID__5070F446");
         });
 
         modelBuilder.Entity<OrderDetail>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Order De__3214EC2716EB1C5B");
+            entity.HasKey(e => e.Id).HasName("PK__Order De__3214EC278802C910");
 
             entity.ToTable("Order Detail");
 
@@ -123,17 +131,17 @@ public partial class TravelProjectContext : DbContext
             entity.HasOne(d => d.IdNavigation).WithOne(p => p.OrderDetail)
                 .HasForeignKey<OrderDetail>(d => d.Id)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Order Det__Order__52593CB8");
+                .HasConstraintName("FK__Order Detail__ID__74AE54BC");
 
             entity.HasOne(d => d.Plan).WithMany(p => p.OrderDetails)
                 .HasForeignKey(d => d.PlanId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Order Det__PlanI__534D60F1");
+                .HasConstraintName("FK__Order Det__PlanI__73BA3083");
         });
 
         modelBuilder.Entity<Plan>(entity =>
         {
-            entity.HasKey(e => e.PlanId).HasName("PK__Plan__755C22D746C641ED");
+            entity.HasKey(e => e.PlanId).HasName("PK__Plan__755C22D754D16B20");
 
             entity.ToTable("Plan");
 
@@ -144,12 +152,12 @@ public partial class TravelProjectContext : DbContext
             entity.HasOne(d => d.Product).WithMany(p => p.Plans)
                 .HasForeignKey(d => d.ProductId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Plan__ProductID__4CA06362");
+                .HasConstraintName("FK__Plan__ProductID__76969D2E");
         });
 
         modelBuilder.Entity<PlanCalendar>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Plan Cal__3214EC27D7BB259A");
+            entity.HasKey(e => e.Id).HasName("PK__Plan Cal__3214EC27B569FF60");
 
             entity.ToTable("Plan Calendar");
 
@@ -161,27 +169,27 @@ public partial class TravelProjectContext : DbContext
             entity.HasOne(d => d.Plan).WithMany(p => p.PlanCalendars)
                 .HasForeignKey(d => d.PlanId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Plan Cale__PlanI__4F7CD00D");
+                .HasConstraintName("FK__Plan Cale__PlanI__778AC167");
         });
 
         modelBuilder.Entity<Product>(entity =>
         {
-            entity.HasKey(e => e.ProductId).HasName("PK__Products__B40CC6ED1C411162");
+            entity.HasKey(e => e.ProductId).HasName("PK__Products__B40CC6EDF2375538");
 
             entity.Property(e => e.ProductId).HasColumnName("ProductID");
             entity.Property(e => e.Id).HasColumnName("ID");
-            entity.Property(e => e.ProductName).HasMaxLength(50);
             entity.Property(e => e.Price).HasColumnType("money");
+            entity.Property(e => e.ProductName).HasMaxLength(50);
 
             entity.HasOne(d => d.IdNavigation).WithMany(p => p.Products)
                 .HasForeignKey(d => d.Id)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Products__ID__4222D4EF");
+                .HasConstraintName("FK__Products__ID__787EE5A0");
         });
 
         modelBuilder.Entity<QuestionReport>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Question__3214EC276AAFFC38");
+            entity.HasKey(e => e.Id).HasName("PK__Question__3214EC27FEDEB8D2");
 
             entity.ToTable("Question Report");
 
@@ -193,12 +201,12 @@ public partial class TravelProjectContext : DbContext
             entity.HasOne(d => d.User).WithMany(p => p.QuestionReports)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Question __UserI__3A81B327");
+                .HasConstraintName("FK__Question __UserI__5441852A");
         });
 
         modelBuilder.Entity<Rating>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Rating__3214EC27AB0689C9");
+            entity.HasKey(e => e.Id).HasName("PK__Rating__3214EC277B4AEC0F");
 
             entity.ToTable("Rating");
 
@@ -210,17 +218,17 @@ public partial class TravelProjectContext : DbContext
             entity.HasOne(d => d.Product).WithMany(p => p.Ratings)
                 .HasForeignKey(d => d.ProductId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Rating__ProductI__49C3F6B7");
+                .HasConstraintName("FK__Rating__ProductI__7A672E12");
 
             entity.HasOne(d => d.User).WithMany(p => p.Ratings)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Rating__UserID__48CFD27E");
+                .HasConstraintName("FK__Rating__UserID__5629CD9C");
         });
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.UserId).HasName("PK__User__1788CCAC2C109BFA");
+            entity.HasKey(e => e.UserId).HasName("PK__User__1788CCACFCC705CB");
 
             entity.ToTable("User");
 
