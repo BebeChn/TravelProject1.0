@@ -4,7 +4,7 @@ using System.Drawing;
 using TravelProject1._0.Models;
 using TravelProject1._0.Models.ProductDTO;
 
-namespace TravelProject1._0.Controllers
+namespace TravelProject1._0.Controllers.Api
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
@@ -23,7 +23,6 @@ namespace TravelProject1._0.Controllers
             new ProductDTO
             {
                 Name = x.Name,
-                CategoryId = x.Id,
                 Price = x.Price,
                 ProductId = x.Id,
                 Image = "/lib/image/foreast.jpeg"

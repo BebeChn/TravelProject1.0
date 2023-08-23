@@ -1,30 +1,105 @@
-﻿
+﻿@model TravelProject1._0.Models.DTO.UserDTO
 @{
     ViewData["Title"] = "Register";
 }
 
 <h1>Register</h1>
+<div id="app">
 <div class="panel panel-primary">
-    <div class="panel-heading">註冊頁面範例</div>
+    <div class="panel-heading"></div>
     <div class="panel-body">
+            <div class="form-group">
+                <label asp-for="@Model.Name">姓名:</label>
+                <input asp-validation-for="" type="text" class="form-control">
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Gender">性別:</label>
+                <input type="radio" asp-for="@Model.Gender" value="boy"/>男
+                <input type="radio" asp-for="@Model.Gender" value="girl"/>女
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Birthday">生日:</label>
+                <input asp-validation-for="" type="text" class="form-control">
+            </div>
         <div class="form-group">
-            <label>帳號</label>
+            <label asp-for="@Model.Email">Email:</label>
+            <input asp-validation-for="" type="text" class="form-control">
+        </div>
+        <div class="form-group">
+                <label asp-for="@Model.Password">密碼:</label>
+            <input asp-validation-for="" type="password" class="form-control">
+        </div>
+            <div class="form-group">
+                <label asp-for="@Model.Password">重複輸入密碼:</label>
+                <input asp-validation-for="" type="password" class="form-control">
+            </div>
+      
+        <div class="form-group">
+            <label asp-for="@Model.Phone">Phone:</label>
             <input type="text" class="form-control">
         </div>
-        <div class="form-group">
-            <label>密碼</label>
-            <input type="password" class="form-control">
-        </div>
-        <div class="form-group">
-            <label>姓名</label>
-            <input type="text" class="form-control">
-        </div>
-        <div class="form-group">
-            <label>EMail</label>
-            <input type="text" class="form-control">
-        </div>
+
     </div>
     <div class="panel-footer">
         <button type="button" class="btn btn-primary">註冊</button>
     </div>
 </div>
+
+<div class="modal fade" id="ErrorAlert" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">錯誤訊息</h4>
+            </div>
+            <div class="modal-body" id="ErrorMsg" style="overflow-x:auto;width:100%;">
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+@section scripts {
+    @* <script>
+        var app = new Vue({
+            el: '#app'
+            , data: function () {
+                var data = {
+                    form: {}
+                };
+                return data;
+            }
+            , methods: {
+                // 執行註冊按鈕
+                DoRegister: function () {
+                    var self = this;
+
+                    // 組合表單資料
+                    var postData = {};
+                    postData['UserID'] = self.form.UserID;
+                    postData['UserPwd'] = self.form.UserPwd;
+                    postData['UserName'] = self.form.UserName;
+                    postData['UserEmail'] = self.form.UserEmail;
+
+                    // 使用 jQuery Ajax 傳送至後端
+                    $.ajax({
+                        url: '@Url.Content("~/Member/DoRegister")',
+                        method: 'POST',
+                        dataType: 'json',
+                        data: { inModel: postData },
+                        success: function (datas) {
+                            if (datas.ErrMsg) {
+                                alert(datas.ErrMsg);
+                                return;
+                            }
+                            alert(datas.ResultMsg);
+                        },
+                        error: function (err) {
+                            $('#ErrorMsg').html(err.responseText);
+                            $('#ErrorAlert').modal('toggle');
+                        },
+                    });
+                }
+            }
+        })
+    </script> *@
+}
