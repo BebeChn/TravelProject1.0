@@ -193,12 +193,12 @@ namespace TravelProject1._0.Controllers
         //    var user = _context.Users.FirstOrDefault(u => u.Email == email);
         //    if (user != null)
         //    {
-        //        // Generate a verification code
+       
         //        string verificationCode = GenerateVerificationCode();
         //        user.VerificationCode = verificationCode;
         //        _context.SaveChanges();
 
-        //        // Send the verification code via email
+    
         //        await _sender.SendEmailAsync(email, "Verification Code", $"Your verification code: {verificationCode}");
 
         //        return RedirectToAction("VerifyCode");
@@ -212,7 +212,7 @@ namespace TravelProject1._0.Controllers
 
         //private string GenerateVerificationCode()
         //{
-        //    // Generate a random verification code
+        
         //    return new Random().Next(1000, 9999).ToString();
         //}
 
@@ -225,7 +225,7 @@ namespace TravelProject1._0.Controllers
         //[HttpPost]
         //public IActionResult VerifyCode(string code)
         //{
-        //    // Validate the verification code
+      
         //    var user = _context.Users.FirstOrDefault(u => u.VerificationCode == code);
         //    if (user != null)
         //    {
