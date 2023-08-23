@@ -29,7 +29,7 @@ public partial class User
 
     public DateTime? CreateDate { get; set; }
 
-    public bool EmailConfirmed { get; set; }
+    public bool? EmailConfirmed { get; set; }
 
     public string Salt { get; set; } = null!;
 

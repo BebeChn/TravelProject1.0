@@ -23,13 +23,13 @@ namespace TravelProject1._0.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly TravelProjectAzureContext _context;
-        private readonly EmailSender _sender;
-        public UserController(ILogger<HomeController> logger, TravelProjectAzureContext context, EmailSender sender)
+        //private readonly EmailSender _sender;
+        public UserController(ILogger<HomeController> logger, TravelProjectAzureContext context/*, EmailSender sender*/)
 
         {
             _logger = logger;
             _context = context;
-            _sender = sender;
+            //_sender = sender;
         }
         public IActionResult Index()
         {
@@ -61,7 +61,7 @@ namespace TravelProject1._0.Controllers
                         new Claim("Email",userDTO.Email),
                        };
 
-                ClaimsPrincipal userPrincipal = new ClaimsPrincipal(new ClaimsIdentity(claims, "Customer"));
+                ClaimsPrincipal userPrincipal = new ClaimsPrincipal(new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme));
                 HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, userPrincipal, new AuthenticationProperties
                 {
                     ExpiresUtc = DateTime.UtcNow.AddMinutes(30),//過期時間;30分鐘
@@ -87,46 +87,7 @@ namespace TravelProject1._0.Controllers
         {
             return View();
         }
-        [HttpPost]
-        public async Task  <IActionResult> Register(UserDTO user)
-        {
-            // 檢查用戶名與用法是否為空
-            if (string.IsNullOrEmpty(user.Name) || string.IsNullOrEmpty(user.Password))
-            {
-                ViewBag.Message = "帳號或密碼已被使用";
-                return View();
-            }
-            string salt = GenerateSalt();
 
-            // 對密碼進行加鹽
-            string hashedPassword = HashPassword(user.Password, salt);
-
-            // 創建用戶實體
-            User newUser = new User
-            {
-                Name = user.Name,
-                Gender = user.Gender,
-                Email = user.Email,
-                Birthday = user.Birthday,
-                Password = user.Password,
-                PasswordHash = hashedPassword,
-                Salt = salt,
-            };
-
-            // 添加用戶到資料庫
-            _context.Users.Add(newUser);
-            _context.SaveChanges();
-
-           //註冊視同登入
-            List<Claim> claims = new List<Claim>();
-            new Claim(ClaimTypes.Name, $"{user.Name}");
-            new Claim("Email", user.Email);    
-            ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            ClaimsPrincipal principal = new ClaimsPrincipal(identity);
-            await HttpContext.SignInAsync(principal);
-            return RedirectToAction("Index", "Home");
-        }
-        // 生成隨機鹽
         private string GenerateSalt()
         {
             byte[] saltBytes = new byte[16];
@@ -167,86 +128,89 @@ namespace TravelProject1._0.Controllers
         }
 
         // Custom method to validate the user
-        private bool IsValidUser(string username, string password)
+        private bool IsValidUser(string Email,string password)
         {
             // Perform your custom validation logic here
-            return (username == "example" && password == "password");
+            UserDTO user = new UserDTO();
+            return (Email=="user.Email" && password == "user.password");
         }
 
-        private void AuthenticateUser(string username)
-        {
-            // Perform your custom user authentication and session setup here
-            var claims = new[]
-            {
-                new Claim(ClaimTypes.Name, username),
-                new Claim(ClaimTypes.Role, "User")
-            };
+        //private void AuthenticateUser(string username)
+        //{
+        //    //執行身分驗證
+        //    var claims = new[]
+        //    {
+        //        new Claim(ClaimTypes.Name,username),
+        //        new Claim(ClaimTypes.Role, "User")
+        //    };
 
-            var identity = new ClaimsIdentity(claims, "custom");
-            var principal = new ClaimsPrincipal(identity);
+        //    var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+        //    var principal = new ClaimsPrincipal(identity);
 
-            HttpContext.SignInAsync("custom", principal);
-        }
-        [HttpGet]
-        public IActionResult SendVerificationCode()
-        {
-            return View();
-        }
+        //    HttpContext.SignInAsync("custom", principal);
+        //}
+        //[HttpGet]
+        //public IActionResult SendVerificationCode()
+        //{
+        //    return View();
+        //}
 
-        [HttpPost]
-        public async Task<IActionResult> SendVerificationCode(string email)
-        {
-            var user = _context.Users.FirstOrDefault(u => u.Email == email);
-            if (user != null)
-            {
+        //[HttpPost]
+        //public async Task<IActionResult> SendVerificationCode(string email)
+        //{
+        //    var user = _context.Users.FirstOrDefault(u => u.Email == email);
+        //    if (user != null)
+        //    {
 
-                string verificationCode = GenerateVerificationCode();
-                user.VerificationCode = verificationCode;
-                _context.SaveChanges();
+        //        string verificationCode = GenerateVerificationCode();
+        //        user.VerificationCode = verificationCode;
+        //        _context.SaveChanges();
 
 
-                await _sender.SendEmailAsync(email, "驗證碼", $"你的驗證碼: {verificationCode}");
+        //        await _sender.SendEmailAsync(email, "驗證碼", $"你的驗證碼: {verificationCode}");
 
-                return RedirectToAction("VerifyCode");
-            }
-            else
-            {
-                ModelState.AddModelError("", "不存在的Email");
-                return View();
-            }
-        }
+        //        return RedirectToAction("VerifyCode");
+        //    }
+        //    else
+        //    {
+        //        ModelState.AddModelError("", "不存在的Email");
+        //        return View();
+        //    }
+        //}
 
-        private string GenerateVerificationCode()
-        {
+        //private string GenerateVerificationCode()
+        //{
 
-            return new Random().Next(1000, 9999).ToString();
-        }
+        //    return new Random().Next(1000, 9999).ToString();
+        //}
 
-        [HttpGet]
-        public IActionResult VerifyCode()
-        {
-            return View();
-        }
+        //[HttpGet]
+        //public IActionResult VerifyCode()
+        //{
+        //    return View();
+        //}
 
-        [HttpPost]
-        public IActionResult VerifyCode(string code)
-        {
+        //[HttpPost]
+        //public IActionResult VerifyCode(string code)
+        //{
 
-            var user = _context.Users.FirstOrDefault(u => u.VerificationCode == code);
-            if (user != null)
-            {
-                // Code is valid, you can proceed with further actions
-                // For example, mark the email as verified or allow password reset
-                return RedirectToAction("Index", "Home");
-            }
-            else
-            {
-                ModelState.AddModelError("", "不合法的驗證碼");
+        //    var user = _context.Users.FirstOrDefault(u => u.VerificationCode == code);
+        //    if (user != null)
+        //    {
+        //        // Code is valid, you can proceed with further actions
+        //        // For example, mark the email as verified or allow password reset
+        //        return RedirectToAction("Index", "Home");
+        //    }
+        //    else
+        //    {
+        //        ModelState.AddModelError("", "不合法的驗證碼");
 
-                return View();
-            }
-        }
+        //        return View();
+        //    }
+        //}
     }
+
+
 
 
 }

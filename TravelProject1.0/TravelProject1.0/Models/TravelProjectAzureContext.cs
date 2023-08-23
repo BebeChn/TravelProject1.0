@@ -41,9 +41,8 @@ public partial class TravelProjectAzureContext : DbContext
     {
         if (!optionsBuilder.IsConfigured)
         {
-            IConfigurationRoot Config = new ConfigurationBuilder().SetBasePath(AppDomain.CurrentDomain.BaseDirectory).AddJsonFile("appsettings").Build();
-
-            optionsBuilder.UseSqlServer(Config.GetConnectionString("TravelProject"));
+            IConfigurationRoot Config = new ConfigurationBuilder().SetBasePath(AppDomain.CurrentDomain.BaseDirectory).AddJsonFile("appsettings.json").Build();
+            optionsBuilder.UseSqlServer(Config.GetConnectionString("TravelProjectAzure"));
         }
     }
 
