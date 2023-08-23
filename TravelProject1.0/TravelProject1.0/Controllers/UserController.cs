@@ -23,13 +23,13 @@ namespace TravelProject1._0.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly TravelProjectAzureContext _context;
-        //private readonly EmailSender _sender;
-        public UserController(ILogger<HomeController> logger, TravelProjectAzureContext context/*, EmailSender sender*/)
+        private readonly EmailSender _sender;
+        public UserController(ILogger<HomeController> logger, TravelProjectAzureContext context, EmailSender sender)
 
         {
             _logger = logger;
             _context = context;
-            //_sender = sender;
+            _sender = sender;
         }
         public IActionResult Index()
         {
@@ -88,7 +88,7 @@ namespace TravelProject1._0.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Register(UserDTO user)
+        public async Task  <IActionResult> Register(UserDTO user)
         {
             // 檢查用戶名與用法是否為空
             if (string.IsNullOrEmpty(user.Name) || string.IsNullOrEmpty(user.Password))
@@ -117,8 +117,14 @@ namespace TravelProject1._0.Controllers
             _context.Users.Add(newUser);
             _context.SaveChanges();
 
-            ViewBag.Message = "會員成功註冊.";
-            return View();
+           //註冊視同登入
+            List<Claim> claims = new List<Claim>();
+            new Claim(ClaimTypes.Name, $"{user.Name}");
+            new Claim("Email", user.Email);    
+            ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            ClaimsPrincipal principal = new ClaimsPrincipal(identity);
+            await HttpContext.SignInAsync(principal);
+            return RedirectToAction("Index", "Home");
         }
         // 生成隨機鹽
         private string GenerateSalt()
@@ -187,58 +193,59 @@ namespace TravelProject1._0.Controllers
             return View();
         }
 
-        //[HttpPost]
-        //public async Task<IActionResult> SendVerificationCode(string email)
-        //{
-        //    var user = _context.Users.FirstOrDefault(u => u.Email == email);
-        //    if (user != null)
-        //    {
-       
-        //        string verificationCode = GenerateVerificationCode();
-        //        user.VerificationCode = verificationCode;
-        //        _context.SaveChanges();
+        [HttpPost]
+        public async Task<IActionResult> SendVerificationCode(string email)
+        {
+            var user = _context.Users.FirstOrDefault(u => u.Email == email);
+            if (user != null)
+            {
 
-    
-        //        await _sender.SendEmailAsync(email, "Verification Code", $"Your verification code: {verificationCode}");
+                string verificationCode = GenerateVerificationCode();
+                user.VerificationCode = verificationCode;
+                _context.SaveChanges();
 
-        //        return RedirectToAction("VerifyCode");
-        //    }
-        //    else
-        //    {
-        //        ModelState.AddModelError("", "User with this email does not exist.");
-        //        return View();
-        //    }
-        //}
 
-        //private string GenerateVerificationCode()
-        //{
-        
-        //    return new Random().Next(1000, 9999).ToString();
-        //}
+                await _sender.SendEmailAsync(email, "驗證碼", $"你的驗證碼: {verificationCode}");
 
-        //[HttpGet]
-        //public IActionResult VerifyCode()
-        //{
-        //    return View();
-        //}
+                return RedirectToAction("VerifyCode");
+            }
+            else
+            {
+                ModelState.AddModelError("", "不存在的Email");
+                return View();
+            }
+        }
 
-        //[HttpPost]
-        //public IActionResult VerifyCode(string code)
-        //{
-      
-        //    var user = _context.Users.FirstOrDefault(u => u.VerificationCode == code);
-        //    if (user != null)
-        //    {
-        //        // Code is valid, you can proceed with further actions
-        //        // For example, mark the email as verified or allow password reset
-        //        return RedirectToAction("Index", "Home");
-        //    }
-        //    else
-        //    {
-        //        ModelState.AddModelError("", "Invalid verification code.");
-        //        return View();
-        //    }
-        //}
+        private string GenerateVerificationCode()
+        {
+
+            return new Random().Next(1000, 9999).ToString();
+        }
+
+        [HttpGet]
+        public IActionResult VerifyCode()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult VerifyCode(string code)
+        {
+
+            var user = _context.Users.FirstOrDefault(u => u.VerificationCode == code);
+            if (user != null)
+            {
+                // Code is valid, you can proceed with further actions
+                // For example, mark the email as verified or allow password reset
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                ModelState.AddModelError("", "不合法的驗證碼");
+
+                return View();
+            }
+        }
     }
 
 
