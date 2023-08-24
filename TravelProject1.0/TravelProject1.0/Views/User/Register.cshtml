@@ -16,7 +16,7 @@
             <div class="form-group">
                 <label for="gender"></label>
                 <input type="radio" v-model="gender" value="F"/>男
-                <input type="radio" v-model="gender" value="M"/>女
+                    <input type="radio" v-model="gender" value="M" />女
             </div>
             <div class="form-group">
                 <label for="birthday">生日:</label>
@@ -24,8 +24,8 @@
                     <div class="invalid-feedback">已被註冊、或您輸入的格式不正確</div>
             </div>
         <div class="form-group">
-            <label for="Email">Email:</label>
-                    <input v-model="email"  class="form-control" type="email" name="email"id="email" placeholder="必填"required />
+            <label for="email">Email:</label>
+                    <input v-model="email" class="form-control" type="email" name="email" id="email" placeholder="必填" required />
                     <div class="invalid-feedback">已被註冊、或您輸入的格式不正確</div>
             </div>
                 <label for="address">Address:</label>
@@ -35,7 +35,7 @@
             <div class="form-group">
                 <label for="phone">Phone:</label>
                 <input v-model="phone" type="text" class="form-control">
-                    <div class="invalid-feedback">已被註冊、或您輸入的格式不正確</div>
+                <div class="invalid-feedback">已被註冊、或您輸入的格式不正確</div>
             </div>
         <div class="form-group">
                 <label for="password">密碼:</label>
@@ -43,8 +43,8 @@
                     <div class="invalid-feedback">已被註冊、或您輸入的格式不正確</div>
         </div>
             <div class="form-group">
-                <label for="password" >重複輸入密碼:</label>
-                    <input v-model="password" type="password" class="form-control">
+                <label for="password">重複輸入密碼:</label>
+                <input v-model="password" type="password" class="form-control">
                     <div class="invalid-feedback">已被註冊、或您輸入的格式不正確</div>
             </div>
     </div>

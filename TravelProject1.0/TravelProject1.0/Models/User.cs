@@ -31,9 +31,11 @@ public partial class User
 
     public bool? EmailConfirmed { get; set; }
 
-    public string Salt { get; set; } = null!;
+    public string? Salt { get; set; }
 
-    public string?VerificationCode { get; set; }
+    public string? VerificationCode { get; set; }
+
+    public string? ResetToken { get; set; }
 
     public virtual ICollection<Cart> Carts { get; set; } = new List<Cart>();
 
