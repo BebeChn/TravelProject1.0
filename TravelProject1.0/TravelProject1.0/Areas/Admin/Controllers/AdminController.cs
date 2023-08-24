@@ -67,7 +67,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers
             y.Gender.Contains(AdminDTO.Gender) ||
             y.Address.Contains(AdminDTO.Address) ||
             y.Email.Contains(AdminDTO.Email)
-            || y.CreateDate==(AdminDTO.CreateDate)
+            || y.Birthday == (AdminDTO.Birthday)
             ).Select(x => new AdminDTO
             {
                 UserId = x.UserId,
@@ -75,7 +75,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers
                 Gender = x.Gender,
                 Address = x.Address,
                 Email = x.Email,
-                CreateDate = x.CreateDate,
+                Birthday = x.Birthday,
             });
         }
 
@@ -111,7 +111,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers
             User.Gender = AdminDTO.Gender;
             User.Address = AdminDTO.Address;
             User.Email = AdminDTO.Email;
-            User.CreateDate = AdminDTO.CreateDate;
+            User.Birthday = AdminDTO.Birthday;
             _db.Entry(User).State = EntityState.Modified;
 
             try
@@ -126,8 +126,6 @@ namespace TravelProject1._0.Areas.Admin.Controllers
             return "成功";
         }
 
-
-        
 
         [HttpDelete("{id}")]
         public async Task<string> AdminDELETE(int id)
@@ -154,15 +152,75 @@ namespace TravelProject1._0.Areas.Admin.Controllers
         }
 
 
+        //新增
+        //[HttpPost]
+        //public async Task<string> ADDAdmin(AdminDTO AdmDTO)
+        //{
+        //    if (_db.Users == null)
+        //    {
+        //        return null;
+        //    }
+        //    User ADM = new User
+        //    {
+        //        UserId = AdmDTO.UserId,
+        //        Name = AdmDTO.Name,
+        //        Gender = AdmDTO.Gender,
+        //        Address = AdmDTO.Address,
+        //        Email = AdmDTO.Email,
+        //        Birthday = AdmDTO.Birthday,
+        //        Password = AdmDTO.Password,
+        //    };
+        //    _db.Users.Add(ADM);
+        //    await _db.SaveChangesAsync();
+        //    AdmDTO.UserId = ADM.UserId;
+        //    return "成功";
+        //}
+
+
+        //[HttpPost]
+        //public async Task<string> ADDAdmin(AdminDTO AdmDTO)
+        //{
+        //    if (_db.Users == null)
+        //    {
+        //        return null;
+        //    }
+        //    User ADM = new User
+        //    {
+        //        UserId = AdmDTO.UserId,
+        //        Name = AdmDTO.Name,
+        //        Gender = AdmDTO.Gender,
+        //        Address = AdmDTO.Address,
+        //        Email = AdmDTO.Email,
+        //        Birthday = AdmDTO.Birthday,
+        //        Password = AdmDTO.Password,
+        //    };
+        //    _db.Users.Add(ADM);
+
+        //    try
+        //    {
+        //        await _db.SaveChangesAsync();
+        //        AdmDTO.UserId = ADM.UserId;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine(ex.Message);
+        //    }
+        //    return "成功";
+        //}
 
 
         //日期低高
         public async Task<IEnumerable<AdminDTO>> Datelower()
         {
-            return _db.Users.OrderBy(y => y.CreateDate)
+            return _db.Users.OrderBy(y => y.Birthday)
                 .Select(z => new AdminDTO
                 {
-                    CreateDate = z.CreateDate,
+                    UserId = z.UserId,
+                    Name = z.Name,
+                    Gender = z.Gender,
+                    Address = z.Address,
+                    Email = z.Email,
+                    Birthday = z.Birthday,
 
                 });
         }
@@ -170,10 +228,15 @@ namespace TravelProject1._0.Areas.Admin.Controllers
         //日期高低
         public async Task<IEnumerable<AdminDTO>> Datehigh()
         {
-            return _db.Users.OrderByDescending(y => y.CreateDate)
+            return _db.Users.OrderByDescending(y => y.Birthday)
                 .Select(z => new AdminDTO
                 {
-                    CreateDate = z.CreateDate,
+                    UserId = z.UserId,
+                    Name = z.Name,
+                    Gender = z.Gender,
+                    Address = z.Address,
+                    Email = z.Email,
+                    Birthday = z.Birthday,
 
                 
                 });

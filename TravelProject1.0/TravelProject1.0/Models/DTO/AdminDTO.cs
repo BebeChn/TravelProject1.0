@@ -13,9 +13,11 @@ namespace TravelProject1._0.Models.DTO
         [DisplayName("地址")]
         public string? Address { get; set; }
         [DisplayName("信箱")]
-        public string? Email { get; set; }
-        
-        public DateTime? CreateDate { get; set; }
+        public string Email { get; set; }
+
+
+        public DateTime? Birthday { get; set; }
+
 
     }
 }

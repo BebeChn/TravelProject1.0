@@ -1,6 +1,6 @@
 ﻿namespace TravelProject1._0.Models.DTO
 {
-    public class MerchandiseDTO
+    public class BookDTO
     {
         public int ProductId { get; set; }
 
@@ -11,9 +11,5 @@
         public decimal Price { get; set; }
 
         public string? MainDescribe { get; set; }
-
-        public string? SubDescribe { get; set; }
-
-        public string? ShortDescribe { get; set; }
     }
 }
