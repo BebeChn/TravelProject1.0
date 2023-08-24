@@ -8,6 +8,7 @@ using System.Text;
 using TravelProject1._0.Models.DTO;
 using TravelProject1._0.Models;
 using Microsoft.AspNetCore.Identity;
+using TravelProject1._0.ViewModel;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -20,13 +21,13 @@ namespace TravelProject1._0.Controllers.Api
         private readonly ILogger<HomeController> _logger;
         private readonly TravelProjectAzureContext _context;
         private readonly IConfiguration _configuration;
-        //private readonly EmailSender _emailSender;
-        public UserApiController(ILogger<HomeController> logger, TravelProjectAzureContext context/*, EmailSender emailSender*/)
+        private readonly EmailSender _emailSender;
+        public UserApiController(ILogger<HomeController> logger, TravelProjectAzureContext context, EmailSender emailSender)
 
         {
             _logger = logger;
             _context = context;
-            /*_emailSender = emailSender*/;
+            _emailSender = emailSender;
 
         }
         // GET: api/<UserApiController>
@@ -147,62 +148,53 @@ namespace TravelProject1._0.Controllers.Api
 
 
 
-    //    private string GenerateResetToken()
-    //    {
-    //        using var rng = RandomNumberGenerator.Create();
-    //        var bytes = new byte[20];
-    //        rng.GetBytes(bytes);
-    //        return Convert.ToBase64String(bytes);
-    //    }
+        private string GenerateResetToken()
+        {
+            using var rng = RandomNumberGenerator.Create();
+            var bytes = new byte[20];
+            rng.GetBytes(bytes);
+            return Convert.ToBase64String(bytes);
+        }
 
-    //    [HttpPost("forgot")]
-    //    public IActionResult ForgotPassword([FromBody] ForgotPasswordRequest request)
-    //    {
-    //        var user = _context.Users.FirstOrDefault(u => u.Name == request.Username);
-    //        if (user != null)
-    //        {
-    //            var resetToken = GenerateResetToken();
-    //            user.ResetToken = resetToken;
-    //            _context.SaveChanges();
+        [HttpPost("forgot")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
+        {
+            var user = _context.Users.FirstOrDefault(u => u.Email == request.Email);
+            if (user != null)
+            {
+                var resetToken = GenerateResetToken();
+                user.ResetToken = resetToken;
+                await _context.SaveChangesAsync();
 
+                
+                return Ok(new { ResetToken = resetToken });
+            }
+            else
+            {
+                return NotFound(new { Message = "郵件無效" });
+            }
+        }
 
-    //            return Ok(new { ResetToken = resetToken });
-    //        }
-    //        else
-    //        {
-    //            return NotFound(new { Message = "User not found" });
-    //        }
-    //    }
+        [HttpPost("reset")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
+        {
+            var user = _context.Users.FirstOrDefault(u => u.Email == request.Email && u.ResetToken == request.ResetToken);
+            if (user != null)
+            {
+                user.Password = request.NewPassword;
+                user.ResetToken = null;
+                await _context.SaveChangesAsync();
+                return Ok(new { Message = "密碼成功重設" });
+            }
+            else
+            {
+                return BadRequest(new { Message = "重設密碼" });
+            }
+        }
+    }
 
-    //    [HttpPost("reset")]
-    //    public IActionResult ResetPassword([FromBody] ResetPasswordRequest request)
-    //    {
-    //        var user = _context.Users.FirstOrDefault(u => u.Username == request.Username && u.ResetToken == request.ResetToken);
-    //        if (user != null)
-    //        {
-    //            user.Password = request.NewPassword;
-    //            user.ResetToken = null;
-    //            _context.SaveChanges();
-    //            return Ok(new { Message = "Password reset successfully" });
-    //        }
-    //        else
-    //        {
-    //            return BadRequest(new { Message = "Invalid reset token" });
-    //        }
-    //    }
-    //}
+    
 
-    //public class ForgotPasswordRequest
-    //{
-    //    public string Username { get; set; }
-    //}
-
-    //public class ResetPasswordRequest
-    //{
-    //    public string Username { get; set; }
-    //    public string ResetToken { get; set; }
-    //    public string NewPassword { get; set; }
-    //}
-
+    
 }
-}
+
