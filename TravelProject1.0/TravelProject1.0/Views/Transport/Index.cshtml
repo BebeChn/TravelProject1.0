@@ -34,6 +34,11 @@
         </div>
 
         <div class="col-md-9">
+            <div class="search">
+                <label class="sort-title">搜尋：</label>
+                <input type="text" class="inp-search" size="40" v-model="search" />
+            </div>
+
             <div class="sort">
                 <div class="row">
                     <div class="col-md-4">
@@ -48,7 +53,7 @@
                 </div>
             </div>
 
-            <div class="card" v-for="t in transport">
+            <div class="card" v-for="t in transportFilter">
                 <div class="row">
                     <div class="col-md-3 card-img">
                         <img class="img-transportation" src="~/lib/image/mountain2.jpeg" />
@@ -59,9 +64,7 @@
                     </div>
                     <div class="col-md-2 card-end">
                         <span class="product-price">NT {{t.price}}</span>
-                        <a asp-action="Plan" >
-                            <button class="btn btn-product">查看價格</button>
-                        </a>
+                        <a :href="'/Transport/Plan/'+t.productId" class="btn btn-product">查看價格</a>
                     </div>
                 </div>
             </div>
@@ -78,7 +81,8 @@
             data: {
                 transport: [],
                 priceOrderby: [],
-                count: 0
+                count: 0,
+                search: ''
             },
             mounted: function () {
                 //取得交通種類的商品
@@ -88,7 +92,7 @@
                         if (response.ok) return response.json();
                     }).then(data => {
                         _this.transport = data;
-                        //console.log(data);
+                        console.log(data);
                     }).catch(error => {
                         alert(error);
                     })
@@ -118,10 +122,12 @@
                                 alert(error);
                             })
                     }
-                },
-
-                //傳遞參數
-
+                }
+            },
+            computed: {
+                transportFilter: function () {
+                    return this.transport.filter(f => f.productName.match(this.search));
+                }
             }
         })
     </script>

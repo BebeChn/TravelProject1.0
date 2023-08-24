@@ -73,10 +73,9 @@
     <div>
         <div class="row">
             <div class="col-md-8 offset-2 text-center">
-                <h2 class="title">機場接送</h2>
+                <h2 class="title">{{product.productName}}</h2>
                 <div class="sub-descripts">
-                    <p>嚴選機場接駁，最快可訂購當日 6 小時後搭車，價錢還比搭計程車便宜，不需排隊等計程車</p>
-                    <p>訓練有素的司機用專業熱情的態度迎接旅客，舒適又快速載你直達桃園機場</p>
+                    <p>{{product.mainDescribe}}</p>
                 </div>
             </div>
         </div>
@@ -94,7 +93,21 @@
                 </div>
                 <div class="col-md-2 card-end">
                     <button class="btn btn-heart"><i class="fa-solid fa-heart fa-2xl"></i></button>
-                    <button class="btn btn-plan">選擇</button>
+                    <button class="btn btn-plan" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">選擇</button>
+                </div>
+                <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+                    <div class="row accordion-body">
+                        <div class="col-md-6">
+                            <h4>選擇日期</h4>
+                            <div></div>
+                        </div>
+                        <div class="col-md-6">
+                            <h4 class="">選擇項目</h4>
+                            <label class="">數量：</label>
+                            <input type="text" />
+                            <button class="btn btn-settle">結帳</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -112,7 +125,7 @@
                         <img class="img-caption" src="~/lib/image/mountain.jpeg" />
                     </div>
                     <div class="col-md-8">
-                        <p class="sub-descripts">場次設定僅供參考使用，非上車時間，如用車時間為 12:15，請選擇 12:00 場次；如用車時間為 23:40，請選擇 23:00 場次，以此類推，但實際接送時間將依照旅客航班資訊為主。</p>
+                        <p class="sub-descripts">{{product.subDescribe}}</p>
                     </div>
                 </div>
             </div>
@@ -166,16 +179,12 @@
         <h2 class="title">購買須知</h2>
         <ul>
             <li>
-                <p>農曆過年期間加價費用（現場支付加價費用給司機）：</p>
-                <p>五人車 TWD300 / 九人車 TWD500</p>
-            </li>
-            <li>
-                <p>多點下車加價費用（現場支付加價費用給司機）：</p>
-                <p>同區多點下車每個地點加收 NT$ 100、跨區多點下車將加收 NT$ 200 - NT$ 1,000</p>
+                <p>{{product.shortDescribe}}</p>
             </li>
         </ul>
     </div>
 </div>
+
 
 @*商品評價*@
 <div class="container rating">
@@ -279,15 +288,24 @@
             el: '#app',
             data: {
                 plan: [],
-                id: ''
+                product: []
             },
             mounted: function () {
                 var _this = this;
-                fetch(`${baseAddress}/api/TransportPlanApi/GetPlanByTransport/${id}`, { method: "GET" })
+                fetch(`${baseAddress}/api/TransportPlanApi/GetPlan/41`, { method: "GET" })
                     .then(response => {
                         if (response.ok) return response.json();
                     }).then(data => {
                         _this.plan = data;
+                    }).catch(error => {
+                        alert(error);
+                    });
+                fetch(`${baseAddress}/api/TransportPlanApi/GetProduct/41`, { method: "GET" })
+                    .then(response => {
+                        if (response.ok) return response.json();
+                    }).then(data => {
+                        _this.product = data;
+                        console.log(_this.product);
                     }).catch(error => {
                         alert(error);
                     })
