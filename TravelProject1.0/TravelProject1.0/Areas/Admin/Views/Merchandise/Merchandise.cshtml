@@ -55,8 +55,8 @@
                     <form class="d-flex" role="search">
                         @*<img src="./pic/search.png" width="100" height="60">*@
                         <!--輸入關鍵字-->
-@*                        <input class="form-control " type="search" placeholder="Search" aria-label="Search"
-                               v-model="filter" @@keyup="filterUser">*@
+                        <input class="form-control " type="search" placeholder="Search" aria-label="Search"
+                               v-model="Filter" @@keyup="filterMerchandise">
                         <button class="btn btn-outline-secondary " style="color :#1e2154" type="submit">
                             <Fieldset>搜尋</Fieldset>
                         </button>
@@ -88,16 +88,8 @@
             <span class="container-fluid   row">
                 <div class="col-1"></div>
                 @*新增員工紀錄案鍵*@
-                <div class="col-1 ">
-                    <button type="button" class="btn   btn-success" @@click="insertShow">新增</button>
-                </div>
-                @*刪除員工紀錄案鍵*@
-                <div class="col-1 ">
-                    <button type="button" class="btn btn-danger" @@click="deleteShow">刪除</button>
-                </div>
-                @*修改員工紀錄案鍵*@
-                <div class="col-1 ">
-                    <button type="button" class="btn btn-warning" @@click="editShow">修改</button>
+                <div class="col-2 ">
+                    <button type="button" class="btn   btn-success" @@click="showModal">新增</button>
                 </div>
                 <div class="col-3"></div>
                 <div class="col-3"></div>
@@ -109,6 +101,8 @@
                 <table class="table table-bordered">
                     <thead>
                         <tr>
+                            <td>產品ID</td>
+                            <td>商品種類ID</td>
                             <td>商品名稱</td>
                             <td>金額</td>
                             <td>主要敘述</td>
@@ -117,66 +111,96 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!--新增-->
-                        <template v-if="item.Edit==addMerchandise">
-                            <td>{{item.userId}}</td>
-                            <td><input v-model="item.productName " /></td>
+                    <!--新增-->
+                    <!--迴圈-->
+                    <tr v-for="item in MerchandiseDTOes">
+                        <!--修改-->
+                        <template v-if="item.Edit==true">
+                            <td>{{item.productId}}</td> 
+                            <td><input v-model="item.id" /></td>
+                            <td><input v-model="item.productName" /></td>
                             <td><input v-model="item.price" /></td>
                             <td><input v-model="item.mainDescribe" /></td>
                             <td><input v-model="item.subDescribe" /></td>
                             <td><input v-model="item.shortDescribe" /></td>
-                            <td>
-                                <button type="button" class="btn btn-success" @@click="update(item)">更新</button>
-                                <button type="button" class="btn btn-info" @@click="cancel">取消</button>
-                            </td>
-                        </template>
-                        <!--迴圈-->
-                    <tr v-for="item in MerchandiseDTOes">
-                        <!--修改-->
-                        <template v-if="item.Edit==editMerchandise">
-                                <td>{{item.userId}}</td>
-                                <td><input v-model="item.name" /></td>
-                                <td><input v-model="item.gender" /></td>
-                                <td><input v-model="item.address" /></td>
-                                <td><input v-model="item.email" /></td>
-                                <td><input v-model="item.birthday" /></td>
                                 <td>
-                                    <button type="button" class="btn btn-success" @@click="update(item)">更新</button>
+                                <button type="button" class="btn btn-success" @@click="update(item)">儲存</button>
+                                </td>
+                                <td>
                                     <button type="button" class="btn btn-info" @@click="cancel">取消</button>
                                 </td>
-                            </template>
-                        <!--刪除-->
-                        <template v-if="item.Edit==deleteMerchandise">
-                            <td>{{item.userId}}</td>
-                            <td>{{item.userId}}</td>
-                            <td>{{item.name}}</td>
-                            <td>{{item.gender}}</td>
-                            <td>{{item.address}}</td>
-                            <td>{{item.email}}</td>
-                            <td>{{item.birthday}}</td>
-                            <td>
-                                <button type="button" class="btn btn-danger" @@click="deleteMch(item.userId)">刪除</button>
-                                <button type="button" class="btn btn-info" @@click="cancel">取消</button>
-                            </td>
                         </template>
                         <!--正常-->
-                            <template v-else>
-                                <td>{{item.userId}}</td>
-                                <td>{{item.name}}</td>
-                                <td>{{item.gender}}</td>
-                                <td>{{item.address}}</td>
-                                <td>{{item.email}}</td>
-                                <td>{{item.birthday}}</td>
-                                <td>
-                                    <button type="button" class="btn btn-primary" @@click="edit(item.UserId)">修改</button>
-                                    <button type="button" class="btn btn-info" @@click="cancel">取消</button>
-                                </td>
-                            </template>
-                        </tr>
+                        <template v-else>
+                            <td>{{item.productId}}</td>
+                            <td>{{item.id}}</td>
+                            <td>{{item.productName}}</td>
+                            <td>{{item.price}}</td>
+                            <td>{{item.mainDescribe}}</td>
+                            <td>{{item.subDescribe}}</td>
+                            <td>{{item.shortDescribe}}</td>
+                            <td>
+                            <button type="button" class="btn btn-warning" @@click="edit(item.productId)">修改</button>
+                            </td>
+                            <td>
+                            <button type="button" class="btn btn-danger" @@click="deleteMch(item.productId)">刪除</button>
+                            </td>
+                        </template>
+                    </tr>
                     </tbody>
                 </table>
-    
-    
+
+
+
+         <!------------------------------------------新增紀錄的畫面--------------------------------------->
+            <!-- Modal Body -->
+            <!-- if you want to close by clicking outside the modal, delete the last endpoint:data-bs-backdrop and data-bs-keyboard -->
+            <div class="modal fade" id="insertModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalTitleId">新增商品紀錄</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label class="form-label">addid</label>
+                                <input v-model="addid" type="text" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">addproductName</label>
+                                <input v-model="addproductName" type="text" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">addprice</label>
+                                <input v-model="addprice" type="text" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">addmainDescribe</label>
+                                <input v-model="addmainDescribe" type="text" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">addsubDescribe</label>
+                                <input v-model="addsubDescribe" type="text" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">addshortDescribe</label>
+                                <input v-model="addshortDescribe" type="text" class="form-control" />
+                            </div>
+                            Body
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                            <button type="button" class="btn btn-primary" @@click="insert">新增</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+         <!------------------------------------------新增紀錄的畫面底--------------------------------------->
+
+
+
+
 
     
         
@@ -191,32 +215,168 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js" integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://unpkg.com/vue@next"></script>
     <script src="~/js/planetk.js"></script>
+
+
     <script>
         var baseAddress = "https://localhost:7025"
-
-
         var vueApp = {
             data() {
                 return {
                     MerchandiseDTOes: [],
-
-
+                    Filter:'', //關鍵字
+                     //新增
+                    addid:'',
+                    addproductName:'',
+                    addprice: '',
+                    addmainDescribe: '',
+                    addsubDescribe: '',
+                    addshortDescribe: '',
+                    //原本
+                    originalid:'',
+                    originalproductName: '',
+                    originalprice: '',
+                    originalmainDescribe: '',
+                    originalsubDescribe: '',
+                    originalshortDescribe: '',
+ 
                 };
             },
             mounted: function () {
-
+                let _this=this;
+                _this.filterMerchandise();
+                
             },
             methods: {
+                filterMerchandise: function () {
+                    let _this = this;
+                    //alert("篩選");
+                    var request = {};
+                    request.ProductId = isNaN(Number(_this.Filter)) ? -1 : Number(_this.Filter);
+                    request.ProductName = request.MainDescribe = request.SubDescribe = _this.ShortDescribe = _this.Filter;
+                    axios.post(`${baseAddress}/api/Merchandise/MerchandiseSearch`, request)
+                        .then(response => {
+                            _this.MerchandiseDTOes = response.data;
+                            for (var i = 0; i < _this.MerchandiseDTOes.length; i++) {
+                                var item = _this.MerchandiseDTOes[i];
+                                item.Edit = false;
+                                 
+                            }
+                        })
+                        .catch(err => {
+                            alert(err);
+                        });
+                },
 
-                insertShow: function () {
-                    alert("insertShow")
+
+
+
+                //取消
+                cancel: function () {
+                    //alert("delete");
+                    let _this = this;
+                    for (var i = 0; i < _this.MerchandiseDTOes.length; i++) {
+                        var item = _this.MerchandiseDTOes[i];
+                        if (item.Edit == true ) {    
+                            
+                            item.Edit = false;
+                            item.id = _this.originalid;
+                            item.productName = _this.originalproductName;
+                            item.price = _this.originalprice;
+                            item.mainDescribe = _this.originalmainDescribe;
+                            item.subDescribe = _this.originalsubDescribe;
+                            item.shortDescribe = _this.originalshortDescribe;
+
+
+                        }
+ 
+ 
+ 
+                    }
                 },
-                deleteShow: function () {
-                    alert("deleteShow")
+                edit: function (productId) {
+                    let _this = this;
+                    for (var i = 0; i < _this.MerchandiseDTOes.length; i++) {
+                        var item = _this.MerchandiseDTOes[i];
+                        if (item.productId == productId) {
+                            item.Edit = true;
+                            _this.originalid = item.id;
+                            _this.originalproductName = item.productName;
+                            _this.originalprice = item.price;
+                            _this.originalmainDescribe = item.mainDescribe;
+                            _this.originalsubDescribe = item.subDescribe;
+                            _this.originalshortDescribe = item.shortDescribe;
+                        }
+
+                     }
                 },
-                editShow: function () {
-                    alert("editShow")
+                //儲存
+                update:function(item){
+                    let _this=this;
+                    var request={};
+
+                    request.ProductId = item.productId;
+                    request.Id = item.id;
+                    request.ProductName = item.productName;
+                    request.Price = item.price;
+                    request.MainDescribe = item.mainDescribe;
+                    request.SubDescribe = item.subDescribe;
+                    request.ShortDescribe = item.shortDescribe;
+                    axios.put(`${baseAddress}/api/Merchandise/MerchandisePUT/${item.productId}`, request).then(response => {
+                        alert(response.data);
+                        _this.filterMerchandise();
+                    }).catch(err=>{
+                        alert(err);
+                    });
+
                 },
+
+                deleteMch: function (productId){
+                    var ret = confirm('確定要刪除嗎?');
+                    let _this = this;
+                     
+                    if(ret==true){
+                        axios.delete(`${baseAddress}/api/Merchandise/MerchandiseDELETE/${productId}`).then(response=>{
+                            alert(response.data);
+                            _this.filterMerchandise();
+                        }).catch(err=>{
+                            alert(err);
+                        })
+
+
+                    }
+                },
+                //showModal
+                showModal:function(){
+                    $("#insertModal").modal("show");
+                },
+                //insert
+                insert:function(){
+                    let _this = this;
+                    //alert("insert");
+
+                    var request={
+
+                        ProductId:0,
+                        Id: _this.addid,
+                        ProductName: _this.addproductName,
+                        Price: _this.addprice,
+                        MainDescribe: _this.addmainDescribe,
+                        SubDescribe: _this.addsubDescribe,
+                        ShortDescribe: _this.addshortDescribe,
+                    };
+                    axios.post(`#{baseAddress}/api/Merchandise/MerchandiseADD`,request).then(response=>{
+                        alert(response.data);
+                        $('#insertModal').modal("hide");
+                        _this.filterMerchandise();
+                    }).catch(err=>{
+                        alert(err);
+                    });
+                     
+
+                },
+
+
+
 
             }
         };
