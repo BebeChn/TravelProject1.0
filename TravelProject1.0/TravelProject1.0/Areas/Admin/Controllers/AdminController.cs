@@ -52,13 +52,13 @@ namespace TravelProject1._0.Areas.Admin.Controllers
                 Name = x.Name,
                 UserId = x.UserId,
                 Email = x.Email,
-               
-                
-            }); 
+
+
+            });
 
         }
 
-    [HttpPost]
+        [HttpPost]
         public async Task<IEnumerable<AdminDTO>> AdminSearch(AdminDTO AdminDTO)
         {
             return _db.Users.Where(y =>
