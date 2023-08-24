@@ -1,4 +1,4 @@
-﻿namespace TravelProject1._0.ViewModel
+﻿namespace TravelProject1._0.Models.ViewModel
 {
     public class ResetPasswordRequest
     {

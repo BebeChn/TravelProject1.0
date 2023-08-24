@@ -8,7 +8,8 @@ using System.Text;
 using TravelProject1._0.Models.DTO;
 using TravelProject1._0.Models;
 using Microsoft.AspNetCore.Identity;
-using TravelProject1._0.ViewModel;
+using TravelProject1._0.Models.ViewModel;
+using Microsoft.Win32;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -141,13 +142,52 @@ namespace TravelProject1._0.Controllers.Api
 
         // PUT api/<UserApiController>/5
         [HttpPut("{id}")]
-        public void PutPeople(int id, [FromBody] string value)
+        public async Task<IActionResult>PutPeople(Guid id, PutPeopleViewModel model)
         {
+            if (id != model.UserId)
+            {
+                return BadRequest("欲修改之 User ID 與實際傳入 ID 不同");
+            }
+            User user = await _context.Users.FindAsync(id);
 
+
+            if (user! == null)
+            {
+                string salt = GenerateSalt();
+
+                string hashedPassword = HashPassword(model.Password, salt);
+
+                if (hashedPassword==model.OldPassword)
+                    return BadRequest("密碼不可重複");
+            }
+
+            // 有輸入新密碼才修改密碼
+            if (model.Password != null)
+            {
+                string salt = GenerateSalt();
+
+                string hashedPassword = HashPassword(model.Password, salt);
+
+                user.Salt =salt;
+                user.PasswordHash = hashedPassword;
+            }
+
+            // 修改其他個資
+            user.Email = model.Email;
+           
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch
+            {
+                return Conflict();
+            }
+      
+
+            return Ok();
         }
-
-
-
         private string GenerateResetToken()
         {
             using var rng = RandomNumberGenerator.Create();
@@ -193,8 +233,12 @@ namespace TravelProject1._0.Controllers.Api
         }
     }
 
+
+       
+ }
+
     
 
     
-}
+
 
