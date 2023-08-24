@@ -98,7 +98,7 @@
                         Email: _this.email,
                         Address:_this.address
                     };
-                      axios.post(`${baseAddress}/api/UserApi/postpeople`, form).then(response => {
+                      axios.post(`${baseAddress}/api/UserApi/PostUser`, form).then(response => {
                         alert(response.data);
                     }).catch(err => {
                         alert(err);
