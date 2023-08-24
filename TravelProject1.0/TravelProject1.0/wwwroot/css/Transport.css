@@ -1,5 +1,5 @@
-﻿.div-img{
-    margin-bottom:20px;
+﻿.div-img {
+    margin-bottom: 20px;
 }
 
 .img {
@@ -22,6 +22,15 @@
 .sort-title {
     font-size: 36px;
     font-weight: bold;
+}
+
+.search{
+    margin-bottom:30px;
+}
+
+.inp-search{
+    font-size:32px;
+    height:40px;
 }
 
 .btn-sort {

@@ -1,8 +1,12 @@
-﻿@section Styles{
+﻿@{
+    ViewData["Title"] = "購物車";
+}
+
+@section Styles{
     <link href="~/css/cart.css" rel="stylesheet" />
 }
 
-<h1>購物車頁面</h1>
+<h1>購物車</h1>
 
 <table class="table table-striped table-bordered table-hover">
     <thead>
@@ -15,10 +19,10 @@
             <th>操作</th>
         </tr>
     </thead>
-    <tbody>
-        <tr>
+    <tbody class="cart">
+        <tr class="cart-item">
             <td>
-                <input class="inp-checkbox" type="checkbox" />
+                <input class="inp-cart" type="checkbox" onclick="totalPrice()" />
             </td>
             <td>
                 <img style="width:100px;height:100px;" src="~/lib/image/mountain.jpeg" />
@@ -26,14 +30,34 @@
             <td>
                 小王子飯店
             </td>
-            <td>
+            <td class="cart-quantity">
                 1
             </td>
-            <td>
+            <td class="cart-price">
                 9999
             </td>
             <td>
-                <button class="btn btn-delete" onclick="removeItem()">刪除</button>
+                <button class="btn btn-delete">刪除</button>
+            </td>
+        </tr>
+        <tr class="cart-item">
+            <td>
+                <input class="inp-cart" type="checkbox" onclick="totalPrice()" />
+            </td>
+            <td>
+                <img style="width:100px;height:100px;" src="~/lib/image/mountain.jpeg" />
+            </td>
+            <td>
+                小國王飯店
+            </td>
+            <td class="cart-quantity">
+                1
+            </td>
+            <td class="cart-price">
+                10000
+            </td>
+            <td>
+                <button class="btn btn-delete">刪除</button>
             </td>
         </tr>
     </tbody>
@@ -41,7 +65,8 @@
 <hr />
 <div class="total">
     <div>
-        <span class="span-total">總金額：NT0</span>
+        <span class="span-total">總金額：</span>
+        <span class="total-price">NT0</span>
     </div>
     <div>
         <button class="btn btn-buy">前往結帳</button>
@@ -49,17 +74,5 @@
 </div>
 
 @section Scripts{
-    <script>
-        function removeItem() {
-            var deleteItem = document.querySelectorAll('.btn-delete')[0];
-            var check = document.querySelectorAll('.inp-checkbox');
-            console.log(deleteItem);
-            for (var i = 0; i < deleteItem.length; i++) {
-                var checkBox = check[i];
-                if (checkBox.checked == true) {
-
-                }
-            }
-        }
-    </script>
+    <script src="~/js/cart.js"></script>
 }
