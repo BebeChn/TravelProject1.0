@@ -1,4 +1,4 @@
-﻿@model TravelProject1._0.Models.DTO.UserDTO
+﻿
 @{
     ViewData["Title"] = "Register";
 }
@@ -6,43 +6,52 @@
 <h1>Register</h1>
 <div id="app">
 <div class="panel panel-primary">
-    <div class="panel-heading"></div>
+    <div class="panel-heading">
     <div class="panel-body">
             <div class="form-group">
-                <label asp-for="@Model.Name">姓名:</label>
-                <input asp-validation-for="" type="text" class="form-control">
+                <label for="name">姓名:</label>
+                <input asp-validation-for="" type="text" class="form-control" v-model="name"/>
+                <div class="invalid-feedback">已被註冊、或您輸入的格式不正確</div>
             </div>
             <div class="form-group">
-                <label asp-for="@Model.Gender">性別:</label>
-                <input type="radio" asp-for="@Model.Gender" value="boy"/>男
-                <input type="radio" asp-for="@Model.Gender" value="girl"/>女
+                <label for="gender"></label>
+                <input type="radio" v-model="gender" value="F"/>男
+                <input type="radio" v-model="gender" value="M"/>女
             </div>
             <div class="form-group">
-                <label asp-for="@Model.Birthday">生日:</label>
-                <input asp-validation-for="" type="text" class="form-control">
+                <label for="birthday">生日:</label>
+                    <input v-model="birthday" type="datetime" class="form-control" />
+                    <div class="invalid-feedback">已被註冊、或您輸入的格式不正確</div>
             </div>
         <div class="form-group">
-            <label asp-for="@Model.Email">Email:</label>
-            <input asp-validation-for="" type="text" class="form-control">
-        </div>
+            <label for="Email">Email:</label>
+                    <input v-model="email"  class="form-control" type="email" name="email"id="email" placeholder="必填"required />
+                    <div class="invalid-feedback">已被註冊、或您輸入的格式不正確</div>
+            </div>
+                <label for="address">Address:</label>
+                <input v-model="address" class="form-control" name="address" id="address" placeholder="必填" required />
+                <div class="invalid-feedback">已被註冊、或您輸入的格式不正確</div>
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone:</label>
+                <input v-model="phone" type="text" class="form-control">
+                    <div class="invalid-feedback">已被註冊、或您輸入的格式不正確</div>
+            </div>
         <div class="form-group">
-                <label asp-for="@Model.Password">密碼:</label>
-            <input asp-validation-for="" type="password" class="form-control">
+                <label for="password">密碼:</label>
+                    <input v-model="password" type="password" class="form-control">
+                    <div class="invalid-feedback">已被註冊、或您輸入的格式不正確</div>
         </div>
             <div class="form-group">
-                <label asp-for="@Model.Password">重複輸入密碼:</label>
-                <input asp-validation-for="" type="password" class="form-control">
+                <label for="password" >重複輸入密碼:</label>
+                    <input v-model="password" type="password" class="form-control">
+                    <div class="invalid-feedback">已被註冊、或您輸入的格式不正確</div>
             </div>
-      
-        <div class="form-group">
-            <label asp-for="@Model.Phone">Phone:</label>
-            <input type="text" class="form-control">
-        </div>
-
     </div>
     <div class="panel-footer">
-        <button type="button" class="btn btn-primary">註冊</button>
+                <button type="button" class="btn btn-primary" @@click="Register" >註冊</button></button>
     </div>
+</div>
 </div>
 
 <div class="modal fade" id="ErrorAlert" tabindex="-1" role="dialog">
@@ -58,48 +67,46 @@
     </div>
 </div>
 </div>
-@section scripts {
-    @* <script>
-        var app = new Vue({
-            el: '#app'
-            , data: function () {
-                var data = {
-                    form: {}
-                };
-                return data;
-            }
-            , methods: {
-                // 執行註冊按鈕
-                DoRegister: function () {
-                    var self = this;
-
-                    // 組合表單資料
-                    var postData = {};
-                    postData['UserID'] = self.form.UserID;
-                    postData['UserPwd'] = self.form.UserPwd;
-                    postData['UserName'] = self.form.UserName;
-                    postData['UserEmail'] = self.form.UserEmail;
-
-                    // 使用 jQuery Ajax 傳送至後端
-                    $.ajax({
-                        url: '@Url.Content("~/Member/DoRegister")',
-                        method: 'POST',
-                        dataType: 'json',
-                        data: { inModel: postData },
-                        success: function (datas) {
-                            if (datas.ErrMsg) {
-                                alert(datas.ErrMsg);
-                                return;
-                            }
-                            alert(datas.ResultMsg);
-                        },
-                        error: function (err) {
-                            $('#ErrorMsg').html(err.responseText);
-                            $('#ErrorAlert').modal('toggle');
-                        },
+@section Scripts{
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js" integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        var baseAddress ="https://localhost:7025";
+        var vueApp = new Vue({
+            el: '#app',
+            data: {
+                form: [],
+                name: "",
+                gender: "",
+                birthday: "",
+                password: "",
+                phone: "",
+                email: "",
+                address:"",
+            },
+            
+            methods: {
+                Register: function () {
+                    let _this = this;
+                    var form = {
+                        userId: "",
+                        Name: _this.name,
+                        Gender: _this.gender,
+                        Birthday: _this.birthday,
+                        Password: _this.password,
+                        Phone: _this.phone,
+                        Email: _this.email,
+                        Address:_this.address
+                    };
+                      axios.post(`${baseAddress}/api/UserApi/postpeople`, form).then(response => {
+                        alert(response.data);
+                    }).catch(err => {
+                        alert(err);
                     });
-                }
+                },
             }
-        })
-    </script> *@
+        });
+   
+    </script>
 }
+
