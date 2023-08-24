@@ -33,7 +33,7 @@ public partial class User
 
     public string Salt { get; set; } = null!;
 
-    public string VerificationCode { get; set; } = null!;
+    public string?VerificationCode { get; set; }
 
     public virtual ICollection<Cart> Carts { get; set; } = new List<Cart>();
 

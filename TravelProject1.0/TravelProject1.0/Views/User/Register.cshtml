@@ -15,18 +15,22 @@
             </div>
             <div class="form-group">
                 <label for="gender"></label>
-                <input type="radio" v-model="gender" value="boy" />男
-                <input type="radio" v-model="gender" value="girl"/>女
+                <input type="radio" v-model="gender" value="F"/>男
+                <input type="radio" v-model="gender" value="M"/>女
             </div>
             <div class="form-group">
                 <label for="birthday">生日:</label>
-                    <input v-model="birthday" type="date" class="form-control" />
+                    <input v-model="birthday" type="datetime" class="form-control" />
                     <div class="invalid-feedback">已被註冊、或您輸入的格式不正確</div>
             </div>
         <div class="form-group">
             <label for="Email">Email:</label>
                     <input v-model="email"  class="form-control" type="email" name="email"id="email" placeholder="必填"required />
                     <div class="invalid-feedback">已被註冊、或您輸入的格式不正確</div>
+            </div>
+                <label for="address">Address:</label>
+                <input v-model="address" class="form-control" name="address" id="address" placeholder="必填" required />
+                <div class="invalid-feedback">已被註冊、或您輸入的格式不正確</div>
             </div>
             <div class="form-group">
                 <label for="phone">Phone:</label>
@@ -45,7 +49,7 @@
             </div>
     </div>
     <div class="panel-footer">
-                <button type="button" class="btn btn-primary" @@click="Register" @Url.Action("sendEmail")>註冊</button></button>
+                <button type="button" class="btn btn-primary" @@click="Register" >註冊</button></button>
     </div>
 </div>
 </div>
@@ -77,24 +81,25 @@
                 birthday: "",
                 password: "",
                 phone: "",
-                email: ""
-
+                email: "",
+                address:"",
             },
             
             methods: {
-               async Register: function () {
+                Register: function () {
                     let _this = this;
                     var form = {
-                        userId: 0,
+                        userId: "",
                         Name: _this.name,
-                        Gander: _this.gander,
+                        Gender: _this.gender,
                         Birthday: _this.birthday,
                         Password: _this.password,
                         Phone: _this.phone,
-                        Email: _this.email
+                        Email: _this.email,
+                        Address:_this.address
                     };
-                     await axios.post(`${baseAddress}/api/UserApi/postpeople`, form).then(response => {
-                        alert(JSON.stringify(data));
+                      axios.post(`${baseAddress}/api/UserApi/postpeople`, form).then(response => {
+                        alert(response.data);
                     }).catch(err => {
                         alert(err);
                     });

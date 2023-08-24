@@ -16,6 +16,8 @@ namespace TravelProject1._0.Models.DTO
      
         public string Phone { get; set; } = null!;
 
+        public string? Address { get; set; }
+
     }
 }
 

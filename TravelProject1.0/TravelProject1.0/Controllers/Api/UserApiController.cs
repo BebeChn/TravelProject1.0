@@ -7,6 +7,7 @@ using System.Security.Cryptography;
 using System.Text;
 using TravelProject1._0.Models.DTO;
 using TravelProject1._0.Models;
+using Microsoft.AspNetCore.Identity;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -18,38 +19,40 @@ namespace TravelProject1._0.Controllers.Api
     {
         private readonly ILogger<HomeController> _logger;
         private readonly TravelProjectAzureContext _context;
-
-        public UserApiController(ILogger<HomeController> logger, TravelProjectAzureContext context)
+        private readonly IConfiguration _configuration;
+        private readonly EmailSender _emailSender;
+        public UserApiController(ILogger<HomeController> logger, TravelProjectAzureContext context, EmailSender emailSender)
 
         {
             _logger = logger;
             _context = context;
+            _emailSender= emailSender;
           
         }
         // GET: api/<UserApiController>
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
+        //[HttpGet]
+        //public IEnumerable<string> Get()
+        //{
+        //    return new string[] { "value1", "value2" };
+        //}
 
         // GET api/<UserApiController>/5
         [HttpGet("{id}")]
         public async Task<IActionResult>getpeople()
         {
-            IQueryable<User> userQry = _context.Users;
-            UserDTO[] user=await userQry
-                .Select(u => new UserDTO
-                {
-                    Name=u.Name,
-                    Email = u.Email,
-                    Gender = u.Gender,
-                    Birthday=u.Birthday, 
-                    Phone = u.Phone,
-                })
-                .ToArrayAsync();
+            //IQueryable<User> userQry = _context.Users;
+            //UserDTO[] user=await userQry
+            //    .Select(u => new UserDTO
+            //    {
+            //        Name=u.Name,
+            //        Email = u.Email,
+            //        Gender = u.Gender,
+            //        Birthday=u.Birthday, 
+            //        Phone = u.Phone,
+            //    })
+            //    .ToArrayAsync();
 
-            return Ok(user);
+            return Ok();
         }
         // POST api/<UserApiController>
         [HttpPost]
@@ -61,8 +64,10 @@ namespace TravelProject1._0.Controllers.Api
                 return BadRequest("帳號或密碼已被使用"); 
             }
             // 對密碼進行加鹽
+          
+            
             string salt = GenerateSalt();
-   
+
             string hashedPassword = HashPassword(register.Password, salt);
 
             // 創建用戶實體
@@ -72,27 +77,37 @@ namespace TravelProject1._0.Controllers.Api
                 Gender = register.Gender,
                 Email = register.Email,
                 Birthday = register.Birthday,
+                Phone = register.Phone,
                 Password = register.Password,
                 PasswordHash = hashedPassword,
-                Salt=salt,
-               
+                Salt = salt,
+                CreateDate= DateTime.Now,
+                Address=register.Address
+                
             };
+           
+        // 添加用戶到資料庫
 
-            // 添加用戶到資料庫
-            try { 
-            _context.Users.Add(newUser);
+        _context.Users.Add(newUser);
+            try
+            {
+                _context.SaveChanges();
             }
-            catch { 
-            _context.SaveChanges();
-                }
-          
+            catch (Exception ex)
+            {
+                
+                Console.WriteLine(ex.Message);
+                return Conflict("資料庫更新失敗");
+            }
             List<Claim> claims = new List<Claim>();
-            new Claim(ClaimTypes.Name, $"{register.Name}");
-            new Claim("Email", register.Email);
+            claims.Add(new Claim(ClaimTypes.Name, $"{register.Name}")); 
+            claims.Add(new Claim("Email", register.Email));
             ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             ClaimsPrincipal principal = new ClaimsPrincipal(identity);
-            await HttpContext.SignInAsync(principal);
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
             return RedirectToAction("Index", "Home");
+
+
         }
         // 生成隨機鹽
         private string GenerateSalt()
@@ -128,7 +143,37 @@ namespace TravelProject1._0.Controllers.Api
         {
 
         }
+        //[HttpPost]
+        //public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDTO resetPasswordDTO)
+        //{
+        //    if (string.IsNullOrEmpty(resetPasswordDTO.Email))
+        //    {
+        //        return BadRequest("Email為必填");
+        //    }
 
-       
+        //    string resetToken = Guid.NewGuid().ToString();
+        //    DateTime expirationTime = DateTime.Now.AddHours(24);
+        //    PasswordResetToken tokenEntity = new PasswordResetToken
+        //    {
+        //        Email = resetPasswordDTO.Email,
+        //        Token = resetToken,
+        //        ExpirationTime = expirationTime
+        //    };
+
+            
+        //    _context.SaveChanges();
+
+        //    string resetLink = $"https://yourapp.com/reset-password?token={resetToken}";
+
+
+        //    await _emailSender.SendEmailAsync(resetPasswordDTO.Email, "密碼重設", $"確認連結密碼:{{resetLink}}");
+
+
+        //    return Ok(new { Message = "密碼重設" });
+
+        //}
     }
+
+
+
 }
