@@ -20,14 +20,14 @@ namespace TravelProject1._0.Controllers.Api
         private readonly ILogger<HomeController> _logger;
         private readonly TravelProjectAzureContext _context;
         private readonly IConfiguration _configuration;
-        private readonly EmailSender _emailSender;
-        public UserApiController(ILogger<HomeController> logger, TravelProjectAzureContext context, EmailSender emailSender)
+        //private readonly EmailSender _emailSender;
+        public UserApiController(ILogger<HomeController> logger, TravelProjectAzureContext context/*, EmailSender emailSender*/)
 
         {
             _logger = logger;
             _context = context;
-            _emailSender= emailSender;
-          
+            /*_emailSender = emailSender*/;
+
         }
         // GET: api/<UserApiController>
         //[HttpGet]
@@ -38,7 +38,7 @@ namespace TravelProject1._0.Controllers.Api
 
         // GET api/<UserApiController>/5
         [HttpGet("{id}")]
-        public async Task<IActionResult>getpeople()
+        public async Task<IActionResult> getpeople()
         {
             //IQueryable<User> userQry = _context.Users;
             //UserDTO[] user=await userQry
@@ -56,16 +56,16 @@ namespace TravelProject1._0.Controllers.Api
         }
         // POST api/<UserApiController>
         [HttpPost]
-        public async Task<IActionResult>postpeople(RegisterDTO register)
+        public async Task<IActionResult> postpeople(RegisterDTO register)
         {
             // 檢查用戶名與用法是否為空
             if (string.IsNullOrEmpty(register.Name) || string.IsNullOrEmpty(register.Password))
             {
-                return BadRequest("帳號或密碼已被使用"); 
+                return BadRequest("帳號或密碼已被使用");
             }
             // 對密碼進行加鹽
-          
-            
+
+
             string salt = GenerateSalt();
 
             string hashedPassword = HashPassword(register.Password, salt);
@@ -81,30 +81,31 @@ namespace TravelProject1._0.Controllers.Api
                 Password = register.Password,
                 PasswordHash = hashedPassword,
                 Salt = salt,
-                CreateDate= DateTime.Now,
-                Address=register.Address
-                
-            };
-           
-        // 添加用戶到資料庫
+                CreateDate = DateTime.Now,
+                Address = register.Address
 
-        _context.Users.Add(newUser);
+            };
+
+            // 添加用戶到資料庫
+
+            _context.Users.Add(newUser);
             try
             {
                 _context.SaveChanges();
             }
             catch (Exception ex)
             {
-                
+
                 Console.WriteLine(ex.Message);
                 return Conflict("資料庫更新失敗");
             }
             List<Claim> claims = new List<Claim>();
-            claims.Add(new Claim(ClaimTypes.Name, $"{register.Name}")); 
+            claims.Add(new Claim(ClaimTypes.Name, $"{register.Name}"));
             claims.Add(new Claim("Email", register.Email));
             ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             ClaimsPrincipal principal = new ClaimsPrincipal(identity);
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+            
             return RedirectToAction("Index", "Home");
 
 
@@ -143,37 +144,65 @@ namespace TravelProject1._0.Controllers.Api
         {
 
         }
-        //[HttpPost]
-        //public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDTO resetPasswordDTO)
-        //{
-        //    if (string.IsNullOrEmpty(resetPasswordDTO.Email))
-        //    {
-        //        return BadRequest("Email為必填");
-        //    }
-
-        //    string resetToken = Guid.NewGuid().ToString();
-        //    DateTime expirationTime = DateTime.Now.AddHours(24);
-        //    PasswordResetToken tokenEntity = new PasswordResetToken
-        //    {
-        //        Email = resetPasswordDTO.Email,
-        //        Token = resetToken,
-        //        ExpirationTime = expirationTime
-        //    };
-
-            
-        //    _context.SaveChanges();
-
-        //    string resetLink = $"https://yourapp.com/reset-password?token={resetToken}";
-
-
-        //    await _emailSender.SendEmailAsync(resetPasswordDTO.Email, "密碼重設", $"確認連結密碼:{{resetLink}}");
-
-
-        //    return Ok(new { Message = "密碼重設" });
-
-        //}
-    }
 
 
 
+    //    private string GenerateResetToken()
+    //    {
+    //        using var rng = RandomNumberGenerator.Create();
+    //        var bytes = new byte[20];
+    //        rng.GetBytes(bytes);
+    //        return Convert.ToBase64String(bytes);
+    //    }
+
+    //    [HttpPost("forgot")]
+    //    public IActionResult ForgotPassword([FromBody] ForgotPasswordRequest request)
+    //    {
+    //        var user = _context.Users.FirstOrDefault(u => u.Name == request.Username);
+    //        if (user != null)
+    //        {
+    //            var resetToken = GenerateResetToken();
+    //            user.ResetToken = resetToken;
+    //            _context.SaveChanges();
+
+
+    //            return Ok(new { ResetToken = resetToken });
+    //        }
+    //        else
+    //        {
+    //            return NotFound(new { Message = "User not found" });
+    //        }
+    //    }
+
+    //    [HttpPost("reset")]
+    //    public IActionResult ResetPassword([FromBody] ResetPasswordRequest request)
+    //    {
+    //        var user = _context.Users.FirstOrDefault(u => u.Username == request.Username && u.ResetToken == request.ResetToken);
+    //        if (user != null)
+    //        {
+    //            user.Password = request.NewPassword;
+    //            user.ResetToken = null;
+    //            _context.SaveChanges();
+    //            return Ok(new { Message = "Password reset successfully" });
+    //        }
+    //        else
+    //        {
+    //            return BadRequest(new { Message = "Invalid reset token" });
+    //        }
+    //    }
+    //}
+
+    //public class ForgotPasswordRequest
+    //{
+    //    public string Username { get; set; }
+    //}
+
+    //public class ResetPasswordRequest
+    //{
+    //    public string Username { get; set; }
+    //    public string ResetToken { get; set; }
+    //    public string NewPassword { get; set; }
+    //}
+
+}
 }
