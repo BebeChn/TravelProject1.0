@@ -58,7 +58,7 @@ namespace TravelProject1._0.Controllers.Api
         }
         // POST api/<UserApiController>
         [HttpPost]
-        public async Task<IActionResult> postpeople(RegisterDTO register)
+        public async Task<IActionResult> PostUser(RegisterDTO register)
         {
             // 檢查用戶名與用法是否為空
             if (string.IsNullOrEmpty(register.Name) || string.IsNullOrEmpty(register.Password))
@@ -139,15 +139,18 @@ namespace TravelProject1._0.Controllers.Api
             }
         }
 
+      
 
-        // PUT api/<UserApiController>/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult>PutPeople(Guid id, PutPeopleViewModel model)
+        
+    // PUT api/<UserApiController>/5
+    [HttpPut("{id}")]
+        public async Task<IActionResult>UpdateUser(int id,UpdateUserViewModel UpdateUser)
         {
-            if (id != model.UserId)
+            if (id != UpdateUser.UserId)
             {
                 return BadRequest("欲修改之 User ID 與實際傳入 ID 不同");
             }
+             
             User user = await _context.Users.FindAsync(id);
 
 
@@ -155,28 +158,28 @@ namespace TravelProject1._0.Controllers.Api
             {
                 string salt = GenerateSalt();
 
-                string hashedPassword = HashPassword(model.Password, salt);
+                string hashedPassword = HashPassword(updatedUser.Password, salt);
 
-                if (hashedPassword==model.OldPassword)
+                if (hashedPassword == updatedUser.OldPassword)
                     return BadRequest("密碼不可重複");
             }
 
             // 有輸入新密碼才修改密碼
-            if (model.Password != null)
+            if  updatedUser.Password != null)
             {
                 string salt = GenerateSalt();
 
-                string hashedPassword = HashPassword(model.Password, salt);
+                string hashedPassword = HashPassword(updatedUser.Password, salt);
 
                 user.Salt =salt;
                 user.PasswordHash = hashedPassword;
             }
 
             // 修改其他個資
-            user.Email = model.Email;
-           
+            user.Email = updatedUser.Email;
 
-            try
+              _context.Entry(updatedUser).State = EntityState.Modified;
+             try
             {
                 await _context.SaveChangesAsync();
             }
@@ -190,7 +193,7 @@ namespace TravelProject1._0.Controllers.Api
         }
         private string GenerateResetToken()
         {
-            using var rng = RandomNumberGenerator.Create();
+            var rng = RandomNumberGenerator.Create();
             var bytes = new byte[20];
             rng.GetBytes(bytes);
             return Convert.ToBase64String(bytes);

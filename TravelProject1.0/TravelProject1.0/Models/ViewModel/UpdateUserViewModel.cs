@@ -3,7 +3,7 @@ using static TravelProject1._0.Models.ViewModel.PutPeopleViewModel;
 
 namespace TravelProject1._0.Models.ViewModel
 {
-    public class PutPeopleViewModel : RegisterDTO
+    public class UpdateUserViewModel : User
     {
         public Guid UserId { get; set; }
 
