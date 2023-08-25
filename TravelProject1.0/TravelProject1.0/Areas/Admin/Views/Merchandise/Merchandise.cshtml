@@ -19,32 +19,38 @@
     <!--第一段-->
     <div class="container-fluid row  justify-content-between">
         <div class="col-2"></div>
-        <button type="button" class="btn  solid col-1">統計</button>
         <br>
-        <button type="button" class="btn solid  col-1">按週統計</button>
-        <button type="button" class="btn solid  col-1">按月統計</button>
+        <button type="button" class="btn solid  col-2" @@click="pricehigh">按金額大到小排序</button>
         <br>
-        <button type="button" class="btn solid  col-1">時間</button>
+        <button type="button" class="btn solid  col-2" @@click="pricelower">按金額小到大排序</button>
+        <br>
         <div class="col-4"></div>
     </div>
-    <!--第二段下拉選單-->
+    <br>
+    <!------------------------------------第二段下拉選單--------------------------------------->
     <div class="container-fluid row justify-content-center">
         <div class="col-2 justify-content-start">
             種類:
-            <select class="form-select form-select-lg mb-3  " aria-label="Large select example">
-                <option selected>Open this select menu</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
+            <select v-model="opvalue" @@change="selectoption" class="form-select form-select-lg mb-3  " aria-label="Large select example">
+                <option value="0" selected>請選擇</option>
+                <option value="1" >機票</option>
+                <option value="2" >住宿</option>
+                <option value="3" >交通</option>
+                <option value="4" >景點</option>
             </select>
         </div>
         <div class="col-2">
             商品名稱:
-            <select class="form-select form-select-lg mb-3 " aria-label="Large select example">
-                <option selected>Open this select menu</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
+            <select v-model="locationvalue" @@change="selectlocation" class="form-select form-select-lg mb-3 " aria-label="Large select example">
+                <option value="0"  selected>請選擇</option>
+                <option value="日本">日本</option>
+                <option value="韓國">韓國</option>
+                <option value="美國">美國</option>
+                <option value="台灣">台灣</option>
+                <option value="台中">台中</option>
+                <option value="台南">台南</option>
+                <option value="加拿大">加拿大</option>
+                <option value="香港">香港</option>
             </select>
         </div>
         <div class="col-3">
@@ -57,7 +63,7 @@
                         <!--輸入關鍵字-->
                         <input class="form-control " type="search" placeholder="Search" aria-label="Search"
                                v-model="Filter" @@keyup="filterMerchandise">
-                        <button class="btn btn-outline-secondary " style="color :#1e2154" type="submit">
+                        <button class="btn btn-outline-secondary " style="color :#1e2154" @*type="submit"*@>
                             <Fieldset>搜尋</Fieldset>
                         </button>
                     </form>
@@ -66,7 +72,7 @@
         </div>
     </div>
     <br>
-    <!--第三段-->
+    <!-----------------------------------------------第三段------------------------------------>
     <!--第四段-->
     <div class="container-fluid row">
         <!--管理選單-->
@@ -97,8 +103,8 @@
             <br>
             <!--這段吃完-->
             <!--換下一行-->
-            <!------------------------------------------顯示管理內容--------------------------------------->
-                <table class="table table-bordered">
+            <!------------------------------------------顯示管理內容--------------------------------------->            
+              <table class="table table-bordered  ">
                     <thead>
                         <tr>
                             <td>產品ID</td>
@@ -108,10 +114,11 @@
                             <td>主要敘述</td>
                             <td>次要敘述</td>
                             <td>簡短敘述</td>
+                            <td></td>
+                            <td></td>
                         </tr>
                     </thead>
                     <tbody>
-                    <!--新增-->
                     <!--迴圈-->
                     <tr v-for="item in MerchandiseDTOes">
                         <!--修改-->
@@ -120,8 +127,8 @@
                             <td><input v-model="item.id" /></td>
                             <td><input v-model="item.productName" /></td>
                             <td><input v-model="item.price" /></td>
-                            <td><input v-model="item.mainDescribe" /></td>
-                            <td><input v-model="item.subDescribe" /></td>
+                            <td><textarea v-model="item.mainDescribe" style="height:100px;width: 500px;"></textarea>
+                            <td><textarea v-model="item.subDescribe" style="height:100px;width: 500px;"></textarea>
                             <td><input v-model="item.shortDescribe" /></td>
                                 <td>
                                 <button type="button" class="btn btn-success" @@click="update(item)">儲存</button>
@@ -148,15 +155,15 @@
                         </template>
                     </tr>
                     </tbody>
-                </table>
-
-
-
+            </table>
+            
+        <br />
+            <br />
          <!------------------------------------------新增紀錄的畫面--------------------------------------->
             <!-- Modal Body -->
             <!-- if you want to close by clicking outside the modal, delete the last endpoint:data-bs-backdrop and data-bs-keyboard -->
             <div class="modal fade" id="insertModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm" role="document">
+                <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered " role="document">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="modalTitleId">新增商品紀錄</h5>
@@ -164,28 +171,30 @@
                         </div>
                         <div class="modal-body">
                             <div class="form-group">
-                                <label class="form-label">addid</label>
-                                <input v-model="addid" type="text" class="form-control" />
+                                <label class="form-label">商品種類Id</label>
+                                <input v-model="id" type="text" class="form-control" />
                             </div>
                             <div class="form-group">
-                                <label class="form-label">addproductName</label>
-                                <input v-model="addproductName" type="text" class="form-control" />
+                                <label class="form-label">商品名稱</label>
+                                <input v-model="productName" type="text" class="form-control" />
                             </div>
                             <div class="form-group">
-                                <label class="form-label">addprice</label>
-                                <input v-model="addprice" type="text" class="form-control" />
+                                <label class="form-label">金額</label>
+                                <input v-model="price" type="text" class="form-control" />
                             </div>
                             <div class="form-group">
-                                <label class="form-label">addmainDescribe</label>
-                                <input v-model="addmainDescribe" type="text" class="form-control" />
+                                <label class="form-label">主要內文</label>
+                                <textarea v-model="mainDescribe" type="text" class="form-control"
+                                       style="height:100px;width: 500px;"></textarea>
                             </div>
                             <div class="form-group">
-                                <label class="form-label">addsubDescribe</label>
-                                <input v-model="addsubDescribe" type="text" class="form-control" />
+                                <label class="form-label">副內容</label>
+                                <textarea v-model="subDescribe" type="text" class="form-control"
+                                          style="height:100px;width: 500px;"></textarea>
                             </div>
                             <div class="form-group">
-                                <label class="form-label">addshortDescribe</label>
-                                <input v-model="addshortDescribe" type="text" class="form-control" />
+                                <label class="form-label">簡短描述</label>
+                                <input v-model="shortDescribe" type="text" class="form-control" />
                             </div>
                             Body
                         </div>
@@ -225,12 +234,12 @@
                     MerchandiseDTOes: [],
                     Filter:'', //關鍵字
                      //新增
-                    addid:'',
-                    addproductName:'',
-                    addprice: '',
-                    addmainDescribe: '',
-                    addsubDescribe: '',
-                    addshortDescribe: '',
+                    id:'',
+                    productName:'',
+                    price: '',
+                    mainDescribe: '',
+                    subDescribe: '',
+                    shortDescribe: '',
                     //原本
                     originalid:'',
                     originalproductName: '',
@@ -238,7 +247,12 @@
                     originalmainDescribe: '',
                     originalsubDescribe: '',
                     originalshortDescribe: '',
- 
+                    //option
+                    opvalue:0,
+                    locationvalue:0 ,
+
+
+
                 };
             },
             mounted: function () {
@@ -247,6 +261,7 @@
                 
             },
             methods: {
+                //
                 filterMerchandise: function () {
                     let _this = this;
                     //alert("篩選");
@@ -286,13 +301,10 @@
                             item.subDescribe = _this.originalsubDescribe;
                             item.shortDescribe = _this.originalshortDescribe;
 
-
                         }
- 
- 
- 
                     }
                 },
+                //
                 edit: function (productId) {
                     let _this = this;
                     for (var i = 0; i < _this.MerchandiseDTOes.length; i++) {
@@ -329,7 +341,7 @@
                     });
 
                 },
-
+                //
                 deleteMch: function (productId){
                     var ret = confirm('確定要刪除嗎?');
                     let _this = this;
@@ -357,23 +369,105 @@
                     var request={
 
                         ProductId:0,
-                        Id: _this.addid,
-                        ProductName: _this.addproductName,
-                        Price: _this.addprice,
-                        MainDescribe: _this.addmainDescribe,
-                        SubDescribe: _this.addsubDescribe,
-                        ShortDescribe: _this.addshortDescribe,
+                        Id: _this.id,
+                        ProductName: _this.productName,
+                        Price: _this.price,
+                        MainDescribe: _this.mainDescribe,
+                        SubDescribe: _this.subDescribe,
+                        ShortDescribe: _this.shortDescribe,
                     };
-                    axios.post(`#{baseAddress}/api/Merchandise/MerchandiseADD`,request).then(response=>{
+                    axios.post(`${baseAddress}/api/Merchandise/MerchandiseADD`, request).then(response => {
                         alert(response.data);
-                        $('#insertModal').modal("hide");
+                        //$('#insertModal').modal("hide");
                         _this.filterMerchandise();
                     }).catch(err=>{
                         alert(err);
                     });
+                    
+                },
+                // option id
+                selectoption:function(){
+
+                    let _this=this;
+                    var opvalue = _this.opvalue;
+
+                    if (opvalue == 0) {
+                        return;
+                    }
+
+                    axios.get(`${baseAddress}/api/Merchandise/MerchandiseOption/${opvalue}`)
+                        .then(response => {
+                            _this.MerchandiseDTOes = response.data;
+                            for (var i = 0; i < _this.MerchandiseDTOes.length; i++) {
+                                var item = _this.MerchandiseDTOes[i];
+                                item.Edit = false;
+
+                            }
+                        })
+                        .catch(err => {
+                            alert(err);
+                        });
+
                      
+                },
+                //option location
+                selectlocation: function () {
+
+                    let _this = this;
+                    var locationvalue = _this.locationvalue;
+
+                    if (locationvalue == 0) {
+                        return;
+                    }
+
+                    axios.get(`${baseAddress}/api/Merchandise/Merchandiselocation/${locationvalue}`)
+                        .then(response => {
+                            _this.MerchandiseDTOes = response.data;
+                            for (var i = 0; i < _this.MerchandiseDTOes.length; i++) {
+                                var item = _this.MerchandiseDTOes[i];
+                                item.Edit = false;
+
+                            }
+                        })
+                        .catch(err => {
+                            alert(err);
+                        });
+
 
                 },
+                
+                //由小到大
+                pricelower:function(){
+                    let _this=this;
+                    axios.get(`${baseAddress}/api/Merchandise/pricelower`)
+                        .then(response=>{
+                                _this.MerchandiseDTOes= response.data;
+                                for (var i = 0; i < _this.MerchandiseDTOes.Length;i++){
+                                    var item = _this.MerchandiseDTOes[i];
+                                    item.EDit=false;
+                                }
+                        }).catch(err=>{
+                            alert(err);
+                        });
+                },
+
+                //由大到小
+                pricehigh: function () {
+                    let _this = this;
+                    axios.get(`${baseAddress}/api/Merchandise/pricehigh`)
+                        .then(response => {
+                            _this.MerchandiseDTOes = response.data;
+                            for (var i = 0; i < _this.MerchandiseDTOes.Length; i++) {
+                                var item = _this.MerchandiseDTOes[i];
+                                item.EDit = false;
+                            }
+                        }).catch(err => {
+                            alert(err);
+                        });
+                },
+
+
+
 
 
 

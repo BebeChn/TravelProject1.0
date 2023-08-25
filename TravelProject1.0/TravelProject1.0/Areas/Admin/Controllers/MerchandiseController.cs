@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel;
+using System.Linq;
 using TravelProject1._0.Models;
 using TravelProject1._0.Models.DTO;
 
@@ -163,8 +165,81 @@ namespace TravelProject1._0.Areas.Admin.Controllers
         }
 
 
+        //id
+        
+        [HttpGet("{id}")]
+        public async Task<IEnumerable<MerchandiseDTO>> MerchandiseOption(int id )
+        {
+
+            return _db.Products.Where(p => p.Id == id)
+                .Select(op => new MerchandiseDTO
+            {
+                ProductId = op.ProductId,
+                Id = op.Id,
+                ProductName = op.ProductName,
+                Price = op.Price,
+                MainDescribe = op.MainDescribe,
+                SubDescribe = op.SubDescribe,
+                ShortDescribe = op.ShortDescribe,
+            });
+
+        }
 
 
+        //lc
+        [HttpGet("{lc}")]
+        public async Task<IEnumerable<MerchandiseDTO>> Merchandiselocation(string lc)
+        {
+
+            return _db.Products.Where(p => p.ProductName.Contains(lc))
+                .Select(op => new MerchandiseDTO
+                {
+                    ProductId = op.ProductId,
+                    Id = op.Id,
+                    ProductName = op.ProductName,
+                    Price = op.Price,
+                    MainDescribe = op.MainDescribe,
+                    SubDescribe = op.SubDescribe,
+                    ShortDescribe = op.ShortDescribe,
+                });
+
+        }
+
+
+        [HttpGet]
+        //LH
+        public async Task<IEnumerable<MerchandiseDTO>> pricelower()
+        {
+            return _db.Products.OrderBy(y => y.Price)
+                .Select(z => new MerchandiseDTO
+                {
+                    ProductId = z.ProductId,
+                    Id = z.Id,
+                    ProductName = z.ProductName,
+                    Price = z.Price,
+                    MainDescribe = z.MainDescribe,
+                    SubDescribe = z.SubDescribe,
+                    ShortDescribe = z.ShortDescribe,
+
+                });
+        }
+
+        //HL
+        public async Task<IEnumerable<MerchandiseDTO>> pricehigh()
+        {
+            return _db.Products.OrderByDescending(y => y.Price)
+                .Select(z => new MerchandiseDTO
+                {
+                    ProductId = z.ProductId,
+                    Id = z.Id,
+                    Price = z.Price,
+                    MainDescribe = z.MainDescribe,
+                    SubDescribe = z.SubDescribe,
+                    ShortDescribe = z.ShortDescribe,
+
+
+                });
+        }
 
 
 
