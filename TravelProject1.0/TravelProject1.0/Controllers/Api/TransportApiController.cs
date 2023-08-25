@@ -36,6 +36,7 @@ namespace TravelProject1._0.Controllers.Api
         {
             return _dbContext.Products.Where(w => w.Id == 3).OrderBy(o => o.Price).Select(p => new TransportDTO
             {
+                ProductId = p.ProductId,
                 ProductName = p.ProductName,
                 Price = p.Price,
                 MainDescribe = p.MainDescribe
@@ -46,6 +47,7 @@ namespace TravelProject1._0.Controllers.Api
         {
             return _dbContext.Products.Where(w => w.Id == 3).OrderByDescending(o => o.Price).Select(p => new TransportDTO
             {
+                ProductId = p.ProductId,
                 ProductName = p.ProductName,
                 Price = p.Price,
                 MainDescribe = p.MainDescribe
