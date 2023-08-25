@@ -8,6 +8,8 @@ using System.Text;
 using TravelProject1._0.Models.DTO;
 using TravelProject1._0.Models;
 using Microsoft.AspNetCore.Identity;
+using TravelProject1._0.Models.ViewModel;
+using Microsoft.Win32;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -26,8 +28,8 @@ namespace TravelProject1._0.Controllers.Api
         {
             _logger = logger;
             _context = context;
-            _emailSender= emailSender;
-          
+            _emailSender = emailSender;
+
         }
         // GET: api/<UserApiController>
         //[HttpGet]
@@ -38,7 +40,7 @@ namespace TravelProject1._0.Controllers.Api
 
         // GET api/<UserApiController>/5
         [HttpGet("{id}")]
-        public async Task<IActionResult>getpeople()
+        public async Task<IActionResult> getpeople()
         {
             //IQueryable<User> userQry = _context.Users;
             //UserDTO[] user=await userQry
@@ -56,16 +58,16 @@ namespace TravelProject1._0.Controllers.Api
         }
         // POST api/<UserApiController>
         [HttpPost]
-        public async Task<IActionResult>postpeople(RegisterDTO register)
+        public async Task<IActionResult> PostUser(RegisterDTO register)
         {
             // 檢查用戶名與用法是否為空
             if (string.IsNullOrEmpty(register.Name) || string.IsNullOrEmpty(register.Password))
             {
-                return BadRequest("帳號或密碼已被使用"); 
+                return BadRequest("帳號或密碼已被使用");
             }
             // 對密碼進行加鹽
-          
-            
+
+
             string salt = GenerateSalt();
 
             string hashedPassword = HashPassword(register.Password, salt);
@@ -81,30 +83,31 @@ namespace TravelProject1._0.Controllers.Api
                 Password = register.Password,
                 PasswordHash = hashedPassword,
                 Salt = salt,
-                CreateDate= DateTime.Now,
-                Address=register.Address
-                
-            };
-           
-        // 添加用戶到資料庫
+                CreateDate = DateTime.Now,
+                Address = register.Address
 
-        _context.Users.Add(newUser);
+            };
+
+            // 添加用戶到資料庫
+
+            _context.Users.Add(newUser);
             try
             {
                 _context.SaveChanges();
             }
             catch (Exception ex)
             {
-                
+
                 Console.WriteLine(ex.Message);
                 return Conflict("資料庫更新失敗");
             }
             List<Claim> claims = new List<Claim>();
-            claims.Add(new Claim(ClaimTypes.Name, $"{register.Name}")); 
+            claims.Add(new Claim(ClaimTypes.Name, $"{register.Name}"));
             claims.Add(new Claim("Email", register.Email));
             ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             ClaimsPrincipal principal = new ClaimsPrincipal(identity);
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+            
             return RedirectToAction("Index", "Home");
 
 
@@ -136,44 +139,109 @@ namespace TravelProject1._0.Controllers.Api
             }
         }
 
+      
 
-        // PUT api/<UserApiController>/5
-        [HttpPut("{id}")]
-        public void PutPeople(int id, [FromBody] string value)
+        
+    // PUT api/<UserApiController>/5
+    [HttpPut("{id}")]
+        public async Task<IActionResult>UpdateUser(int id,UpdateUserViewModel UpdateUser)
         {
+            if (id != UpdateUser.UserId)
+            {
+                return BadRequest("欲修改之 User ID 與實際傳入 ID 不同");
+            }
+             
+            User user = await _context.Users.FindAsync(id);
 
+
+            if (user! == null)
+            {
+                string salt = GenerateSalt();
+
+                string hashedPassword = HashPassword(updatedUser.Password, salt);
+
+                if (hashedPassword == updatedUser.OldPassword)
+                    return BadRequest("密碼不可重複");
+            }
+
+            // 有輸入新密碼才修改密碼
+            if  updatedUser.Password != null)
+            {
+                string salt = GenerateSalt();
+
+                string hashedPassword = HashPassword(updatedUser.Password, salt);
+
+                user.Salt =salt;
+                user.PasswordHash = hashedPassword;
+            }
+
+            // 修改其他個資
+            user.Email = updatedUser.Email;
+
+              _context.Entry(updatedUser).State = EntityState.Modified;
+             try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch
+            {
+                return Conflict();
+            }
+      
+
+            return Ok();
         }
-        //[HttpPost]
-        //public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDTO resetPasswordDTO)
-        //{
-        //    if (string.IsNullOrEmpty(resetPasswordDTO.Email))
-        //    {
-        //        return BadRequest("Email為必填");
-        //    }
+        private string GenerateResetToken()
+        {
+            var rng = RandomNumberGenerator.Create();
+            var bytes = new byte[20];
+            rng.GetBytes(bytes);
+            return Convert.ToBase64String(bytes);
+        }
 
-        //    string resetToken = Guid.NewGuid().ToString();
-        //    DateTime expirationTime = DateTime.Now.AddHours(24);
-        //    PasswordResetToken tokenEntity = new PasswordResetToken
-        //    {
-        //        Email = resetPasswordDTO.Email,
-        //        Token = resetToken,
-        //        ExpirationTime = expirationTime
-        //    };
+        [HttpPost("forgot")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
+        {
+            var user = _context.Users.FirstOrDefault(u => u.Email == request.Email);
+            if (user != null)
+            {
+                var resetToken = GenerateResetToken();
+                user.ResetToken = resetToken;
+                await _context.SaveChangesAsync();
 
-            
-        //    _context.SaveChanges();
+                
+                return Ok(new { ResetToken = resetToken });
+            }
+            else
+            {
+                return NotFound(new { Message = "郵件無效" });
+            }
+        }
 
-        //    string resetLink = $"https://yourapp.com/reset-password?token={resetToken}";
-
-
-        //    await _emailSender.SendEmailAsync(resetPasswordDTO.Email, "密碼重設", $"確認連結密碼:{{resetLink}}");
-
-
-        //    return Ok(new { Message = "密碼重設" });
-
-        //}
+        [HttpPost("reset")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
+        {
+            var user = _context.Users.FirstOrDefault(u => u.Email == request.Email && u.ResetToken == request.ResetToken);
+            if (user != null)
+            {
+                user.Password = request.NewPassword;
+                user.ResetToken = null;
+                await _context.SaveChangesAsync();
+                return Ok(new { Message = "密碼成功重設" });
+            }
+            else
+            {
+                return BadRequest(new { Message = "重設密碼" });
+            }
+        }
     }
 
 
+       
+ }
 
-}
+    
+
+    
+
+

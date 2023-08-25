@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using TravelProject1._0.Controllers.Api;
 
 namespace TravelProject1._0.Models;
 
@@ -36,13 +35,18 @@ public partial class TravelProjectAzureContext : DbContext
 
     public virtual DbSet<Rating> Ratings { get; set; }
 
+    public virtual DbSet<ResetPasswordToken> ResetPasswordTokens { get; set; }
+
     public virtual DbSet<User> Users { get; set; }
-    
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=tcp:thm10201.database.windows.net,1433;Initial Catalog=TravelProjectAzure;Persist Security Info=False;User ID=allen955103;Password=AAA12345!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=True;Connection Timeout=30;");
-
+    {
+        if (!optionsBuilder.IsConfigured)
+        {
+            IConfigurationRoot Config = new ConfigurationBuilder().SetBasePath(AppDomain.CurrentDomain.BaseDirectory).AddJsonFile("appsetting.json").Build();
+            optionsBuilder.UseSqlServer(Config.GetConnectionString("TravelProjectAzure"));
+        }
+    }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.UseCollation("Chinese_Taiwan_Stroke_CI_AS");
@@ -220,6 +224,18 @@ public partial class TravelProjectAzureContext : DbContext
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Rating__UserID__5629CD9C");
+        });
+
+        modelBuilder.Entity<ResetPasswordToken>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToTable("ResetPasswordToken");
+
+            entity.Property(e => e.ExpireTime).HasColumnType("datetime");
+            entity.Property(e => e.HashedToken)
+                .HasMaxLength(50)
+                .IsFixedLength();
         });
 
         modelBuilder.Entity<User>(entity =>
