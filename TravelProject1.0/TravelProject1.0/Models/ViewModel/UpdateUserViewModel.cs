@@ -1,11 +1,10 @@
 ﻿using TravelProject1._0.Models.DTO;
-using static TravelProject1._0.Models.ViewModel.PutPeopleViewModel;
-
+using static TravelProject1._0.Models.ViewModel.UpdateUserViewModel;
 namespace TravelProject1._0.Models.ViewModel
 {
-    public class UpdateUserViewModel : User
+    public class UpdateUserViewModel : PostUserVewModel
     {
-        public Guid UserId { get; set; }
+        public int UserId { get; set; }
 
         public string OldPassword { get; set; }
 

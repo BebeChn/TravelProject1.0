@@ -58,7 +58,7 @@ namespace TravelProject1._0.Controllers.Api
         }
         // POST api/<UserApiController>
         [HttpPost]
-        public async Task<IActionResult> PostUser(RegisterDTO register)
+        public async Task<IActionResult> PostUser(PostUserVewModel register)
         {
             // 檢查用戶名與用法是否為空
             if (string.IsNullOrEmpty(register.Name) || string.IsNullOrEmpty(register.Password))
@@ -158,27 +158,27 @@ namespace TravelProject1._0.Controllers.Api
             {
                 string salt = GenerateSalt();
 
-                string hashedPassword = HashPassword(updatedUser.Password, salt);
+                string hashedPassword = HashPassword(UpdateUser.Password, salt);
 
-                if (hashedPassword == updatedUser.OldPassword)
+                if (hashedPassword == UpdateUser.OldPassword)
                     return BadRequest("密碼不可重複");
             }
 
             // 有輸入新密碼才修改密碼
-            if  updatedUser.Password != null)
+            if  (UpdateUser.Password != null)
             {
                 string salt = GenerateSalt();
 
-                string hashedPassword = HashPassword(updatedUser.Password, salt);
+                string hashedPassword = HashPassword(UpdateUser.Password, salt);
 
                 user.Salt =salt;
                 user.PasswordHash = hashedPassword;
             }
 
             // 修改其他個資
-            user.Email = updatedUser.Email;
+            user.Email = UpdateUser.Email;
 
-              _context.Entry(updatedUser).State = EntityState.Modified;
+              _context.Entry(UpdateUser).State = EntityState.Modified;
              try
             {
                 await _context.SaveChangesAsync();
