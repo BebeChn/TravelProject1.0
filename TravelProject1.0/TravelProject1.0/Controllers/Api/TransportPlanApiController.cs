@@ -27,9 +27,9 @@ namespace TravelProject1._0.Controllers.Api
             });
         }
 
-        public async Task<IQueryable<TransportPlanDTO>> GetProduct()
+        public async Task<IQueryable<TransportPlanDTO>> GetProduct(int id)
         {
-            return _dbContext.Products.Where(p => p.ProductId == 41).Select(p => new TransportPlanDTO
+            return _dbContext.Products.Where(p => p.ProductId == id).Select(p => new TransportPlanDTO
             {
                 ProductName = p.ProductName,
                 MainDescribe = p.MainDescribe,
