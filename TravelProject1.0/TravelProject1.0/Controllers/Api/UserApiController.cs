@@ -148,48 +148,49 @@ namespace TravelProject1._0.Controllers.Api
         {
             if (id != UpdateUser.UserId)
             {
-                return BadRequest("欲修改之 User ID 與實際傳入 ID 不同");
+                return BadRequest("使用者不存在");
             }
              
             User user = await _context.Users.FindAsync(id);
 
 
-            if (user! == null)
+            if (user != null)
             {
-                string salt = GenerateSalt();
-
-                string hashedPassword = HashPassword(UpdateUser.Password, salt);
+                string hashedPassword = HashPassword(UpdateUser.Password,user.Salt);
 
                 if (hashedPassword == UpdateUser.OldPassword)
                     return BadRequest("密碼不可重複");
             }
 
-            // 有輸入新密碼才修改密碼
+            //判斷傳入的密碼是否更改
+        
             if  (UpdateUser.Password != null)
             {
                 string salt = GenerateSalt();
-
                 string hashedPassword = HashPassword(UpdateUser.Password, salt);
-
-                user.Salt =salt;
+                user.Password = UpdateUser.Password;
+                user.Salt = salt;
                 user.PasswordHash = hashedPassword;
             }
 
             // 修改其他個資
             user.Email = UpdateUser.Email;
-
+            user.Address= UpdateUser.Address;
+            user.Birthday = UpdateUser.Birthday;
+            user.Name = UpdateUser.Name;
+            user.Phone = UpdateUser.Phone;
+            user.Gender = UpdateUser.Gender;
+            
               _context.Entry(UpdateUser).State = EntityState.Modified;
-             try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch
-            {
+              try
+              {
+               await _context.SaveChangesAsync();
+              }
+              catch
+              {
                 return Conflict();
-            }
-      
-
-            return Ok();
+              }
+               return Ok();
         }
         private string GenerateResetToken()
         {
