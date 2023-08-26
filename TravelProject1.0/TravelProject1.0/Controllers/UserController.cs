@@ -85,6 +85,7 @@ namespace TravelProject1._0.Controllers
 
         public IActionResult Register()
         {
+            ViewData["Title"] = "商品瀏覽";
             return View();
         }
 
