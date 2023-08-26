@@ -79,8 +79,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers
             {
                 return "修改失敗";
             }
-            try
-            {
+
                 var Mch = await _db.Products.FindAsync(id);
                 Mch.Id = MchDTO.Id;
                 Mch.ProductName = MchDTO.ProductName;
@@ -89,10 +88,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers
                 Mch.SubDescribe = MchDTO.SubDescribe;
                 Mch.ShortDescribe = MchDTO.ShortDescribe;
                 _db.Entry(Mch).State = EntityState.Modified;
-            }catch(Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+
 
             try
             {

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.DotNet.Scaffolding.Shared.Messaging;
+using Microsoft.EntityFrameworkCore;
 using TravelProject1._0.Models;
 using TravelProject1._0.Models.DTO;
 
@@ -30,7 +31,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers
 
 
         [HttpGet]
-        public async Task<IEnumerable<OrderDTO>> OrderSeach()
+        public async Task<IEnumerable<OrderDTO>> OrderGET()
         {
             return _db.Orders.Select(x => new OrderDTO
             {
@@ -50,15 +51,15 @@ namespace TravelProject1._0.Areas.Admin.Controllers
 
 
 
-        [HttpPost]
+        
         public async Task<IEnumerable<OrderDTO>> OrderSeachL(OrderDTO order )
         {
 
 
             return _db.Orders.Where(y =>
-            y.OrderId == order.OrderId||
-            y.UserId == order.UserId||
-            y.OrderDate ==order.OrderDate
+            y.OrderId == (order.OrderId)
+            || y.UserId == (order.UserId)
+            || y.OrderDate == (order.OrderDate)
             ).Select(x => new OrderDTO
             {
                 OrderId = x.OrderId,
@@ -67,15 +68,81 @@ namespace TravelProject1._0.Areas.Admin.Controllers
             });
 
 
-  
+            //try
+            //{
+            //    _db.Orders.Where(y =>
+            //   y.OrderId == (order.OrderId)
+            //   || y.UserId == (order.UserId)
+            //   || y.OrderDate == (order.OrderDate)
+            //   ).Select(x => new OrderDTO
+            //   {
+            //    OrderId = x.OrderId,
+            //    UserId = x.UserId,
+            //    OrderDate = x.OrderDate,
+            //          });
+            //}catch (Exception ex)
+            //{
+            //    Console.WriteLine(ex.Message);
+            //}
+
+            //return null;
 
         }
 
+        [HttpPut("{id}")]
+        //PUT
+        public async Task<string> OrderPUT(int id,OrderDTO order)
+        {
+            if (id != order.OrderId)
+            {
+                return "修改失敗";
+            }
+
+            var ORD = await _db.Orders.FindAsync(id);
+            ORD.OrderId=order.OrderId;
+            ORD.UserId=order.UserId;
+            ORD.OrderDate=order.OrderDate;
+            _db.Entry(ORD).State = EntityState.Modified;
+
+            try
+            {
+                await _db.SaveChangesAsync();
+            }catch(DbUpdateConcurrencyException)
+            {
+                throw;
+            }
+
+            return "成功";
+        }
 
 
+        //
 
+        [HttpDelete("id")]
 
+        public async Task<string> OrderDELETE(int id)
+        {
 
+            if (_db.Orders == null)
+            {
+                return "刪除失敗";
+            }
+            var ORD = await _db.Orders.FindAsync(id);
+            if (ORD == null)
+            {
+                return "刪除失敗";
+            }
+            try
+            {
+                _db.Orders.Remove(ORD);
+                await _db.SaveChangesAsync();
+            }
+            catch
+            {
+                return "刪除關聯失敗";
+            }
+            return "刪除成功";
+        }
 
 
 
