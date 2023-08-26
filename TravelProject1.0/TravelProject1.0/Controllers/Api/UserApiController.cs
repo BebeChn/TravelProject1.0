@@ -137,7 +137,17 @@ namespace TravelProject1._0.Controllers.Api
                 return Convert.ToBase64String(hashBytes);
             }
         }
+        [HttpGet("check-username")]
+        public async Task<ActionResult<bool>> CheckUsernameExists(string username)
+        {
+            if (string.IsNullOrEmpty(username))
+            {
+                return BadRequest("Username cannot be empty.");
+            }
 
+            bool usernameExists = await _context.Users.AnyAsync(user => user.Name == username);
+            return Ok(new { Exists = usernameExists });
+        }
 
 
 
@@ -250,7 +260,7 @@ namespace TravelProject1._0.Controllers.Api
         //            return BadRequest(new { Message = "重設密碼" });
         //        }
         //    }
-        
+
 
     }
        

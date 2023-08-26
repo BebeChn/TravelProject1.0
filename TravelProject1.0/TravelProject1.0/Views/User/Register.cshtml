@@ -10,8 +10,9 @@
                
                 <div class="form-group">
                     <label for="name">姓名:</label>
-                    <input  type="text" class="form-control" v-model.trim="name" />
+                    <input type="text" class="form-control" v-model.trim="name" @@class="checkUsernameAvailability" />
                     <div class="invalid-feedback" v-if="!isValidName">已被註冊、或您輸入的格式錯誤</div>
+                    <div v-if="usernameTaken">該用戶名已存在</div>
                 </div>
                 <div class="form-group">
                     <label for="gender"></label>
@@ -25,12 +26,12 @@
                 </div>
                 <div class="form-group">
                     <label for="email">Email:</label>
-                        <input v-model.trim="email" class="form-control" type="email" name="email" id="email" placeholder="必填" required />
-                        <div class="invalid-feedback" v-if="isValidEmail()">已被註冊、或您輸入的格式不正確</div>
+                    <input v-model.trim="email" class="form-control" type="email" name="email" id="emailInput" placeholder="必填" required />
+                    <div class="invalid-feedback" v-if="isValidEmail()" id="emailError">已被註冊、或您輸入的格式不正確</div>
                 </div>
                 <label for="address">Address:</label>
-                    <input v-model.trim="address" class="form-control" name="address" id="address" placeholder="必填" required />
-                    <div class="invalid-feedback" v-if="!isValidEmail()">已被註冊、或您輸入的格式不正確</div>
+                <input v-model.trim="address" class="form-control" name="address" id="addressInput" placeholder="必填" required />
+                <div class="invalid-feedback" v-if="!isValidEmail()" id="addressError">已被註冊、或您輸入的格式不正確</div>
             </div>
             <div class="form-group">
                 <label for="phone">Phone:</label>
@@ -50,7 +51,7 @@
             <div v-manifest="passwordmatch()" class="invalid-feedback ">兩次所輸入密碼不一致</div>
         </div>
         <div class="panel-footer">
-            <button type="button" class="btn btn-primary" @@click="Register">註冊</button>
+            <button type="button" class="btn btn-primary" id="submitButton" @@click ="Register">註冊</button>
         </div>
         
     </div>
@@ -73,11 +74,28 @@
     <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js" integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
+        const emailInput = document.getElementById('emailInput');
+        const addressInput = document.getElementById('addressInput');
+        const emailError = document.getElementById('emailError');
+        const addressError = document.getElementById('addressError');
+        const submitButton = document.getElementById('submitButton');
+
+        emailInput.addEventListener('input', validateEmail);
+
+        function validateEmail() {
+            const isValidEmail = this.$refs.emailInput.validity.valid && emailPattern.test(this.email);
+
+            emailError.style.display = isValidEmail ? 'none' : 'block';
+            addressError.style.display = isValidAddress ? 'none' : 'block';
+            submitButton.disabled = (isValidEmail && isValidAddress) ? 'block' : 'none';
+
         var baseAddress = "https://localhost:7025";
         var vueApp = new Vue({
             el: '#app',
             data: {
                 confirmPassword:"",
+                username: '',
+                usernameTaken: false,
                 form: [],
                 name: "",
                 gender: "",
@@ -89,7 +107,7 @@
                 bool:"",
             },
             computed: {
-                isValidName() {
+                !isValidName() {
                     const namePattern = /^[A-Za-z\s]+$/;
                     return namePattern.test(this.name) && this.name.trim().length > 0;                
                 },
@@ -113,10 +131,9 @@
                    return phonePattern.test(this.phoneNumber);
                  },
                  passwordmatch(){
-            return this.password == this.confirmPassword
+                 return this.password == this.confirmPassword
                  },
                    methods: {
-          
                       Register: function () {     
                            let _this = this;
                            var form = {
@@ -144,9 +161,18 @@
                                    alert(err);
                                });
                             }   
-                       },
-           }
-        });
+                    },
+                  checkUsernameAvailability: function() {
+                 axios.get(`/api/check-username?username=${this.username}`)
+                .then(response => {
+                    this.usernameTaken = response.data.exists;
+                })
+                .catch(error => {
+                    console.error('使用者已經存在啦', error);
+                });
+        }
+                   }
+                });
 
     </script>
 }
