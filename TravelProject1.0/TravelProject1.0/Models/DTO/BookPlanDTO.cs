@@ -15,5 +15,11 @@
 		public string? SubDescribe { get; set; }
 
 		public string? ShortDescribe { get; set; }
+
+		public string Name { get; set; } = null!;
+
+		public string? Describe { get; set; }
+
+		public int PlanId { get; set; }
 	}
 }
