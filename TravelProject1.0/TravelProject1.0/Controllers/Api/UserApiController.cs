@@ -21,7 +21,7 @@ namespace TravelProject1._0.Controllers.Api
     {
         private readonly ILogger<HomeController> _logger;
         private readonly TravelProjectAzureContext _context;
-        private readonly IConfiguration _configuration;
+      
         private readonly EmailSender _emailSender;
         public UserApiController(ILogger<HomeController> logger, TravelProjectAzureContext context, EmailSender emailSender)
 
@@ -148,48 +148,49 @@ namespace TravelProject1._0.Controllers.Api
         {
             if (id != UpdateUser.UserId)
             {
-                return BadRequest("欲修改之 User ID 與實際傳入 ID 不同");
+                return BadRequest("使用者不存在");
             }
              
             User user = await _context.Users.FindAsync(id);
+        
 
-
-            if (user! == null)
+            if (user != null)
             {
-                string salt = GenerateSalt();
-
-                string hashedPassword = HashPassword(UpdateUser.Password, salt);
+                string hashedPassword = HashPassword(UpdateUser.Password,user.Salt);
 
                 if (hashedPassword == UpdateUser.OldPassword)
                     return BadRequest("密碼不可重複");
             }
 
-            // 有輸入新密碼才修改密碼
+            //判斷傳入的密碼是否更改
+        
             if  (UpdateUser.Password != null)
             {
                 string salt = GenerateSalt();
-
                 string hashedPassword = HashPassword(UpdateUser.Password, salt);
-
-                user.Salt =salt;
+                user.Password = UpdateUser.Password;
+                user.Salt = salt;
                 user.PasswordHash = hashedPassword;
             }
 
             // 修改其他個資
             user.Email = UpdateUser.Email;
-
+            user.Address= UpdateUser.Address;
+            user.Birthday = UpdateUser.Birthday;
+            user.Name = UpdateUser.Name;
+            user.Phone = UpdateUser.Phone;
+            user.Gender = UpdateUser.Gender;
+            
               _context.Entry(UpdateUser).State = EntityState.Modified;
-             try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch
-            {
+              try
+              {
+               await _context.SaveChangesAsync();
+              }
+              catch
+              {
                 return Conflict();
-            }
-      
-
-            return Ok();
+              }
+               return Ok();
         }
         private string GenerateResetToken()
         {
@@ -200,26 +201,32 @@ namespace TravelProject1._0.Controllers.Api
         }
 
         [HttpPost("forgot")]
-        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordViewModel request)
         {
             var user = _context.Users.FirstOrDefault(u => u.Email == request.Email);
             if (user != null)
             {
                 var resetToken = GenerateResetToken();
                 user.ResetToken = resetToken;
-                await _context.SaveChangesAsync();
+                try { 
 
-                
+                await _context.SaveChangesAsync();
+                }
+                catch 
+                {
+                    return BadRequest("資料庫更新失敗");
+                }
+                await _emailSender.SendEmailAsync(request.Email, "驗證碼", $"你的驗證碼: {request.VerificationCode}");
                 return Ok(new { ResetToken = resetToken });
-            }
+                }
             else
             {
-                return NotFound(new { Message = "郵件無效" });
+               return NotFound(new { Message = "郵件無效" });
             }
         }
 
         [HttpPost("reset")]
-        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordViewModel request)
         {
             var user = _context.Users.FirstOrDefault(u => u.Email == request.Email && u.ResetToken == request.ResetToken);
             if (user != null)
