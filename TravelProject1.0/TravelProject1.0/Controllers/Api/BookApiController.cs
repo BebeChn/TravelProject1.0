@@ -18,6 +18,12 @@ namespace TravelProject1._0.Controllers.Api
 
         public IEnumerable<BookDTO> GetBooks() 
         {
+            var test = _context.Products.Where(b => b.Id == 2).Select(r => new
+            {
+                r.ProductName,
+                r.Price,
+                r.MainDescribe
+            }) ;        
             return _context.Products.Where(b => b.Id == 2).Select(b => new BookDTO
             {
                 ProductName = b.ProductName,
