@@ -34,11 +34,13 @@
         </div>
 
         <div class="col-md-9">
+            @* 商品名稱搜尋 *@
             <div class="search">
                 <label class="sort-title">搜尋：</label>
                 <input type="text" class="inp-search" size="40" v-model="search" />
             </div>
 
+            @* 排序 *@
             <div class="sort">
                 <div class="row">
                     <div class="col-md-4">
@@ -53,6 +55,7 @@
                 </div>
             </div>
 
+            @* 商品 *@
             <div class="card" v-for="t in transportFilter">
                 <div class="row">
                     <div class="col-md-3 card-img">
@@ -63,7 +66,7 @@
                         <p class="card-text">{{t.mainDescribe}}</p>
                     </div>
                     <div class="col-md-2 card-end">
-                        <span class="product-price">NT {{t.price}}</span>
+                        <span class="product-price">NT {{t.price}}起</span>
                         <a :href="'/Transport/Plan/'+t.productId" class="btn btn-product">查看價格</a>
                     </div>
                 </div>
@@ -125,6 +128,7 @@
                 }
             },
             computed: {
+                //關鍵字搜尋
                 transportFilter: function () {
                     return this.transport.filter(f => f.productName.match(this.search));
                 }

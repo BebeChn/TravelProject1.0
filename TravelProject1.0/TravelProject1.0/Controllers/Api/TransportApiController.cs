@@ -21,20 +21,23 @@ namespace TravelProject1._0.Controllers.Api
         [HttpGet]
         public async Task<IEnumerable<TransportDTO>> GetCategoryByTransport()
         {
-            return _dbContext.Products.Where(c => c.Id == 3).Select(p => new TransportDTO
+            var result = _dbContext.Products.Where(p => p.Id == 3).Select(p => new TransportDTO
             {
                 ProductId = p.ProductId,
                 ProductName = p.ProductName,
                 Price = p.Price,
                 MainDescribe = p.MainDescribe,
             });
+
+            return result;
         }
 
         //排序商品的價格
         //低到高
+        [HttpGet]
         public async Task<IEnumerable<TransportDTO>> TransportOrderbyPrice()
         {
-            return _dbContext.Products.Where(w => w.Id == 3).OrderBy(o => o.Price).Select(p => new TransportDTO
+            return _dbContext.Products.Where(p => p.Id == 3).OrderBy(p => p.Price).Select(p => new TransportDTO
             {
                 ProductId = p.ProductId,
                 ProductName = p.ProductName,
@@ -43,9 +46,10 @@ namespace TravelProject1._0.Controllers.Api
             });
         }
         //高到低
+        [HttpGet]
         public async Task<IEnumerable<TransportDTO>> TransportOrderByDescendingPrice()
         {
-            return _dbContext.Products.Where(w => w.Id == 3).OrderByDescending(o => o.Price).Select(p => new TransportDTO
+            return _dbContext.Products.Where(p => p.Id == 3).OrderByDescending(p => p.Price).Select(p => new TransportDTO
             {
                 ProductId = p.ProductId,
                 ProductName = p.ProductName,

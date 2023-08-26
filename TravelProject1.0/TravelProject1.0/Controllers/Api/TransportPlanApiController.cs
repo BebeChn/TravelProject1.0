@@ -22,6 +22,7 @@ namespace TravelProject1._0.Controllers.Api
         {
             return _dbContext.Plans.Where(p => p.ProductId == id).Select(p => new TransportPlanDTO
             {
+                PlanId = p.PlanId,
                 Name = p.Name,
                 Describe = p.Describe,
             });
