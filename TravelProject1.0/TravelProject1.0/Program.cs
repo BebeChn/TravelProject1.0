@@ -41,15 +41,17 @@ namespace TravelProject1._0
                 option.LoginPath = "/User/Login";//
                 option.AccessDeniedPath = "/Home/NoAuthority";
             });
-            //builder.Services.ConfigureApplicationCookie(options =>
-            //{
-            //    options.Cookie.HttpOnly = true;
-            //    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-            //    options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
-            //    options.LoginPath = "/Identity/Account/Login";
-            //    options.AccessDeniedPath = "/Identity/Account/AccessDenied";
-            //    options.SlidingExpiration = true;
-            //});
+
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.Cookie.HttpOnly = true;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+                options.LoginPath = "/User/Login";
+                //options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+                options.SlidingExpiration = true;
+                options.Cookie.SameSite = SameSiteMode.None;
+            });
 
             builder.Services.AddSession();
             var app = builder.Build();

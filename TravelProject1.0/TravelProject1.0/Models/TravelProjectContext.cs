@@ -236,7 +236,7 @@ public partial class TravelProjectContext : DbContext
                 .IsUnicode(false)
                 .IsFixedLength();
             entity.Property(e => e.Name).HasMaxLength(30);
-            entity.Property(e => e.Password).HasMaxLength(64);
+            entity.Property(e => e.PasswordHash).HasMaxLength(64);
             entity.Property(e => e.Phone).HasMaxLength(20);
         });
 
