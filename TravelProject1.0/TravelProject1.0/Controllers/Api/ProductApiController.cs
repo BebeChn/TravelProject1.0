@@ -11,23 +11,20 @@ namespace TravelProject1._0.Controllers.Api
     public class ProductApiController : ControllerBase
     {
         private readonly TravelProjectAzureContext _db;
-
         public ProductApiController(TravelProjectAzureContext db)
-
         {
             _db = db;
         }
-        public async Task<List<ProductDTO>> GetImge(int id)
+
+        public async Task<IQueryable<ProductDTO>> GetProduct()
         {
-            var Product = _db.Products.Select(x =>
-            new ProductDTO
+            return _db.Products.Select(x => new ProductDTO
             {
+                ProductId = x.ProductId,
                 ProductName = x.ProductName,
                 Price = x.Price,
-                ProductId = x.Id,
                 Image = "/lib/image/foreast.jpeg"
-            }).ToList();
-            return Product;
+            }).Take(4);
         }
     }
 }

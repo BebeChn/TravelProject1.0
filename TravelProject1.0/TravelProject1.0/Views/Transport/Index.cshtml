@@ -2,81 +2,56 @@
     ViewData["Title"] = "交通";
 }
 
-@section Styles{
-    <link href="~/css/transport.css" rel="stylesheet" />
-}
+<section class="breadcrumb_area">
+    <div class="overlay bg-parallax" data-stellar-ratio="0.8" data-stellar-vertical-offset="0" data-background=""></div>
+    <div class="container">
+        <div class="page-cover text-center">
+            <h2 class="page-cover-tittle">Transport</h2>
+        </div>
+    </div>
+</section>
 
-<div class="container div-img">
-    <img class="img" src="~/lib/image/mountain.jpeg" />
-</div>
-
-<div id="app" class="container">
-    <div class="row">
-        <div class="col-md-3">
-            <div class="accordion" id="accordionExample">
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="headingOne">
-                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                            所有商品種類
-                        </button>
-                    </h2>
-                    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                        <div class="accordion-body">
-                            <div><a href="#">機場接送</a></div>
-                            <div><a href="#">火車</a></div>
-                            <div><a href="#">高鐵</a></div>
-                            <div><a href="#">輕軌</a></div>
-                            <div><a href="#">公車</a></div>
-                        </div>
-                    </div>
+<section id="app" class="accomodation_area section_gap">
+    <div class="container">
+        <div class="section_title text-center">
+            <h2 class="title_color">交通</h2>
+            <p>We all live in an age that belongs to the young at heart. Life that is becoming extremely fast,</p>
+        </div>
+        @* 商品名稱搜尋 *@
+        <div class="search">
+            <h3 class="title_color">搜尋：</h3>
+            <input type="text" class="form-control" v-model="search" placeholder="請輸入商品名稱" />
+        </div>
+        @* 排序 *@
+        <div class="sort">
+            <div class="row">
+                <div class="col-md-4">
+                    <h3 class="title_color">排序：</h3>
+                </div>
+                <div class="col-md-4">
+                    <button class="btn theme_btn button_hover">熱門程度</button>
+                </div>
+                <div class="col-md-4">
+                    <button class="btn theme_btn button_hover" v-on:click="orderbyPrice">金額高低</button>
                 </div>
             </div>
         </div>
-
-        <div class="col-md-9">
-            @* 商品名稱搜尋 *@
-            <div class="search">
-                <label class="sort-title">搜尋：</label>
-                <input type="text" class="inp-search" size="40" v-model="search" />
-            </div>
-
-            @* 排序 *@
-            <div class="sort">
-                <div class="row">
-                    <div class="col-md-4">
-                        <h3 class="sort-title">排序：</h3>
+        <div class="row accomodation_two">
+            <div class="col-lg-3 col-sm-6" v-for="t in transportFilter">
+                <div class="accomodation_item text-center">
+                    <div class="hotel_img">
+                        <img src="~/lib/image/mountain2.jpeg" />
+                        <a :href="'/Transport/Plan/'+t.productId" class="btn theme_btn button_hover">查看價格</a>
                     </div>
-                    <div class="col-md-4">
-                        <button class="btn btn-sort">熱門程度</button>
-                    </div>
-                    <div class="col-md-4">
-                        <button class="btn btn-sort" v-on:click="orderbyPrice">金額高低</button>
-                    </div>
-                </div>
-            </div>
-
-            @* 商品 *@
-            <div class="card" v-for="t in transportFilter">
-                <div class="row">
-                    <div class="col-md-3 card-img">
-                        <img class="img-transportation" src="~/lib/image/mountain2.jpeg" />
-                    </div>
-                    <div class="col-md-7 card-body">
-                        <h5 class="card-title">{{t.productName}}</h5>
-                        <p class="card-text">{{t.mainDescribe}}</p>
-                    </div>
-                    <div class="col-md-2 card-end">
-                        <span class="product-price">NT {{t.price}}起</span>
-                        <a :href="'/Transport/Plan/'+t.productId" class="btn btn-product">查看價格</a>
-                    </div>
+                    <h4 class="sec_h4">{{t.productName}}</h4>
+                    <h5>${{t.price}}</h5>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</section>
 
 @section Scripts{
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
     <script>
         var baseAddress = "https://localhost:7025";
         var app = new Vue({
