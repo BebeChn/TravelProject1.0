@@ -10,7 +10,6 @@ namespace TravelProject1._0.Controllers
         public IActionResult Index()
         {
             return View();
-        }
-            
+        } 
     }
 }

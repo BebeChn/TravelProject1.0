@@ -3,75 +3,58 @@
 }
 
 @section Styles{
-    <link href="~/css/attractions.css" rel="stylesheet" />
 }
 
-<div class="container">
-    <img class="img-title" src="~/lib/image/mountain.jpeg" />
-</div>
-
-<div id="app" class="container attractions">
-    <div class="row">
-        <div class="col-md-3">
-            <div class="accordion" id="accordionExample">
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="headingOne">
-                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                            所有商品種類
-                        </button>
-                    </h2>
-                    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                        <div class="accordion-body">
-                            <div>景點門票</div>
-                            <div>展覽</div>
-                            <div>戶外活動</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-9">
-            @*排序*@
-            <div class="row div-sort">
-                <div class="col-md-3">
-                    <h3 class="sort-title">排序：</h3>
-                </div>
-                <div class="col-md-3">
-                    <button class="btn btn-sort">熱門程度</button>
-                </div>
-                <div class="col-md-3">
-                    <button class="btn btn-sort">金額高低</button>
-                </div>
-                <div class="col-md-3">
-                    <button class="btn btn-sort">使用者評價</button>
-                </div>
-            </div>
-
-            @*景點商品*@
-            <div class="row">
-                <div class="col-md-4" v-for="a in attractions">
-                    <div class="card">
-                        <img class="img-attractions" src="~/lib/image/mountain3.jpeg" />
-                        <div class="card-body">
-                            <h4 class="card-title">{{a.productName}}</h4>
-                            <p class="card-text">{{a.mainDescribe}}</p>
-                            <span class="sell">已售出人數：</span>
-                        </div>
-                        <div class="card-end">
-                            <span class="attractions-price">NT {{a.price}}</span>
-                            <button class="btn btn-attractions">查看門票</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+<section class="breadcrumb_area">
+    <div class="overlay bg-parallax" data-stellar-ratio="0.8" data-stellar-vertical-offset="0" data-background=""></div>
+    <div class="container">
+        <div class="page-cover text-center">
+            <h2 class="page-cover-tittle">Attractions</h2>
         </div>
     </div>
-</div>
+</section>
+
+<section id="app" class="accomodation_area section_gap">
+    <div class="container">
+        <div class="section_title text-center">
+            <h2 class="title_color">景點</h2>
+            <p>We all live in an age that belongs to the young at heart. Life that is becoming extremely fast,</p>
+        </div>
+        @* 商品名稱搜尋 *@
+        <div class="search">
+            <h3 class="title_color">搜尋：</h3>
+            <input type="text" class="form-control" placeholder="請輸入商品名稱" />
+        </div>
+        @* 排序 *@
+        <div class="sort">
+            <div class="row">
+                <div class="col-md-4">
+                    <h3 class="title_color">排序：</h3>
+                </div>
+                <div class="col-md-4">
+                    <button class="btn theme_btn button_hover">熱門程度</button>
+                </div>
+                <div class="col-md-4">
+                    <button class="btn theme_btn button_hover">金額高低</button>
+                </div>
+            </div>
+        </div>
+        <div class="row accomodation_two">
+            <div class="col-lg-3 col-sm-6" v-for="a in attractions">
+                <div class="accomodation_item text-center">
+                    <div class="hotel_img">
+                        <img src="~/lib/image/mountain2.jpeg" />
+                        <a :href="'/Attractions/Plan/'+a.productId" class="btn theme_btn button_hover">查看價格</a>
+                    </div>
+                    <h4 class="sec_h4">{{a.productName}}</h4>
+                    <h5>${{a.price}}</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
 @section Scripts{
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
     <script>
         var baseAddress = "https://localhost:7025";
 
@@ -87,7 +70,6 @@
                         if (response.ok) return response.json();
                     }).then(data => {
                         _this.attractions = data;
-                        console.log(data);
                     }).catch(error => {
                         alert(error);
                     })

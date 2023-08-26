@@ -7,68 +7,109 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/TravelProject1.0.styles.css" asp-append-version="true" />
-    <link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/font-awesome/css/all.min.css" asp-append-version="true" />
     @await RenderSectionAsync("Styles", required: false)
 </head>
 <body>
     <header>
-        <div style="background-color: rgb(78, 198, 238);padding: 2px;"></div>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index" style="background-color:rgb(78, 198, 238)">首頁</a>
+        <div class="container">
+            <nav class="navbar navbar-expand-lg navbar-light">
+                <a class="navbar-brand logo_h" asp-controller="Home" asp-action="Index">LOGO</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="PlaneTK" asp-action="PlaneTK_catgory">機票</a>
+                <div class="collapse navbar-collapse offset d-sm-inline-flex justify-content-between" id="navbarSupportedContent">
+                    <ul class="nav navbar-nav menu_nav ml-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">首頁</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" asp-area="" asp-controller="PlaneTK" asp-action="PlaneTK_catgory">機票</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Book" asp-action="Index">住宿</a>
+                            <a class="nav-link" asp-area="" asp-controller="Book" asp-action="Index">住宿</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Attractions" asp-action="Index">景點</a>
+                            <a class="nav-link" asp-controller="Attractions" asp-action="Index">景點</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Transport" asp-action="Index">交通</a>
+                            <a class="nav-link" asp-controller="Transport" asp-action="Index">交通</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Login">登入</a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Admin" asp-controller="Admin" asp-action="Admin">管理員</a>
+                            <a class="nav-link" asp-area="Admin" asp-controller="Admin" asp-action="Admin">管理員</a>
                         </li>
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>
-            </div>
-        </nav>
+            </nav>
+        </div>
     </header>
-    <div class="container">
+
+    <div>
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div style="background-color:gainsboro">
-            <div class="container">
-                <div>
-                    關於我們<a asp-area="" asp-controller="Home" asp-action="Privacy"></a>
-                    付款方式<a asp-area="" asp-controller="Home" asp-action="Privacy"></a>
-                    隱私權政策<a asp-area="" asp-controller="Home" asp-action="Privacy"></a>
-                    條款與細則<a asp-area="" asp-controller="Home" asp-action="Privacy"></a>
+    <footer class="footer-area section_gap">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3  col-md-6 col-sm-6">
+                    <div class="single-footer-widget">
+                        <h6 class="footer_title">關於我們</h6>
+                        <p></p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <div class="single-footer-widget">
+                        <h6 class="footer_title">付款方式</h6>
+                        <div class="row">
+                            <div class="col-4">
+                                <ul class="list_style">
+                                    <li><a href="#">Home</a></li>
+                                    <li><a href="#">Feature</a></li>
+                                    <li><a href="#">Services</a></li>
+                                    <li><a href="#">Portfolio</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-4">
+                                <ul class="list_style">
+                                    <li><a href="#">Team</a></li>
+                                    <li><a href="#">Pricing</a></li>
+                                    <li><a href="#">Blog</a></li>
+                                    <li><a href="#">Contact</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <div class="single-footer-widget">
+                        <h6 class="footer_title">隱私權政策</h6>
+                        <p>For business professionals caught between high OEM price and mediocre print and graphic output, </p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <div class="single-footer-widget instafeed">
+                        <h6 class="footer_title">條款與細則</h6>
+                        <ul class="list_style instafeed d-flex flex-wrap">
+                        </ul>
+                    </div>
                 </div>
             </div>
+            <div class="border_line"></div>
+            <div class="row footer-bottom d-flex justify-content-between align-items-center">
+                <p class="col-lg-8 col-sm-12 footer-text m-0">
+                    THM102 <script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+                </p>
+            </div>
         </div>
-        <div style="background-color: rgb(78, 198, 238);padding: 2px;"></div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

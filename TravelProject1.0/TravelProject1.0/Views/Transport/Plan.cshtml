@@ -4,298 +4,107 @@
 
 @section Styles{
     <link href="~/css/transport-plan.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/vue2-datepicker/index.css">
 }
 
-@*選轉木馬*@
-<div class="container">
-    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
-        <div class="carousel-indicators">
-            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
-            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3" aria-label="Slide 4"></button>
-            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="4" aria-label="Slide 5"></button>
+<section class="breadcrumb_area">
+    <div class="overlay bg-parallax" data-stellar-ratio="0.8" data-stellar-vertical-offset="0" data-background=""></div>
+    <div class="container">
+        <div class="page-cover text-center">
+            <h2 class="page-cover-tittle">Transport Plan</h2>
         </div>
-        <div class="carousel-inner">
-            <div class="carousel-item active">
-                <img class="img-product" src="~/lib/image/mountain3.jpeg" />
-            </div>
-            <div class="carousel-item">
-                <img class="img-product" src="~/lib/image/mountain3.jpeg" />
-            </div>
-            <div class="carousel-item">
-                <img class="img-product" src="~/lib/image/mountain3.jpeg" />
-            </div>
-            <div class="carousel-item">
-                <img class="img-product" src="~/lib/image/mountain3.jpeg" />
-            </div>
-            <div class="carousel-item">
-                <img class="img-product" src="~/lib/image/mountain3.jpeg" />
-            </div>
-        </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
     </div>
-</div>
+</section>
 
-@*商品介紹*@
-<div class="container">
-    <nav>
-        <ul class="pagination">
-            <li class=" product-li">
-                <button class="btn btn-switch page-1">全部</button>
-            </li>
-            <li class=" product-li">
-                <button class="btn btn-switch page-2">商品方案</button>
-            </li>
-            <li class=" product-li">
-                <button class="btn btn-switch page-3">商品說明</button>
-            </li>
-            <li class=" product-li">
-                <button class="btn btn-switch page-4">購買須知</button>
-            </li>
-            <li class=" product-li">
-                <button class="btn btn-switch page-5">商品評價</button>
-            </li>
-        </ul>
-    </nav>
-</div>
-
-@*商品方案*@
-<div id="app" class="container plan">
-    @*方案選擇*@
-    <div>
-        <div class="row" v-for="x in product">
-            <div class="col-md-8 offset-2 text-center">
-                <h2 class="title">{{x.productName}}</h2>
-                <div class="sub-descripts">
+<section id="app" class="about_history_area section_gap">
+    <div class="container">
+        <nav>
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                <button class="nav-link active" id="nav-plan-tab" data-bs-toggle="tab" data-bs-target="#nav-plan" type="button" role="tab" aria-controls="nav-plan" aria-selected="true">方案</button>
+                <button class="nav-link" id="nav-caption-tab" data-bs-toggle="tab" data-bs-target="#nav-caption" type="button" role="tab" aria-controls="nav-caption" aria-selected="false">商品說明</button>
+                <button class="nav-link" id="nav-describe-tab" data-bs-toggle="tab" data-bs-target="#nav-describe" type="button" role="tab" aria-controls="nav-describe" aria-selected="false">購買須知</button>
+                <button class="nav-link" id="nav-rating-tab" data-bs-toggle="tab" data-bs-target="#nav-rating" type="button" role="tab" aria-controls="nav-rating" aria-selected="false">評價</button>
+            </div>
+        </nav>
+        <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade show active" id="nav-plan" role="tabpanel" aria-labelledby="nav-plan-tab"></div>
+            <div class="tab-pane fade" id="nav-caption" role="tabpanel" aria-labelledby="nav-caption-tab"></div>
+            <div class="tab-pane fade" id="nav-describe" role="tabpanel" aria-labelledby="nav-describe-tab"></div>
+            <div class="tab-pane fade" id="nav-rating" role="tabpanel" aria-labelledby="nav-rating-tab"></div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 d_flex align-items-center" v-for="x in product">
+                <div class="about_content ">
+                    <h2 class="title title_color">{{x.productName}}</h2>
                     <p>{{x.mainDescribe}}</p>
+                    <a href="#" class="button_hover theme_btn_two">Request Custom Price</a>
                 </div>
             </div>
+            <div class="col-md-6">
+                <img class="img-fluid" src="~/lib/image/mountain2.jpeg" />
+            </div>
         </div>
+    </div>
 
-        <div class="card" v-for="p in plan">
-            <div class="row">
-                <div class="col-md-3">
-                    <img class="img-plan" src="~/lib/image/mountain2.jpeg" />
+    <div class="card" v-for="p in plan">
+        <div class="row">
+            <div class="col-md-3">
+                <img class="img-plan" src="~/lib/image/mountain2.jpeg" />
+            </div>
+            <div class="col-md-7">
+                <div class="card-body">
+                    <h3 class="card-title">{{p.name}}</h3>
+                    <p class="card-text">{{p.describe}}</p>
                 </div>
-                <div class="col-md-7">
-                    <div class="card-body">
-                        <h3 class="card-title">{{p.name}}</h3>
-                        <p class="card-text">{{p.describe}}</p>
-                    </div>
-                </div>
-                <div class="col-md-2 card-end">
-                    <button class="btn btn-heart"><i class="fa-solid fa-heart fa-2xl"></i></button>
-                    <button class="btn btn-plan" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">選擇</button>
-                </div>
-                <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
-                    <div class="row accordion-body">
+            </div>
+            <div class="col-md-2 card-end">
+                <button class="btn theme_btn button_hover" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">選擇</button>
+            </div>
+            <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    <div class="row">
                         <div class="col-md-6">
-                            <h4>選擇日期</h4>
+                            <h2>選擇日期</h2>
+                            <template>
+                                <div>
+                                    <date-picker v-model="time1" valueType="format"></date-picker>
+                                </div>
+                            </template>
+                        </div>
+                        <div class="col-md-6">
+                            <h2>選擇項目</h2>
                             <div>
-                                <h1>Select a Date and Money</h1>
-                                <input type="text" id="datetimepicker">
-                                <br>
-                                <label for="money">Money:</label>
-                                <input type="number" id="money" name="money">
-
+                                <span>數量：</span>
+                                <br />
+                                <span>金額：</span>
+                                <span>NT0</span>
+                            </div>
+                            <div>
+                                <a class="btn theme_btn button_hover">加入購物車</a>
+                                <a class="btn theme_btn button_hover">立即訂購</a>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <h4 class="">選擇項目</h4>
-                            <label class="">數量：</label>
-                            <input type="text" />
-                            <button class="btn btn-settle">結帳</button>
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-
-@*商品說明*@
-<div class="container caption">
-    <div>
-        <div class="row product-descripts">
-            <div class="col-md-8 offset-2 text-center">
-                <h2 class="title">商品說明</h2>
-                <div class="row">
-                    <div class="col-md-4">
-                        <img class="img-caption" src="~/lib/image/mountain.jpeg" />
-                    </div>
-                    <div class="col-md-8">
-                        <p class="sub-descripts">{{x.subDescribe}}</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-4">
-                <h4 class="sub-title">兌換方式</h4>
-                <p class="sub-descripts">QRCode</p>
-            </div>
-            <div class="col-md-4">
-                <h4 class="sub-title">時段介紹</h4>
-                <p class="sub-descripts">
-                    接機
-                    - 接機時間：司機將於飛機降落時間在機場舉牌接您上車
-                    - 緩沖時間：司機將等候 90 分鐘，若尚未出關，會視同自願放棄，恕不退費
-                    - 接載時間為 22:00 ~ 07:00 的範圍內，需現場另收夜間服務費用 NT$200
-                    - 班機提早抵達：依班機實際抵達時間等候90分鐘
-                    - 班機延遲抵達：延遲時間1小時內，司機將依班機實際抵達時間於現場等候90分鐘。延遲時間超過1小時，請抵達後聯絡KKday客服重新安排車輛，若無法搭乘將全額退費
-                </p>
-                <p class="sub-descripts">
-                    送機
-                    - 接載時間為 22:00 ~ 07:00 的範圍內，需現場另收夜間服務費用 NT$200
-                    - 送機時間：司機將於飛機起飛前 3 小時至指定地點接您上車，司機資料及車牌號碼於出發前一天 20:00 前 (GMT+8)，以訂單訊息提供。
-                    ＊緩衝時間：司機將等待30分鐘，若尚未出現，將會視同自願放棄，恕不退費。
-                    ＊若於「訂單備註」欄位填寫指定上車時間，等候緩衝時間為 30 分鐘，敬請知悉。
-                </p>
-            </div>
-            <div class="col-md-4">
-                <h4 class="sub-title">接送範圍</h4>
-                <p class="sub-descripts">
-                    不需額外加價地點：
-                    -台北市：中正、大同、中山、松山、大安、萬華、信義、內湖、南港、士林（山區除外）、北投（山區除外）
-                    -新北市：板橋、永和、中和、土城、三峽（山區除外）、樹林、鶯歌、三重、新莊、泰山、林口、蘆洲、五股、八里
-                </p>
-                <p class="sub-descripts">
-                    需加收額外費用地點（現場支付加價費用給司機）：
-                    NT$300：文山、士林山區、淡水市區（其他另議）、貓空、汐止(山區除外)、深坑、新店、安坑、文山山區
-                    NT$600：新店(偏遠地區)、陽明山、烏來、五堵、瑞芳、九份、基隆
-                    NT$1,200：萬里、金山（含陽明山天籟酒店）、石碇、平溪、三芝、三峽山區
-                    NT$2,000：雙溪、貢寮
-                </p>
-            </div>
-        </div>
-    </div>
-</div>
-
-@*購買須知*@
-<div class="container describe">
-    <div>
-        <h2 class="title">購買須知</h2>
-        <ul>
-            <li>
-                <p>{{x.shortDescribe}}</p>
-            </li>
-        </ul>
-    </div>
-</div>
-
-@*商品評價*@
-<div class="container rating">
-    <div>
-        <h2 class="title">商品評價</h2>
-        <hr />
-        <div class="card">
-            <div class="row">
-                <div class="col-md-2">
-                    <img class="img-user" src="~/lib/image/foreast.jpeg" />
-                </div>
-                <div class="col-md-10">
-                    <div class="card-body">
-                        <h5 class="card-title">會員一</h5>
-                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
-                        <p>2023/08/04</p>
-                        <div>
-                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="card">
-            <div class="row">
-                <div class="col-md-2">
-                    <img class="img-user" src="~/lib/image/foreast.jpeg" />
-                </div>
-                <div class="col-md-10">
-                    <div class="card-body">
-                        <h5 class="card-title">會員二</h5>
-                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
-                        <p>2023/08/04</p>
-                        <div>
-                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="card">
-            <div class="row">
-                <div class="col-md-2">
-                    <img class="img-user" src="~/lib/image/foreast.jpeg" />
-                </div>
-                <div class="col-md-10">
-                    <div class="card-body">
-                        <h5 class="card-title">會員三</h5>
-                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
-                        <p>2023/08/04</p>
-                        <div>
-                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="card">
-            <div class="row">
-                <div class="col-md-2">
-                    <img class="img-user" src="~/lib/image/foreast.jpeg" />
-                </div>
-                <div class="col-md-10">
-                    <div class="card-body">
-                        <h5 class="card-title">會員四</h5>
-                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
-                        <p>2023/08/04</p>
-                        <div>
-                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="card">
-            <div class="row">
-                <div class="col-md-2">
-                    <img class="img-user" src="~/lib/image/foreast.jpeg" />
-                </div>
-                <div class="col-md-10">
-                    <div class="card-body">
-                        <h5 class="card-title">會員五</h5>
-                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
-                        <p>2023/08/04</p>
-                        <div>
-                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+</section>
 
 @section Scripts{
     <script src="~/js/transport-plan.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+    <script src="https://unpkg.com/vue2-datepicker/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
     <script>
         var baseAddress = "https://localhost:7025";
+        Vue.component('datePicker', DatePicker);
         var app = new Vue({
             el: '#app',
             data: {
                 plan: [],
                 product: [],
-                queries: ''
+                queries: '',
+                time1: null
             },
             mounted: function () {
                 var _this = this;
@@ -315,7 +124,6 @@
                         if (response.ok) return response.json();
                     }).then(data => {
                         _this.product = data;
-                        console.log(_this.product);
                     }).catch(error => {
                         alert(error);
                     })
