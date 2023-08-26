@@ -1,5 +1,72 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>修改會員資料</title>
+    <style>
+       
+    </style>
+</head>
+<body>
+    <h1>修改會員資料</h1>
+    <form id="updateProfileForm">
+        <label for="username">姓名</label>
+        <input type="text" id="username" name="username" readonly>
+        <br>
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required>
+        <br>
+        <label for="fullName">地址</label>
+        <input type="text" id="fullName" name="fullName" required>
+        <br>
+        <button type="submit">更改資料</button>
+    </form>
+
+    <script>
+       
+        const userData = {
+            username: "",
+            email: "",
+            address: ""
+        };
+
+        const updateProfileForm = document.getElementById("updateProfileForm");
+        const usernameInput = document.getElementById("username");
+        const emailInput = document.getElementById("email");
+        const addressInput = document.getElementById("address");
+
+        // Fill the form with user data
+        usernameInput.value = userData.username;
+        emailInput.value = userData.email;
+        addressInput.value = userData.address;
+
+        updateProfileForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            const updatedData = {
+                email: emailInput.value,
+                address: addressInput.value
+            };
+
+            /
+            fetch("/api/User/1", {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(updatedData)
+            })
+                .then(response => {
+                    if (response.ok) {
+                        alert("更改成功");
+                    } else {
+                        alert("更改時發生錯誤");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    alert("發生錯誤,請聯絡管理員");
+                });
+        });
+    </script>
+</body>
+</html>
