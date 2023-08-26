@@ -127,33 +127,15 @@ namespace TravelProject1._0.Controllers
             return View();
         }
 
-        // Custom method to validate the user
+      
         private bool IsValidUser(string Email,string password)
         {
-            // Perform your custom validation logic here
+           
             UserDTO user = new UserDTO();
             return (Email=="user.Email" && password == "user.password");
         }
 
-        //private void AuthenticateUser(string username)
-        //{
-        //    //執行身分驗證
-        //    var claims = new[]
-        //    {
-        //        new Claim(ClaimTypes.Name,username),
-        //        new Claim(ClaimTypes.Role, "User")
-        //    };
 
-        //    var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-        //    var principal = new ClaimsPrincipal(identity);
-
-        //    HttpContext.SignInAsync("custom", principal);
-        //}
-        //[HttpGet]
-        //public IActionResult SendVerificationCode()
-        //{
-        //    return View();
-        //}
 
         //[HttpPost]
         //public async Task<IActionResult> SendVerificationCode(string email)
@@ -178,17 +160,13 @@ namespace TravelProject1._0.Controllers
         //    }
         //}
 
-        //private string GenerateVerificationCode()
-        //{
 
-        //    return new Random().Next(1000, 9999).ToString();
-        //}
 
-        //[HttpGet]
-        //public IActionResult VerifyCode()
-        //{
-        //    return View();
-        //}
+        [HttpGet]
+        public IActionResult VerifyCode()
+        {
+            return View();
+        }
 
         //[HttpPost]
         //public IActionResult VerifyCode(string code)

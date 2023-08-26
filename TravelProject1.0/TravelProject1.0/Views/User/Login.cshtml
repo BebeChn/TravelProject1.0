@@ -27,7 +27,7 @@
                 <input class="form-check-input" asp-for="@Model.RememberMe" />
                 @Html.DisplayNameFor(m=>m.RememberMe)
             </label >
-            <a id="forgot-password">忘記密碼</a>
+            <a id="forgot-password" asp-action="ForgetPassword">忘記密碼</a>
 
         </div>
 

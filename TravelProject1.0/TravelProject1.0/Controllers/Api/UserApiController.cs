@@ -21,7 +21,7 @@ namespace TravelProject1._0.Controllers.Api
     {
         private readonly ILogger<HomeController> _logger;
         private readonly TravelProjectAzureContext _context;
-        private readonly IConfiguration _configuration;
+      
         private readonly EmailSender _emailSender;
         public UserApiController(ILogger<HomeController> logger, TravelProjectAzureContext context, EmailSender emailSender)
 
@@ -152,7 +152,7 @@ namespace TravelProject1._0.Controllers.Api
             }
              
             User user = await _context.Users.FindAsync(id);
-
+        
 
             if (user != null)
             {
@@ -201,26 +201,32 @@ namespace TravelProject1._0.Controllers.Api
         }
 
         [HttpPost("forgot")]
-        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordViewModel request)
         {
             var user = _context.Users.FirstOrDefault(u => u.Email == request.Email);
             if (user != null)
             {
                 var resetToken = GenerateResetToken();
                 user.ResetToken = resetToken;
-                await _context.SaveChangesAsync();
+                try { 
 
-                
+                await _context.SaveChangesAsync();
+                }
+                catch 
+                {
+                    return BadRequest("資料庫更新失敗");
+                }
+                await _emailSender.SendEmailAsync(request.Email, "驗證碼", $"你的驗證碼: {request.VerificationCode}");
                 return Ok(new { ResetToken = resetToken });
-            }
+                }
             else
             {
-                return NotFound(new { Message = "郵件無效" });
+               return NotFound(new { Message = "郵件無效" });
             }
         }
 
         [HttpPost("reset")]
-        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordViewModel request)
         {
             var user = _context.Users.FirstOrDefault(u => u.Email == request.Email && u.ResetToken == request.ResetToken);
             if (user != null)
