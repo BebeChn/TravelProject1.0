@@ -343,6 +343,7 @@ button:focus {
         color: #222222;
         text-transform: uppercase;
         padding: 0px;
+        font-size: 20px;
     }
 
         .navbar .menu_nav .nav-item .nav-link:after {
@@ -1198,7 +1199,7 @@ button:focus {
     .blog_right_sidebar .widget_title {
         font-size: 18px;
         line-height: 25px;
-        background: #f3c300;
+        background: #52c5fd;
         text-align: center;
         color: #fff;
         padding: 8px 0px;
@@ -1497,7 +1498,7 @@ button:focus {
 .blog-pagination .page-link:hover {
     color: #fff;
     text-decoration: none;
-    background-color: #f3c300;
+    background-color: #52c5fd;
     border-color: #eee;
 }
 
