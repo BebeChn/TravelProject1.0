@@ -3,65 +3,109 @@
 }
 
 @section Styles{
+    <link href="~/css/attractions.css" rel="stylesheet" />
 }
 
-<section class="breadcrumb_area">
-    <div class="overlay bg-parallax" data-stellar-ratio="0.8" data-stellar-vertical-offset="0" data-background=""></div>
+<section id="app" class="accomodation_area">
     <div class="container">
-        <div class="page-cover text-center">
-            <h2 class="page-cover-tittle">Attractions</h2>
-        </div>
-    </div>
-</section>
-
-<section id="app" class="accomodation_area section_gap">
-    <div class="container">
-        <div class="section_title text-center">
-            <h2 class="title_color">景點</h2>
-            <p>We all live in an age that belongs to the young at heart. Life that is becoming extremely fast,</p>
-        </div>
-        @* 商品名稱搜尋 *@
-        <div class="search">
-            <h3 class="title_color">搜尋：</h3>
-            <input type="text" class="form-control" placeholder="請輸入商品名稱" />
-        </div>
-        @* 排序 *@
-        <div class="sort">
-            <div class="row">
-                <div class="col-md-4">
-                    <h3 class="title_color">排序：</h3>
-                </div>
-                <div class="col-md-4">
-                    <button class="btn theme_btn button_hover">熱門程度</button>
-                </div>
-                <div class="col-md-4">
-                    <button class="btn theme_btn button_hover">金額高低</button>
-                </div>
+        <div>
+            @* 商品名稱搜尋 *@
+            <div class="search">
+                <span class="title_color search-title">搜尋：</span>
+                <input class="inp-search" v-model="search" type="text" placeholder="請輸入商品名稱" />
+            </div>
+            @* 排序 *@
+            <div class="sort">
+                <span class="title_color sort-title">排序：</span>
+                <button class="genric-btn info radius">熱門程度</button>
+                <button class="genric-btn info radius">金額高低</button>
             </div>
         </div>
-        <div class="row accomodation_two">
-            <div class="col-lg-3 col-sm-6" v-for="a in attractions">
-                <div class="accomodation_item text-center">
-                    <div class="hotel_img">
-                        <img src="~/lib/image/mountain2.jpeg" />
-                        <a :href="'/Attractions/Plan/'+a.productId" class="btn theme_btn button_hover">查看價格</a>
+        @* 列表 *@
+        <div class="row">
+            <div class="col-md-2">
+                <div class="blog_right_sidebar">
+                    <aside class="single_sidebar_widget post_category_widget">
+                        <h4 class="widget_title">商品種類</h4>
+                        <ul class="list_style cat-list">
+                            <li>
+                                <a href="#" class="d-flex justify-content-between">
+                                    <p>遊樂園</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="d-flex justify-content-between">
+                                    <p>景點</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="d-flex justify-content-between">
+                                    <p>戶外活動</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="d-flex justify-content-between">
+                                    <p>展覽</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </aside>
+                </div>
+            </div>
+            @* 商品 *@
+            <div class="col-md-10">
+                <div class="row" v-for="a in attractionsFilter" style="margin-bottom:18px;">
+                    <div class="col-md-3">
+                        <img class="img-fluid" src="~/lib/image/mountain2.jpeg" style="width:100%;border-radius:10px;" />
                     </div>
-                    <h4 class="sec_h4">{{a.productName}}</h4>
-                    <h5>${{a.price}}</h5>
+                    <div class="col-md-7 d_flex align-items-center">
+                        <div class="about_content ">
+                            <h2 class="title title_color">{{a.productName}}</h2>
+                            <span>{{a.mainDescribe}}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <span class="product-price">${{a.price}}起</span>
+                        <a :href="'/Attractions/Plan/'+a.productId" class="button_hover theme_btn_two info">選擇方案</a>
+                    </div>
                 </div>
             </div>
         </div>
+        @* 分頁 *@
+        <nav class="blog-pagination justify-content-center d-flex">
+            <ul class="pagination">
+                <li class="page-item">
+                    <a href="#" class="page-link" aria-label="Previous">
+                        <span aria-hidden="true">
+                            <span class="lnr lnr-chevron-left"><</span>
+                        </span>
+                    </a>
+                </li>
+                <li class="page-item"><a href="#" class="page-link">01</a></li>
+                <li class="page-item"><a href="#" class="page-link">02</a></li>
+                <li class="page-item"><a href="#" class="page-link">03</a></li>
+                <li class="page-item"><a href="#" class="page-link">04</a></li>
+                <li class="page-item"><a href="#" class="page-link">...</a></li>
+                <li class="page-item">
+                    <a href="#" class="page-link" aria-label="Next">
+                        <span aria-hidden="true">
+                            <span class="lnr lnr-chevron-right">></span>
+                        </span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
     </div>
 </section>
 
 @section Scripts{
     <script>
         var baseAddress = "https://localhost:7025";
-
         var app = new Vue({
             el: '#app',
             data: {
-                attractions: []
+                attractions: [],
+                search: ""
             },
             mounted: function () {
                 var _this = this;
@@ -73,6 +117,12 @@
                     }).catch(error => {
                         alert(error);
                     })
+            },
+            computed: {
+                //關鍵字搜尋
+                attractionsFilter: function () {
+                    return this.attractions.filter(a => a.productName.match(this.search));
+                }
             }
         })
     </script>
