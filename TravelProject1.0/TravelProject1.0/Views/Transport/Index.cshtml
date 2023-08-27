@@ -2,52 +2,108 @@
     ViewData["Title"] = "交通";
 }
 
-<section class="breadcrumb_area">
-    <div class="overlay bg-parallax" data-stellar-ratio="0.8" data-stellar-vertical-offset="0" data-background=""></div>
-    <div class="container">
-        <div class="page-cover text-center">
-            <h2 class="page-cover-tittle">Transport</h2>
-        </div>
-    </div>
-</section>
+@section Styles{
+    <link href="~/css/transport.css" rel="stylesheet" />
+}
 
-<section id="app" class="accomodation_area section_gap">
+<section id="app" class="accomodation_area">
     <div class="container">
-        <div class="section_title text-center">
-            <h2 class="title_color">交通</h2>
-            <p>We all live in an age that belongs to the young at heart. Life that is becoming extremely fast,</p>
-        </div>
-        @* 商品名稱搜尋 *@
-        <div class="search">
-            <h3 class="title_color">搜尋：</h3>
-            <input type="text" class="form-control" v-model="search" placeholder="請輸入商品名稱" />
-        </div>
-        @* 排序 *@
-        <div class="sort">
-            <div class="row">
-                <div class="col-md-4">
-                    <h3 class="title_color">排序：</h3>
-                </div>
-                <div class="col-md-4">
-                    <button class="btn theme_btn button_hover">熱門程度</button>
-                </div>
-                <div class="col-md-4">
-                    <button class="btn theme_btn button_hover" v-on:click="orderbyPrice">金額高低</button>
+        @* 列表 *@
+        <div class="row">
+            <div class="col-md-2">
+                <div class="blog_right_sidebar">
+                    <aside class="single_sidebar_widget post_category_widget">
+                        <h4 class="widget_title">商品種類</h4>
+                        <ul class="list_style cat-list">
+                            <li>
+                                <a href="#" class="d-flex justify-content-between">
+                                    <p>機場接送</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="d-flex justify-content-between">
+                                    <p>租車</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="d-flex justify-content-between">
+                                    <p>高鐵</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="d-flex justify-content-between">
+                                    <p>鐵路</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </aside>
                 </div>
             </div>
-        </div>
-        <div class="row accomodation_two">
-            <div class="col-lg-3 col-sm-6" v-for="t in transportFilter">
-                <div class="accomodation_item text-center">
-                    <div class="hotel_img">
-                        <img src="~/lib/image/mountain2.jpeg" />
-                        <a :href="'/Transport/Plan/'+t.productId" class="btn theme_btn button_hover">查看價格</a>
+            @* 商品 *@
+            <div class="col-md-10">
+                <div class="filter-panel d-flex justify-content-between">
+                    @* 商品名稱搜尋 *@
+                    <div class="search">
+                        <span class="title_color search-title">搜尋：</span>
+                        <input class="inp-search" v-model="search" type="text" placeholder="請輸入商品名稱" />
                     </div>
-                    <h4 class="sec_h4">{{t.productName}}</h4>
-                    <h5>${{t.price}}</h5>
+                    @* 排序 *@
+                    <div class="sort d-flex align-items-center">
+                        <div>
+                            <h4 class="title_color sort-title">排序：</h4>
+                        </div>
+                        <h4>
+                            <span class="">
+                                <a href="#"><i class="fas fa-fire"></i>熱門程度</a>
+                            </span>
+                            <span>|</span>
+                            <span class="">
+                                <a href="#" v-on:click="orderbyPrice"><i class="fas fa-funnel-dollar"></i>金額高低</a>
+                            </span>
+                        </h4>
+                    </div>
+                </div>
+                <div class="row" v-for="t in transportFilter" style="margin-bottom:18px;">
+                    <div class="col-md-3">
+                        <img class="img-fluid" src="~/lib/image/mountain2.jpeg" style="width:100%;border-radius:10px;" />
+                    </div>
+                    <div class="col-md-7 d_flex align-items-center">
+                        <div class="about_content ">
+                            <h2 class="title title_color">{{t.productName}}</h2>
+                            <span>{{t.mainDescribe}}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <span class="product-price">${{t.price}}起</span>
+                        <a :href="'/Transport/Plan/'+t.productId" class="button_hover theme_btn_two info">選擇方案</a>
+                    </div>
                 </div>
             </div>
         </div>
+        @* 分頁 *@
+        <nav class="blog-pagination justify-content-center d-flex">
+            <ul class="pagination">
+                <li class="page-item">
+                    <a href="#" class="page-link" aria-label="Previous">
+                        <span aria-hidden="true">
+                            <span class="lnr lnr-chevron-left"><</span>
+                        </span>
+                    </a>
+                </li>
+                <li class="page-item"><a href="#" class="page-link">01</a></li>
+                <li class="page-item"><a href="#" class="page-link">02</a></li>
+                <li class="page-item"><a href="#" class="page-link">03</a></li>
+                <li class="page-item"><a href="#" class="page-link">04</a></li>
+                <li class="page-item"><a href="#" class="page-link">...</a></li>
+                <li class="page-item">
+                    <a href="#" class="page-link" aria-label="Next">
+                        <span aria-hidden="true">
+                            <span class="lnr lnr-chevron-right">></span>
+                        </span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
     </div>
 </section>
 

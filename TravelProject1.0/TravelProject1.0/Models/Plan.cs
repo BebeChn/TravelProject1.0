@@ -13,6 +13,8 @@ public partial class Plan
 
     public string? Describe { get; set; }
 
+    public string? Img { get; set; }
+
     public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
 
     public virtual ICollection<PlanCalendar> PlanCalendars { get; set; } = new List<PlanCalendar>();
