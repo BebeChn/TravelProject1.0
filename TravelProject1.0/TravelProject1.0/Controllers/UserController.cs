@@ -128,7 +128,10 @@ namespace TravelProject1._0.Controllers
             return View();
         }
 
-      
+        public IActionResult UpdateUser(int id)
+        {
+            return View();
+        }
         private bool IsValidUser(string Email,string password)
         {
            
