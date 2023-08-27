@@ -28,5 +28,11 @@
     "inputFiles": [
       "wwwroot/css/Book.css"
     ]
+  },
+  {
+    "outputFileName": "wwwroot/js/Validation.min.js",
+    "inputFiles": [
+      "wwwroot/js/Validation.js"
+    ]
   }
 ]

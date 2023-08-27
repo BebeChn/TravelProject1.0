@@ -96,6 +96,7 @@ namespace TravelProject1._0.Controllers.Api
                 _context.Users.Add(newUser);
 
                 _context.SaveChanges();
+
                 List<Claim> claims = new List<Claim>();
                 claims.Add(new Claim(ClaimTypes.Name, $"{register.Name}"));
                 claims.Add(new Claim("Email", register.Email));
@@ -137,112 +138,122 @@ namespace TravelProject1._0.Controllers.Api
                 return Convert.ToBase64String(hashBytes);
             }
         }
-        [HttpGet("check-username")]
-        public async Task<ActionResult<bool>> CheckUsernameExists(string username)
-        {
-            if (string.IsNullOrEmpty(username))
-            {
-                return BadRequest("Username cannot be empty.");
-            }
+        //[HttpGet("check-username")]
+        //public async Task<ActionResult<bool>> CheckUsernameExists(string username)
+        //{
+        //    if (string.IsNullOrEmpty(username))
+        //    {
+        //        return BadRequest("使用者不能為空.");
+        //    }
 
-            bool usernameExists = await _context.Users.AnyAsync(user => user.Name == username);
-            return Ok(new { Exists = usernameExists });
-        }
+        //    bool usernameExists = await _context.Users.AnyAsync(user => user.Name == username);
+        //    return Ok(new { Exists = usernameExists });
+        //}
 
 
 
         // PUT api/<UserApiController>/5
-        //[HttpPut("{id}")]
-        //    public async Task<IActionResult>UpdateUser(int id,UpdateUserViewModel UpdateUser)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateUser(int id, UpdateUserViewModel UpdateUser)
+        {
+
+            if (id != UpdateUser.UserId)
+            {
+                return BadRequest("使用者不存在");
+            }
+
+            User user = await _context.Users.FindAsync(id);
+
+           
+           
+            if (user != null)
+            {  
+                string hashedPassword = HashPassword(UpdateUser.Password,UpdateUser.Salt);
+                if (UpdateUser.PasswordHash == hashedPassword)
+                    return BadRequest("密碼不可重複");
+            }
+
+            //正在更改
+            //判斷傳入的密碼是否更改
+
+            if (UpdateUser.Password != null)
+            {
+                string hashedPassword = HashPassword(UpdateUser.Password, user.Salt);
+                if (UpdateUser.PasswordHash == hashedPassword) 
+                {
+                    return BadRequest("密碼不可重複");
+                }
+                else {
+                    string salt = GenerateSalt();
+                    user.Salt = salt;
+                    user.PasswordHash = hashedPassword;
+                }
+            }
+
+            // 修改其他個資
+            user.Email = UpdateUser.Email;
+            user.Address = UpdateUser.Address;
+            user.Birthday = UpdateUser.Birthday;
+            user.Name = UpdateUser.Name;
+            user.Phone = UpdateUser.Phone;
+            user.Gender = UpdateUser.Gender;
+            user.PasswordHash = UpdateUser.PasswordHash;
+            user.Salt = UpdateUser.Salt;
+
+
+            _context.Entry(UpdateUser).State = EntityState.Modified;
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch
+            {
+                return Conflict();
+            }
+            return Ok();
+        }
+        //private string GenerateResetToken()
+        //{
+        //    var rng = RandomNumberGenerator.Create();
+        //    var bytes = new byte[20];
+        //    rng.GetBytes(bytes);
+        //    return Convert.ToBase64String(bytes);
+        //}
+
+        //private string VerificationCode()
+        //{
+        //    Random rng = new Random(5);
+        //    var vertficationcode = rng.ToString();
+        //    return vertficationcode;
+        //}
+        //[HttpPost("forgot")]
+        //public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordViewModel request)
+        //{
+        //    var user = _context.Users.FirstOrDefault(u => u.Email == request.Email);
+
+        //    if (user != null)
         //    {
-        //        if (id != UpdateUser.UserId)
+        //        var resetToken = GenerateResetToken();
+        //        user.ResetToken = resetToken;
+        //        string verificationCode = GenerateResetToken();
+        //        user.VerificationCode = VerificationCode();
+        //        try
         //        {
-        //            return BadRequest("使用者不存在");
-        //        }
-
-        //        User user = await _context.Users.FindAsync(id);
-
-
-        //        if (user != null)
-        //        {
-        //            string hashedPassword = HashPassword(UpdateUser.Password,user.Salt);
-
-        //            if (hashedPassword == UpdateUser.OldPassword)
-        //                return BadRequest("密碼不可重複");
-        //        }
-
-        //        //判斷傳入的密碼是否更改
-
-        //        if  (UpdateUser.Password != null)
-        //        {
-        //            string salt = GenerateSalt();
-        //            string hashedPassword = HashPassword(UpdateUser.Password, salt);
-        //            user.Password = UpdateUser.Password;
-        //            user.Salt = salt;
-        //            user.PasswordHash = hashedPassword;
-        //        }
-
-        //        // 修改其他個資
-        //        user.Email = UpdateUser.Email;
-        //        user.Address= UpdateUser.Address;
-        //        user.Birthday = UpdateUser.Birthday;
-        //        user.Name = UpdateUser.Name;
-        //        user.Phone = UpdateUser.Phone;
-        //        user.Gender = UpdateUser.Gender;
-
-        //          _context.Entry(UpdateUser).State = EntityState.Modified;
-        //          try
-        //          {
-        //           await _context.SaveChangesAsync();
-        //          }
-        //          catch
-        //          {
-        //            return Conflict();
-        //          }
-        //           return Ok();
-        //    }
-        //    private string GenerateResetToken()
-        //    {
-        //        var rng = RandomNumberGenerator.Create();
-        //        var bytes = new byte[20];
-        //        rng.GetBytes(bytes);
-        //        return Convert.ToBase64String(bytes);
-        //    }
-
-        //    private string VerificationCode()
-        //    {
-        //        Random rng =new Random(5);
-        //        var vertficationcode = rng.ToString();
-        //        return vertficationcode;
-        //    }
-        //    [HttpPost("forgot")]
-        //    public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordViewModel request)
-        //    {
-        //        var user = _context.Users.FirstOrDefault(u => u.Email == request.Email);
-
-        //        if (user != null)
-        //        {
-        //            var resetToken = GenerateResetToken();
-        //            user.ResetToken = resetToken;
-        //            string verificationCode = GenerateResetToken();
-        //            user.VerificationCode = VerificationCode();
-        //            try
-        //            { 
 
         //            await _context.SaveChangesAsync();
-        //            }
-        //            catch 
-        //            {
-        //                return BadRequest("資料庫更新失敗");
-        //            }
-        //            await _emailSender.SendEmailAsync(request.Email, "驗證碼", $"你的驗證碼: {VerificationCode}");
-        //            return RedirectToPage("./ForgotPassword");
         //        }
-        //        else
+        //        catch
         //        {
-        //           return NotFound(new { Message = "郵件無效" });
+        //            return BadRequest("資料庫更新失敗");
         //        }
+        //        await _emailSender.SendEmailAsync(request.Email, "驗證碼", $"你的驗證碼: {VerificationCode}");
+
         //    }
+        //    else
+        //    {
+        //        return NotFound(new { Message = "郵件無效" });
+        //    }
+        //}
 
         //    [HttpPost("reset")]
         //    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordViewModel request)
