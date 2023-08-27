@@ -80,7 +80,7 @@ namespace TravelProject1._0.Controllers
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction("Index");
+            return RedirectToAction("Index","Home");
         }
 
         public IActionResult Register()

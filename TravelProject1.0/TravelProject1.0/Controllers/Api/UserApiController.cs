@@ -96,6 +96,7 @@ namespace TravelProject1._0.Controllers.Api
                 _context.Users.Add(newUser);
 
                 _context.SaveChanges();
+
                 List<Claim> claims = new List<Claim>();
                 claims.Add(new Claim(ClaimTypes.Name, $"{register.Name}"));
                 claims.Add(new Claim("Email", register.Email));
@@ -137,17 +138,17 @@ namespace TravelProject1._0.Controllers.Api
                 return Convert.ToBase64String(hashBytes);
             }
         }
-        [HttpGet("check-username")]
-        public async Task<ActionResult<bool>> CheckUsernameExists(string username)
-        {
-            if (string.IsNullOrEmpty(username))
-            {
-                return BadRequest("Username cannot be empty.");
-            }
+        //[HttpGet("check-username")]
+        //public async Task<ActionResult<bool>> CheckUsernameExists(string username)
+        //{
+        //    if (string.IsNullOrEmpty(username))
+        //    {
+        //        return BadRequest("使用者不能為空.");
+        //    }
 
-            bool usernameExists = await _context.Users.AnyAsync(user => user.Name == username);
-            return Ok(new { Exists = usernameExists });
-        }
+        //    bool usernameExists = await _context.Users.AnyAsync(user => user.Name == username);
+        //    return Ok(new { Exists = usernameExists });
+        //}
 
 
 
