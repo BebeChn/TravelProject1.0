@@ -40,8 +40,13 @@ public partial class TravelProjectAzureContext : DbContext
     public virtual DbSet<User> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=tcp:thm10201.database.windows.net,1433;Initial Catalog=TravelProjectAzure;Persist Security Info=False;User ID=allen955103;Password=AAA12345!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=True;Connection Timeout=30;");
+    {
+        if (!optionsBuilder.IsConfigured)
+        {
+            IConfigurationRoot Config = new ConfigurationBuilder().SetBasePath(AppDomain.CurrentDomain.BaseDirectory).AddJsonFile("appsettings.json").Build();
+            optionsBuilder.UseSqlServer(Config.GetConnectionString("TravelProjectAzure"));
+        }
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
