@@ -39,25 +39,48 @@ namespace TravelProject1._0.Controllers.Api
         //{
         //    return new string[] { "value1", "value2" };
         //}
+        // GET: api/Employees/5
+        [HttpGet("{id}")]
+        public async Task<UserDTO> GetUser(int id)
+        {
+            if (_context.Users == null)
+            {
+                return null;
+            }
+            var users = await _context.Users.FindAsync(id);
 
+            if (users == null)
+            {
+                return null;
+            }
+            UserDTO userDTO = new UserDTO
+            {
+                Name = users.Name, 
+                Email = users.Email,
+                Birthday = users.Birthday,
+                Gender = users.Gender,
+                Phone = users.Phone,
+            };
+            return userDTO;
+        }
         // GET api/<UserApiController>/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> getpeople()
-        {
-            //IQueryable<User> userQry = _context.Users;
-            //UserDTO[] user=await userQry
-            //    .Select(u => new UserDTO
-            //    {
-            //        Name=u.Name,
-            //        Email = u.Email,
-            //        Gender = u.Gender,
-            //        Birthday=u.Birthday, 
-            //        Phone = u.Phone,
-            //    })
-            //    .ToArrayAsync();
+        //public async Task<IActionResult> getpeople()
+        //{
+        //    //IQueryable<User> userQry = _context.Users;
+        //    //UserDTO[] user=await userQry
+        //    //    .Select(u => new UserDTO
+        //    //    {
+        //    //        Name=u.Name,
+        //    //        Email = u.Email,
+        //    //        Gender = u.Gender,
+        //    //        Birthday=u.Birthday, 
+        //    //        Phone = u.Phone,
+        //    //    })
+        //    //    .ToArrayAsync();
 
-            return Ok();
-        }
+        //    return Ok();
+        //}
         // POST api/<UserApiController>
         [HttpPost]
         public async Task<bool> PostUser(PostUserVewModel register)

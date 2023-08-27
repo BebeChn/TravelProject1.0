@@ -1,0 +1,62 @@
+﻿/* 基本表格樣式 */
+table {
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* 表格頭部 */
+thead {
+    background-color: #f2f2f2;
+}
+
+/* 表格行 */
+tr {
+    border-bottom: 1px solid #ddd;
+}
+
+/* 表格單元格 */
+td, th {
+    padding: 10px;
+    text-align: left;
+}
+
+/* 奇數行背景色 */
+tr:nth-child(odd) {
+    background-color: #f8f8f8;
+}
+
+/* 鼠標懸停時的背景色 */
+tr:hover {
+    background-color: #e0e0e0;
+}
+
+/* 添加邊框 */
+table {
+    border: 1px solid #ddd;
+}
+
+/* 指定單元格寬度 */
+td, th {
+    width: 150px;
+}
+
+/* 對齊單元格內容 */
+td {
+    text-align: center;
+}
+
+/* 設定表頭樣式 */
+th {
+    font-weight: bold;
+}
+
+/* 高亮選中的行 */
+tr.selected {
+    background-color: #a0d3e8;
+    color: white;
+}
+th, td {
+    border: 1px solid #ddd;
+}
