@@ -19,10 +19,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers
         {
             _db = db;
         }
-        public IActionResult Index()
-        {
-            return View();
-        }
+
         public IActionResult Order()
         {
             return View();
