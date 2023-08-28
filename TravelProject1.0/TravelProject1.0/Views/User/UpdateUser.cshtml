@@ -34,46 +34,42 @@
     </tr>
     <tr>
         <td>
-                <button type="submit">更改資料</button>
-                <button type="button" @@click="GetUser()">顯示</button>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">更改資料</button>
         </td>
     </tr>
        
 </table>
-
-    @* <div class="modal" tabindex="-1" id="UpdateUser">
+  
+    <!-- Modal -->
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">修改會員資料</h5>
+                    <h5 class="modal-title" id="staticBackdropLabel">修改會員資料</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <table>
-                        <tbody>
-                            <tr>
-                                <th>使用者名稱</th>
-                                <td><input v-model="user.name" /></td>
-                            </tr>
-                            <tr>
-                                <th>郵件</th>
-                                <td><input v-model="user.email" /></td>
-                            </tr>
-                            <tr>
-                                <th>電話</th>
-                                <td><input v-model="user.phone" /></td>
-                            </tr>
-                            <tr>
-                                <th>性別</th>
-                                <td><input v-model="user.gender" /></td>
-                            </tr>
-                            <tr>
-                                <th>生日</th>
-                                <td><input v-model="user.birthday" /></td>
-                            </tr>
-                                    <template iv-if="priview">
-                                        <img :src="priview" style="width:466px;height:407px" />
-                                    </template>
+                    <tr>
+                        <th>使用者名稱</th>
+                        <td><input v-model="user.name" /></td>
+                    </tr>
+                    <tr>
+                        <th>郵件</th>
+                        <td><input v-model="user.email" /></td>
+                    </tr>
+                    <tr>
+                        <th>電話</th>
+                        <td><input v-model="user.phone" /></td>
+                    </tr>
+                    <tr>
+                        <th>性別</th>
+                        <td><input v-model="user.gender" /></td>
+                    </tr>
+                    <tr>
+                        <th>生日</th>
+                        <td><input v-model="user.birthday" /></td>
+                    </tr>
                     </table>
                 </div>
                 <div class="modal-footer">
@@ -82,8 +78,8 @@
                 </div>
             </div>
         </div>
-    </div> *@
-
+    </div>
+  
 </div>
 @section Scripts{
     <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
@@ -95,39 +91,51 @@
             el: '#app',
             data: {
                 user: {},
+                userUpdate: {},
             },
             computed: {
             
             },
-          
+            mounted:function() {
+                let _this = this;
+                fetch(`${baseAddress}/api/UserApi/GetUser/1`, {
+                                method: "GET"
+                            }).then(response => {
+                                if (response.ok) {
+                                    return response.json();
+                                }
+                            }).then(data => {
+                                _this.user = data
+                            }).catch(err => {
+                                alert(err);
+                            });
+            },
             methods: {
-                  GetUser: function () {
-                    let _this = this;
-                    fetch(`${baseAddress}/api/UserApi/GetUser/1`, {
-                        method: "GET"
-                    }).then(response => {
-                        if (response.ok) {
-                            return response.json();
-                        }
-                    }).then(data => {
-                        _this.user = data
-                    }).catch(err => {
-                        alert(err);
-                    });
-                },
                 UpdateUser: function () {
                     let _this = this;
+                    let request = {
+                        Name: _this.userUpdate.name,
+                        Email: _this.userUpdate.email,
+                        Address: _this.userUpdate.address,
+                        Phone: _this.userUpdate.phone,
+                        Gender: _this.userUpdate.gender,  
+                        Birthday: _this.userUpdate.birthday,
+                    };
+
                     fetch(`${baseAddress}/api/UserApi/UpdateUser/1`, {
-                        method: "PUT"
-                    }).then(response => {
-                        if (response.ok) {
-                            return response.json();
-                        }
-                    }).then(data => {
-                        _this.user = data
-                    }).catch(err => {
-                        alert(err);
-                    });
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(request)
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            alert("修改成功");
+                        })
+                        .catch(err => {
+                            alert("修改失敗");
+                        });
                 }
             },
          });

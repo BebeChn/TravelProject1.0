@@ -12,6 +12,10 @@ using TravelProject1._0.Models.ViewModel;
 using Microsoft.Win32;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.View;
 using Microsoft.AspNetCore.Http.HttpResults;
+using System.Collections.Concurrent;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using System.Net.Mail;
+using System.Net;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -23,14 +27,14 @@ namespace TravelProject1._0.Controllers.Api
     {
         private readonly ILogger<HomeController> _logger;
         private readonly TravelProjectAzureContext _context;
-
-        //private readonly EmailSender _emailSender;
+        private readonly ConcurrentDictionary<string, VerificationCodeData> _verificationCodes = new ConcurrentDictionary<string, VerificationCodeData>();
+        private readonly EmailSender _emailSender;
         public UserApiController(ILogger<HomeController> logger, TravelProjectAzureContext context/*, EmailSender emailSender*/)
 
         {
             _logger = logger;
             _context = context;
-            //_emailSender = emailSender;
+            _emailSender = _emailSender;
 
         }
         // GET: api/<UserApiController>
@@ -55,7 +59,7 @@ namespace TravelProject1._0.Controllers.Api
             }
             UserDTO userDTO = new UserDTO
             {
-                Name = users.Name, 
+                Name = users.Name,
                 Email = users.Email,
                 Birthday = users.Birthday,
                 Gender = users.Gender,
@@ -125,7 +129,7 @@ namespace TravelProject1._0.Controllers.Api
                 claims.Add(new Claim("Email", register.Email));
                 ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 ClaimsPrincipal principal = new ClaimsPrincipal(identity);
-                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,principal);
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
             }
 
             catch (Exception ex)
@@ -187,11 +191,11 @@ namespace TravelProject1._0.Controllers.Api
 
             User user = await _context.Users.FindAsync(id);
 
-           
-           
+
+
             if (user != null)
-            {  
-                string hashedPassword = HashPassword(UpdateUser.Password,UpdateUser.Salt);
+            {
+                string hashedPassword = HashPassword(UpdateUser.Password, UpdateUser.Salt);
                 if (UpdateUser.PasswordHash == hashedPassword)
                     return BadRequest("密碼不可重複");
             }
@@ -202,11 +206,12 @@ namespace TravelProject1._0.Controllers.Api
             if (UpdateUser.Password != null)
             {
                 string hashedPassword = HashPassword(UpdateUser.Password, user.Salt);
-                if (UpdateUser.PasswordHash == hashedPassword) 
+                if (UpdateUser.PasswordHash == hashedPassword)
                 {
                     return BadRequest("密碼不可重複");
                 }
-                else {
+                else
+                {
                     string salt = GenerateSalt();
                     user.Salt = salt;
                     user.PasswordHash = hashedPassword;
@@ -235,73 +240,134 @@ namespace TravelProject1._0.Controllers.Api
             }
             return Ok();
         }
-        //private string GenerateResetToken()
-        //{
-        //    var rng = RandomNumberGenerator.Create();
-        //    var bytes = new byte[20];
-        //    rng.GetBytes(bytes);
-        //    return Convert.ToBase64String(bytes);
-        //}
 
-        //private string VerificationCode()
-        //{
-        //    Random rng = new Random(5);
-        //    var vertficationcode = rng.ToString();
-        //    return vertficationcode;
-        //}
-        //[HttpPost("forgot")]
-        //public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordViewModel request)
-        //{
-        //    var user = _context.Users.FirstOrDefault(u => u.Email == request.Email);
+        [HttpPost("SendVerificatio")]
+        public async Task<IActionResult> SendVerificationCode([FromBody] VerificationRequest request)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(request.Email))
+                    return BadRequest("郵件為必需的");
 
-        //    if (user != null)
-        //    {
-        //        var resetToken = GenerateResetToken();
-        //        user.ResetToken = resetToken;
-        //        string verificationCode = GenerateResetToken();
-        //        user.VerificationCode = VerificationCode();
-        //        try
-        //        {
+                string verificationCode = GenerateVerificationCode();
+                string codeId = Guid.NewGuid().ToString();
 
-        //            await _context.SaveChangesAsync();
-        //        }
-        //        catch
-        //        {
-        //            return BadRequest("資料庫更新失敗");
-        //        }
-        //        await _emailSender.SendEmailAsync(request.Email, "驗證碼", $"你的驗證碼: {VerificationCode}");
+                var verificationCodeData = new VerificationCodeData
+                {
+                    Code = verificationCode,
+                    ExpiryTime = DateTime.UtcNow.AddMinutes(10) // 設定驗證碼的有效期，例如10分鐘
+                };
 
-        //    }
-        //    else
-        //    {
-        //        return NotFound(new { Message = "郵件無效" });
-        //    }
-        //}
+                _verificationCodes.TryAdd(codeId, verificationCodeData);
 
-        //    [HttpPost("reset")]
-        //    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordViewModel request)
-        //    {
-        //        var user = _context.Users.FirstOrDefault(u => u.Email == request.Email && u.ResetToken == request.ResetToken);
-        //        if (user != null)
-        //        {
-        //            user.Password = request.NewPassword;
-        //            user.ResetToken = null;
-        //            await _context.SaveChangesAsync();
-        //            return Ok(new { Message = "密碼成功重設" });
-        //        }
-        //        else
-        //        {
-        //            return BadRequest(new { Message = "重設密碼" });
-        //        }
-        //    }
+                await _emailSender.SendEmailAsync(request.Email, "驗證碼", $"你的驗證碼: {_verificationCodes}");
 
+                return Ok(new { Message = "驗證碼成功寄送.", CodeId = codeId });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"錯誤: {ex.Message}");
+            }
+        }
+
+        [HttpPost("verify")]
+        public IActionResult VerifyCode([FromBody] VerifyCodeRequest request)
+        {
+            if (!_verificationCodes.TryGetValue(request.CodeId, out VerificationCodeData verificationCodeData))
+            {
+                return BadRequest("錯誤的驗證碼或是驗證碼時效過期.");
+            }
+
+            if (verificationCodeData.ExpiryTime < DateTime.UtcNow)
+            {
+                _verificationCodes.TryRemove(request.CodeId, out _);
+                return BadRequest("驗證碼過期.");
+            }
+
+            if (verificationCodeData.Code == request.Code)
+            {
+                _verificationCodes.TryRemove(request.CodeId, out _);
+                return Ok("驗證碼驗證成功");
+            }
+
+            return BadRequest("錯誤驗證碼.");
+        }
+
+        private string GenerateVerificationCode()
+        {
+            Random random = new Random();
+            return random.Next(1000, 9999).ToString();
+        }
+
+        private async Task SendEmail(string toEmail, string subject, string message)
+        {
+            using (var client = new SmtpClient())
+            {
+                client.Host = "smtp.example.com"; // 郵件伺服器地址
+                client.Port = 587; // 郵件伺服器端口
+                client.EnableSsl = true; // 使用SSL加密
+                client.Credentials = new NetworkCredential("your_email@example.com", "your_email_password"); // 你的郵件地址和密碼
+
+                var emailMessage = new MailMessage
+                {
+                    From = new MailAddress("your_email@example.com"), // 你的郵件地址
+                    Subject = subject,
+                    Body = message,
+                    IsBodyHtml = false
+                };
+
+                emailMessage.To.Add(toEmail);
+
+                await client.SendMailAsync(emailMessage);
+            }
+        }
+       
+
+        [HttpPost("reset")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordViewModel request)
+        {
+            var user = _context.Users.FirstOrDefault(u => u.Email == request.Email && u.ResetToken == request.ResetToken);
+            if (user != null)
+            {
+               string password = request.NewPassword;
+                await _context.SaveChangesAsync();
+                return Ok(new { Message = "密碼成功重設" });
+            }
+            else
+            {
+                return BadRequest(new { Message = "重設密碼" });
+            }
+        }
 
     }
-       
- }
+
+    public class VerificationRequest
+    {
+        public string Email { get; set; }
+    }
+
+    public class VerifyCodeRequest
+    {
+        public string CodeId { get; set; }
+        public string Code { get; set; }
+    }
+
+    public class VerificationCodeData
+    {
+        public string Code { get; set; }
+        public DateTime ExpiryTime { get; set; }
+    }
+
+
 
     
+}
 
-    
+
+
+
+
+
+
 
 
