@@ -212,17 +212,19 @@
 
     <script>
         var baseAddress = "https://localhost:7025"
+        var WebsiteIndex = window.location.pathname.replace('/api/PlaneTK/PlaneTK_sale/', '')
         var vueApp = {
             data() {
                 return {
                     PlaneTKGETIDDTOes: [],
-                    xxx: 111,
-
+                    
                 };
             },
             mounted: function () {
                 let _this = this;
                 _this.PlaneTKGETID();
+                 
+
             },
             methods: {
                 PlaneTKGETID: function () {
@@ -231,7 +233,7 @@
                     var request = {};
 
                     //直接GET
-                    axios.get(`${baseAddress}/api/PlaneTK/PlaneTKGETID/2`)
+                    axios.get(`${baseAddress}/api/PlaneTK/PlaneTKGETID/${WebsiteIndex}`)
                         .then(response => {
                             _this.PlaneTKGETIDDTOes = response.data;
                             for (var i = 0; i < _this.PlaneTKGETIDDTOes.length; i++) {
