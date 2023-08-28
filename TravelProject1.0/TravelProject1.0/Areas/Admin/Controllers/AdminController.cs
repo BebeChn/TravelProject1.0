@@ -25,20 +25,13 @@ namespace TravelProject1._0.Areas.Admin.Controllers
         }
 
 
-        public IActionResult Index()
-        {
-            return View();
-        }
+
 
         public IActionResult Admin()
         {
             return View();
         }
 
-        public IActionResult Admin_partial()
-        {
-            return View();
-        }
 
 
         [HttpGet]

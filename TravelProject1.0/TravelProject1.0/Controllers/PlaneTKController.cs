@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
+using System.Numerics;
 using TravelProject1._0.Models;
 using TravelProject1._0.Models.DTO;
 
 namespace TravelProject1._0.Controllers
 {
-    
+
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class PlaneTKController : Controller
@@ -22,7 +24,7 @@ namespace TravelProject1._0.Controllers
 
 
 
-        
+
         public IActionResult PlaneTK_catgory()
         {
             return View();
@@ -95,11 +97,41 @@ namespace TravelProject1._0.Controllers
 
 
         //=======================================================
+        [HttpGet]
         public IActionResult PlaneTK_sale()
         {
+
+
             return View();
         }
 
+
+        [HttpGet("{id}")]
+        public IActionResult PlaneTK_sale(int id)
+        {
+
+
+            return View();
+        }
+
+        //GET資料
+        [HttpGet("{id}")]
+        public async Task<IEnumerable<PlaneTKDTO>> PlaneTKGETID(int id)
+        {
+
+            return _db.Products.Where(p => p.Id == 1
+                && p.ProductId == id)
+                .Select(op => new PlaneTKDTO
+                {
+                    ProductId = op.ProductId,
+                    Id = op.Id,
+                    ProductName = op.ProductName,
+                    Price = op.Price,
+                    MainDescribe = op.MainDescribe,
+                    SubDescribe = op.SubDescribe,
+                    ShortDescribe = op.ShortDescribe,
+                });
+        }
 
     }
 }

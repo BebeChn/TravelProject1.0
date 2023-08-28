@@ -21,15 +21,14 @@ namespace TravelProject1._0.Controllers.Api
         [HttpGet]
         public async Task<IEnumerable<TransportDTO>> GetCategoryByTransport()
         {
-            var result = _dbContext.Products.Where(p => p.Id == 3).Select(p => new TransportDTO
+            return _dbContext.Products.Where(p => p.Id == 3).Select(p => new TransportDTO
             {
                 ProductId = p.ProductId,
                 ProductName = p.ProductName,
                 Price = p.Price,
                 MainDescribe = p.MainDescribe,
+                Img = p.Img
             });
-
-            return result;
         }
 
         //排序商品的價格
@@ -42,7 +41,8 @@ namespace TravelProject1._0.Controllers.Api
                 ProductId = p.ProductId,
                 ProductName = p.ProductName,
                 Price = p.Price,
-                MainDescribe = p.MainDescribe
+                MainDescribe = p.MainDescribe,
+                Img = p.Img
             });
         }
         //高到低
@@ -54,7 +54,8 @@ namespace TravelProject1._0.Controllers.Api
                 ProductId = p.ProductId,
                 ProductName = p.ProductName,
                 Price = p.Price,
-                MainDescribe = p.MainDescribe
+                MainDescribe = p.MainDescribe,
+                Img = p.Img
             });
         }
     }
