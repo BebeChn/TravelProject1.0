@@ -34,5 +34,11 @@
     "inputFiles": [
       "wwwroot/js/Validation.js"
     ]
+  },
+  {
+    "outputFileName": "wwwroot/css/Table.min.css",
+    "inputFiles": [
+      "wwwroot/css/Table.css"
+    ]
   }
 ]
