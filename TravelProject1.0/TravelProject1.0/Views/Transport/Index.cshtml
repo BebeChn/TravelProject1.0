@@ -39,7 +39,7 @@
                     </aside>
                 </div>
             </div>
-            @* 商品 *@
+            @* 商品區 *@
             <div class="col-md-10">
                 <div class="filter-panel d-flex justify-content-between">
                     @* 商品名稱搜尋 *@
@@ -58,14 +58,15 @@
                             </span>
                             <span>|</span>
                             <span class="">
-                                <a href="#" v-on:click="orderbyPrice"><i class="fas fa-funnel-dollar"></i>金額高低</a>
+                                <a href="#" v-on:click="priceSort"><i class="fas fa-funnel-dollar"></i>金額高低</a>
                             </span>
                         </h4>
                     </div>
                 </div>
-                <div class="row" v-for="t in transportFilter" style="margin-bottom:18px;">
+                @* 商品 *@
+                <div class="row product-items" v-for="t in transportFilter">
                     <div class="col-md-3">
-                        <img class="img-fluid" src="~/lib/image/mountain2.jpeg" style="width:100%;border-radius:10px;" />
+                        <img class="img-product" :src="t.img" />
                     </div>
                     <div class="col-md-7 d_flex align-items-center">
                         <div class="about_content ">
@@ -126,17 +127,15 @@
                         if (response.ok) return response.json();
                     }).then(data => {
                         _this.transport = data;
-                        console.log(data);
                     }).catch(error => {
                         alert(error);
                     })
             },
             methods: {
                 //價格排序
-                orderbyPrice: function () {
+                priceSort: function () {
                     var _this = this;
                     _this.count++;
-                    console.log(_this.count);
                     if (_this.count % 2 != 0) {
                         fetch(`${baseAddress}/api/TransportApi/TransportOrderbyPrice`, { method: "GET" })
                             .then(response => {

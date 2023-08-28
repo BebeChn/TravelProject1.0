@@ -35,7 +35,7 @@
                     <!--輸入關鍵字-->
                     <input class="form-control" type="text" placeholder="Search" aria-label="Search"
                            v-model="filter" @@keyup="filterUser">
-                    <button class="btn btn-outline-secondary " style="color :#1e2154" type="submit"  @*@@click="filterUser"*@>
+                    <button class="btn btn-outline-secondary " style="color :#1e2154" type="submit" @*@@click="filterUser"*@>
                         <Fieldset>搜尋</Fieldset>
                     </button>
                 </form>
@@ -49,11 +49,11 @@
         <!--管理選單-->
         <div class="col-2">
             <ul class="list-group">
-                <!--管理選單列-->
-                <a class="btn" href="http://127.0.0.1:5500/admin.html">使用者管理</a>
-                <a class="btn" href="http://127.0.0.1:5500/admin.html">訂單管理</a>
+                <!--管理選單列-->  <!--改道layout用-->
+@*                <a class="btn" href="https://localhost:7025/api/Admin/Admin">使用者管理</a>
+                <a class="btn" href="https://localhost:7025/api/Order/Order">訂單管理</a>
                 <a class="btn" href="http://127.0.0.1:5500/admin.html">數據分析</a>
-                <a class="btn" href="http://127.0.0.1:5500/admin.html">商品管理</a>
+                <a class="btn" href="https://localhost:7025/api/Merchandise/Merchandise">商品管理</a>*@
                 <!--管理選單底-->
             </ul>
         </div>
@@ -84,7 +84,7 @@
                             <td>
                                 <button type="button" class="btn btn-success" @@click="update(item)">更新</button>
                             </td>
-                             <td>
+                            <td>
                                 <button type="button" class="btn btn-info" @@click="cancel">取消</button>
                             </td>
                         </template>
@@ -170,7 +170,7 @@
                         axios.post(`${baseAddress}/api/Admin/AdminSearch`, request)
                             .then(response => {
                                 _this.AdminDTOes = response.data;
-                                for (var i = 0; i < _this.AdminDTOes.Length; i++) {
+                                for (var i = 0; i < _this.AdminDTOes.length; i++) {
                                     var item = _this.AdminDTOes[i];
                                     item.Edit = false;
                                 }
@@ -256,7 +256,7 @@
                         axios.get(`${baseAddress}/api/Admin/Datelower`)
                             .then(response => {
                                 _this.AdminDTOes = response.data;
-                                for (var i = 0; i < _this.AdminDTOes.Length; i++) {
+                                for (var i = 0; i < _this.AdminDTOes.length; i++) {
                                     var item = _this.AdminDTOes[i];
                                     item.Edit = false;
                                 }
@@ -272,7 +272,7 @@
                         axios.get(`${baseAddress}/api/Admin/Datehigh`)
                             .then(response => {
                                 _this.AdminDTOes = response.data;
-                                for (var i = 0; i < _this.AdminDTOes.Length; i++) {
+                                for (var i = 0; i < _this.AdminDTOes.length; i++) {
                                     var item = _this.AdminDTOes[i];
                                     item.Edit = false;
                                 }

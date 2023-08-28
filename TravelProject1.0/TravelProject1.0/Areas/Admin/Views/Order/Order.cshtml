@@ -28,7 +28,7 @@
     <nav class="navbar bg-body">
         <div class="container-fluid justify-content-end">
             <form class="d-flex" role="search">
-               @* <img src="./pic/search.png" width="100" height="60">*@
+                @* <img src="./pic/search.png" width="100" height="60">*@
                 <input class="form-control " type="search" placeholder="Search" aria-label="Search"
                        v-model="Filter" @@keyup="filterorder">
                 <button class="btn btn-outline-secondary " style="color :#1e2154" @*type="submit"*@>
@@ -43,11 +43,11 @@
         <!--管理選單-->
         <div class="col-2">
             <ul class="list-group">
-                <!--管理選單列-->
-                <a class="btn" href="http://127.0.0.1:5500/admin.html">使用者管理</a>
-                <a class="btn" href="http://127.0.0.1:5500/admin.html">訂單管理</a>
+                <!--管理選單列--> <!--改道layout用-->
+@*                <a class="btn" href="https://localhost:7025/api/Admin/Admin">使用者管理</a>
+                <a class="btn" href="https://localhost:7025/api/Order/Order">訂單管理</a>
                 <a class="btn" href="http://127.0.0.1:5500/admin.html">數據分析</a>
-                <a class="btn" href="http://127.0.0.1:5500/admin.html">商品管理</a>
+                <a class="btn" href="https://localhost:7025/api/Merchandise/Merchandise">商品管理</a>*@
                 <!--管理選單底-->
             </ul>
         </div>
@@ -62,7 +62,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                
+
                     <tr v-for="item in OrderDTOes ">
                         <template v-if="item.Edit==true">
                             <td><label>{{item.orderId}}</label></td>
@@ -73,19 +73,19 @@
                                 <button type="button" class="btn btn-info" @@click="cancel">取消</button>
                             </td>
                         </template>
-                         <template v-else>
-                                <td><label>{{item.orderId}}</label></td>
-                                <td><label>{{item.userId}}</label></td>
-                                 <td><label>{{item.orderDate}}</label></td>
-                                <td>
+                        <template v-else>
+                            <td><label>{{item.orderId}}</label></td>
+                            <td><label>{{item.userId}}</label></td>
+                            <td><label>{{item.orderDate}}</label></td>
+                            <td>
                                 <button type="button" class="btn btn-primary" @@click="edit(item.orderId)">編輯</button>
                                 <button type="button" class="btn btn-danger" @@click="deleteOrder(item.orderId)">刪除</button>
-                                </td>
-                         </template>
+                            </td>
+                        </template>
                     </tr>
-                
+
                 </tbody>
-             </table>
+            </table>
         </div>
     </div>
     <!--app-->
@@ -112,37 +112,37 @@
 
 
 
- 
-<script>
-    var baseAddress = "https://localhost:7025";
-    var vueApp = {
-        data() {
-            return {
-            OrderDTOes:[],
-            Filter:'',
-            //
-            originalorderDate:'',
 
-            };
-        },
-        mounted: function () {
+    <script>
+        var baseAddress = "https://localhost:7025";
+        var vueApp = {
+            data() {
+                return {
+                    OrderDTOes: [],
+                    Filter: '',
+                    //
+                    originalorderDate: '',
+
+                };
+            },
+            mounted: function () {
+                let _this = this;
+                //alert("mouned");
+                _this.filterorder();
+            },
+            methods: {
+
+
+                filterorder: function () {
                     let _this = this;
-                    //alert("mouned");
-                    _this.filterorder();
-        },
-         methods:{
+                    //alert("篩選");
+                    var request = {};
 
-
-                    filterorder: function () {
-                            let _this = this;
-                            //alert("篩選");
-                            var request = { };
-
-                        //直接GET
-                         axios.get(`${baseAddress}/api/Order/OrderGET`)
+                    //直接GET
+                    axios.get(`${baseAddress}/api/Order/OrderGET`)
                         .then(response => {
                             _this.OrderDTOes = response.data;
-                            for (var i = 0; i < _this.OrderDTOes.Length; i++) {
+                            for (var i = 0; i < _this.OrderDTOes.length; i++) {
                                 var item = _this.OrderDTOes[i];
                                 item.Edit = false;
                             }
@@ -153,111 +153,111 @@
 
 
 
-                        //查詢
-                            //request.OrderId  = _this.Filter;    
-                            //request.OrderId = isNaN(Number(_this.Filter)) ? -1 : Number(_this.Filter);
-                            //request.OrderId = request.UserId = request.OrderDate = _this.Filter;
-                            //axios.post(`${baseAddress}/api/Order/OrderSeachL`, request)
-                            //.then(response => {
-                            //    _this.OrderDTOes = response.data;
-                            //    for (var i = 0; i < _this.OrderDTOes.length; i++) {
-                            //        var item = _this.OrderDTOes[i];
-                            //        item.Edit = false;
-                            //    }
-                            //})
-                            //.catch(err => {
-                            //    alert(err);
-                            //});
-                
-                    },
-                
+                    //查詢
+                    //request.OrderId  = _this.Filter;
+                    //request.OrderId = isNaN(Number(_this.Filter)) ? -1 : Number(_this.Filter);
+                    //request.OrderId = request.UserId = request.OrderDate = _this.Filter;
+                    //axios.post(`${baseAddress}/api/Order/OrderSeachL`, request)
+                    //.then(response => {
+                    //    _this.OrderDTOes = response.data;
+                    //    for (var i = 0; i < _this.OrderDTOes.length; i++) {
+                    //        var item = _this.OrderDTOes[i];
+                    //        item.Edit = false;
+                    //    }
+                    //})
+                    //.catch(err => {
+                    //    alert(err);
+                    //});
+
+                },
+
                 //edit
                 edit: function (orderId) {
                     //alert("edit");
-                    let _this=this;
-                    for (var i = 0; i < _this.OrderDTOes.length;i++){
+                    let _this = this;
+                    for (var i = 0; i < _this.OrderDTOes.length; i++) {
                         var item = _this.OrderDTOes[i];
-                        if (item.orderId == orderId){
-                            item.Edit=true;
+                        if (item.orderId == orderId) {
+                            item.Edit = true;
 
                             _this.originalorderDate = item.orderDate;
                         }
                     }
                 },
                 //
-                cancel:function(){
-                    let _this=this;
-                        for (var i = 0; i < _this.OrderDTOes.length;i++){
-                            var item = _this.OrderDTOes[i];
-                            if(item.Edit==true){
-                                item.Edit=false;
+                cancel: function () {
+                    let _this = this;
+                    for (var i = 0; i < _this.OrderDTOes.length; i++) {
+                        var item = _this.OrderDTOes[i];
+                        if (item.Edit == true) {
+                            item.Edit = false;
                             item.orderDate = _this.originalorderDate;
 
-                            }
                         }
+                    }
                 },
                 //
-                update:function(item){
-                    let _this=this;
-                    var request={};
+                update: function (item) {
+                    let _this = this;
+                    var request = {};
                     request.orderId = item.orderId;
                     request.userId = item.userId;
                     request.orderDate = item.orderDate;
-                    axios.put(`${baseAddress}/api/Order/OrderuPUT/${item.orderId}`, request).then(response=>{
+                    axios.put(`${baseAddress}/api/Order/OrderuPUT/${item.orderId}`, request).then(response => {
                         alert(response.data);
-                        _this.filterorder();                         
-                    }).catch(err=>{
+                        _this.filterorder();
+                    }).catch(err => {
                         alert(err);
                     });
                 },
                 //
-                deleteOrder:function (orderId){
-                    var ret=confirm('確定要刪除嗎');
-                    let _this=this;
+                deleteOrder: function (orderId) {
+                    var ret = confirm('確定要刪除嗎');
+                    let _this = this;
 
-                    if(ret==true){
-                        axios.delete(`${baseAddress}/api/Order/OrderDELETE`).then(response=>{
+                    if (ret == true) {
+                        axios.delete(`${baseAddress}/api/Order/OrderDELETE`).then(response => {
                             alert(response.data);
                             _this.filterorder();
-                        }).catch(err=>{
+                        }).catch(err => {
                             alert(err);
                         })
                     }
 
                 },
 
- 
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-        }
-
-    };
-var app = Vue.createApp(vueApp).mount("#app");
-
-</script>
 
 
 
 
 
 
-         
 
 
 
- 
+
+
+
+
+
+
+
+
+            }
+
+        };
+        var app = Vue.createApp(vueApp).mount("#app");
+
+    </script>
+
+
+
+
+
+
+
+
+
+
+
 }
