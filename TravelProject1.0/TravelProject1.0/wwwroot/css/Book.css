@@ -1,62 +1,41 @@
-.img {
-    width: 100%;
-    height: 80%;
-    border-radius: 20px;
-}
-.card {
-    width: 100%;
-    margin-bottom: 10px;
-}
-
-.card-img {
-    width: 25%;
-}
-.img-book {
-    width: 100%;
-    height: 100%;
-    border-radius: 10px;
-}
-.card-title {
-    font-weight: bold;
-    font-size: 28px;
-}
-.sell {
-    text-align: left;
-    font-weight: bold;
-    font-size: 20px;
-    color: red;
-}
-.card-end {
-    margin: 0 auto;
-    margin: auto;
-    text-align: center;
-}
-.product-price {
-    font-weight: bold;
-    font-size: 28px;
-    color: red;
-}
-.btn-sort {
-    margin-bottom: 20px;
-    background-color: cornflowerblue;
-    color: white;
-    font-size: 20px;
-    border-radius: 10px;
-    transition: all 0.3s ease;
-}
-.btn-sequence {
-    background-color: darkturquoise;
-    border-radius: 10px;
-    color: white;
-    font-size: 18px;
-    font-weight: bold;
-    transition: all 0.3s ease;
-}
 .search {
-
-    justify-content: space-evenly
+    margin-bottom: 20px;
 }
+
+.search-title {
+    font-size: 24px;
+    font-weight: bold;
+}
+
 .inp-search {
-    font-size: 32px;
-    height: 40px;
+    width: 50%;
+    transition: width 0.4s ease-in-out;
+}
+
+    .inp-search:focus {
+        width: 70%;
+    }
+
+.sort {
+    margin-bottom: 30px;
+}
+
+.sort-title {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.product-items {
+    margin-bottom: 18px;
+}
+
+.img-product {
+    width: 220px;
+    height: 160px;
+    border-radius: 10px;
+}
+
+.product-price {
+    font-size: 24px;
+    font-weight: bold;
 }

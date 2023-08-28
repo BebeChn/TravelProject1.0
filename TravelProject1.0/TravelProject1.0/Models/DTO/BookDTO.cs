@@ -11,5 +11,6 @@
         public decimal Price { get; set; }
 
         public string? MainDescribe { get; set; }
+        public string? Img { get; set; }
     }
 }
