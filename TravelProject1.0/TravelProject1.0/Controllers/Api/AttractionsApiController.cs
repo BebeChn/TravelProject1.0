@@ -31,5 +31,48 @@ namespace TravelProject1._0.Controllers.Api
                 Img = p.Img
             });
         }
+
+        //商品價格排序
+        //價格低到高
+        [HttpGet]
+        public async Task<IQueryable<AttractionsDTO>> OrderByPrice()
+        {
+            return _dbContext.Products.Where(p => p.Id == 4).OrderBy(p => p.Price).Select(p => new AttractionsDTO
+            {
+                ProductId = p.ProductId,
+                ProductName = p.ProductName,
+                Price = p.Price,
+                MainDescribe = p.MainDescribe,
+                Img = p.Img
+            });
+        }
+        //價格高到低
+        [HttpGet]
+        public async Task<IQueryable<AttractionsDTO>> OrderByDescendingPrice()
+        {
+            return _dbContext.Products.Where(p => p.Id == 4).OrderByDescending(p => p.Price).Select(p => new AttractionsDTO
+            {
+                ProductId = p.ProductId,
+                ProductName = p.ProductName,
+                Price = p.Price,
+                MainDescribe = p.MainDescribe,
+                Img = p.Img
+            });
+        }
+
+        //取得商品方案
+        [HttpGet]
+        [Route("{id}")]
+        public async Task<IQueryable<AttractionsPlanDTO>> GetPlan(int id)
+        {
+            return _dbContext.Plans.Where(p => p.ProductId == id).Select(p => new AttractionsPlanDTO
+            {
+                PlanId = p.PlanId,
+                Name = p.Name,
+                Describe = p.Describe,
+                PlanImg = p.PlanImg
+            });
+        }
+
     }
 }

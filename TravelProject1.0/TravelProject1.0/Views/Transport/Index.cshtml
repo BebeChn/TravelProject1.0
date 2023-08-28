@@ -58,7 +58,7 @@
                             </span>
                             <span>|</span>
                             <span class="">
-                                <a href="#" v-on:click="orderbyPrice"><i class="fas fa-funnel-dollar"></i>金額高低</a>
+                                <a href="#" v-on:click="priceSort"><i class="fas fa-funnel-dollar"></i>金額高低</a>
                             </span>
                         </h4>
                     </div>
@@ -127,17 +127,15 @@
                         if (response.ok) return response.json();
                     }).then(data => {
                         _this.transport = data;
-                        console.log(data);
                     }).catch(error => {
                         alert(error);
                     })
             },
             methods: {
                 //價格排序
-                orderbyPrice: function () {
+                priceSort: function () {
                     var _this = this;
                     _this.count++;
-                    console.log(_this.count);
                     if (_this.count % 2 != 0) {
                         fetch(`${baseAddress}/api/TransportApi/TransportOrderbyPrice`, { method: "GET" })
                             .then(response => {
