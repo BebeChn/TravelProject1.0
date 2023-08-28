@@ -22,14 +22,17 @@ namespace TravelProject1._0.Controllers.Api
             {
                 r.ProductName,
                 r.Price,
-                r.MainDescribe
+                r.MainDescribe,
+                r.Img
             }) ;        
             return _context.Products.Where(b => b.Id == 2).Select(b => new BookDTO
             {
                 ProductName = b.ProductName,
                 Price = b.Price,
-                MainDescribe = b.MainDescribe
+                MainDescribe = b.MainDescribe,
+                Img = b.Img
             });
+
         }
     }
 }

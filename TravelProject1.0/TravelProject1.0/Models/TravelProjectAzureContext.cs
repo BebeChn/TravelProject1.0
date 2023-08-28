@@ -163,7 +163,7 @@ public partial class TravelProjectAzureContext : DbContext
             entity.ToTable("Plan Calendar");
 
             entity.Property(e => e.Id).HasColumnName("ID");
-            entity.Property(e => e.Date).HasColumnType("datetime");
+            entity.Property(e => e.Date).HasColumnType("date");
             entity.Property(e => e.PlanId).HasColumnName("PlanID");
             entity.Property(e => e.Price).HasColumnType("money");
 

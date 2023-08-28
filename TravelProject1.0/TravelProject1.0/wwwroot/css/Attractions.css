@@ -8,12 +8,12 @@
 }
 
 .inp-search {
-    width: 20%;
+    width: 50%;
     transition: width 0.4s ease-in-out;
 }
 
     .inp-search:focus {
-        width: 50%;
+        width: 70%;
     }
 
 .sort {
@@ -23,6 +23,16 @@
 .sort-title {
     font-size: 24px;
     font-weight: bold;
+}
+
+.product-items {
+    margin-bottom: 18px;
+}
+
+.img-product {
+    width: 220px;
+    height: 160px;
+    border-radius: 10px;
 }
 
 .product-price {
