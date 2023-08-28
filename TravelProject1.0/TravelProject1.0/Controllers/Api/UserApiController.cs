@@ -29,7 +29,7 @@ namespace TravelProject1._0.Controllers.Api
         private readonly TravelProjectAzureContext _context;
         private readonly ConcurrentDictionary<string, VerificationCodeData> _verificationCodes = new ConcurrentDictionary<string, VerificationCodeData>();
         private readonly EmailSender _emailSender;
-        public UserApiController(ILogger<HomeController> logger, TravelProjectAzureContext context/*, EmailSender emailSender*/)
+        public UserApiController(ILogger<HomeController> logger, TravelProjectAzureContext context, EmailSender emailSender)
 
         {
             _logger = logger;
@@ -241,7 +241,7 @@ namespace TravelProject1._0.Controllers.Api
             return Ok();
         }
 
-        [HttpPost("SendVerificatio")]
+        [HttpPost("SendVerification")]
         public async Task<IActionResult> SendVerificationCode([FromBody] VerificationRequest request)
         {
             try
@@ -255,12 +255,12 @@ namespace TravelProject1._0.Controllers.Api
                 var verificationCodeData = new VerificationCodeData
                 {
                     Code = verificationCode,
-                    ExpiryTime = DateTime.UtcNow.AddMinutes(10) // 設定驗證碼的有效期，例如10分鐘
+                    ExpiryTime = DateTime.UtcNow.AddMinutes(10) // 設定驗證碼的有效期
                 };
 
                 _verificationCodes.TryAdd(codeId, verificationCodeData);
 
-                await _emailSender.SendEmailAsync(request.Email, "驗證碼", $"你的驗證碼: {_verificationCodes}");
+                await _emailSender.SendEmailAsync(request.Email, "驗證碼", $"你的驗證碼: {verificationCode}");
 
                 return Ok(new { Message = "驗證碼成功寄送.", CodeId = codeId });
             }
@@ -287,7 +287,7 @@ namespace TravelProject1._0.Controllers.Api
             if (verificationCodeData.Code == request.Code)
             {
                 _verificationCodes.TryRemove(request.CodeId, out _);
-                return Ok("驗證碼驗證成功");
+                return Ok("驗證碼驗證成功") ;
             }
 
             return BadRequest("錯誤驗證碼.");
@@ -299,37 +299,21 @@ namespace TravelProject1._0.Controllers.Api
             return random.Next(1000, 9999).ToString();
         }
 
-        private async Task SendEmail(string toEmail, string subject, string message)
-        {
-            using (var client = new SmtpClient())
-            {
-                client.Host = "smtp.example.com"; // 郵件伺服器地址
-                client.Port = 587; // 郵件伺服器端口
-                client.EnableSsl = true; // 使用SSL加密
-                client.Credentials = new NetworkCredential("your_email@example.com", "your_email_password"); // 你的郵件地址和密碼
-
-                var emailMessage = new MailMessage
-                {
-                    From = new MailAddress("your_email@example.com"), // 你的郵件地址
-                    Subject = subject,
-                    Body = message,
-                    IsBodyHtml = false
-                };
-
-                emailMessage.To.Add(toEmail);
-
-                await client.SendMailAsync(emailMessage);
-            }
-        }
-       
-
         [HttpPost("reset")]
-        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordViewModel request)
+        public async Task<IActionResult> ResetPassword(int id,[FromBody] ResetPasswordViewModel request)
         {
-            var user = _context.Users.FirstOrDefault(u => u.Email == request.Email && u.ResetToken == request.ResetToken);
+            var user = _context.Users.FirstOrDefault(u => u.Email == request.Email);
             if (user != null)
             {
                string password = request.NewPassword;
+                string salt = GenerateSalt();
+
+                string hashedPassword = HashPassword(password, salt);
+
+                User userId = await _context.Users.FindAsync(id);
+                user.PasswordHash = hashedPassword;
+                user.Salt = salt;
+
                 await _context.SaveChangesAsync();
                 return Ok(new { Message = "密碼成功重設" });
             }
