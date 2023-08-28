@@ -33,16 +33,16 @@
             種類:
             <select v-model="opvalue" @@change="selectoption" class="form-select form-select-lg mb-3  " aria-label="Large select example">
                 <option value="0" selected>請選擇</option>
-                <option value="1" >機票</option>
-                <option value="2" >住宿</option>
-                <option value="3" >交通</option>
-                <option value="4" >景點</option>
+                <option value="1">機票</option>
+                <option value="2">住宿</option>
+                <option value="3">交通</option>
+                <option value="4">景點</option>
             </select>
         </div>
         <div class="col-2">
             商品名稱:
             <select v-model="locationvalue" @@change="selectlocation" class="form-select form-select-lg mb-3 " aria-label="Large select example">
-                <option value="0"  selected>請選擇</option>
+                <option value="0" selected>請選擇</option>
                 <option value="日本">日本</option>
                 <option value="韓國">韓國</option>
                 <option value="美國">美國</option>
@@ -78,11 +78,11 @@
         <!--管理選單-->
         <div class="col-2">
             <ul class="list-group">
-                <!--管理選單列-->
-                <a class="btn" href="http://127.0.0.1:5500/admin.html">使用者管理</a>
-                <a class="btn" href="http://127.0.0.1:5500/admin.html">訂單管理</a>
+                <!--管理選單列--> <!--改道layout用-->
+@*                <a class="btn" href="https://localhost:7025/api/Admin/Admin">使用者管理</a>
+                <a class="btn" href="https://localhost:7025/api/Order/Order">訂單管理</a>
                 <a class="btn" href="http://127.0.0.1:5500/admin.html">數據分析</a>
-                <a class="btn" href="http://127.0.0.1:5500/admin.html">商品管理</a>
+                <a class="btn" href="https://localhost:7025/api/Merchandise/Merchandise">商品管理</a>*@
                 <!--管理選單底-->
             </ul>
         </div>
@@ -103,39 +103,39 @@
             <br>
             <!--這段吃完-->
             <!--換下一行-->
-            <!------------------------------------------顯示管理內容--------------------------------------->            
-              <table class="table table-bordered  ">
-                    <thead>
-                        <tr>
-                            <td>產品ID</td>
-                            <td>商品種類ID</td>
-                            <td>商品名稱</td>
-                            <td>金額</td>
-                            <td>主要敘述</td>
-                            <td>次要敘述</td>
-                            <td>簡短敘述</td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                    </thead>
-                    <tbody>
+            <!------------------------------------------顯示管理內容--------------------------------------->
+            <table class="table table-bordered  ">
+                <thead>
+                    <tr>
+                        <td>產品ID</td>
+                        <td>商品種類ID</td>
+                        <td>商品名稱</td>
+                        <td>金額</td>
+                        <td>主要敘述</td>
+                        <td>次要敘述</td>
+                        <td>簡短敘述</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </thead>
+                <tbody>
                     <!--迴圈-->
                     <tr v-for="item in MerchandiseDTOes">
                         <!--修改-->
                         <template v-if="item.Edit==true">
-                            <td>{{item.productId}}</td> 
+                            <td>{{item.productId}}</td>
                             <td><input v-model="item.id" /></td>
                             <td><input v-model="item.productName" /></td>
                             <td><input v-model="item.price" /></td>
                             <td><textarea v-model="item.mainDescribe" style="height:100px;width: 500px;"></textarea>
                             <td><textarea v-model="item.subDescribe" style="height:100px;width: 500px;"></textarea>
                             <td><input v-model="item.shortDescribe" /></td>
-                                <td>
+                            <td>
                                 <button type="button" class="btn btn-success" @@click="update(item)">儲存</button>
-                                </td>
-                                <td>
-                                    <button type="button" class="btn btn-info" @@click="cancel">取消</button>
-                                </td>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-info" @@click="cancel">取消</button>
+                            </td>
                         </template>
                         <!--正常-->
                         <template v-else>
@@ -147,19 +147,19 @@
                             <td>{{item.subDescribe}}</td>
                             <td>{{item.shortDescribe}}</td>
                             <td>
-                            <button type="button" class="btn btn-warning" @@click="edit(item.productId)">修改</button>
+                                <button type="button" class="btn btn-warning" @@click="edit(item.productId)">修改</button>
                             </td>
                             <td>
-                            <button type="button" class="btn btn-danger" @@click="deleteMch(item.productId)">刪除</button>
+                                <button type="button" class="btn btn-danger" @@click="deleteMch(item.productId)">刪除</button>
                             </td>
                         </template>
                     </tr>
-                    </tbody>
+                </tbody>
             </table>
-            
-        <br />
+
             <br />
-         <!------------------------------------------新增紀錄的畫面--------------------------------------->
+            <br />
+            <!------------------------------------------新增紀錄的畫面--------------------------------------->
             <!-- Modal Body -->
             <!-- if you want to close by clicking outside the modal, delete the last endpoint:data-bs-backdrop and data-bs-keyboard -->
             <div class="modal fade" id="insertModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
@@ -185,7 +185,7 @@
                             <div class="form-group">
                                 <label class="form-label">主要內文</label>
                                 <textarea v-model="mainDescribe" type="text" class="form-control"
-                                       style="height:100px;width: 500px;"></textarea>
+                                          style="height:100px;width: 500px;"></textarea>
                             </div>
                             <div class="form-group">
                                 <label class="form-label">副內容</label>
@@ -205,20 +205,19 @@
                     </div>
                 </div>
             </div>
-         <!------------------------------------------新增紀錄的畫面底--------------------------------------->
+            <!------------------------------------------新增紀錄的畫面底--------------------------------------->
 
 
 
 
 
-    
-        
-         </div>
+
+
+        </div>
     </div>
     <!--app-->
 </div>
 <!--app-->
- 
 <!--第四段 就是最後整段完-->
 @section Scripts{
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js" integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -232,33 +231,33 @@
             data() {
                 return {
                     MerchandiseDTOes: [],
-                    Filter:'', //關鍵字
-                     //新增
-                    id:'',
-                    productName:'',
+                    Filter: '', //關鍵字
+                    //新增
+                    id: '',
+                    productName: '',
                     price: '',
                     mainDescribe: '',
                     subDescribe: '',
                     shortDescribe: '',
                     //原本
-                    originalid:'',
+                    originalid: '',
                     originalproductName: '',
                     originalprice: '',
                     originalmainDescribe: '',
                     originalsubDescribe: '',
                     originalshortDescribe: '',
                     //option
-                    opvalue:0,
-                    locationvalue:0 ,
+                    opvalue: 0,
+                    locationvalue: 0,
 
 
 
                 };
             },
             mounted: function () {
-                let _this=this;
+                let _this = this;
                 _this.filterMerchandise();
-                
+
             },
             methods: {
                 //
@@ -274,7 +273,7 @@
                             for (var i = 0; i < _this.MerchandiseDTOes.length; i++) {
                                 var item = _this.MerchandiseDTOes[i];
                                 item.Edit = false;
-                                 
+
                             }
                         })
                         .catch(err => {
@@ -291,8 +290,8 @@
                     let _this = this;
                     for (var i = 0; i < _this.MerchandiseDTOes.length; i++) {
                         var item = _this.MerchandiseDTOes[i];
-                        if (item.Edit == true ) {    
-                            
+                        if (item.Edit == true) {
+
                             item.Edit = false;
                             item.id = _this.originalid;
                             item.productName = _this.originalproductName;
@@ -319,12 +318,12 @@
                             _this.originalshortDescribe = item.shortDescribe;
                         }
 
-                     }
+                    }
                 },
                 //儲存
-                update:function(item){
-                    let _this=this;
-                    var request={};
+                update: function (item) {
+                    let _this = this;
+                    var request = {};
 
                     request.ProductId = item.productId;
                     request.Id = item.id;
@@ -336,21 +335,21 @@
                     axios.put(`${baseAddress}/api/Merchandise/MerchandisePUT/${item.productId}`, request).then(response => {
                         alert(response.data);
                         _this.filterMerchandise();
-                    }).catch(err=>{
+                    }).catch(err => {
                         alert(err);
                     });
 
                 },
                 //
-                deleteMch: function (productId){
+                deleteMch: function (productId) {
                     var ret = confirm('確定要刪除嗎?');
                     let _this = this;
-                     
-                    if(ret==true){
-                        axios.delete(`${baseAddress}/api/Merchandise/MerchandiseDELETE/${productId}`).then(response=>{
+
+                    if (ret == true) {
+                        axios.delete(`${baseAddress}/api/Merchandise/MerchandiseDELETE/${productId}`).then(response => {
                             alert(response.data);
                             _this.filterMerchandise();
-                        }).catch(err=>{
+                        }).catch(err => {
                             alert(err);
                         })
 
@@ -358,17 +357,17 @@
                     }
                 },
                 //showModal
-                showModal:function(){
+                showModal: function () {
                     $("#insertModal").modal("show");
                 },
                 //insert
-                insert:function(){
+                insert: function () {
                     let _this = this;
                     //alert("insert");
 
-                    var request={
+                    var request = {
 
-                        ProductId:0,
+                        ProductId: 0,
                         Id: _this.id,
                         ProductName: _this.productName,
                         Price: _this.price,
@@ -380,15 +379,15 @@
                         alert(response.data);
                         //$('#insertModal').modal("hide");
                         _this.filterMerchandise();
-                    }).catch(err=>{
+                    }).catch(err => {
                         alert(err);
                     });
-                    
+
                 },
                 // option id
-                selectoption:function(){
+                selectoption: function () {
 
-                    let _this=this;
+                    let _this = this;
                     var opvalue = _this.opvalue;
 
                     if (opvalue == 0) {
@@ -408,7 +407,7 @@
                             alert(err);
                         });
 
-                     
+
                 },
                 //option location
                 selectlocation: function () {
@@ -435,18 +434,18 @@
 
 
                 },
-                
+
                 //由小到大
-                pricelower:function(){
-                    let _this=this;
+                pricelower: function () {
+                    let _this = this;
                     axios.get(`${baseAddress}/api/Merchandise/pricelower`)
-                        .then(response=>{
-                                _this.MerchandiseDTOes= response.data;
-                                for (var i = 0; i < _this.MerchandiseDTOes.Length;i++){
-                                    var item = _this.MerchandiseDTOes[i];
-                                    item.EDit=false;
-                                }
-                        }).catch(err=>{
+                        .then(response => {
+                            _this.MerchandiseDTOes = response.data;
+                            for (var i = 0; i < _this.MerchandiseDTOes.length; i++) {
+                                var item = _this.MerchandiseDTOes[i];
+                                item.EDit = false;
+                            }
+                        }).catch(err => {
                             alert(err);
                         });
                 },
@@ -457,7 +456,7 @@
                     axios.get(`${baseAddress}/api/Merchandise/pricehigh`)
                         .then(response => {
                             _this.MerchandiseDTOes = response.data;
-                            for (var i = 0; i < _this.MerchandiseDTOes.Length; i++) {
+                            for (var i = 0; i < _this.MerchandiseDTOes.length; i++) {
                                 var item = _this.MerchandiseDTOes[i];
                                 item.EDit = false;
                             }

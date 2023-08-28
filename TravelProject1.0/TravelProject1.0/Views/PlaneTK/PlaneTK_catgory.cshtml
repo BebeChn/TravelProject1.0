@@ -96,8 +96,8 @@
                     <div class="card mb-3" style="max-width: 960px;">
                         <div class="row g-0">
                             <div class="col-md-4">
-@*                                <img width="450" height="300" src="./pic/toky6.png" class="img-fluid rounded-start"
-                                     alt="...">*@
+                                @*                                <img width="450" height="300" src="./pic/toky6.png" class="img-fluid rounded-start"
+                                alt="...">*@
                             </div>
                             <div class="col-md-8">
                                 <div class="card-body">
@@ -108,7 +108,7 @@
                                     <p class="card-text">
                                         <small class="text-body-secondary">NT$: {{item.price}}</small>
                                     </p>
-                                    <a class="btn btn-outline-secondary " href="'https://localhost:7025/PlaneTK/PlaneTK_sale'+item.productId">購入</a>
+                                    <a class="btn btn-outline-secondary " :href="website+item.productId">購入</a>
 
                                 </div>
                             </div>
@@ -124,8 +124,8 @@
                 <div class="card mb-3" style="max-width: 960px;">
                     <div class="row g-0">
                         <div class="col-md-4">
-@*                            <img width="450" height="300" src="./pic/toky6.png" class="img-fluid rounded-start"
-                                 alt="...">*@
+                            @*                            <img width="450" height="300" src="./pic/toky6.png" class="img-fluid rounded-start"
+                            alt="...">*@
                         </div>
                         <div class="col-md-8">
                             <div class="card-body">
@@ -137,7 +137,7 @@
                                 <p class="card-text">
                                     <small class="text-body-secondary">Last updated 3 mins ago</small>
                                 </p>
-                                <a class="btn btn-outline-secondary   " href="https://localhost:7025/PlaneTK_sale/PlaneTK_sale">購入</a>
+                                <a class="btn btn-outline-secondary   " @*href="https://localhost:7025/PlaneTK_sale/PlaneTK_sale"*@>購入</a>
 
                             </div>
                         </div>
@@ -169,8 +169,8 @@
         var vueApp = {
             data() {
                 return {
-                    PlaneTK_catgoryDTOes:[],
-
+                    PlaneTK_catgoryDTOes: [],
+                    website: "https://localhost:7025/api/PlaneTK/PlaneTK_sale/",
 
                 };
 
@@ -181,7 +181,7 @@
 
             },
             methods: {
-                PlaneTK_catgoryGET:function(){
+                PlaneTK_catgoryGET: function () {
                     let _this = this;
                     //alert("篩選");
                     var request = {};
@@ -190,7 +190,7 @@
                     axios.get(`${baseAddress}/api/PlaneTK/PlaneTK_catgoryGET`)
                         .then(response => {
                             _this.PlaneTK_catgoryDTOes = response.data;
-                            for (var i = 0; i < _this.PlaneTK_catgoryDTOes.Length; i++) {
+                            for (var i = 0; i < _this.PlaneTK_catgoryDTOes.length; i++) {
                                 var item = _this.PlaneTK_catgoryDTOes[i];
                                 item.Edit = false;
                             }
