@@ -27,7 +27,8 @@ namespace TravelProject1._0.Controllers.Api
                 Id = p.Id,
                 ProductName = p.ProductName,
                 Price = p.Price,
-                MainDescribe = p.MainDescribe
+                MainDescribe = p.MainDescribe,
+                Img = p.Img
             });
         }
     }

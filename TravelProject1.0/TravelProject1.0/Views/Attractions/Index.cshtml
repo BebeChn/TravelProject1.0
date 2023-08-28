@@ -8,19 +8,6 @@
 
 <section id="app" class="accomodation_area">
     <div class="container">
-        <div>
-            @* 商品名稱搜尋 *@
-            <div class="search">
-                <span class="title_color search-title">搜尋：</span>
-                <input class="inp-search" v-model="search" type="text" placeholder="請輸入商品名稱" />
-            </div>
-            @* 排序 *@
-            <div class="sort">
-                <span class="title_color sort-title">排序：</span>
-                <button class="genric-btn info radius">熱門程度</button>
-                <button class="genric-btn info radius">金額高低</button>
-            </div>
-        </div>
         @* 列表 *@
         <div class="row">
             <div class="col-md-2">
@@ -54,9 +41,31 @@
             </div>
             @* 商品 *@
             <div class="col-md-10">
-                <div class="row" v-for="a in attractionsFilter" style="margin-bottom:18px;">
+                <div class="filter-panel d-flex justify-content-between">
+                    @* 商品名稱搜尋 *@
+                    <div class="search">
+                        <span class="title_color search-title">搜尋：</span>
+                        <input class="inp-search" v-model="search" type="text" placeholder="請輸入商品名稱" />
+                    </div>
+                    @* 排序 *@
+                    <div class="sort d-flex align-items-center">
+                        <div>
+                            <h4 class="title_color sort-title">排序：</h4>
+                        </div>
+                        <h4>
+                            <span>
+                                <a href="#"><i class="fas fa-fire"></i>熱門程度</a>
+                            </span>
+                            <span>|</span>
+                            <span>
+                                <a href="#"><i class="fas fa-funnel-dollar"></i>金額高低</a>
+                            </span>
+                        </h4>
+                    </div>
+                </div>
+                <div class="row product-items" v-for="a in attractionsFilter">
                     <div class="col-md-3">
-                        <img class="img-fluid" src="~/lib/image/mountain2.jpeg" style="width:100%;border-radius:10px;" />
+                        <img class="img-product" :src="a.img" />
                     </div>
                     <div class="col-md-7 d_flex align-items-center">
                         <div class="about_content ">

@@ -25,6 +25,16 @@
     font-weight: bold;
 }
 
+.product-items {
+    margin-bottom: 18px;
+}
+
+.img-product {
+    width: 220px;
+    height: 160px;
+    border-radius: 10px;
+}
+
 .product-price {
     font-size: 24px;
     font-weight: bold;
