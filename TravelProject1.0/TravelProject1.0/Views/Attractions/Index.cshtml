@@ -63,7 +63,7 @@
                         </h4>
                     </div>
                 </div>
-                <div class="row product-items" v-for="a in attractionsFilter">
+                <div class="row product-items" v-for="a in showProduct">
                     <div class="col-md-3">
                         <img class="img-product" :src="a.img" />
                     </div>
@@ -80,42 +80,38 @@
                 </div>
             </div>
         </div>
+
         @* 分頁 *@
         <nav class="blog-pagination justify-content-center d-flex">
             <ul class="pagination">
-                <li class="page-item">
-                    <a href="#" class="page-link" aria-label="Previous">
-                        <span aria-hidden="true">
-                            <span class="lnr lnr-chevron-left"><</span>
-                        </span>
-                    </a>
-                </li>
-                <li class="page-item"><a href="#" class="page-link">01</a></li>
-                <li class="page-item"><a href="#" class="page-link">02</a></li>
-                <li class="page-item"><a href="#" class="page-link">03</a></li>
-                <li class="page-item"><a href="#" class="page-link">04</a></li>
-                <li class="page-item"><a href="#" class="page-link">...</a></li>
-                <li class="page-item">
-                    <a href="#" class="page-link" aria-label="Next">
-                        <span aria-hidden="true">
-                            <span class="lnr lnr-chevron-right">></span>
-                        </span>
-                    </a>
-                </li>
+                <paginate :page-count="total"
+                          :click-handler="changePage"
+                          :page-class="'page-item'"
+                          :page-link-class="'page-link'"
+                          :prev-class="'page-link'"
+                          :prev-link-class="'lnr lnr-chevron-left'"
+                          :next-class="'page-link'"
+                          :next-link-class="'lnr lnr-chevron-right'"
+                          :container-class="'pagination'">
+                </paginate>
             </ul>
         </nav>
     </div>
 </section>
 
 @section Scripts{
+    <script src="https://unpkg.com/vuejs-paginate@0.9.0"></script>
     <script>
+        Vue.component('paginate', VuejsPaginate)
         var baseAddress = "https://localhost:7025";
         var app = new Vue({
             el: '#app',
             data: {
                 attractions: [],
                 count: 0,
-                search: ""
+                search: "",
+                currentPage: 1,
+                itemPage: 10
             },
             mounted: function () {
                 let _this = this;
@@ -151,12 +147,27 @@
                                 alert(error);
                             })
                     }
+                },
+
+                //分頁
+                changePage: function (num) {
+                    this.currentPage = num;
                 }
             },
             computed: {
                 //關鍵字搜尋
                 attractionsFilter: function () {
                     return this.attractions.filter(a => a.productName.match(this.search));
+                },
+
+                //分頁
+                showProduct: function () {
+                    var start = (this.currentPage - 1) * this.itemPage;
+                    var end = start + this.itemPage;
+                    return this.attractionsFilter.slice(start, end);
+                },
+                total: function () {
+                    return Math.ceil(this.attractions.length / this.itemPage);
                 }
             }
         })
