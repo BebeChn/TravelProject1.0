@@ -18,12 +18,12 @@ namespace TravelProject1._0.Controllers.Api
 
         public async Task<IQueryable<ProductDTO>> GetProduct()
         {
-            return _db.Products.Select(x => new ProductDTO
+            return _db.Products.Where(x => x.Id == 4).Select(x => new ProductDTO
             {
                 ProductId = x.ProductId,
                 ProductName = x.ProductName,
                 Price = x.Price,
-                Image = "/lib/image/foreast.jpeg"
+                Img = x.Img
             }).Take(4);
         }
     }

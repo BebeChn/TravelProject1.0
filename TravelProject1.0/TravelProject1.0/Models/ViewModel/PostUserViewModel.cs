@@ -17,7 +17,7 @@ namespace TravelProject1._0.Models.ViewModel
 
         public string Phone { get; set; } = null!;
 
-        public string? Address { get; set; }
+      
 
     }
 }

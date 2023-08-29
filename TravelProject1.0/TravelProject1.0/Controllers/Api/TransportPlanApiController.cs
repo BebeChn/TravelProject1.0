@@ -25,6 +25,7 @@ namespace TravelProject1._0.Controllers.Api
                 PlanId = p.PlanId,
                 Name = p.Name,
                 Describe = p.Describe,
+                PlanImg = p.PlanImg
             });
         }
 
