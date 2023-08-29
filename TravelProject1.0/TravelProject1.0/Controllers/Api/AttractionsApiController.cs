@@ -32,7 +32,7 @@ namespace TravelProject1._0.Controllers.Api
             });
         }
 
-        //商品價格排序
+        //排序
         //價格低到高
         [HttpGet]
         public async Task<IQueryable<AttractionsDTO>> OrderByPrice()
@@ -74,5 +74,20 @@ namespace TravelProject1._0.Controllers.Api
             });
         }
 
+        //取得單一商品
+        [HttpGet]
+        [Route("{id}")]
+        public async Task<IQueryable<AttractionsPlanDTO>> GetProduct(int id)
+        {
+            return _dbContext.Products.Where(p => p.ProductId == id).Select(p => new AttractionsPlanDTO
+            {
+                ProductId = p.ProductId,
+                ProductName = p.ProductName,
+                MainDescribe = p.MainDescribe,
+                SubDescribe = p.SubDescribe,
+                ShortDescribe = p.ShortDescribe,
+                Img = p.Img
+            });
+        }
     }
 }
