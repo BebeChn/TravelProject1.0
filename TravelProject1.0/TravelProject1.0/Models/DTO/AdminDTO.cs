@@ -15,9 +15,13 @@ namespace TravelProject1._0.Models.DTO
         [DisplayName("信箱")]
         public string Email { get; set; }
 
+        
+       
 
         public DateTime? Birthday { get; set; }
 
 
+
+         
     }
 }

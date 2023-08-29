@@ -49,6 +49,7 @@ namespace TravelProject1._0.Controllers
                    MainDescribe = x.MainDescribe,
                    SubDescribe = x.SubDescribe,
                    ShortDescribe = x.ShortDescribe,
+                   Img = x.Img,
                });
         }
 

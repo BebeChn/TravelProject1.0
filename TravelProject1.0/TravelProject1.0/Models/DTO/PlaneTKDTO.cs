@@ -16,6 +16,7 @@
 
         public string? ShortDescribe { get; set; }
 
+        public string? Img { get; set; }
 
     }
 }

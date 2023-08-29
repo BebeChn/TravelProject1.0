@@ -1,5 +1,6 @@
 ﻿@section Styles{
     <link href="~/css/planetk.css" rel="stylesheet" />
+    <link href="~/css/admindashboard.css" rel="stylesheet" />
 }
 <div id="app">
     <div class="container">
@@ -29,11 +30,10 @@
             <button type="button" class="btn btn-success" @@click="showModal">新增會員紀錄</button>
             </div>*@
             <div class="col-3"></div>
-            <div class="form-group col-3">
+            <div class="form-group col-5">
                 <form class="d-flex" role="search">
-                    @*<img src="./pic/search.png" width="100" height="60">*@
                     <!--輸入關鍵字-->
-                    <input class="form-control" type="text" placeholder="Search" aria-label="Search"
+                    <input style="width: 300px; height:70px;" class="form-control" type="text" placeholder="Search" aria-label="Search"
                            v-model="filter" @@keyup="filterUser">
                     <button class="btn btn-outline-secondary " style="color :#1e2154" type="submit" @*@@click="filterUser"*@>
                         <Fieldset>搜尋</Fieldset>
@@ -45,24 +45,29 @@
     <!--第二段底-->
     <br>
     <!--第三段-->
-    <div class="container-fluid row">
+    <div class="container-fluid row ">
         <!--管理選單-->
-        <div class="col-2">
+        <div class="col-1">
+            </div>
+@*        <div class="col-2">
             <ul class="list-group">
                 <!--管理選單列-->  <!--改道layout用-->
-@*                <a class="btn" href="https://localhost:7025/api/Admin/Admin">使用者管理</a>
+                                <a class="btn" href="https://localhost:7025/api/Admin/Admin">使用者管理</a>
                 <a class="btn" href="https://localhost:7025/api/Order/Order">訂單管理</a>
                 <a class="btn" href="http://127.0.0.1:5500/admin.html">數據分析</a>
-                <a class="btn" href="https://localhost:7025/api/Merchandise/Merchandise">商品管理</a>*@
+                <a class="btn" href="https://localhost:7025/api/Merchandise/Merchandise">商品管理</a>
                 <!--管理選單底-->
             </ul>
-        </div>
+        </div>*@
         <!--顯示管理內容-->
-        <div class="col-10">
-            <table class="table table-bordered table-responsive">
+        <div class="col-11  ">
+            <table class="table table-bordered  table-responsive  ">
                 <thead>
                     <tr>
-                        <td>ID</td>
+                        <td>ID
+                            <br />
+                            <br />
+                        </td>
                         <td>姓名</td>
                         <td>性別</td>
                         <td>地址</td>
@@ -82,10 +87,18 @@
                             <td><input v-model="item.email" /></td>
                             <td><input v-model="item.birthday" /></td>
                             <td>
-                                <button type="button" class="btn btn-success" @@click="update(item)">更新</button>
+                                <button type="button" class="btn btn-success" @@click="update(item)">
+                                    <div class="horizontal-text">
+                                        <span>更新</span>
+                                    </div>
+                                </button>
                             </td>
                             <td>
-                                <button type="button" class="btn btn-info" @@click="cancel">取消</button>
+                                <button type="button" class="btn btn-info" @@click="cancel">
+                                    <div class="horizontal-text">
+                                        <span>取消</span>
+                                    </div>
+                                </button>
                             </td>
                         </template>
                         <template v-else>
@@ -96,10 +109,18 @@
                             <td>{{item.email}}</td>
                             <td>{{item.birthday}}</td>
                             <td>
-                                <button type="button" class="btn btn-success" @@click="edit(item.UserId)">修改</button>
+                                <button type="button" class="btn  btn-warning" @@click="edit(item.userId)">
+                                    <div class="horizontal-text">
+                                        <span>修改</span>
+                                    </div>
+                                </button>
                             </td>
                             <td>
-                                <button type="button" class="btn btn-danger" @@click="deleteUsr(item.userId)">刪除</button>
+                                <button type="button" class="btn btn-danger" @@click="deleteUsr(item.userId)">
+                                    <div class="horizontal-text">
+                                        <span>刪除</span>
+                                    </div>
+                                </button>
                             </td>
                         </template>
                     </tr>
@@ -181,12 +202,12 @@
                     },
 
 
-                    edit: function (UserId) {
+                    edit: function (userId) {
                         //alert("edit");
                         let _this = this;
                         for (var i = 0; i < _this.AdminDTOes.length; i++) {
                             var item = _this.AdminDTOes[i];
-                            if (item.UserId == UserId) {
+                            if (item.userId == userId) {
                                 item.Edit = true;
                                 _this.originalname = item.name
                                 _this.originalgender = item.gender
@@ -204,10 +225,10 @@
                         var request = {};
 
                         request.UserId = item.userId;
-                        request.name = item.name;
-                        request.gender = item.gender;
-                        request.address = item.address;
-                        request.email = item.email;
+                        request.Name = item.name;
+                        request.Gender = item.gender;
+                        request.Address = item.address;
+                        request.Email = item.email;
                         request.Birthday = item.birthday;
                         axios.put(`${baseAddress}/api/Admin/AdminPUT/${item.userId}`, request).then(response => {
                             alert(response.data);

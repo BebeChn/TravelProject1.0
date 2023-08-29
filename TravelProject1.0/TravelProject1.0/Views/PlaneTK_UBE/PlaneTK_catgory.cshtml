@@ -1,12 +1,12 @@
 ﻿@section Styles{
-    <link href="~/css/planetk.css" rel="stylesheet" />
+
+    <script src="~/js/planetk_admin.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
 
 }
 
-
-<body>
+<div id="app">
     <div class="container">
         <br>
     </div>
@@ -97,8 +97,8 @@
                     <div class="card mb-3" style="max-width: 960px;">
                         <div class="row g-0">
                             <div class="col-md-4">
-                                <img width="450" height="300" src="./pic/toky6.png" class="img-fluid rounded-start"
-                                     alt="...">
+                                @*                                <img width="450" height="300" src="./pic/toky6.png" class="img-fluid rounded-start"
+                                alt="...">*@
                             </div>
                             <div class="col-md-8">
                                 <div class="card-body">
@@ -107,10 +107,9 @@
                                         {{item.mainDescribe}}
                                     </p>
                                     <p class="card-text">
-                                        @*                                        <small class="text-body-secondary">Last updated 3 mins ago</small>
-                                        *@
+                                        <small class="text-body-secondary">NT$: {{item.price}}</small>
                                     </p>
-                                    <a class="btn btn-outline-secondary " :href="website+item.product">購入</a>
+                                    <a class="btn btn-outline-secondary " :href="website+item.productId">購入</a>
 
                                 </div>
                             </div>
@@ -126,8 +125,8 @@
                 <div class="card mb-3" style="max-width: 960px;">
                     <div class="row g-0">
                         <div class="col-md-4">
-                            <img width="450" height="300" src="./pic/toky6.png" class="img-fluid rounded-start"
-                                 alt="...">
+                            @*                            <img width="450" height="300" src="./pic/toky6.png" class="img-fluid rounded-start"
+                            alt="...">*@
                         </div>
                         <div class="col-md-8">
                             <div class="card-body">
@@ -139,7 +138,7 @@
                                 <p class="card-text">
                                     <small class="text-body-secondary">Last updated 3 mins ago</small>
                                 </p>
-                                <a class="btn btn-outline-secondary   " href="https://localhost:7025/PlaneTK_sale/PlaneTK_sale">購入</a>
+                                <a class="btn btn-outline-secondary   " @*href="https://localhost:7025/PlaneTK_sale/PlaneTK_sale"*@>購入</a>
 
                             </div>
                         </div>
@@ -152,11 +151,14 @@
         </main>
     </div>
     <!--第二段底-->
-</body>
+</div>
+
+
+
 @section Scripts{
+    <script src="~/js/planetk_admin.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js" integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://unpkg.com/vue@next"></script>
-    <script src="~/js/planetk.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous">
     </script>
@@ -169,7 +171,7 @@
             data() {
                 return {
                     PlaneTK_catgoryDTOes: [],
-                    website: 'https://localhost:7025/PlaneTK_sale/PlaneTK_sale/',
+                    website: "https://localhost:7025/api/PlaneTK/PlaneTK_sale/",
 
                 };
 
@@ -189,7 +191,7 @@
                     axios.get(`${baseAddress}/api/PlaneTK/PlaneTK_catgoryGET`)
                         .then(response => {
                             _this.PlaneTK_catgoryDTOes = response.data;
-                            for (var i = 0; i < _this.PlaneTK_catgoryDTOes.Length; i++) {
+                            for (var i = 0; i < _this.PlaneTK_catgoryDTOes.length; i++) {
                                 var item = _this.PlaneTK_catgoryDTOes[i];
                                 item.Edit = false;
                             }
@@ -209,6 +211,7 @@
 
 
 
+        var app = Vue.createApp(vueApp).mount("#app");
 
     </script>
 
