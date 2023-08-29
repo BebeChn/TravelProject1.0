@@ -2,6 +2,7 @@
     <link href="~/css/planetk.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <link href="~/css/admindashboard.css" rel="stylesheet" />
 }
 
 
@@ -28,8 +29,8 @@
     </div>
     <br>
     <!------------------------------------第二段下拉選單--------------------------------------->
-    <div class="container-fluid row justify-content-center">
-        <div class="col-2 justify-content-start">
+    <div class="container-fluid row justify-content-start">
+        <div class="col-2  ">
             種類:
             <select v-model="opvalue" @@change="selectoption" class="form-select form-select-lg mb-3  " aria-label="Large select example">
                 <option value="0" selected>請選擇</option>
@@ -55,15 +56,15 @@
         </div>
         <div class="col-3">
         </div>
-        <div class="col-3">
+        <div class="col-5">
             <nav class="navbar bg-body">
-                <div class="container-fluid justify-content-end">
+                <div class="container-fluid  justify-content-end  ">
                     <form class="d-flex" role="search">
                         @*<img src="./pic/search.png" width="100" height="60">*@
                         <!--輸入關鍵字-->
-                        <input class="form-control " type="search" placeholder="Search" aria-label="Search"
+                        <input style="width: 300px; height:70px;" class="form-control " type="search" placeholder="Search" aria-label="Search"
                                v-model="Filter" @@keyup="filterMerchandise">
-                        <button class="btn btn-outline-secondary " style="color :#1e2154" @*type="submit"*@>
+                        <button class="btn btn-outline-secondary btninline " style="color :#1e2154" @*type="submit"*@>
                             <Fieldset>搜尋</Fieldset>
                         </button>
                     </form>
@@ -74,147 +75,163 @@
     <br>
     <!-----------------------------------------------第三段------------------------------------>
     <!--第四段-->
-    <div class="container-fluid row">
-        <!--管理選單-->
-        <div class="col-2">
-            <ul class="list-group">
-                <!--管理選單列--> <!--改道layout用-->
-@*                <a class="btn" href="https://localhost:7025/api/Admin/Admin">使用者管理</a>
-                <a class="btn" href="https://localhost:7025/api/Order/Order">訂單管理</a>
-                <a class="btn" href="http://127.0.0.1:5500/admin.html">數據分析</a>
-                <a class="btn" href="https://localhost:7025/api/Merchandise/Merchandise">商品管理</a>*@
-                <!--管理選單底-->
-            </ul>
-        </div>
-        <!--管理內容-->
-        <div class="col-10">
-            <!--這段吃完-->
-            <!----------------------------------------------------按鍵----------------------------------->
-            <!--新增刪除修改-->
-            <span class="container-fluid   row">
-                <div class="col-1"></div>
-                @*新增員工紀錄案鍵*@
-                <div class="col-2 ">
-                    <button type="button" class="btn   btn-success" @@click="showModal">新增</button>
-                </div>
-                <div class="col-3"></div>
-                <div class="col-3"></div>
-            </span>
-            <br>
-            <!--這段吃完-->
-            <!--換下一行-->
-            <!------------------------------------------顯示管理內容--------------------------------------->
-            <table class="table table-bordered  ">
-                <thead>
-                    <tr>
-                        <td>產品ID</td>
-                        <td>商品種類ID</td>
-                        <td>商品名稱</td>
-                        <td>金額</td>
-                        <td>主要敘述</td>
-                        <td>次要敘述</td>
-                        <td>簡短敘述</td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!--迴圈-->
-                    <tr v-for="item in MerchandiseDTOes">
-                        <!--修改-->
-                        <template v-if="item.Edit==true">
-                            <td>{{item.productId}}</td>
-                            <td><input v-model="item.id" /></td>
-                            <td><input v-model="item.productName" /></td>
-                            <td><input v-model="item.price" /></td>
-                            <td><textarea v-model="item.mainDescribe" style="height:100px;width: 500px;"></textarea>
-                            <td><textarea v-model="item.subDescribe" style="height:100px;width: 500px;"></textarea>
-                            <td><input v-model="item.shortDescribe" /></td>
-                            <td>
-                                <button type="button" class="btn btn-success" @@click="update(item)">儲存</button>
-                            </td>
-                            <td>
-                                <button type="button" class="btn btn-info" @@click="cancel">取消</button>
-                            </td>
-                        </template>
-                        <!--正常-->
-                        <template v-else>
-                            <td>{{item.productId}}</td>
-                            <td>{{item.id}}</td>
-                            <td>{{item.productName}}</td>
-                            <td>{{item.price}}</td>
-                            <td>{{item.mainDescribe}}</td>
-                            <td>{{item.subDescribe}}</td>
-                            <td>{{item.shortDescribe}}</td>
-                            <td>
-                                <button type="button" class="btn btn-warning" @@click="edit(item.productId)">修改</button>
-                            </td>
-                            <td>
-                                <button type="button" class="btn btn-danger" @@click="deleteMch(item.productId)">刪除</button>
-                            </td>
-                        </template>
-                    </tr>
-                </tbody>
-            </table>
+    @* <div class="container-fluid row">*@
+    <!--管理選單-->
+    @*        <div class="col-2">
+    <ul class="list-group">
+    <!--管理選單列--> <!--改道layout用-->
+    <a class="btn" href="https://localhost:7025/api/Admin/Admin">使用者管理</a>
+    <a class="btn" href="https://localhost:7025/api/Order/Order">訂單管理</a>
+    <a class="btn" href="http://127.0.0.1:5500/admin.html">數據分析</a>
+    <a class="btn" href="https://localhost:7025/api/Merchandise/Merchandise">商品管理</a>
+    <!--管理選單底-->
+    </ul>
+    </div>*@
+    <!--管理內容-->
+    <div class="col-12">
+        <!--這段吃完-->
+        <!----------------------------------------------------按鍵----------------------------------->
+        <!--新增刪除修改-->
+        <span class="container-fluid   row">
+            <div class="col-1"></div>
+            @*新增員工紀錄案鍵*@
+            <div class="col-2 ">
+                <button type="button" class="btn   btn-success" @@click="showModal" id="btn">新增</button>
+            </div>
+            <div class="col-3"></div>
+            <div class="col-3"></div>
+        </span>
+        <br>
+        <!--這段吃完-->
+        <!--換下一行-->
+        <!------------------------------------------顯示管理內容--------------------------------------->
+        <table class="table table-bordered table-responsive">
+            <thead>
+                <tr>
+                    <td>產品ID</td>
+                    <td>商品種類ID</td>
+                    <td>商品名稱</td>
+                    <td>金額</td>
+                    <td>主要敘述</td>
+                    <td>次要敘述</td>
+                    <td>簡短敘述</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </thead>
+            <tbody>
+                <!--迴圈-->
+                <tr v-for="item in MerchandiseDTOes">
+                    <!--修改-->
+                    <template v-if="item.Edit==true">
+                        <td>{{item.productId}}</td>
+                        <td><input v-model="item.id" /></td>
+                        <td><input v-model="item.productName" /></td>
+                        <td><input v-model="item.price" /></td>
+                        <td><textarea v-model="item.mainDescribe" style="height:100px;width: 500px;"></textarea>
+                        <td><textarea v-model="item.subDescribe" style="height:100px;width: 500px;"></textarea>
+                        <td><input v-model="item.shortDescribe" /></td>
+                        <td>
+                            <button id="btninline" type="button" class="btn btn-success" @@click="update(item)">
+                                <div class="horizontal-text">
+                                    <span>儲存</span>
+                                </div>
+                            </button>
+                        </td>
+                        <td>
+                            <button id="btninline" type="button" class="btn btn-info" @@click="cancel">
+                                <div class="horizontal-text">
+                                    <span>取消</span>
+                                </div>
+                            </button>
+                        </td>
+                    </template>
+                    <!--正常-->
+                    <template v-else>
+                        <td>{{item.productId}}</td>
+                        <td>{{item.id}}</td>
+                        <td>{{item.productName}}</td>
+                        <td>{{item.price}}</td>
+                        <td>{{item.mainDescribe}}</td>
+                        <td>{{item.subDescribe}}</td>
+                        <td>{{item.shortDescribe}}</td>
+                        <td>
+                            <button id="btninline" type="button" class="btn btn-warning" id="btn" @@click="edit(item.productId)">
+                                <div class="horizontal-text">
+                                    <span>修改</span>
+                                </div>
+                            </button>
+                        </td>
+                        <td>
+                            <button id="btninline" type="button" class="btn btn-danger" id="btn" @@click="deleteMch(item.productId)">
+                                <div class="horizontal-text">
+                                    <span>刪除</span>
+                                </div>
+                            </button>
+                        </td>
+                    </template>
+                </tr>
+            </tbody>
+        </table>
 
-            <br />
-            <br />
-            <!------------------------------------------新增紀錄的畫面--------------------------------------->
-            <!-- Modal Body -->
-            <!-- if you want to close by clicking outside the modal, delete the last endpoint:data-bs-backdrop and data-bs-keyboard -->
-            <div class="modal fade" id="insertModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered " role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="modalTitleId">新增商品紀錄</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <br />
+        <br />
+        <!------------------------------------------新增紀錄的畫面--------------------------------------->
+        <!-- Modal Body -->
+        <!-- if you want to close by clicking outside the modal, delete the last endpoint:data-bs-backdrop and data-bs-keyboard -->
+        <div class="modal fade" id="insertModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered " role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalTitleId">新增商品紀錄</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="form-label">商品種類Id</label>
+                            <input v-model="id" type="text" class="form-control" />
                         </div>
-                        <div class="modal-body">
-                            <div class="form-group">
-                                <label class="form-label">商品種類Id</label>
-                                <input v-model="id" type="text" class="form-control" />
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">商品名稱</label>
-                                <input v-model="productName" type="text" class="form-control" />
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">金額</label>
-                                <input v-model="price" type="text" class="form-control" />
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">主要內文</label>
-                                <textarea v-model="mainDescribe" type="text" class="form-control"
-                                          style="height:100px;width: 500px;"></textarea>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">副內容</label>
-                                <textarea v-model="subDescribe" type="text" class="form-control"
-                                          style="height:100px;width: 500px;"></textarea>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">簡短描述</label>
-                                <input v-model="shortDescribe" type="text" class="form-control" />
-                            </div>
-                            ____
+                        <div class="form-group">
+                            <label class="form-label">商品名稱</label>
+                            <input v-model="productName" type="text" class="form-control" />
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
-                            <button type="button" class="btn btn-primary" @@click="insert">新增</button>
+                        <div class="form-group">
+                            <label class="form-label">金額</label>
+                            <input v-model="price" type="text" class="form-control" />
                         </div>
+                        <div class="form-group">
+                            <label class="form-label">主要內文</label>
+                            <textarea v-model="mainDescribe" type="text" class="form-control"
+                                      style="height:100px;width: 500px;"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">副內容</label>
+                            <textarea v-model="subDescribe" type="text" class="form-control"
+                                      style="height:100px;width: 500px;"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">簡短描述</label>
+                            <input v-model="shortDescribe" type="text" class="form-control" />
+                        </div>
+                        ____
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                        <button type="button" class="btn btn-primary" @@click="insert">新增</button>
                     </div>
                 </div>
             </div>
-            <!------------------------------------------新增紀錄的畫面底--------------------------------------->
-
-
-
-
-
-
-
         </div>
+        <!------------------------------------------新增紀錄的畫面底--------------------------------------->
+
+
+
+
+
+
+
     </div>
+    @*</div>*@
     <!--app-->
 </div>
 <!--app-->
