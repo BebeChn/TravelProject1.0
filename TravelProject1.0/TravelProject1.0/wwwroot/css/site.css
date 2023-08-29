@@ -1413,7 +1413,7 @@ button:focus {
 }
 
 .blog-pagination .page-item.active .page-link {
-    background-color: #f3c300;
+    background-color: #52c5fd;
     border-color: transparent;
     color: #fff;
 }
