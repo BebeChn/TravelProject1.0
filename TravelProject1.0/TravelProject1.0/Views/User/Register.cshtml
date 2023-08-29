@@ -38,10 +38,10 @@
                     <input v-model.trim="email" class="form-control" type="email" name="email" id="emailInput" placeholder="必填" required />
                     <div class="formatError" v-if="!isValid(email,validType.email)" id="emailError">您輸入的格式不正確</div>
                 </div>
-                <label for="address">Address:</label>
+              @*   <label for="address">Address:</label>
                 <input v-model.trim="address" class="form-control" name="address" id="addressInput" placeholder="必填" required />
                 <div class="formatError" v-if="!isValid(address,validType.address)" id="addressError">您輸入的格式不正確</div>
-            </div>
+            </div> *@
             <div class="form-group">
                 <label for="phone">Phone:</label>
                 <input v-model.trim="phone" type="text" class="form-control">
@@ -99,7 +99,7 @@
                 phone: "",
                 email: "",
                 password: "",
-                address: "",
+                // address: "",
                 bool: "",
                 validType: validType,
             },
@@ -120,13 +120,12 @@
                         Birthday: _this.birthday,
                         Phone: _this.phone,
                         Email: _this.email,
-                        Address: _this.address,
                         Password: _this.password
                     };    
                     axios.post(`${baseAddress}/api/UserApi/PostUser`, form)
                         .then(response => {
                             if (response.data) {
-                                window.location.href = "/User/Index";
+                                window.location.href = "/Home/Index";
                             }
                         }).catch(err => {
                             alert(err);
