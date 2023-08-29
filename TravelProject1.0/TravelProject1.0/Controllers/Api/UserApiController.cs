@@ -28,8 +28,8 @@ namespace TravelProject1._0.Controllers.Api
         private readonly ILogger<HomeController> _logger;
         private readonly TravelProjectAzureContext _context;
         private readonly ConcurrentDictionary<string, VerificationCodeData> _verificationCodes = new ConcurrentDictionary<string, VerificationCodeData>();
-        private readonly EmailSender _emailSender;
-        public UserApiController(ILogger<HomeController> logger, TravelProjectAzureContext context,  EmailSender emailSender)
+        private readonly IEmailSender _emailSender;
+        public UserApiController(ILogger<HomeController> logger, TravelProjectAzureContext context,  IEmailSender emailSender)
 
         {
             _logger = logger;
@@ -231,13 +231,12 @@ namespace TravelProject1._0.Controllers.Api
             return Ok();
         }
 
-        [HttpPost("SendVerification")]
-        [Route("api/UserApi/[Action]")]
+        [HttpPost]
         public async Task<IActionResult> SendVerificationCode([FromBody] ForgotPasswordViewModel forget)
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(forget.Email))
+                if (string.IsNullOrEmpty(forget.Email))
                     return BadRequest("郵件為必需的");
 
                 string verificationCode = GenerateVerificationCode();
@@ -251,7 +250,7 @@ namespace TravelProject1._0.Controllers.Api
 
                 _verificationCodes.TryAdd(codeId, verificationCodeData);
 
-                await _emailSender.SendEmailAsync(forget.Email, "驗證碼", $"你的驗證碼: {verificationCodeData}");
+                await _emailSender.SendEmailAsync(forget.Email, "驗證碼", $"你的驗證碼: {verificationCodeData.Code}");
 
                 return Ok(new { Message = "驗證碼成功寄送.", CodeId = codeId });
             }
@@ -260,11 +259,11 @@ namespace TravelProject1._0.Controllers.Api
                 return StatusCode(500, $"錯誤: {ex.Message}");
             }
         }
-
-        [HttpPost("verify")]
+        [HttpPost]
         public IActionResult VerifyCode([FromBody] VerifyCodeRequest request)
         {
-            if (!_verificationCodes.TryGetValue(request.CodeId, out VerificationCodeData verificationCodeData))
+           
+            if (!_verificationCodes.TryGetValue(request.CodeId,out VerificationCodeData verificationCodeData ))
             {
                 return BadRequest("錯誤的驗證碼或是驗證碼時效過期.");
             }
@@ -317,11 +316,7 @@ namespace TravelProject1._0.Controllers.Api
     }
 
  
-    public class VerifyCodeRequest
-    {
-        public string CodeId { get; set; }
-        public string Code { get; set; }
-    }
+   
 
     public class VerificationCodeData
     {
