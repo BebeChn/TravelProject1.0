@@ -42,27 +42,27 @@
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
     <script>
        
-        let app = new Vue({
-            data: {
+        // let app = new Vue({
+        //     data: {
                
-            },
-            el: "#app",
-            computed: {
-            },
-            mounted: function () {
-                let _this = this;
-                fetch("")
-                    .then(response => {
-                        return response.json();
-                    }).then(data => {
-                        console.log(data);
-                        _this.products = data;
-                    })
-            },
-            methods: {
+        //     },
+        //     el: "#app",
+        //     computed: {
+        //     },
+        //     mounted: function () {
+        //         let _this = this;
+        //         fetch("")
+        //             .then(response => {
+        //                 return response.json();
+        //             }).then(data => {
+        //                 console.log(data);
+        //                 _this.products = data;
+        //             })
+        //     },
+        //     methods: {
 
-            }
-        });
-              // var app2 = Vue.createApp(app).mount("#app");
+        //     }
+        // });
+        //       // var app2 = Vue.createApp(app).mount("#app");
     </script>
 }

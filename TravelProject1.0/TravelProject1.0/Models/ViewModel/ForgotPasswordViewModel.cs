@@ -2,11 +2,11 @@
 
 namespace TravelProject1._0.Controllers.Api
 {
-    public class ForgotPasswordViewModel:PostUserVewModel
+    public class ForgotPasswordViewModel
     {
         public string Email { get; set; }
 
-        public string? VerificationCode { get; set; }
+    
     }
 
 }

@@ -29,12 +29,13 @@ namespace TravelProject1._0.Controllers.Api
         private readonly TravelProjectAzureContext _context;
         private readonly ConcurrentDictionary<string, VerificationCodeData> _verificationCodes = new ConcurrentDictionary<string, VerificationCodeData>();
         private readonly EmailSender _emailSender;
-        public UserApiController(ILogger<HomeController> logger, TravelProjectAzureContext context, EmailSender emailSender)
+        public UserApiController(ILogger<HomeController> logger, TravelProjectAzureContext context,  EmailSender emailSender)
 
         {
             _logger = logger;
             _context = context;
-            _emailSender = _emailSender;
+            _verificationCodes = new ConcurrentDictionary<string, VerificationCodeData>();
+            _emailSender = emailSender;
 
         }
         // GET: api/<UserApiController>
@@ -113,8 +114,8 @@ namespace TravelProject1._0.Controllers.Api
                     //Password = register.Password,
                     PasswordHash = hashedPassword,
                     Salt = salt,
-                    CreateDate = DateTime.Now,
-                    Address = register.Address
+                    CreateDate = DateTime.Now
+
 
                 };
 
@@ -190,17 +191,7 @@ namespace TravelProject1._0.Controllers.Api
             }
 
             User user = await _context.Users.FindAsync(id);
-
-
-
-            if (user != null)
-            {
-                string hashedPassword = HashPassword(UpdateUser.Password, UpdateUser.Salt);
-                if (UpdateUser.PasswordHash == hashedPassword)
-                    return BadRequest("密碼不可重複");
-            }
-
-            //正在更改
+            
             //判斷傳入的密碼是否更改
 
             if (UpdateUser.Password != null)
@@ -220,7 +211,6 @@ namespace TravelProject1._0.Controllers.Api
 
             // 修改其他個資
             user.Email = UpdateUser.Email;
-            user.Address = UpdateUser.Address;
             user.Birthday = UpdateUser.Birthday;
             user.Name = UpdateUser.Name;
             user.Phone = UpdateUser.Phone;
@@ -242,11 +232,12 @@ namespace TravelProject1._0.Controllers.Api
         }
 
         [HttpPost("SendVerification")]
-        public async Task<IActionResult> SendVerificationCode([FromBody] VerificationRequest request)
+        [Route("api/UserApi/[Action]")]
+        public async Task<IActionResult> SendVerificationCode([FromBody] ForgotPasswordViewModel forget)
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(request.Email))
+                if (string.IsNullOrWhiteSpace(forget.Email))
                     return BadRequest("郵件為必需的");
 
                 string verificationCode = GenerateVerificationCode();
@@ -260,7 +251,7 @@ namespace TravelProject1._0.Controllers.Api
 
                 _verificationCodes.TryAdd(codeId, verificationCodeData);
 
-                await _emailSender.SendEmailAsync(request.Email, "驗證碼", $"你的驗證碼: {verificationCode}");
+                await _emailSender.SendEmailAsync(forget.Email, "驗證碼", $"你的驗證碼: {verificationCodeData}");
 
                 return Ok(new { Message = "驗證碼成功寄送.", CodeId = codeId });
             }
@@ -287,7 +278,7 @@ namespace TravelProject1._0.Controllers.Api
             if (verificationCodeData.Code == request.Code)
             {
                 _verificationCodes.TryRemove(request.CodeId, out _);
-                return Ok("驗證碼驗證成功") ;
+                return Ok("驗證碼驗證成功");
             }
 
             return BadRequest("錯誤驗證碼.");
@@ -300,12 +291,12 @@ namespace TravelProject1._0.Controllers.Api
         }
 
         [HttpPost("reset")]
-        public async Task<IActionResult> ResetPassword(int id,[FromBody] ResetPasswordViewModel request)
+        public async Task<IActionResult> ResetPassword(int id, [FromBody] ResetPasswordViewModel request)
         {
             var user = _context.Users.FirstOrDefault(u => u.Email == request.Email);
             if (user != null)
             {
-               string password = request.NewPassword;
+                string password = request.NewPassword;
                 string salt = GenerateSalt();
 
                 string hashedPassword = HashPassword(password, salt);
@@ -325,11 +316,7 @@ namespace TravelProject1._0.Controllers.Api
 
     }
 
-    public class VerificationRequest
-    {
-        public string Email { get; set; }
-    }
-
+ 
     public class VerifyCodeRequest
     {
         public string CodeId { get; set; }
@@ -343,9 +330,9 @@ namespace TravelProject1._0.Controllers.Api
     }
 
 
-
-    
 }
+    
+
 
 
 
