@@ -29,12 +29,12 @@ namespace TravelProject1._0.Controllers.Api
         private readonly TravelProjectAzureContext _context;
         private readonly ConcurrentDictionary<string, VerificationCodeData> _verificationCodes = new ConcurrentDictionary<string, VerificationCodeData>();
         private readonly EmailSender _emailSender;
-        public UserApiController(ILogger<HomeController> logger, TravelProjectAzureContext context, ConcurrentDictionary<string, VerificationCodeData>verificationCodes, EmailSender emailSender)
+        public UserApiController(ILogger<HomeController> logger, TravelProjectAzureContext context,  EmailSender emailSender)
 
         {
             _logger = logger;
             _context = context;
-            _verificationCodes = verificationCodes;
+            _verificationCodes = new ConcurrentDictionary<string, VerificationCodeData>();
             _emailSender = emailSender;
 
         }
@@ -232,6 +232,7 @@ namespace TravelProject1._0.Controllers.Api
         }
 
         [HttpPost("SendVerification")]
+        [Route("api/UserApi/[Action]")]
         public async Task<IActionResult> SendVerificationCode([FromBody] ForgotPasswordViewModel forget)
         {
             try
