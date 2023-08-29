@@ -19,5 +19,7 @@ namespace TravelProject1._0.Models.DTO
         public string Name { get; set; } = null!;
 
         public string? Describe { get; set; }
+
+        public string? PlanImg { get; set; }
     }
 }

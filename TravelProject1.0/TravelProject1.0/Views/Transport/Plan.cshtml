@@ -20,19 +20,19 @@
     <div class="container">
         <nav>
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                <button style="width:20%;border:1px solid gray;" class="nav-link active" id="nav-plan-tab" data-bs-toggle="tab" data-bs-target="#nav-plan" type="button" role="tab" aria-controls="nav-plan" aria-selected="true"><i class="fas fa-bus"></i>方案</button>
+                <button style="width:20%;border:1px solid gray;" class="nav-link active" id="nav-plan-tab" data-bs-toggle="tab" data-bs-target="#nav-plan" type="button" role="tab" aria-controls="nav-plan" aria-selected="true">方案</button>
                 <button style="width:20%;border:1px solid gray;" class="nav-link" id="nav-caption-tab" data-bs-toggle="tab" data-bs-target="#nav-caption" type="button" role="tab" aria-controls="nav-caption" aria-selected="false">商品說明</button>
                 <button style="width:20%;border:1px solid gray;" class="nav-link" id="nav-describe-tab" data-bs-toggle="tab" data-bs-target="#nav-describe" type="button" role="tab" aria-controls="nav-describe" aria-selected="false">購買須知</button>
-                <button style="width:20%;border:1px solid gray;" class="nav-link" id="nav-rating-tab" data-bs-toggle="tab" data-bs-target="#nav-rating" type="button" role="tab" aria-controls="nav-rating" aria-selected="false"><i class="fas fa-star"></i>評價</button>
+                <button style="width:20%;border:1px solid gray;" class="nav-link" id="nav-rating-tab" data-bs-toggle="tab" data-bs-target="#nav-rating" type="button" role="tab" aria-controls="nav-rating" aria-selected="false">評價</button>
             </div>
         </nav>
 
         <div class="tab-content" id="nav-tabContent" v-for="x in product">
             @* 分頁1 *@
             <div class="tab-pane fade show active" id="nav-plan" role="tabpanel" aria-labelledby="nav-plan-tab">
-                <div class="row" style="margin-bottom:30px;">
+                <div class="row product-describe">
                     <div class="col-md-4">
-                        <img class="img-fluid" src="~/lib/image/mountain2.jpeg" />
+                        <img class="img-product" src="~/lib/image/mountain2.jpeg" />
                     </div>
                     <div class="col-md-8 d_flex align-items-center">
                         <div class="about_content ">
@@ -45,12 +45,12 @@
                 <div class="card" v-for="p in plan">
                     <div class="row">
                         <div class="col-md-3">
-                            <img class="img-plan" src="~/lib/image/mountain2.jpeg" />
+                            <img class="img-plan" :src="p.planImg" />
                         </div>
                         <div class="col-md-7">
                             <div class="card-body">
-                                <h3 class="card-title">{{p.name}}</h3>
-                                <p class="card-text">{{p.describe}}</p>
+                                <h3>{{p.name}}</h3>
+                                <p>{{p.describe}}</p>
                             </div>
                         </div>
                         <div class="col-md-2 card-end">
@@ -89,38 +89,36 @@
             @* 分頁2 *@
             <div class="tab-pane fade" id="nav-caption" role="tabpanel" aria-labelledby="nav-caption-tab">
                 @*商品說明*@
-                <div class="container caption">
-                    <div>
-                        <div class="row product-descripts">
-                            <div class="col-md-8 offset-2 text-center">
-                                <h2 class="title">商品說明</h2>
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <img class="img-caption" src="~/lib/image/mountain.jpeg" />
-                                    </div>
-                                    <div class="col-md-8">
-                                        <p class="sub-descripts">{{x.productName}}</p>
-                                    </div>
+                <div class="container">
+                    <h2>商品說明</h2>
+                    <div class="row product-descripts">
+                        <div class="col-md-8 offset-2 text-center">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <img class="img-caption" src="~/lib/image/mountain.jpeg" />
+                                </div>
+                                <div class="col-md-8">
+                                    <p>{{x.productName}}</p>
                                 </div>
                             </div>
                         </div>
-                        <div>
-                            <h4 class="sub-title">兌換方式</h4>
-                            <p class="sub-descripts">QRCode</p>
-                        </div>
-                        <div>
-                            <h4 class="sub-title">時段介紹</h4>
-                            <p class="sub-descripts">{{x.subDescribe}}</p>
-                        </div>
+                    </div>
+                    <div>
+                        <h4>兌換方式</h4>
+                        <p>QRCode</p>
+                    </div>
+                    <div>
+                        <h4>時段介紹</h4>
+                        <p>{{x.subDescribe}}</p>
                     </div>
                 </div>
             </div>
             @* 分頁3 *@
             <div class="tab-pane fade" id="nav-describe" role="tabpanel" aria-labelledby="nav-describe-tab">
                 @*購買須知*@
-                <div class="container describe">
+                <div class="container">
+                    <h2>購買須知</h2>
                     <div>
-                        <h2 class="title">購買須知</h2>
                         <ul>
                             <li>
                                 <p>{{x.shortDescribe}}</p>
@@ -131,60 +129,61 @@
             </div>
             @* 分頁4 *@
             <div class="tab-pane fade" id="nav-rating" role="tabpanel" aria-labelledby="nav-rating-tab">
-                @*商品評價*@
-                <div class="comments-area">
+                <div class="container">
                     <h2>商品評價</h2>
-                    <div class="comment-list">
-                        <div class="single-comment justify-content-between d-flex">
-                            <div class="user justify-content-between d-flex">
-                                <div class="thumb">
+                    <div class="comments-area">
+                        <div class="comment-list">
+                            <div class="single-comment justify-content-between d-flex">
+                                <div class="user justify-content-between d-flex">
+                                    <div class="thumb">
+                                    </div>
+                                    <div class="desc">
+                                        <h5><a href="#">Emilly Blunt</a></h5>
+                                        <p class="date">December 4, 2017 at 3:12 pm </p>
+                                        <p class="comment">
+                                            Never say goodbye till the end comes!
+                                        </p>
+                                    </div>
                                 </div>
-                                <div class="desc">
-                                    <h5><a href="#">Emilly Blunt</a></h5>
-                                    <p class="date">December 4, 2017 at 3:12 pm </p>
-                                    <p class="comment">
-                                        Never say goodbye till the end comes!
-                                    </p>
+                                <div class="reply-btn">
+                                    <a href="" class="btn-reply text-uppercase">reply</a>
                                 </div>
-                            </div>
-                            <div class="reply-btn">
-                                <a href="" class="btn-reply text-uppercase">reply</a>
                             </div>
                         </div>
-                    </div>
-                    <div class="comment-list">
-                        <div class="single-comment justify-content-between d-flex">
-                            <div class="user justify-content-between d-flex">
-                                <div class="thumb">
+                        <div class="comment-list">
+                            <div class="single-comment justify-content-between d-flex">
+                                <div class="user justify-content-between d-flex">
+                                    <div class="thumb">
+                                    </div>
+                                    <div class="desc">
+                                        <h5><a href="#">Maria Luna</a></h5>
+                                        <p class="date">December 4, 2017 at 3:12 pm </p>
+                                        <p class="comment">
+                                            Never say goodbye till the end comes!
+                                        </p>
+                                    </div>
                                 </div>
-                                <div class="desc">
-                                    <h5><a href="#">Maria Luna</a></h5>
-                                    <p class="date">December 4, 2017 at 3:12 pm </p>
-                                    <p class="comment">
-                                        Never say goodbye till the end comes!
-                                    </p>
+                                <div class="reply-btn">
+                                    <a href="" class="btn-reply text-uppercase">reply</a>
                                 </div>
-                            </div>
-                            <div class="reply-btn">
-                                <a href="" class="btn-reply text-uppercase">reply</a>
                             </div>
                         </div>
-                    </div>
-                    <div class="comment-list">
-                        <div class="single-comment justify-content-between d-flex">
-                            <div class="user justify-content-between d-flex">
-                                <div class="thumb">
+                        <div class="comment-list">
+                            <div class="single-comment justify-content-between d-flex">
+                                <div class="user justify-content-between d-flex">
+                                    <div class="thumb">
+                                    </div>
+                                    <div class="desc">
+                                        <h5><a href="#">Ina Hayes</a></h5>
+                                        <p class="date">December 4, 2017 at 3:12 pm </p>
+                                        <p class="comment">
+                                            Never say goodbye till the end comes!
+                                        </p>
+                                    </div>
                                 </div>
-                                <div class="desc">
-                                    <h5><a href="#">Ina Hayes</a></h5>
-                                    <p class="date">December 4, 2017 at 3:12 pm </p>
-                                    <p class="comment">
-                                        Never say goodbye till the end comes!
-                                    </p>
+                                <div class="reply-btn">
+                                    <a href="" class="btn-reply text-uppercase">reply</a>
                                 </div>
-                            </div>
-                            <div class="reply-btn">
-                                <a href="" class="btn-reply text-uppercase">reply</a>
                             </div>
                         </div>
                     </div>
