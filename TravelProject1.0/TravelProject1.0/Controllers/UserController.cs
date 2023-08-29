@@ -15,6 +15,7 @@ using System.Net.Mail;
 using System.Net;
 using System.Web;
 using System.Data.SqlClient;
+using Microsoft.Win32;
 
 namespace TravelProject1._0.Controllers
 {
@@ -40,29 +41,30 @@ namespace TravelProject1._0.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> Login(string username, string password)
+        public async Task<IActionResult> Login(string email, string password)
         {
 
-            var userselect = _context.Users.Select(u => u.Email == username).SingleOrDefault();
+           var userselect = await _context.Users.Where(u => u.Email == email).FirstOrDefaultAsync();
 
             if (userselect == null)
             {
                 return View("Login");
 
             }
-            string pw = Request.Form["password"].ToString();
             UserDTO userDTO = new UserDTO();
-            if (userDTO.PasswordHash == HashPassword(pw, userDTO.Salt))
+            string hashedPassword = HashPassword(password, userDTO.Salt);
+            var user = _context.Users.Select(u => u.PasswordHash == hashedPassword).FirstOrDefaultAsync();
+          
+            if (user !=null )
             {
+                
+                var claims = new List<Claim>();//身份驗證訊息
+                 claims.Add(new Claim(ClaimTypes.Name,userselect.Name));
+                  claims.Add(new Claim(ClaimTypes.Email, userselect.Email));
 
-                var claims = new List<Claim>()//身份驗證訊息
-                     {
-                        new Claim(ClaimTypes.Name,$"{userDTO.Name}"),
-                        new Claim("Email",userDTO.Email),
-                       };
-
-                ClaimsPrincipal userPrincipal = new ClaimsPrincipal(new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme));
-                HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, userPrincipal, new AuthenticationProperties
+                ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                ClaimsPrincipal principal = new ClaimsPrincipal(identity);
+                HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, new AuthenticationProperties
                 {
                     ExpiresUtc = DateTime.UtcNow.AddMinutes(30),//過期時間;30分鐘
 
@@ -75,7 +77,7 @@ namespace TravelProject1._0.Controllers
                 base.ViewBag.Msg = "用戶或密碼錯誤";
             }
 
-            return await Task.FromResult<IActionResult>(View());
+            return Redirect("/Home/Index");
         }
         public async Task<IActionResult> Logout()
         {

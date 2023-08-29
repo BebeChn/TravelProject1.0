@@ -1,9 +1,8 @@
 ﻿const validType = {
-    password: /^(?=.*[A-Za-z])(?=.*d)[A-Za-zd]{8,}$/,
-    phonenumber: /^09\d{8}$/,
-    email: /^[^@\s]+@[^@\s]+$/,
-    birthday: /^\d{4}-\d{2}-\d{2}$/,
-    address: /^[a-zA-Z0-9\s,]+$/,
+    password: /^(?=.*\d)(?=.*[a-zA-Z]).{6,20}$/,
+    phone:/^09[0-9]{8}$/,
+    email:/^[^@\s]+@[^@\s]+$/,
+    birthday:/^\d{4}-\d{2}-\d{2}$/,
     name:/^[A-Za-z\s]+$/,
 }
 
