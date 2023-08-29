@@ -1,11 +1,41 @@
-﻿/*.solid {
-    font-weight: bold;
-    color: #000;
+﻿.search {
+    margin-bottom: 20px;
 }
 
-.foo {
+.search-title {
+    font-size: 24px;
     font-weight: bold;
-    background-color: #85bdc6;
 }
 
-*/
+.inp-search {
+    width: 50%;
+    transition: width 0.4s ease-in-out;
+}
+
+    .inp-search:focus {
+        width: 70%;
+    }
+
+.sort {
+    margin-bottom: 30px;
+}
+
+.sort-title {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.product-items {
+    margin-bottom: 18px;
+}
+
+.img-product {
+    width: 220px;
+    height: 160px;
+    border-radius: 10px;
+}
+
+.product-price {
+    font-size: 24px;
+    font-weight: bold;
+}

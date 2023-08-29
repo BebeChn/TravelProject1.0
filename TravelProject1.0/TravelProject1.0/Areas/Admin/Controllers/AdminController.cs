@@ -104,7 +104,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers
             User.Gender = AdminDTO.Gender;
             User.Address = AdminDTO.Address;
             User.Email = AdminDTO.Email;
-            //User.Birthday = AdminDTO.Birthday;
+            User.Birthday = AdminDTO.Birthday;
             _db.Entry(User).State = EntityState.Modified;
 
             try

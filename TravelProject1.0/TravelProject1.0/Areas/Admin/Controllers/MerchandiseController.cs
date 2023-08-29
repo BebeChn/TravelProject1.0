@@ -57,7 +57,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers
             y.Price == MchDTO.Price ||
             y.MainDescribe.Contains(MchDTO.MainDescribe) ||
             y.SubDescribe.Contains(MchDTO.SubDescribe) ||
-            y.ShortDescribe.Contains(MchDTO.ShortDescribe)
+            y.ShortDescribe.Contains(MchDTO.ShortDescribe)            
             ).Select(x => new MerchandiseDTO
             {
                 ProductId = x.ProductId,

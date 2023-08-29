@@ -1,168 +1,126 @@
 ﻿@section Styles{
+@*     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">*@
+    <link href="~/css/transport.css" rel="stylesheet" />
 
-    <script src="~/js/planetk_admin.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
 
 }
 
-<div id="app">
+<section id="app" class="accomodation_area">
     <div class="container">
-        <br>
-    </div>
-    <!--頁首-->
-    <header class="container-fluid row">
-        <!--區塊-->
-        <!--區塊-->
-    </header>
-    <!--頁首底-->
-    <!--第二段-->
-    <div class="container-fluid row">
-        <div class="col-2">
-            <!---->
-            <div class="container">
-                <br>
-                <br>
-                <br>
+        @* 列表 *@
+        <div class="row">
+            <div class="col-md-2">
+                <div class="blog_right_sidebar">
+                    <aside class="single_sidebar_widget post_category_widget">
+                        <h4 class="widget_title">商品種類</h4>
+                        <ul class="list_style cat-list">
+                            <li>
+                                <a href="#" class="d-flex justify-content-between">
+                                    <p>韓國</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="d-flex justify-content-between">
+                                    <p>日本</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="d-flex justify-content-between">
+                                    <p>越南</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="d-flex justify-content-between">
+                                    <p>泰國</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </aside>
+                </div>
             </div>
-            <!--清單-->
-            <ul class="list-group">
-                <li class="list-group-item">
-                    <input class="form-check-input me-1" type="radio" name="listGroupRadio" value="" id="firstRadio"
-                           checked>
-                    <label class="form-check-label" for="firstRadio">日本</label>
-                </li>
-                <li class="list-group-item">
-                    <input class="form-check-input me-1" type="radio" name="listGroupRadio" value="" id="secondRadio">
-                    <label class="form-check-label" for="secondRadio">台、港澳</label>
-                </li>
-                <li class="list-group-item">
-                    <input class="form-check-input me-1" type="radio" name="listGroupRadio" value="" id="thirdRadio">
-                    <label class="form-check-label" for="thirdRadio">越南</label>
-                </li>
-                <li class="list-group-item">
-                    <input class="form-check-input me-1" type="radio" name="listGroupRadio" value="" id="thirdRadio">
-                    <label class="form-check-label" for="thirdRadio">菲律賓</label>
-                </li>
-                <!---->
-                <div class="container">
-                    <br>
-                    <br>
-                    <br>
+            @* 商品區 *@
+            <div class="col-md-10">
+                <div class="filter-panel d-flex justify-content-between">
+                    @* 商品名稱搜尋 *@
+                    <div class="search">
+                        <span class="title_color search-title">搜尋：</span>
+@*                        <input class="inp-search" v-model="" type="text" placeholder="請輸入商品名稱" />
+*@                    </div>
+                    @* 排序 *@
+                    <div class="sort d-flex align-items-center">
+                        <div>
+                            <h4 class="title_color sort-title">排序：</h4>
+                        </div>
+                        <h4>
+                            <span class="">
+                                <a href="#"><i class="fas fa-fire"></i>熱門程度</a>
+                            </span>
+                            <span> | </span>
+                            <span class="">
+                                <a href="#" v-on:click=" "><i class="fas fa-funnel-dollar"></i>金額高低</a>
+                            </span>
+                        </h4>
+                    </div>
                 </div>
-                <!--價錢-->
-                <label for="customRange1" class="form-label">價格</label>
-                <input type="range" class="form-range" id="customRange1">
-                <!---->
-                <div class="container">
-                    <br>
-                    <br>
-                    <br>
+                @* 商品 *@
+                <div class="row product-items" v-for="item in PlaneTK_catgoryDTOes">
+                    <div class="col-md-3">
+                        <img class="img-product" src="item.img" />
+                    </div>
+                    <div class="col-md-7 d_flex align-items-center">
+                        <div class="about_content ">
+                            <h2 class="title title_color">{{item.productName}}</h2>
+                            <span>{{item.mainDescribe}}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <span class="product-price">$ {{item.price}}起</span>
+                        <a   class="button_hover theme_btn_two info">選擇方案</a>
+                    </div>
                 </div>
-                <!--查看更多目的地-->
-                <div class="container">
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                </div>
+            </div>
         </div>
-        </ul>
-        <!--景點-->
-        <main class="col-10   ">
-            <!--篩選排序-->
-            <ul class="nav justify-content-between  ">
-                <li class="nav-item solid">
-                    <a class="btn btn-outline-secondary   " href="http://127.0.0.1:5500/admin.html">排序</a>
+        @* 分頁 *@
+        <nav class="blog-pagination justify-content-center d-flex">
+            <ul class="pagination">
+                <li class="page-item">
+                    <a href="#" class="page-link" aria-label="Previous">
+                        <span aria-hidden="true">
+                            <span class="lnr lnr-chevron-left"><</span>
+                        </span>
+                    </a>
                 </li>
-                <li class="nav-item solid">
-                    <a class="btn btn-outline-secondary   " href="http://127.0.0.1:5500/admin.html">熱門程度</a>
-                </li>
-                <li class="nav-item solid">
-                    <a class="btn btn-outline-secondary   " href="http://127.0.0.1:5500/admin.html">時間從早到晚</a>
-                </li>
-                <li class="nav-item solid">
-                    <a class="btn btn-outline-secondary   " href="http://127.0.0.1:5500/admin.html">價格低到高</a>
+                <li class="page-item"><a href="#" class="page-link">01</a></li>
+                <li class="page-item"><a href="#" class="page-link">02</a></li>
+                <li class="page-item"><a href="#" class="page-link">03</a></li>
+                <li class="page-item"><a href="#" class="page-link">04</a></li>
+                <li class="page-item"><a href="#" class="page-link">...</a></li>
+                <li class="page-item">
+                    <a href="#" class="page-link" aria-label="Next">
+                        <span aria-hidden="true">
+                            <span class="lnr lnr-chevron-right">></span>
+                        </span>
+                    </a>
                 </li>
             </ul>
-            <!--篩選排序底-->
-            <!--商品排序-->
-            <!--商品-->
-            <div v-for="item in PlaneTK_catgoryDTOes">
-                <span>
-                    <br>
-                    <br>
-                    <div class="card mb-3" style="max-width: 960px;">
-                        <div class="row g-0">
-                            <div class="col-md-4">
-                                @*                                <img width="450" height="300" src="./pic/toky6.png" class="img-fluid rounded-start"
-                                alt="...">*@
-                            </div>
-                            <div class="col-md-8">
-                                <div class="card-body">
-                                    <h5 class="card-title solid">{{item.productName}}</h5>
-                                    <p class="card-text">
-                                        {{item.mainDescribe}}
-                                    </p>
-                                    <p class="card-text">
-                                        <small class="text-body-secondary">NT$: {{item.price}}</small>
-                                    </p>
-                                    <a class="btn btn-outline-secondary " :href="website+item.productId">購入</a>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </span>
-            </div>
-            <!--商品底-->
-            <!--範例-->
-            <span>
-                <br>
-                <br>
-                <div class="card mb-3" style="max-width: 960px;">
-                    <div class="row g-0">
-                        <div class="col-md-4">
-                            @*                            <img width="450" height="300" src="./pic/toky6.png" class="img-fluid rounded-start"
-                            alt="...">*@
-                        </div>
-                        <div class="col-md-8">
-                            <div class="card-body">
-                                <h5 class="card-title solid">東京澀谷人氣景點！SHIBUYA SKY 展望台，從 229 米處高空 360 度</h5>
-                                <p class="card-text">
-                                    東京澀谷人氣景點！SHIBUYA SKY 展望台，從 229 米處高空 360 度無死角俯瞰東京美景
-                                    每日入場時段有人數管控，建議於 KKday 事前訂購，現場出示 QR CODE 即可輕鬆入場
-                                </p>
-                                <p class="card-text">
-                                    <small class="text-body-secondary">Last updated 3 mins ago</small>
-                                </p>
-                                <a class="btn btn-outline-secondary   " @*href="https://localhost:7025/PlaneTK_sale/PlaneTK_sale"*@>購入</a>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </span>
-            <!--範例底-->
-            <!--商品排序底-->
-            <!--景點底-->
-        </main>
+        </nav>
     </div>
     <!--第二段底-->
-</div>
+</section>
 
 
 
 @section Scripts{
-    <script src="~/js/planetk_admin.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js" integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://unpkg.com/vue@next"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+@*    <script src="~/js/planetk_admin.js"></script>
+     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous">
     </script>
     <script src="https://kit.fontawesome.com/ea5c2c7c03.js" crossorigin="anonymous"></script>
+*@
+    
+    <script src="https://unpkg.com/vue@next"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js" integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 
     <script>
@@ -221,4 +179,4 @@
 
 
 
-}
+    }

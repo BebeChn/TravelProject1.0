@@ -10,9 +10,13 @@
 
   <ItemGroup>
     <Compile Remove="Data\**" />
+    <Compile Remove="wwwroot\images\Images.Project\planeTK\NewFolder1\**" />
     <Content Remove="Data\**" />
+    <Content Remove="wwwroot\images\Images.Project\planeTK\NewFolder1\**" />
     <EmbeddedResource Remove="Data\**" />
+    <EmbeddedResource Remove="wwwroot\images\Images.Project\planeTK\NewFolder1\**" />
     <None Remove="Data\**" />
+    <None Remove="wwwroot\images\Images.Project\planeTK\NewFolder1\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -60,7 +64,7 @@
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Areas\Admin\Models\" />
     <Folder Include="Partials\" />
-    <Folder Include="wwwroot\images\" />
+    <Folder Include="wwwroot\images\Images.Project\planeTK\category\" />
   </ItemGroup>
 
 </Project>
