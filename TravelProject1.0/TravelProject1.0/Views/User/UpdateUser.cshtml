@@ -21,10 +21,6 @@
             <td>{{user.phone}}</td>
     </tr>
     <tr>
-        <th>地址</th>
-            <td>{{user.address}}</td>
-    </tr>
-    <tr>
         <th>性別</th>
             <td>{{user.gender}}</td>
     </tr>
@@ -32,6 +28,10 @@
         <th>生日</th>
             <td>{{user.birthday}}</td>
     </tr>
+        <tr>
+            <th>密碼</th>
+            <td>{{user.password}}</td>
+        </tr>
     <tr>
         <td>
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">更改資料</button>
@@ -70,6 +70,10 @@
                         <th>生日</th>
                         <td><input v-model="user.birthday" /></td>
                     </tr>
+                        <tr>
+                            <th>密碼</th>
+                            <td><input v-model="user.password" /></td>
+                        </tr>
                     </table>
                 </div>
                 <div class="modal-footer">
@@ -116,10 +120,10 @@
                     let request = {
                         Name: _this.userUpdate.name,
                         Email: _this.userUpdate.email,
-                        Address: _this.userUpdate.address,
                         Phone: _this.userUpdate.phone,
                         Gender: _this.userUpdate.gender,  
                         Birthday: _this.userUpdate.birthday,
+                        Password: _this.userUpdate.password
                     };
 
                     fetch(`${baseAddress}/api/UserApi/UpdateUser/1`, {
