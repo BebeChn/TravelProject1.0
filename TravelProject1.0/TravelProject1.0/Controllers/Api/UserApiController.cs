@@ -16,6 +16,7 @@ using System.Collections.Concurrent;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using System.Net.Mail;
 using System.Net;
+using Azure.Core;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -29,7 +30,7 @@ namespace TravelProject1._0.Controllers.Api
         private readonly TravelProjectAzureContext _context;
         private readonly ConcurrentDictionary<string, VerificationCodeData> _verificationCodes = new ConcurrentDictionary<string, VerificationCodeData>();
         private readonly IEmailSender _emailSender;
-        public UserApiController(ILogger<HomeController> logger, TravelProjectAzureContext context,  IEmailSender emailSender)
+        public UserApiController(ILogger<HomeController> logger, TravelProjectAzureContext context, IEmailSender emailSender)
 
         {
             _logger = logger;
@@ -191,7 +192,7 @@ namespace TravelProject1._0.Controllers.Api
             }
 
             User user = await _context.Users.FindAsync(id);
-            
+
             //判斷傳入的密碼是否更改
 
             if (UpdateUser.Password != null)
@@ -262,19 +263,19 @@ namespace TravelProject1._0.Controllers.Api
         [HttpPost]
         public IActionResult VerifyCode([FromBody] VerifyCodeRequest request)
         {
-           
-            if (!_verificationCodes.TryGetValue(request.CodeId,out VerificationCodeData verificationCodeData ))
+
+            if (request.Code != request.CodeId)
             {
                 return BadRequest("錯誤的驗證碼或是驗證碼時效過期.");
             }
 
-            if (verificationCodeData.ExpiryTime < DateTime.UtcNow)
-            {
-                _verificationCodes.TryRemove(request.CodeId, out _);
-                return BadRequest("驗證碼過期.");
-            }
+            //if (request.ExpiryTime < DateTime.UtcNow)
+            //{
+            //    _verificationCodes.TryRemove(request.CodeId, out _);
+            //    return BadRequest("驗證碼過期.");
+            //}
 
-            if (verificationCodeData.Code == request.Code)
+            if (request.Code == request.Code)
             {
                 _verificationCodes.TryRemove(request.CodeId, out _);
                 return Ok("驗證碼驗證成功");
@@ -289,7 +290,7 @@ namespace TravelProject1._0.Controllers.Api
             return random.Next(1000, 9999).ToString();
         }
 
-        [HttpPost("reset")]
+        [HttpPost]
         public async Task<IActionResult> ResetPassword(int id, [FromBody] ResetPasswordViewModel request)
         {
             var user = _context.Users.FirstOrDefault(u => u.Email == request.Email);
@@ -301,22 +302,73 @@ namespace TravelProject1._0.Controllers.Api
                 string hashedPassword = HashPassword(password, salt);
 
                 User userId = await _context.Users.FindAsync(id);
+
                 user.PasswordHash = hashedPassword;
                 user.Salt = salt;
 
                 await _context.SaveChangesAsync();
-                return Ok(new { Message = "密碼成功重設" });
+                var isAuthenticated = await AuthenticateUser(user.Email, request.NewPassword);
+                if (isAuthenticated)
+                {
+                    return Ok(new { Message = "密碼成功重設" });
+                }
+                else
+                {
+                    return BadRequest(new { Message = "重設密碼" });
+                }
             }
             else
             {
                 return BadRequest(new { Message = "重設密碼" });
             }
         }
+        private async Task<bool> AuthenticateUser(string email, string password)
+        {
+            string providedPassword = password; 
+            string userEmail = email; 
+
+            var user = _context.Users.FirstOrDefault(u => u.Email == userEmail);
+
+            if (user != null)
+            {
+                string storedHashedPassword = user.PasswordHash; 
+                string storedSalt = user.Salt;
+
+                string hashedPassword = HashPassword(providedPassword, storedSalt); 
+
+                if (hashedPassword == storedHashedPassword)
+                {
+                    var claims = new List<Claim>();
+                    claims.Add(new Claim(ClaimTypes.Name, user.Name));
+                    claims.Add(new Claim("Email", user.Email));
+
+                    var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                    var principal = new ClaimsPrincipal(identity);
+
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+
+                   
+                    return true;
+                }
+                else
+                {
+                  
+                    return false;
+                }
+            }
+                return false;
+        }
+
+        private bool VerifyPassword(string password, string hashedPassword, string salt)
+        {
+            string hashedPasswordToCompare = HashPassword(password, salt);
+            return hashedPasswordToCompare == hashedPassword;
+        }
+
 
     }
 
- 
-   
+
 
     public class VerificationCodeData
     {
@@ -324,8 +376,8 @@ namespace TravelProject1._0.Controllers.Api
         public DateTime ExpiryTime { get; set; }
     }
 
-
 }
+
     
 
 
