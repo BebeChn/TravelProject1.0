@@ -307,64 +307,17 @@ namespace TravelProject1._0.Controllers.Api
                 user.Salt = salt;
 
                 await _context.SaveChangesAsync();
-                var isAuthenticated = await AuthenticateUser(user.Email, request.NewPassword);
-                if (isAuthenticated)
-                {
-                    return Ok(new { Message = "密碼成功重設" });
-                }
-                else
-                {
-                    return BadRequest(new { Message = "重設密碼" });
-                }
+               
+                  return Ok(new { Message = "密碼成功重設" });
+                
+               
             }
             else
             {
                 return BadRequest(new { Message = "重設密碼" });
             }
         }
-        private async Task<bool> AuthenticateUser(string email, string password)
-        {
-            string providedPassword = password; 
-            string userEmail = email; 
-
-            var user = _context.Users.FirstOrDefault(u => u.Email == userEmail);
-
-            if (user != null)
-            {
-                string storedHashedPassword = user.PasswordHash; 
-                string storedSalt = user.Salt;
-
-                string hashedPassword = HashPassword(providedPassword, storedSalt); 
-
-                if (hashedPassword == storedHashedPassword)
-                {
-                    var claims = new List<Claim>();
-                    claims.Add(new Claim(ClaimTypes.Name, user.Name));
-                    claims.Add(new Claim("Email", user.Email));
-
-                    var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                    var principal = new ClaimsPrincipal(identity);
-
-                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
-
-                   
-                    return true;
-                }
-                else
-                {
-                  
-                    return false;
-                }
-            }
-                return false;
-        }
-
-        private bool VerifyPassword(string password, string hashedPassword, string salt)
-        {
-            string hashedPasswordToCompare = HashPassword(password, salt);
-            return hashedPasswordToCompare == hashedPassword;
-        }
-
+       
 
     }
 
