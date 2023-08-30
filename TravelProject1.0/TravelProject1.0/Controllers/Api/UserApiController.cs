@@ -263,8 +263,9 @@ namespace TravelProject1._0.Controllers.Api
         [HttpPost]
         public IActionResult VerifyCode([FromBody] VerifyCodeRequest request)
         {
+            var verificationCodeData = new VerificationCodeData();
 
-            if (request.Code != request.CodeId)
+            if (verificationCodeData.Code != request.CodeId)
             {
                 return BadRequest("錯誤的驗證碼或是驗證碼時效過期.");
             }
