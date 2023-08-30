@@ -24,7 +24,7 @@ namespace TravelProject1._0.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly TravelProjectAzureContext _context;
-        //private readonly EmailSender _sender;
+       
         public UserController(ILogger<HomeController> logger, TravelProjectAzureContext context/*, EmailSender sender*/)
 
         {

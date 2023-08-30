@@ -16,22 +16,22 @@
                         <h4 class="widget_title">商品種類</h4>
                         <ul class="list_style cat-list">
                             <li>
-                                <a v-on:click="tablelist(1) " href="#" class="d-flex justify-content-between">
+                                <a v-on:click="planecategoryFilter(1)" href="#" class="d-flex justify-content-between">
                                     <p>韓國</p>
                                 </a>
                             </li>
                             <li>
-                                <a v-on:click="tablelist(2) " href="#" class="d-flex justify-content-between">
+                                <a v-on:click="planecategoryFilter(2)" href="#" class="d-flex justify-content-between">
                                     <p>日本</p>
                                 </a>
                             </li>
                             <li>
-                                <a v-on:click="tablelist(3) " href="#" class="d-flex justify-content-between">
+                                <a href="#" class="d-flex justify-content-between">
                                     <p>越南</p>
                                 </a>
                             </li>
                             <li>
-                                <a v-on:click="tablelist(4) " href="#" class="d-flex justify-content-between">
+                                <a href="#" class="d-flex justify-content-between">
                                     <p>泰國</p>
                                 </a>
                             </li>
@@ -45,7 +45,7 @@
                     @* 商品名稱搜尋 *@
                     <div class="search">
                         <span class="title_color search-title">搜尋：</span>
-                        <input @@keyup="planecategoryFilter" class="inp-search" v-model="search" type="text" placeholder="請輸入商品名稱" />
+                        <input class="inp-search" v-model="search" type="text" placeholder="請輸入商品名稱" />
                     </div>
                     @* 排序 *@
                     <div class="sort d-flex align-items-center">
@@ -67,7 +67,7 @@
                     </div>
                 </div>
                 @* 商品 *@
-                <div class="row product-items" v-for="item in PlaneTK_catgoryDTOes">
+                <div class="row product-items" v-for="item in planecategoryFilter">
                     <div class="col-md-3">
                         <img :src="item.img" />
                     </div>
@@ -136,7 +136,6 @@
             mounted: function () {
                 let _this = this;
                 _this.PlaneTK_catgoryGET();
-                //_this.planecategoryFilter();
             },
             methods: {
                 //直接GET
@@ -146,15 +145,13 @@
                     var request = {};
                     axios.get(`${baseAddress}/api/PlaneTK/PlaneTK_catgoryGET`)
                         .then(response => {
-                            _this.PlaneTK_catgoryDTOes = response.data;                            
-                            _this.xxx = response.data;
+                            _this.PlaneTK_catgoryDTOes = response.data;
                         })
                         .catch(err => {
                             alert(err);
                         });
 
                 },
-                //
                 priceOrderby: function () {
                     var _this = this;
                     _this.count++;
@@ -177,54 +174,50 @@
                             });
                     }
                 },
-                //
-                planecategoryFilter: function () {
-                    let _this = this;
-
-
-                    _this.PlaneTK_catgoryDTOes = _this.PlaneTK_catgoryDTOes.filter(item => item.productName.match(_this.search));
-
-
-
-                    // 搜尋框為空
-                    // 重新獲得數據
-                    if (_this.search == '') {
-                        _this.PlaneTK_catgoryGET();
-                    }
-
-                },
-                //列表
-                tablelist: function (id) {
-                    let _this = this;
-
-
-                    _this.PlaneTK_catgoryDTOes = _this.xxx;
-
-                    if (id == 1) {
-                        //alert("韓國")
-                        _this.PlaneTK_catgoryDTOes = _this.PlaneTK_catgoryDTOes.filter(item => item.productName.match("韓國"));
-                    }
-                    if (id == 2) {
-                        //alert("日本")
-                        _this.PlaneTK_catgoryDTOes = _this.PlaneTK_catgoryDTOes.filter(item => item.productName.match("日本"));
-                    }
-                    if (id == 3) {
-                        //alert("越南")
-                        _this.PlaneTK_catgoryDTOes = _this.PlaneTK_catgoryDTOes.filter(item => item.productName.match("越南"));
-                    }
-                    if (id == 4) {
-                        //alert("泰國")
-                        _this.PlaneTK_catgoryDTOes = _this.PlaneTK_catgoryDTOes.filter(item => item.productName.match("泰國"));
-                    }
-
-                },
+                //篩選
+                //PlaneTK_catgoryGET: function () {
+                //    let _this = this;
+                //    //alert("篩選");
+                //    var request = {};
+                //    axios.get(`${baseAddress}/api/PlaneTK/PlaneCountry`)
+                //        .then(response => {
+                //            _this.PlaneTK_catgoryDTOes = response.data;
+                //        })
+                //        .catch(err => {
+                //            alert(err);
+                //        });
+                //},
 
 
 
 
             },
+            computed: {
+                planecategoryFilter: function (cn) {
+                    let _this = this;
+
+                    return _this.PlaneTK_catgoryDTOes.filter(item => item.productName.match(_this.search));
 
 
+                    if (cn == 1) {
+                        alert("韓國")
+                        return _this.PlaneTK_catgoryDTOes.filter(item => item.productName.includes("韓國"));
+
+                    }
+                    if (cn == 2) {
+                        alert("日本")
+                        return _this.PlaneTK_catgoryDTOes.filter(item => item.productName.match("日本"));
+
+                    } else {
+
+
+                    }
+
+
+
+
+                }
+            }
 
 
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using TravelProject1._0.Models.ViewModel;
 
 namespace TravelProject1._0.Models;
 
@@ -259,4 +260,6 @@ public partial class TravelProjectAzureContext : DbContext
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
+    public DbSet<TravelProject1._0.Models.ViewModel.CartViewModel> CartViewModel { get; set; } = default!;
 }
