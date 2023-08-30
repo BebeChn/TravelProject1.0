@@ -1,19 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using TravelProject1._0.Helper;
 using TravelProject1._0.Models;
+using TravelProject1._0.Models.ViewModel;
 
 namespace TravelProject1._0.Controllers.Api
 {
-    [Route("api/[controller]/[action]")]
-    [ApiController]
-    public class CartApiController : ControllerBase
-    {
-        private readonly TravelProjectAzureContext _dbContext;
-        public CartApiController(TravelProjectAzureContext dbContext)
-        {
-            _dbContext = dbContext;
-        }  
-=======
     [Route("api/[controller]")]
     [ApiController]
     public class CartApiController : ControllerBase
@@ -57,7 +49,7 @@ namespace TravelProject1._0.Controllers.Api
             }
 
             HttpContext.Session.SetObjectAsJson("cart", cart);
-           return "商品已成功添加到購物車";
+            return "商品已成功添加到購物車";
         }
         public IActionResult RemoveItem(int id)
         {
@@ -81,6 +73,5 @@ namespace TravelProject1._0.Controllers.Api
             return Ok(cart);
         }
 
->>>>>>> Bebe
     }
 }
