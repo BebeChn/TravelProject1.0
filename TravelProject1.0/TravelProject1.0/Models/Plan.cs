@@ -15,9 +15,9 @@ public partial class Plan
 
     public string? PlanImg { get; set; }
 
+    public decimal PlanPrice { get; set; }
+
     public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
 
     public virtual ICollection<PlanCalendar> PlanCalendars { get; set; } = new List<PlanCalendar>();
-
-    public virtual Product Product { get; set; } = null!;
 }

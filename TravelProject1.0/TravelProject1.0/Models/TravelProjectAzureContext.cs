@@ -43,8 +43,8 @@ public partial class TravelProjectAzureContext : DbContext
     {
         if (!optionsBuilder.IsConfigured)
         {
-            IConfigurationRoot Config = new ConfigurationBuilder().SetBasePath(AppDomain.CurrentDomain.BaseDirectory).AddJsonFile("appsettings.json").Build();
-            optionsBuilder.UseSqlServer(Config.GetConnectionString("TravelProjectAzure"));
+            IConfigurationRoot Config = new ConfigurationBuilder().SetBasePath(AppDomain.CurrentDomain.BaseDirectory).AddJsonFile("appsettings").Build();
+            optionsBuilder.UseSqlServer(Config.GetConnectionString("TravelProject"));
         }
     }
 
@@ -148,12 +148,8 @@ public partial class TravelProjectAzureContext : DbContext
 
             entity.Property(e => e.PlanId).HasColumnName("PlanID");
             entity.Property(e => e.Name).HasMaxLength(50);
+            entity.Property(e => e.PlanPrice).HasColumnType("money");
             entity.Property(e => e.ProductId).HasColumnName("ProductID");
-
-            entity.HasOne(d => d.Product).WithMany(p => p.Plans)
-                .HasForeignKey(d => d.ProductId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Plan__ProductID__76969D2E");
         });
 
         modelBuilder.Entity<PlanCalendar>(entity =>
@@ -246,7 +242,6 @@ public partial class TravelProjectAzureContext : DbContext
             entity.ToTable("User");
 
             entity.Property(e => e.UserId).HasColumnName("UserID");
-            entity.Property(e => e.Address).HasMaxLength(50);
             entity.Property(e => e.Age).HasComputedColumnSql("(datediff(year,[Birthday],getdate()))", false);
             entity.Property(e => e.Birthday).HasColumnType("date");
             entity.Property(e => e.CreateDate)
