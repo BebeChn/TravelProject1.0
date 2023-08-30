@@ -40,5 +40,11 @@
     "inputFiles": [
       "wwwroot/css/Table.css"
     ]
+  },
+  {
+    "outputFileName": "wwwroot/css/Attractions-Plan.min.css",
+    "inputFiles": [
+      "wwwroot/css/Attractions-Plan.css"
+    ]
   }
 ]
