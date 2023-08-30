@@ -1,27 +1,29 @@
-﻿table thead tr th {
+﻿thead tr th {
+    font-size: 32px;
+    text-align: center;
+    color: white;
+}
+
+    thead tr th input {
+        width: 30px;
+        height: 30px;
+    }
+
+tbody tr td {
+    font-size: 28px;
     text-align: center;
 }
 
-table tbody tr td {
-    text-align: center;
-}
-
-.inp-checkbox {
-    width: 50%;
-    height: 50%;
-}
+    tbody tr td input {
+        width: 30px;
+        height: 30px;
+    }
 
 .btn-delete {
-    background-color: red;
     color: white;
 }
 
-.total {
-    text-align: end;
-}
-
-.btn-buy {
-    text-align: end;
-    background-color: blue;
-    color: white;
+.total{
+    width:30%;
+    height:40%;
 }
