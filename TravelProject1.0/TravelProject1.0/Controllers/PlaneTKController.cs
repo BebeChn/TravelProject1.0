@@ -22,7 +22,7 @@ namespace TravelProject1._0.Controllers
 
 
 
-
+        //目錄============================================
 
 
         public IActionResult PlaneTK_catgory()
@@ -54,14 +54,53 @@ namespace TravelProject1._0.Controllers
         }
 
 
+        [HttpGet]
 
 
 
 
 
+        //
+        public async Task<IEnumerable<PlaneTKDTO>> pricelower()
+        {
+            return _db.Products.Where(y => y.Id == 1).
+                OrderBy(w => w.Price)
+                .Select(x => new PlaneTKDTO
+                {
+                    ProductId = x.ProductId,
+                    Id = x.Id,
+                    ProductName = x.ProductName,
+                    Price = x.Price,
+                    MainDescribe = x.MainDescribe,
+                    SubDescribe = x.SubDescribe,
+                    ShortDescribe = x.ShortDescribe,
+                    Img = x.Img,
+
+                });
+        }
 
 
 
+
+        //
+        public async Task<IEnumerable<PlaneTKDTO>> priceheigh()
+        {
+            return _db.Products.Where(y => y.Id == 1).
+                OrderByDescending(w => w.Price)
+                .Select(x => new PlaneTKDTO
+                {
+                    ProductId = x.ProductId,
+                    Id = x.Id,
+                    ProductName = x.ProductName,
+                    Price = x.Price,
+                    MainDescribe = x.MainDescribe,
+                    SubDescribe = x.SubDescribe,
+                    ShortDescribe = x.ShortDescribe,
+                    Img = x.Img,
+
+
+                });
+        }
 
 
 
@@ -98,6 +137,7 @@ namespace TravelProject1._0.Controllers
 
 
         //=======================================================
+        //商品
         [HttpGet]
         public IActionResult PlaneTK_sale()
         {
