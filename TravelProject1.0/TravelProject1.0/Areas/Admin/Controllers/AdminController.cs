@@ -24,31 +24,21 @@ namespace TravelProject1._0.Areas.Admin.Controllers
             _db = db;
         }
 
-
-
-
         public IActionResult Admin()
         {
             return View();
         }
-
-
 
         [HttpGet]
         public async Task<IEnumerable<AdminDTO>> AdminGET()
         {
             return _db.Users.Select(x => new AdminDTO
             {
-
-                Address = x.Address,
                 Gender = x.Gender,
                 Name = x.Name,
                 UserId = x.UserId,
                 Email = x.Email,
-
-
             });
-
         }
 
         [HttpPost]
@@ -58,7 +48,6 @@ namespace TravelProject1._0.Areas.Admin.Controllers
             y.UserId == AdminDTO.UserId ||
             y.Name.Contains(AdminDTO.Name) ||
             y.Gender.Contains(AdminDTO.Gender) ||
-            y.Address.Contains(AdminDTO.Address) ||
             y.Email.Contains(AdminDTO.Email)
             || y.Birthday == (AdminDTO.Birthday)
             ).Select(x => new AdminDTO
@@ -66,7 +55,6 @@ namespace TravelProject1._0.Areas.Admin.Controllers
                 UserId = x.UserId,
                 Name = x.Name,
                 Gender = x.Gender,
-                Address = x.Address,
                 Email = x.Email,
                 Birthday = x.Birthday,
             });
@@ -85,12 +73,10 @@ namespace TravelProject1._0.Areas.Admin.Controllers
                 UserId = User.UserId,
                 Name = User.Name,
                 Gender = User.Gender,
-                Address = User.Address,
                 Email = User.Email,
             };
             return UserDTO;
         }
-
 
         [HttpPut("{id}")]
         public async Task<string> AdminPUT(int id, AdminDTO AdminDTO)
@@ -102,7 +88,6 @@ namespace TravelProject1._0.Areas.Admin.Controllers
             var User = await _db.Users.FindAsync(id);
             User.Name = AdminDTO.Name;
             User.Gender = AdminDTO.Gender;
-            User.Address = AdminDTO.Address;
             User.Email = AdminDTO.Email;
             User.Birthday = AdminDTO.Birthday;
             _db.Entry(User).State = EntityState.Modified;
@@ -113,12 +98,11 @@ namespace TravelProject1._0.Areas.Admin.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                    throw;
+                throw;
             }
 
             return "成功";
         }
-
 
         [HttpDelete("{id}")]
         public async Task<string> AdminDELETE(int id)
@@ -143,7 +127,6 @@ namespace TravelProject1._0.Areas.Admin.Controllers
             }
             return "刪除成功";
         }
-
 
         //新增
         //[HttpPost]
@@ -201,7 +184,6 @@ namespace TravelProject1._0.Areas.Admin.Controllers
         //    return "成功";
         //}
 
-
         //日期低高
         public async Task<IEnumerable<AdminDTO>> Datelower()
         {
@@ -211,10 +193,8 @@ namespace TravelProject1._0.Areas.Admin.Controllers
                     UserId = z.UserId,
                     Name = z.Name,
                     Gender = z.Gender,
-                    Address = z.Address,
                     Email = z.Email,
                     Birthday = z.Birthday,
-
                 });
         }
 
@@ -227,11 +207,8 @@ namespace TravelProject1._0.Areas.Admin.Controllers
                     UserId = z.UserId,
                     Name = z.Name,
                     Gender = z.Gender,
-                    Address = z.Address,
                     Email = z.Email,
                     Birthday = z.Birthday,
-
-                
                 });
         }
     }

@@ -27,7 +27,7 @@ namespace TravelProject1._0
                 client.Credentials = new NetworkCredential("allen955103@gmail.com", "bgcbdgblcslutury");
                 client.EnableSsl = true;
                 client.Send(mail);
-            }
+             }
 			
 
          

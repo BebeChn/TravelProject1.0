@@ -58,5 +58,33 @@ namespace TravelProject1._0.Controllers.Api
                 Img = p.Img
             });
         }
+
+        //取得商品方案
+        [HttpGet]
+        [Route("{id}")]
+        public async Task<IQueryable<TransportPlanDTO>> GetPlan(int id)
+        {
+            return _dbContext.Plans.Where(p => p.ProductId == id).Select(p => new TransportPlanDTO
+            {
+                PlanId = p.PlanId,
+                Name = p.Name,
+                Describe = p.Describe,
+                PlanImg = p.PlanImg
+            });
+        }
+
+        //取得單一商品
+        [HttpGet]
+        [Route("{id}")]
+        public async Task<IQueryable<TransportPlanDTO>> GetProduct(int id)
+        {
+            return _dbContext.Products.Where(p => p.ProductId == id).Select(p => new TransportPlanDTO
+            {
+                ProductName = p.ProductName,
+                MainDescribe = p.MainDescribe,
+                SubDescribe = p.SubDescribe,
+                ShortDescribe = p.ShortDescribe
+            });
+        }
     }
 }

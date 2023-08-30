@@ -3,7 +3,7 @@
 }
 
 @section Styles{
-    <link href="~/css/attractions-plan.css" rel="stylesheet" />
+    <link href="~/css/attractions-plan.min.css" rel="stylesheet" />
 }
 
 <section class="breadcrumb_area">
@@ -42,7 +42,7 @@
                     </div>
                 </div>
                 @* 商品方案 *@
-                <div class="card" v-for="p in plan">
+                <div class="card" v-for="(p,index) in plan" :key="index">
                     <div class="row">
                         <div class="col-md-3">
                             <img class="img-plan" :src="p.planImg" />
@@ -54,9 +54,9 @@
                             </div>
                         </div>
                         <div class="col-md-2 card-end">
-                            <button class="btn theme_btn button_hover info" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">選擇</button>
+                            <button class="btn theme_btn button_hover info" data-bs-toggle="collapse" :data-bs-target="'#collapse'+index" aria-expanded="true" :aria-controls="'collapse'+index">選擇</button>
                         </div>
-                        <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                        <div :id="'collapse'+index" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
                             <div class="accordion-body">
                                 <div class="row">
                                     <div class="col-md-6">
@@ -70,12 +70,19 @@
                                     <div class="col-md-6">
                                         <h2>選擇項目</h2>
                                         <div>
-                                            <span>數量：</span>
+                                            <h4>數量：</h4>
+                                            <div class="quantity d-flex">
+                                                <button class="btn minus info" v-on:click="minusNum">-</button>
+                                                <input class="quantity-num" v-bind:value="num" disabled>
+                                                <button class="btn plus info" v-on:click="plusNum">+</button>
+                                            </div>
                                             <br />
-                                            <span>金額：</span>
-                                            <span>NT0</span>
+                                            <h4>總金額：</h4>
+                                            <div class="total">
+                                                <span class="total-price">NT{{totalPrice}}</span>
+                                            </div>
                                         </div>
-                                        <div>
+                                        <div class="buy">
                                             <a class="btn theme_btn button_hover info">加入購物車</a>
                                             <a class="btn theme_btn button_hover info">立即訂購</a>
                                         </div>
@@ -201,11 +208,12 @@
                 plan: [],
                 product: [],
                 queries: '',
-                time1: null
+                time1: null,
+                num: 0,
+                totalPrice: 0
             },
             mounted: function () {
                 let _this = this;
-
                 //queryString
                 _this.queries = window.location.pathname.slice("18");
 
@@ -225,6 +233,18 @@
                     }).catch(error => {
                         alert(error);
                     })
+            },
+            methods: {
+                //數量選擇
+                plusNum: function () {
+                    let _this = this;
+                    return _this.num++;
+                },
+                minusNum: function () {
+                    let _this = this;
+                    if (_this.num == 0) { return _this.num = 0; }
+                    return _this.num--;
+                }
             }
         })
     </script>
