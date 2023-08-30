@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using TravelProject1._0.Models.ViewModel;
 
 namespace TravelProject1._0.Models;
 
@@ -39,6 +38,8 @@ public partial class TravelProjectAzureContext : DbContext
     public virtual DbSet<ResetPasswordToken> ResetPasswordTokens { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
+
+    public virtual DbSet<VerificationCodeDatum> VerificationCodeData { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -256,10 +257,15 @@ public partial class TravelProjectAzureContext : DbContext
             entity.Property(e => e.Phone).HasMaxLength(20);
         });
 
+        modelBuilder.Entity<VerificationCodeDatum>(entity =>
+        {
+            entity.HasNoKey();
+
+            entity.Property(e => e.ExpiryTime).HasColumnType("datetime");
+        });
+
         OnModelCreatingPartial(modelBuilder);
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
-
-    public DbSet<TravelProject1._0.Models.ViewModel.CartViewModel> CartViewModel { get; set; } = default!;
 }

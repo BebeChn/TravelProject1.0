@@ -83,7 +83,7 @@
                                             </div>
                                         </div>
                                         <div class="buy">
-                                            <a class="btn theme_btn button_hover info">加入購物車</a>
+                                            <a class="btn theme_btn button_hover info" v-on:click="addCart">加入購物車</a>
                                             <a class="btn theme_btn button_hover info">立即訂購</a>
                                         </div>
                                     </div>
@@ -244,6 +244,27 @@
                     let _this = this;
                     if (_this.num == 0) { return _this.num = 0; }
                     return _this.num--;
+                },
+
+                //加入購物車
+                addCart: function () {
+                    let _this = this;
+
+                    fetch(`${baseAddress}/api/CartApi/AddtoCart/61`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: {
+                            "productId": _this.product.productId,
+                            "productName": _this.product.productName
+                        }
+                    })
+                        .then(response => {
+                            if (response.ok) return response.json();
+                        }).then(data => {
+                            console.log(data);
+                        }).catch(error => {
+                            console.log(error);
+                        })
                 }
             }
         })

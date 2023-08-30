@@ -186,7 +186,7 @@
 
 
 
-                    // 搜尋框為空
+           
                     // 重新獲得數據
                     if (_this.search == '') {
                         _this.PlaneTK_catgoryGET();
@@ -201,19 +201,15 @@
                     _this.PlaneTK_catgoryDTOes = _this.xxx;
 
                     if (id == 1) {
-                        //alert("韓國")
                         _this.PlaneTK_catgoryDTOes = _this.PlaneTK_catgoryDTOes.filter(item => item.productName.match("韓國"));
                     }
                     if (id == 2) {
-                        //alert("日本")
                         _this.PlaneTK_catgoryDTOes = _this.PlaneTK_catgoryDTOes.filter(item => item.productName.match("日本"));
                     }
                     if (id == 3) {
-                        //alert("越南")
                         _this.PlaneTK_catgoryDTOes = _this.PlaneTK_catgoryDTOes.filter(item => item.productName.match("越南"));
                     }
                     if (id == 4) {
-                        //alert("泰國")
                         _this.PlaneTK_catgoryDTOes = _this.PlaneTK_catgoryDTOes.filter(item => item.productName.match("泰國"));
                     }
 
