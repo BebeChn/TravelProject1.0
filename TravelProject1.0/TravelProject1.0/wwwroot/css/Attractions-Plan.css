@@ -24,3 +24,36 @@
     width: 100%;
     border-radius: 10px;
 }
+
+.quantity {
+    justify-content: center;
+    align-items: center;
+    height: 80px;
+    margin-bottom: 20px;
+}
+
+.quantity-num {
+    font-size: 28px;
+    width: 100px;
+    text-align: center;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.quantity button {
+    font-weight: bold;
+    color: white;
+}
+
+.buy {
+    text-align: center;
+}
+
+.total {
+    text-align: center;
+    margin-bottom: 12px;
+}
+
+.total-price {
+    font-size: 40px;
+}

@@ -16,7 +16,7 @@
                         <h4 class="widget_title">商品種類</h4>
                         <ul class="list_style cat-list">
                             <li>
-                                <a href="#" class="d-flex justify-content-between">
+                                <a href="#" class="d-flex justify-content-between" v-on:click="keyWord('遊樂園')">
                                     <p>遊樂園</p>
                                 </a>
                             </li>
@@ -125,6 +125,7 @@
                     })
             },
             methods: {
+                //金額排序
                 priceSort: function () {
                     let _this = this;
                     _this.count++;
@@ -151,23 +152,35 @@
 
                 //分頁
                 changePage: function (num) {
-                    this.currentPage = num;
+                    let _this = this;
+                    _this.currentPage = num;
+                },
+
+                //商品有關鍵字做篩選
+                keyWord: function (str) {
+                    let _this = this;
+                    let keyValue = new RegExp(str);
+                    return _this.attractions.filter(k => k.productName.match(keyValue));
                 }
             },
             computed: {
                 //關鍵字搜尋
                 attractionsFilter: function () {
-                    return this.attractions.filter(a => a.productName.match(this.search));
+                    let _this = this;
+                    _this.currentPage = 1;
+                    return _this.attractions.filter(a => a.productName.match(_this.search));
                 },
 
                 //分頁
                 showProduct: function () {
-                    var start = (this.currentPage - 1) * this.itemPage;
-                    var end = start + this.itemPage;
+                    let _this = this;
+                    var start = (_this.currentPage - 1) * _this.itemPage;
+                    var end = start + _this.itemPage;
                     return this.attractionsFilter.slice(start, end);
                 },
                 total: function () {
-                    return Math.ceil(this.attractions.length / this.itemPage);
+                    let _this = this;
+                    return Math.ceil(_this.attractions.length / _this.itemPage);
                 }
             }
         })
