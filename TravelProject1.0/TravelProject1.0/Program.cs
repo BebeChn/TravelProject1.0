@@ -38,7 +38,7 @@ namespace TravelProject1._0
                 option.DefaultSignOutScheme = CookieAuthenticationDefaults.AuthenticationScheme;
             }).AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, option =>
             {
-                option.LoginPath = "/User/Login";//
+                option.LoginPath = "/User/Login";
                 option.AccessDeniedPath = "/Home/NoAuthority";
             });
 

@@ -2,18 +2,19 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 100vh;
+    height: 50vh;
+   
 }
 .inputbox {
     position: relative;
-    width: 250px;
+    width: 270px;
 }
 
     .inputbox input {
         width: 100%;
         padding: 10px;
         border: 1px solid deepskyblue;
-        background: deepskyblue;
+        background:white;
         border-radius: 5px;
         outline: none;
         color: azure;
@@ -54,7 +55,7 @@
 
 .dup {
     display: block;
-    margin: 20px 50px;
+    margin: 20px 80px;
     text-align: center;
     background-color: #fad384;
     padding: 12px;
@@ -62,14 +63,14 @@
     border-radius: 22px;
     outline: none;
     color: rgb(19, 23, 27);
-    width: 125px;
-    background-color: deepskyblue;
+    width: 115px;
+    background-color: white;
     border: 2px solid #070505;
     cursor: pointer;
 }
 
     .dup:hover {
-        background-color: lightblue;
+        background-color: deepskyblue;
     }
 
 .labelstyle {
