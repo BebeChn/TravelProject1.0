@@ -25,7 +25,5 @@ public partial class Product
 
     public virtual Category IdNavigation { get; set; } = null!;
 
-    public virtual ICollection<Plan> Plans { get; set; } = new List<Plan>();
-
     public virtual ICollection<Rating> Ratings { get; set; } = new List<Rating>();
 }
