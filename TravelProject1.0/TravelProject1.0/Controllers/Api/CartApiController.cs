@@ -6,7 +6,7 @@ using TravelProject1._0.Models.ViewModel;
 
 namespace TravelProject1._0.Controllers.Api
 {
-    [Route("api/[controller]/[action]")]
+    [Route("api/CartApi/[action]")]
     [ApiController]
     public class CartApiController : ControllerBase
     {
@@ -18,58 +18,39 @@ namespace TravelProject1._0.Controllers.Api
             _context = context;
         }
 
-        [HttpPost]
-        public string AddtoCart(int id)
+        [HttpGet]
+        public async Task<IActionResult> GetCart()
         {
-            Product product = _context.Products.SingleOrDefault(p => p.Id == id);
-
-            if (product == null) return "沒有這個商品";
-
-            var cartItem = new CartViewModel
-            {
-                ProductId = product.Id,
-                ProductName = product.ProductName,
-                Quantity = 1
-            };
-
-            List<CartViewModel> cart = HttpContext.Session.GetObjectFromJson<List<CartViewModel>>("cart");
-
-            if (cart == null) cart = new List<CartViewModel>();
-
-            var existingCartItem = cart.FirstOrDefault(item => item.ProductId == cartItem.ProductId);
-
-            if (existingCartItem != null)
-            {
-                existingCartItem.Quantity += 1;
-            }
-            else
-            {
-                cart.Add(cartItem);
-            }
-
-            HttpContext.Session.SetObjectAsJson("cart", cart);
-            return "商品已成功添加到購物車";
+            return null;
         }
 
-        [HttpDelete]
-        public IActionResult RemoveItem(int id)
+        [HttpPost]
+        public async Task<IActionResult> AddToCart([FromBody] CartViewModel model)
         {
-            //向 Session 取得商品列表
-            List<CartViewModel> cart = Session.GetObjectFromJson<List<CartViewModel>>(HttpContext.Session, "cart");
+            if (model == null) return BadRequest();
 
-            //用FindIndex查詢目標在List裡的位置
-            int index = cart.FindIndex(m => m.Product.Id.Equals(id));
-            cart.RemoveAt(index);
+            Cart item = new Cart
+            {
+                UserId = model.UserId,
+                ProductId = model.ProductId,
+                CartName = model.CartName,
+                CartPrice = model.CartPrice,
+                CartQuantity = model.CartQuantity,
+                CartDate = model.CartDate
+            };
 
-            if (cart.Count < 1)
+            _context.Carts.Add(item);
+
+            try
             {
-                Session.Remove(HttpContext.Session, "cart");
+                _context.SaveChangesAsync();
             }
-            else
+            catch (Exception ex)
             {
-                Session.SetObjectAsJson(HttpContext.Session, "cart", cart);
+                return BadRequest(ex);
             }
-            return Ok(cart);
+
+            return Ok(new { Message = "商品已加入購物車" });
         }
     }
 }

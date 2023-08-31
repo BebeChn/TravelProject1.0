@@ -143,29 +143,7 @@ namespace TravelProject1._0.Controllers
 
 
 
-        //[HttpPost]
-        //public async Task<IActionResult> SendVerificationCode(string email)
-        //{
-        //    var user = _context.Users.FirstOrDefault(u => u.Email == email);
-        //    if (user != null)
-        //    {
-
-        //        string verificationCode = GenerateVerificationCode();
-        //        user.VerificationCode = verificationCode;
-        //        _context.SaveChanges();
-
-
-        //        await _sender.SendEmailAsync(email, "驗證碼", $"你的驗證碼: {verificationCode}");
-
-        //        return RedirectToAction("VerifyCode");
-        //    }
-        //    else
-        //    {
-        //        ModelState.AddModelError("", "不存在的Email");
-        //        return View();
-        //    }
-        //}
-
+        
 
 
         [HttpGet]
@@ -174,24 +152,7 @@ namespace TravelProject1._0.Controllers
             return View();
         }
 
-        //[HttpPost]
-        //public IActionResult VerifyCode(string code)
-        //{
-
-        //    var user = _context.Users.FirstOrDefault(u => u.VerificationCode == code);
-        //    if (user != null)
-        //    {
-        //        // Code is valid, you can proceed with further actions
-        //        // For example, mark the email as verified or allow password reset
-        //        return RedirectToAction("Index", "Home");
-        //    }
-        //    else
-        //    {
-        //        ModelState.AddModelError("", "不合法的驗證碼");
-
-        //        return View();
-        //    }
-        //}
+        
     }
 
 

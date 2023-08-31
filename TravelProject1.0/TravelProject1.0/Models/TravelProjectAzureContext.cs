@@ -39,7 +39,7 @@ public partial class TravelProjectAzureContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
-    public virtual DbSet<VerificationCodeDatum> VerificationCodeData { get; set; }
+    public virtual DbSet<VerificationCodeData> VerificationCodeData { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -79,6 +79,8 @@ public partial class TravelProjectAzureContext : DbContext
             entity.ToTable("Cart");
 
             entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.CartDate).HasColumnType("date");
+            entity.Property(e => e.CartPrice).HasColumnType("money");
             entity.Property(e => e.ProductId).HasColumnName("ProductID");
             entity.Property(e => e.UserId).HasColumnName("UserID");
 
@@ -257,7 +259,7 @@ public partial class TravelProjectAzureContext : DbContext
             entity.Property(e => e.Phone).HasMaxLength(20);
         });
 
-        modelBuilder.Entity<VerificationCodeDatum>(entity =>
+        modelBuilder.Entity<VerificationCodeData>(entity =>
         {
             entity.HasNoKey();
 

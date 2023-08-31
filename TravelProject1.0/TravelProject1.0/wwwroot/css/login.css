@@ -1,3 +1,8 @@
+.element {
+    background-image: url('../images/images.project/plan/korea/istockphoto-835391546-612x612.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+}
 .app-container {
     display: flex;
     align-items: center;
@@ -17,7 +22,7 @@
         background:white;
         border-radius: 5px;
         outline: none;
-        color: azure;
+        color: black;
         font-size: 1em;
     }
 
@@ -47,7 +52,7 @@
         color:black;
         border-radius:2px;
     }*/
-    .inputbox input:valid:valid, .inputbox input:focus {
+    .inputbox input:valid, .inputbox input:focus {
         border: 1px solid deepskyblue;
     }
 
@@ -58,19 +63,19 @@
     margin: 20px 80px;
     text-align: center;
     background-color: #fad384;
-    padding: 12px;
+    padding: 8px;
     font-size: 15px;
-    border-radius: 22px;
+    border-radius: 18px;
     outline: none;
     color: rgb(19, 23, 27);
-    width: 115px;
+    width: 100px;
     background-color: white;
-    border: 2px solid #070505;
+    border: 1px solid deepskyblue;
     cursor: pointer;
 }
 
     .dup:hover {
-        background-color: deepskyblue;
+        border: 1.5px solid black;
     }
 
 .labelstyle {
