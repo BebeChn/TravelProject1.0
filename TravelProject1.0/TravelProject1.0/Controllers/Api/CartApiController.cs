@@ -6,7 +6,7 @@ using TravelProject1._0.Models.ViewModel;
 
 namespace TravelProject1._0.Controllers.Api
 {
-    [Route("api/CartApi/[action]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class CartApiController : ControllerBase
     {
@@ -19,9 +19,16 @@ namespace TravelProject1._0.Controllers.Api
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetCart()
+        [Route("{id}")]
+        public async Task<IQueryable<CartViewModel>> GetCart(int id)
         {
-            return null;
+            return _context.Carts.Where(c => c.UserId == id).Select(c => new CartViewModel
+            {
+                CartName = c.CartName,
+                CartPrice = c.CartPrice,
+                CartQuantity = c.CartQuantity,
+                CartDate = c.CartDate
+            });
         }
 
         [HttpPost]
