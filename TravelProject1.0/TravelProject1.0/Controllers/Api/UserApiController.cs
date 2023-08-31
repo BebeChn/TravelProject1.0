@@ -260,11 +260,11 @@ namespace TravelProject1._0.Controllers.Api
             }
         }
         [HttpPost]
-        public IActionResult VerifyCode([FromBody] VerifyCodeRequest request)
+        public IActionResult VerifyCode([FromBody] VerificationCodeViewModel request)
         {
             var verificationCodeData = new VerificationCodeData();
 
-            if (verificationCodeData.Code != request.CodeId)
+            if (verificationCodeData.Code != request.Code)
             {
                 return BadRequest("錯誤的驗證碼或是驗證碼時效過期.");
             }
@@ -275,7 +275,7 @@ namespace TravelProject1._0.Controllers.Api
             //    return BadRequest("驗證碼過期.");
             //}
 
-            if (request.Code == request.Code)
+            if (verificationCodeData.Code == request.Code)
             {
                 _verificationCodes.TryRemove(request.CodeId, out _);
                 return Ok("驗證碼驗證成功");
