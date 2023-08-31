@@ -22,7 +22,7 @@
         background:white;
         border-radius: 5px;
         outline: none;
-        color: azure;
+        color: black;
         font-size: 1em;
     }
 
@@ -52,7 +52,7 @@
         color:black;
         border-radius:2px;
     }*/
-    .inputbox input:valid:valid, .inputbox input:focus {
+    .inputbox input:valid, .inputbox input:focus {
         border: 1px solid deepskyblue;
     }
 
