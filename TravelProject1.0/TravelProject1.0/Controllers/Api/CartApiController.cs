@@ -12,64 +12,32 @@ namespace TravelProject1._0.Controllers.Api
     {
         private readonly ILogger<HomeController> _logger;
         private readonly TravelProjectAzureContext _context;
-        public CartApiController(ILogger<HomeController> logger, TravelProjectAzureContext context)
+
+        private readonly ShoppingCartService _cartService;
+        public CartApiController(ILogger<HomeController> logger, TravelProjectAzureContext context, ShoppingCartService cartService)
         {
             _logger = logger;
             _context = context;
-        }
-
+            _cartService = cartService;
+        }  
         [HttpPost]
-        public string AddtoCart(int id)
+        public IActionResult AddToCart(int productId, string productName, decimal price, int quantity)
         {
-            Product product = _context.Products.SingleOrDefault(p => p.Id == id);
-
-            if (product == null) return "沒有這個商品";
-
-            var cartItem = new CartViewModel
+            var item = new ShoppingCartItemViewModel
             {
-                ProductId = product.Id,
-                ProductName = product.ProductName,
-                Quantity = 1
+                Id = productId,
+                ProductName = productName,
+                Price = price,
+                Quantity = quantity
             };
 
-            List<CartViewModel> cart = HttpContext.Session.GetObjectFromJson<List<CartViewModel>>("cart");
+            _cartService.AddToCart(item);
 
-            if (cart == null) cart = new List<CartViewModel>();
-
-            var existingCartItem = cart.FirstOrDefault(item => item.ProductId == cartItem.ProductId);
-
-            if (existingCartItem != null)
-            {
-                existingCartItem.Quantity += 1;
-            }
-            else
-            {
-                cart.Add(cartItem);
-            }
-
-            HttpContext.Session.SetObjectAsJson("cart", cart);
-            return "商品已成功添加到購物車";
+            return Ok(new { Message = "商品已加入購物車" });
         }
 
-        [HttpDelete]
-        public IActionResult RemoveItem(int id)
-        {
-            //向 Session 取得商品列表
-            List<CartViewModel> cart = Session.GetObjectFromJson<List<CartViewModel>>(HttpContext.Session, "cart");
-
-            //用FindIndex查詢目標在List裡的位置
-            int index = cart.FindIndex(m => m.Product.Id.Equals(id));
-            cart.RemoveAt(index);
-
-            if (cart.Count < 1)
-            {
-                Session.Remove(HttpContext.Session, "cart");
-            }
-            else
-            {
-                Session.SetObjectAsJson(HttpContext.Session, "cart", cart);
-            }
-            return Ok(cart);
-        }
+        
     }
+
+
 }

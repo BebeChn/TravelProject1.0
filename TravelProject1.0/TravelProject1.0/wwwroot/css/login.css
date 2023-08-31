@@ -1,3 +1,8 @@
+.element {
+    background-image: url('../images/images.project/plan/korea/istockphoto-835391546-612x612.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+}
 .app-container {
     display: flex;
     align-items: center;
