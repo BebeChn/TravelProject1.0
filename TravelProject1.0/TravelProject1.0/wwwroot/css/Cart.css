@@ -21,9 +21,40 @@ tbody tr td {
 
 .btn-delete {
     color: white;
+    transition: all 0.3s ease;
 }
 
-.total{
-    width:30%;
-    height:40%;
+    .btn-delete:hover {
+        font-size: 20px;
+        color: white;
+    }
+
+.total {
+    justify-content: end;
+    text-align: right;
+    margin: 0px auto 0px auto;
+    margin-top:20px;
 }
+
+.calculate{
+    margin-bottom:20px;
+}
+
+.total-title {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.total-price{
+    font-size:24px;
+}
+
+.btn-buy {
+    color: white;
+    transition: all 0.3s ease;
+}
+
+    .btn-buy:hover {
+        font-size: 22px;
+        color: white;
+    }
