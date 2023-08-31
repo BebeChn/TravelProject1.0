@@ -134,7 +134,9 @@
             mounted: function () {
                 let _this = this;
                 _this.PlaneTK_catgoryGET();
-
+                //_this.planecategoryFilter();
+                //_this.showProduct();
+                //_this.changePage();
 
             },
             methods: {
@@ -217,6 +219,8 @@
 
                 },
 
+                //將當前頁數傳參數給currentPage
+                //分頁     改變當前頁數傳回給showProduct
                 changePage: function (n) {
                     //alert("change");
                     let _this = this;
@@ -228,6 +232,7 @@
                 },
                 showProduct2: function () {
                     let _this = this;
+
 
                     var start = (_this.currentPage - 1) * _this.itemPage;
                     var end = start + _this.itemPage;
@@ -245,7 +250,7 @@
             computed: {
 
 
-
+                //這個是顯示下面頁簽的頁數的總數
                 total: function () {
                     let _this = this;
 
