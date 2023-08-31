@@ -11,12 +11,12 @@ namespace TravelProject1._0.Controllers.Api
     {
         private readonly TravelProjectAzureContext _context;
 
-        public BookApiController (TravelProjectAzureContext context)
+        public BookApiController(TravelProjectAzureContext context)
         {
             _context = context;
         }
 
-        public IEnumerable<BookDTO> GetBooks() 
+        public IEnumerable<BookDTO> GetBooks()
         {
             var test = _context.Products.Where(b => b.Id == 2).Select(r => new
             {
@@ -24,9 +24,10 @@ namespace TravelProject1._0.Controllers.Api
                 r.Price,
                 r.MainDescribe,
                 r.Img
-            }) ;        
+            });
             return _context.Products.Where(b => b.Id == 2).Select(b => new BookDTO
             {
+                ProductId = b.ProductId,
                 ProductName = b.ProductName,
                 Price = b.Price,
                 MainDescribe = b.MainDescribe,
