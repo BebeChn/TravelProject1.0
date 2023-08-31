@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace TravelProject1._0.Models;
 
-public partial class VerificationCodeDatum
+public partial class VerificationCodeData
 {
     public string? Code { get; set; }
 
