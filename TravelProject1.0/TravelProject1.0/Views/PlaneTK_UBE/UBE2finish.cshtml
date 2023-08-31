@@ -16,22 +16,22 @@
                         <h4 class="widget_title">商品種類</h4>
                         <ul class="list_style cat-list">
                             <li>
-                                <a v-on:click="planecategoryFilter(1)" href="#" class="d-flex justify-content-between">
+                                <a v-on:click="tablelist(1) " href="#" class="d-flex justify-content-between">
                                     <p>韓國</p>
                                 </a>
                             </li>
                             <li>
-                                <a v-on:click="planecategoryFilter(2)" href="#" class="d-flex justify-content-between">
+                                <a v-on:click="tablelist(2) " href="#" class="d-flex justify-content-between">
                                     <p>日本</p>
                                 </a>
                             </li>
                             <li>
-                                <a href="#" class="d-flex justify-content-between">
+                                <a v-on:click="tablelist(3) " href="#" class="d-flex justify-content-between">
                                     <p>越南</p>
                                 </a>
                             </li>
                             <li>
-                                <a href="#" class="d-flex justify-content-between">
+                                <a v-on:click="tablelist(4) " href="#" class="d-flex justify-content-between">
                                     <p>泰國</p>
                                 </a>
                             </li>
@@ -45,7 +45,7 @@
                     @* 商品名稱搜尋 *@
                     <div class="search">
                         <span class="title_color search-title">搜尋：</span>
-                        <input class="inp-search" v-model="search" type="text" placeholder="請輸入商品名稱" />
+                        <input @*@@keyup="planecategoryFilter"*@ class="inp-search" v-model="search" type="text" placeholder="請輸入商品名稱" />
                     </div>
                     @* 排序 *@
                     <div class="sort d-flex align-items-center">
@@ -67,9 +67,9 @@
                     </div>
                 </div>
                 @* 商品 *@
-                <div class="row product-items" v-for="item in planecategoryFilter">
+                <div class="row product-items" v-for="item in showProduct">
                     <div class="col-md-3">
-                        <img :src="item.img" />
+                        @* <img :src="item.img" />*@
                     </div>
                     <div class="col-md-7 d_flex align-items-center">
                         <div class="about_content ">
@@ -84,28 +84,20 @@
                 </div>
             </div>
         </div>
-        @* 分頁 *@
+        <!---------------------------------分頁---------------------------------->
         <nav class="blog-pagination justify-content-center d-flex">
             <ul class="pagination">
-                <li class="page-item">
-                    <a href="#" class="page-link" aria-label="Previous">
-                        <span aria-hidden="true">
-                            <span class="lnr lnr-chevron-left"><</span>
-                        </span>
-                    </a>
-                </li>
-                <li class="page-item"><a href="#" class="page-link">01</a></li>
-                <li class="page-item"><a href="#" class="page-link">02</a></li>
-                <li class="page-item"><a href="#" class="page-link">03</a></li>
-                <li class="page-item"><a href="#" class="page-link">04</a></li>
-                <li class="page-item"><a href="#" class="page-link">...</a></li>
-                <li class="page-item">
-                    <a href="#" class="page-link" aria-label="Next">
-                        <span aria-hidden="true">
-                            <span class="lnr lnr-chevron-right">></span>
-                        </span>
-                    </a>
-                </li>
+                <paginate :page-count="total"
+                          :click-handler="changePage"
+                          :page-class="'page-item'"
+                          :page-link-class="'page-link'"
+                          :prev-class="'page-link'"
+                          :prev-link-class="'lnr lnr-chevron-left'"
+                          :next-class="'page-link'"
+                          :next-link-class="'lnr lnr-chevron-right'"
+                          :container-class="'pagination'">
+                </paginate>
+
             </ul>
         </nav>
     </div>
@@ -119,6 +111,7 @@
 
     <script src="https://unpkg.com/vue@3.2.36/dist/vue.global.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js" integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://unpkg.com/vuejs-paginate-next@latest/dist/vuejs-paginate-next.umd.js"></script>
 
 
     <script>
@@ -130,12 +123,21 @@
                     website: "https://localhost:7025/api/PlaneTK/PlaneTK_sale/",
                     count: 0,
                     search: '',
+                    //
+                    currentPage: 1,   //初始是第一頁
+                    itemPage: 5,   //五個商品為一頁
                 };
 
+            }, components: {
+                paginate: VuejsPaginateNext,
             },
             mounted: function () {
                 let _this = this;
                 _this.PlaneTK_catgoryGET();
+                //_this.planecategoryFilter();
+                //_this.showProduct();
+                //_this.changePage();
+
             },
             methods: {
                 //直接GET
@@ -146,12 +148,17 @@
                     axios.get(`${baseAddress}/api/PlaneTK/PlaneTK_catgoryGET`)
                         .then(response => {
                             _this.PlaneTK_catgoryDTOes = response.data;
+                            _this.xxx = response.data;
                         })
                         .catch(err => {
                             alert(err);
                         });
 
+
+
+
                 },
+                //排序價錢
                 priceOrderby: function () {
                     var _this = this;
                     _this.count++;
@@ -174,50 +181,84 @@
                             });
                     }
                 },
-                //篩選
-                //PlaneTK_catgoryGET: function () {
-                //    let _this = this;
-                //    //alert("篩選");
-                //    var request = {};
-                //    axios.get(`${baseAddress}/api/PlaneTK/PlaneCountry`)
-                //        .then(response => {
-                //            _this.PlaneTK_catgoryDTOes = response.data;
-                //        })
-                //        .catch(err => {
-                //            alert(err);
-                //        });
-                //},
+
+                //列表
+                tablelist: function (id) {
+                    let _this = this;
+
+
+                    _this.PlaneTK_catgoryDTOes = _this.xxx;
+
+                    if (id == 1) {
+                        _this.PlaneTK_catgoryDTOes = _this.PlaneTK_catgoryDTOes.filter(item => item.productName.match("韓國"));
+                    }
+                    if (id == 2) {
+                        _this.PlaneTK_catgoryDTOes = _this.PlaneTK_catgoryDTOes.filter(item => item.productName.match("日本"));
+                    }
+                    if (id == 3) {
+                        _this.PlaneTK_catgoryDTOes = _this.PlaneTK_catgoryDTOes.filter(item => item.productName.match("越南"));
+                    }
+                    if (id == 4) {
+                        _this.PlaneTK_catgoryDTOes = _this.PlaneTK_catgoryDTOes.filter(item => item.productName.match("泰國"));
+                    }
+
+                },
+
+                changePage: function (n) {
+                    //alert("change");
+                    let _this = this;
+                    _this.currentPage = n;
+
+                    //_this.showProduct2();
+
+
+                },
+
+
+
+
 
 
 
 
             },
             computed: {
-                planecategoryFilter: function (cn) {
+                //篩選
+                planecategoryFilter: function () {
                     let _this = this;
+
 
                     return _this.PlaneTK_catgoryDTOes.filter(item => item.productName.match(_this.search));
 
 
-                    if (cn == 1) {
-                        alert("韓國")
-                        return _this.PlaneTK_catgoryDTOes.filter(item => item.productName.includes("韓國"));
-
-                    }
-                    if (cn == 2) {
-                        alert("日本")
-                        return _this.PlaneTK_catgoryDTOes.filter(item => item.productName.match("日本"));
-
-                    } else {
 
 
+                    // 重新獲得數據
+                    if (_this.search == '') {
+                        _this.PlaneTK_catgoryGET();
                     }
 
+                },
+                showProduct: function () {
+                    let _this = this;
+
+                    //_this.PlaneTK_catgoryDTOes = _this.xxx;
 
 
+                    var start = (_this.currentPage - 1) * _this.itemPage;
+                    var end = start + _this.itemPage;
+                    return _this.planecategoryFilter.slice(start, end);
 
+                },
+                total: function () {
+                    let _this = this;
+
+                    //_this.PlaneTK_catgoryDTOes = _this.xxx;
+                    return Math.ceil(_this.PlaneTK_catgoryDTOes.length / _this.itemPage);
                 }
+
             }
+
 
 
 
