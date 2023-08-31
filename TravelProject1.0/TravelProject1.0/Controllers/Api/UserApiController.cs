@@ -195,20 +195,20 @@ namespace TravelProject1._0.Controllers.Api
 
             //判斷傳入的密碼是否更改
 
-            if (UpdateUser.Password != null)
-            {
-                string hashedPassword = HashPassword(UpdateUser.Password, user.Salt);
-                if (UpdateUser.PasswordHash == hashedPassword)
-                {
-                    return BadRequest("密碼不可重複");
-                }
-                else
-                {
-                    string salt = GenerateSalt();
-                    user.Salt = salt;
-                    user.PasswordHash = hashedPassword;
-                }
-            }
+            //if (UpdateUser.Password != null)
+            //{
+            //    string hashedPassword = HashPassword(UpdateUser.Password, user.Salt);
+            //    if (UpdateUser.PasswordHash == hashedPassword)
+            //    {
+            //        return BadRequest("密碼不可重複");
+            //    }
+            //    else
+            //    {
+            //        string salt = GenerateSalt();
+            //        user.Salt = salt;
+            //        user.PasswordHash = hashedPassword;
+            //    }
+            //}
 
             // 修改其他個資
             user.Email = UpdateUser.Email;
@@ -216,11 +216,10 @@ namespace TravelProject1._0.Controllers.Api
             user.Name = UpdateUser.Name;
             user.Phone = UpdateUser.Phone;
             user.Gender = UpdateUser.Gender;
-            user.PasswordHash = UpdateUser.PasswordHash;
-            user.Salt = UpdateUser.Salt;
 
 
-            _context.Entry(UpdateUser).State = EntityState.Modified;
+
+            _context.Entry(user).State = EntityState.Modified;
             try
             {
                 await _context.SaveChangesAsync();
@@ -324,11 +323,7 @@ namespace TravelProject1._0.Controllers.Api
 
 
 
-    public class VerificationCodeData
-    {
-        public string Code { get; set; }
-        public DateTime ExpiryTime { get; set; }
-    }
+   
 
 }
 
