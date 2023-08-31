@@ -79,6 +79,8 @@ public partial class TravelProjectAzureContext : DbContext
             entity.ToTable("Cart");
 
             entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.CartDate).HasColumnType("date");
+            entity.Property(e => e.CartPrice).HasColumnType("money");
             entity.Property(e => e.ProductId).HasColumnName("ProductID");
             entity.Property(e => e.UserId).HasColumnName("UserID");
 

@@ -20,10 +20,10 @@
         @* 分頁按鈕 *@
         <nav>
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                <button style="width:20%;border:1px solid gray;" class="nav-link active" id="nav-plan-tab" data-bs-toggle="tab" data-bs-target="#nav-plan" type="button" role="tab" aria-controls="nav-plan" aria-selected="true">方案</button>
-                <button style="width:20%;border:1px solid gray;" class="nav-link" id="nav-caption-tab" data-bs-toggle="tab" data-bs-target="#nav-caption" type="button" role="tab" aria-controls="nav-caption" aria-selected="false">商品說明</button>
-                <button style="width:20%;border:1px solid gray;" class="nav-link" id="nav-describe-tab" data-bs-toggle="tab" data-bs-target="#nav-describe" type="button" role="tab" aria-controls="nav-describe" aria-selected="false">購買須知</button>
-                <button style="width:20%;border:1px solid gray;" class="nav-link" id="nav-rating-tab" data-bs-toggle="tab" data-bs-target="#nav-rating" type="button" role="tab" aria-controls="nav-rating" aria-selected="false">評價</button>
+                <button style="width:10%;border:1px solid gray;" class="nav-link active" id="nav-plan-tab" data-bs-toggle="tab" data-bs-target="#nav-plan" type="button" role="tab" aria-controls="nav-plan" aria-selected="true">方案</button>
+                <button style="width:10%;border:1px solid gray;" class="nav-link" id="nav-caption-tab" data-bs-toggle="tab" data-bs-target="#nav-caption" type="button" role="tab" aria-controls="nav-caption" aria-selected="false">商品說明</button>
+                <button style="width:10%;border:1px solid gray;" class="nav-link" id="nav-describe-tab" data-bs-toggle="tab" data-bs-target="#nav-describe" type="button" role="tab" aria-controls="nav-describe" aria-selected="false">購買須知</button>
+                <button style="width:10%;border:1px solid gray;" class="nav-link" id="nav-rating-tab" data-bs-toggle="tab" data-bs-target="#nav-rating" type="button" role="tab" aria-controls="nav-rating" aria-selected="false">評價</button>
             </div>
         </nav>
 
@@ -45,7 +45,7 @@
                 <div class="card" v-for="(p,index) in plan" :key="index">
                     <div class="row">
                         <div class="col-md-3">
-                            <img class="img-plan" :src="p.planImg" />
+                            <img class="img-plan" @* :src="p.planImg" *@ />
                         </div>
                         <div class="col-md-7">
                             <div class="card-body">
@@ -62,14 +62,19 @@
                                     <div class="col-md-6">
                                         <h2>選擇日期</h2>
                                         <template>
-                                            <div>
-                                                <date-picker v-model="time1" valueType="format"></date-picker>
-                                            </div>
+                                            @* <div>
+                                            <date-picker v-model="time1" valueType="format"></date-picker>
+                                            </div> *@
                                         </template>
                                     </div>
                                     <div class="col-md-6">
                                         <h2>選擇項目</h2>
                                         <div>
+                                            <h4>單價：</h4>
+                                            <div class="plan-price">
+                                                <span class="price">NT{{p.planPrice}}</span>
+                                            </div>
+                                            <br />
                                             <h4>數量：</h4>
                                             <div class="quantity d-flex">
                                                 <button class="btn minus info" v-on:click="minusNum">-</button>
@@ -205,8 +210,8 @@
         var app = new Vue({
             el: '#app',
             data: {
-                plan: [],
-                product: [],
+                plan: {},
+                product: {},
                 queries: '',
                 time1: null,
                 num: 0,
@@ -250,21 +255,28 @@
                 addCart: function () {
                     let _this = this;
 
-                    fetch(`${baseAddress}/api/CartApi/AddtoCart/61`, {
-                        method: "POST",
+                    let cartData = {
+                        userId: 1,
+                        productId: _this.product[0].productId,
+                        cartName: _this.plan[0].name,
+                        cartPrice: 299,
+                        cartQuantity: 1,
+                        cartDate: ""
+                    };
+
+                    fetch(`${baseAddress}/api/CartApi/AddtoCart`, {
+                        method: 'POST',
                         headers: { "Content-Type": "application/json" },
-                        body: {
-                            "productId": _this.product.productId,
-                            "productName": _this.product.productName
+                        body: JSON.stringify(cartData)
+                    }).then(response => {
+                        if (response.ok) {
+                            alert("商品已加入購物車!");
+                        } else {
+                            throw new Error("無法將商品加入購物車!");
                         }
+                    }).catch(error => {
+                        console.log(error);
                     })
-                        .then(response => {
-                            if (response.ok) return response.json();
-                        }).then(data => {
-                            console.log(data);
-                        }).catch(error => {
-                            console.log(error);
-                        })
                 }
             }
         })
