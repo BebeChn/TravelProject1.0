@@ -6,7 +6,7 @@ using TravelProject1._0.Models.DTO;
 
 namespace TravelProject1._0.Controllers.Api
 {
-	[Route("api/[controller]/[action]")]
+	[Route("api/[controller]/[action]/{id?}")]
 	[ApiController]
 	public class BookPlanApiController : ControllerBase
 	{
@@ -18,20 +18,20 @@ namespace TravelProject1._0.Controllers.Api
 		}
 		public IEnumerable<BookPlanDTO> GetBook(int id)
 		{
-			return _context.Products.Where(b => b.Id == id).Select(b => new BookPlanDTO
+			return _context.Products.Where(b => b.ProductId == id).Select(b => new BookPlanDTO
 			{
 				ProductName = b.ProductName,
 				MainDescribe = b.MainDescribe,
 				ProductId = b.ProductId,
 				ShortDescribe = b.ShortDescribe,
 				SubDescribe = b.SubDescribe,
-				Img = b.Img,
+				Img = b.Img
 			});
 		}
 
-		public IEnumerable<BookPlanDTO> GetBookss()
+		public IEnumerable<BookPlanDTO> GetBookss(int id)
 		{
-			return _context.Plans.Where(c => c.ProductId == 21).Select(c => new BookPlanDTO
+			return _context.Plans.Where(c => c.ProductId == id).Select(c => new BookPlanDTO
 			{
 				Name = c.Name,
 				Describe = c.Describe,
