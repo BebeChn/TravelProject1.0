@@ -2,18 +2,16 @@
 {
     public class CartViewModel
     {
-        public int Id { get; set; }
-
         public int UserId { get; set; }
 
         public int ProductId { get; set; }
 
-        public string ProductName { get; set; } = null!;
+        public short? CartQuantity { get; set; }
 
-        public Product Product { get; set; }
+        public decimal? CartPrice { get; set; }
 
-        public short? Quantity { get; set; }
+        public string? CartName { get; set; }
 
-        public short? UnitPrice { get; set; }
+        public DateTime? CartDate { get; set; }
     }
 }

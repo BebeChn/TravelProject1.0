@@ -256,15 +256,15 @@
                     let _this = this;
 
                     let cartData = {
-                        userId: 1,
+                        userId:1,
                         productId: _this.product[0].productId,
                         cartName: _this.plan[0].name,
                         cartPrice: 299,
                         cartQuantity: 1,
-                        cartDate: ""
+                        CartDate: '2023-08-31'
                     };
 
-                    fetch(`${baseAddress}/api/CartApi/AddtoCart`, {
+                    fetch(`${baseAddress}/api/CartApi/AddToCart`, {
                         method: 'POST',
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify(cartData)
