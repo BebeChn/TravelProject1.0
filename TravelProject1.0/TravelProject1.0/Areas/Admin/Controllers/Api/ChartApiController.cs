@@ -22,7 +22,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 		public async Task<UsersAnalyzeDTO> GetUsers()
 		{
 			var users = _db.Users.ToList();
-
+			Order order = new Order();
 			Dictionary<string,int> payingMemberAgeGroup = new Dictionary<string,int>
 			{
 				{ "18-22歲", 0 },
@@ -65,29 +65,30 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 
 			foreach (var user in users)
 			{
+				var orders = _db.Orders.ToList();
 				switch (user.Age)
 				{
 					case int age when age >= 18 && age <= 22:
-						if (user.Orders != null)
+						if (orders.Any(order => order.UserId == user.UserId))
 						{
-							nonPayingMemberAgeGroup["18-22歲"]++;
+							payingMemberAgeGroup["18-22歲"]++;
 						}
 						else {
-							payingMemberAgeGroup["18-22歲"]++;
+							nonPayingMemberAgeGroup["18-22歲"]++;
 						}
 						break;
 					case int age when age >= 23 && age <= 27:
-						if (user.Orders != null)
-						{
-							nonPayingMemberAgeGroup["23-27歲"]++;
-						}
-						else
+						if (orders.Any(order => order.UserId == user.UserId))
 						{
 							payingMemberAgeGroup["23-27歲"]++;
 						}
+						else
+						{
+							nonPayingMemberAgeGroup["23-27歲"]++;
+						}
 						break;
 					case int age when age >= 28 && age <= 32:
-						if (user.Orders != null)
+						if (orders.Any(order => order.UserId == user.UserId))
 						{
 							payingMemberAgeGroup["28-32歲"]++;
 						}
@@ -96,7 +97,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 						}
 						break;
 					case int age when age >= 33 && age <= 37:
-						if (user.Orders != null)
+						if (orders.Any(order => order.UserId == user.UserId))
 						{
 							payingMemberAgeGroup["33-37歲"]++;
 						}
@@ -106,7 +107,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 						}
 						break;
 					case int age when age >= 38 && age <= 42:
-						if (user.Orders != null)
+						if (orders.Any(order => order.UserId == user.UserId))
 						{
 							payingMemberAgeGroup["38-42歲"]++;
 						}
@@ -116,7 +117,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 						}
 						break;
 					case int age when age >= 43 && age <= 47:
-						if (user.Orders != null)
+						if (orders.Any(order => order.UserId == user.UserId))
 						{
 							payingMemberAgeGroup["43-47歲"]++;
 						}
@@ -126,7 +127,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 						}
 						break;
 					case int age when age >= 48 && age <= 52:
-						if (user.Orders != null)
+						if (orders.Any(order => order.UserId == user.UserId))
 						{
 							payingMemberAgeGroup["48-52歲"]++;
 						}
@@ -136,7 +137,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 						}
 						break;
 					case int age when age >= 53 && age <= 57:
-						if (user.Orders != null)
+						if (orders.Any(order => order.UserId == user.UserId))
 						{
 							payingMemberAgeGroup["53-57歲"]++;
 						}
@@ -146,7 +147,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 						}
 						break;
 					case int age when age >= 58 && age <= 62:
-						if (user.Orders != null)
+						if (orders.Any(order => order.UserId == user.UserId))
 						{
 							payingMemberAgeGroup["58-62歲"]++;
 						}
@@ -156,7 +157,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 						}
 						break;
 					case int age when age >= 63 && age <= 67:
-						if (user.Orders != null)
+						if (orders.Any(order => order.UserId == user.UserId))
 						{
 							payingMemberAgeGroup["63-67歲"]++;
 						}
@@ -166,7 +167,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 						}
 						break;
 					case int age when age >= 68 && age <= 72:
-						if (user.Orders != null)
+						if (orders.Any(order => order.UserId == user.UserId))
 						{
 							payingMemberAgeGroup["68-72歲"]++;
 						}
@@ -176,7 +177,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 						}
 						break;
 					case int age when age >= 73 && age <= 77:
-						if (user.Orders != null)
+						if (orders.Any(order => order.UserId == user.UserId))
 						{
 							payingMemberAgeGroup["73-77歲"]++;
 						}
@@ -186,7 +187,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 						}
 						break;
 					case int age when age >= 78 && age <= 82:
-						if (user.Orders != null)
+						if (orders.Any(order => order.UserId == user.UserId))
 						{
 							payingMemberAgeGroup["78-82歲"]++;
 						}
@@ -196,7 +197,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 						}
 						break;
 					case int age when age >= 83 && age <= 87:
-						if (user.Orders != null)
+						if (orders.Any(order => order.UserId == user.UserId))
 						{
 							payingMemberAgeGroup["83-87歲"]++;
 						}
@@ -206,7 +207,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 						}
 						break;
 					case int age when age >= 88 && age <= 92:
-						if (user.Orders != null)
+						if (orders.Any(order => order.UserId == user.UserId))
 						{
 							payingMemberAgeGroup["88-92歲"]++;
 						}
@@ -216,7 +217,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 						}
 						break;
 					case int age when age >= 93 && age <= 97:
-						if (user.Orders != null)
+						if (orders.Any(order => order.UserId == user.UserId))
 						{
 							payingMemberAgeGroup["93-97歲"]++;
 						}
