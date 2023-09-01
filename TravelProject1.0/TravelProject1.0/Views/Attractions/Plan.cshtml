@@ -3,7 +3,7 @@
 }
 
 @section Styles{
-    <link href="~/css/attractions-plan.min.css" rel="stylesheet" />
+    <link href="~/css/attractions-plan.min.css" rel="stylesheet" asp-append-version="true" />
 }
 
 <section class="breadcrumb_area">
@@ -32,7 +32,7 @@
             <div class="tab-pane fade show active" id="nav-plan" role="tabpanel" aria-labelledby="nav-plan-tab">
                 <div class="row product-describe">
                     <div class="col-md-4">
-                        <img class="img-product" :src="x.img" />
+                        <img class="img-product" @* :src="x.img" *@ />
                     </div>
                     <div class="col-md-8 d_flex align-items-center">
                         <div class="about_content ">
@@ -42,7 +42,7 @@
                     </div>
                 </div>
                 @* 商品方案 *@
-                <div class="card" v-for="(p,index) in plan" :key="index">
+                <div class="card" v-for="(p,index) in plan" :key="p.planId">
                     <div class="row">
                         <div class="col-md-3">
                             <img class="img-plan" @* :src="p.planImg" *@ />
@@ -62,9 +62,9 @@
                                     <div class="col-md-6">
                                         <h2>選擇日期</h2>
                                         <template>
-                                            @* <div>
-                                            <date-picker v-model="time1" valueType="format"></date-picker>
-                                            </div> *@
+                                            <div>
+                                                <date-picker v-model="planDate" valueType="format"></date-picker>
+                                            </div>
                                         </template>
                                     </div>
                                     <div class="col-md-6">
@@ -84,7 +84,7 @@
                                             <br />
                                             <h4>總金額：</h4>
                                             <div class="total">
-                                                <span class="total-price">NT{{totalPrice}}</span>
+                                                <input class="total-price" v-model="calculate" disabled />
                                             </div>
                                         </div>
                                         <div class="buy">
@@ -213,7 +213,7 @@
                 plan: {},
                 product: {},
                 queries: '',
-                time1: null,
+                planDate: null,
                 num: 0,
                 totalPrice: 0
             },
@@ -254,14 +254,14 @@
                 //加入購物車
                 addCart: function () {
                     let _this = this;
-
+                    _this.queries = window.location.pathname.slice("18");
                     let cartData = {
-                        userId:1,
-                        productId: _this.product[0].productId,
+                        userId: 1,
+                        productId: _this.queries,
                         cartName: _this.plan[0].name,
-                        cartPrice: 299,
-                        cartQuantity: 1,
-                        CartDate: '2023-08-31'
+                        cartPrice: _this.totalPrice,
+                        cartQuantity: _this.num,
+                        cartDate: _this.planDate
                     };
 
                     fetch(`${baseAddress}/api/CartApi/AddToCart`, {
@@ -277,6 +277,12 @@
                     }).catch(error => {
                         console.log(error);
                     })
+                }
+            },
+            computed: {
+                calculate: function () {
+                    let _this = this;
+                    return _this.totalPrice = _this.plan[0].planPrice * _this.num;
                 }
             }
         })
