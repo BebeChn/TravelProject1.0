@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using System.Net.Mail;
 using System.Net;
 using Azure.Core;
+using NuGet.Versioning;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -69,7 +70,7 @@ namespace TravelProject1._0.Controllers.Api
             };
             return userDTO;
         }
-       
+
         [HttpPost]
         public async Task<bool> PostUser(PostUserVewModel register)
         {
@@ -214,7 +215,7 @@ namespace TravelProject1._0.Controllers.Api
         }
 
         [HttpPost]
-        public async Task<IActionResult> SendVerificationCode(int id,[FromBody] ForgotPasswordViewModel forget)
+        public async Task<IActionResult> SendVerificationCode(int id, [FromBody] ForgotPasswordViewModel forget)
         {
             try
             {
@@ -226,11 +227,11 @@ namespace TravelProject1._0.Controllers.Api
 
                 var verificationCodeData = new VerificationCode
                 {
-     
+
                     Code = verificationCode,
                     ExpiryTime = DateTime.UtcNow.AddMinutes(10) // 設定驗證碼的有效期
                 };
-                VerificationCode vc= await _context.VerificationCodes.FindAsync(id);
+                VerificationCode vc = await _context.VerificationCodes.FindAsync(id);
                 _context.VerificationCodes.Add(verificationCodeData);
 
                 _context.SaveChanges();
@@ -251,30 +252,29 @@ namespace TravelProject1._0.Controllers.Api
         {
             try
             {
-               
-                    var verificationCodeData = await _context.VerificationCodes.FindAsync(request.CodeId);
+                var verificationCodeData = await _context.VerificationCodes
+             .FirstOrDefaultAsync(v => v.Code == request.Code);
 
-                    if (verificationCodeData == null || verificationCodeData.Code != request.Code)
-                    {
-                        return BadRequest("錯誤的驗證碼或是驗證碼時效過期.");
-                    }
+                if (verificationCodeData == null)
+                {
+                    return BadRequest("錯誤的驗證碼或是驗證碼時效過期.");
+                }
 
-                    if (verificationCodeData.ExpiryTime < DateTime.UtcNow)
-                    {
-                        _verificationCodes.TryRemove("request.CodeId", out _);
-                        return BadRequest("驗證碼過期.");
-                    }
-
-                    _verificationCodes.TryRemove("request.CodeId", out _);
-                    return Ok("驗證碼驗證成功");
-                
-          
+                //if (verificationCodeData.ExpiryTime < DateTime.UtcNow)
+                //{
+                //    _verificationCodes.TryRemove("request.CodeId", out _);
+                //    return BadRequest("驗證碼過期.");
+                //}
+                _context.VerificationCodes.Remove(verificationCodeData);
+                await _context.SaveChangesAsync();
+                return Ok("驗證碼驗證成功");
             }
             catch (Exception ex)
             {
                 return StatusCode(500, $"錯誤: {ex.Message}");
             }
         }
+
 
         private string GenerateVerificationCode()
         {
@@ -299,27 +299,27 @@ namespace TravelProject1._0.Controllers.Api
                 user.Salt = salt;
 
                 await _context.SaveChangesAsync();
-               
-                  return Ok(new { Message = "密碼成功重設" });
-                
-               
+
+                return Ok(new { Message = "密碼成功重設" });
+
+
             }
             else
             {
                 return BadRequest(new { Message = "重設密碼" });
             }
         }
-       
+
 
     }
 
 
 
-   
+
 
 }
 
-    
+
 
 
 

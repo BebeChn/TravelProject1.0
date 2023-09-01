@@ -6,7 +6,7 @@
         var verificationCodeInput = document.getElementById("verificationCode");
         var verificationCodeValue = verificationCodeInput.value.trim();
 
-        if (verificationCodeValue == "" && emailInputValue == "") {
+        if (verificationCodeValue == "" || emailInputValue == "") {
             alert("驗證碼或電子郵件未填寫");
             return false;
         }
