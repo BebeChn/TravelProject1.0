@@ -4,6 +4,7 @@ namespace TravelProject1._0.Models.DTO
 {
     public class UserDTO
     {
+        public int Id { get; set; }
         [Required]
         public string Name { get; set; } = null!;
 

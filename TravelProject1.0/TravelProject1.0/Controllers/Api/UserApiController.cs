@@ -110,8 +110,10 @@ namespace TravelProject1._0.Controllers.Api
                 _context.SaveChanges();
 
                 List<Claim> claims = new List<Claim>();
+                claims.Add(new Claim(ClaimTypes.NameIdentifier, register.Id.ToString()));
                 claims.Add(new Claim(ClaimTypes.Name, $"{register.Name}"));
                 claims.Add(new Claim("Email", register.Email));
+                claims.Add(new Claim(ClaimTypes.Role, "user"));
                 ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 ClaimsPrincipal principal = new ClaimsPrincipal(identity);
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
@@ -144,9 +146,9 @@ namespace TravelProject1._0.Controllers.Api
                 // 將密碼轉換成二進位
                 string passwordWithSalt = password + salt;
                 byte[] passwordBytes = Encoding.UTF8.GetBytes(passwordWithSalt);
-                // 計算密碼哈希
+                // 計算哈希
                 byte[] hashBytes = SHA256.ComputeHash(passwordBytes);
-                // 將密碼哈希轉換為Base64编碼的字串
+                // 將哈希轉換為Base64編碼的字串
                 return Convert.ToBase64String(hashBytes);
             }
         }
