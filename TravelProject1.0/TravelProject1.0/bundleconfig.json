@@ -46,5 +46,11 @@
     "inputFiles": [
       "wwwroot/css/Attractions-Plan.css"
     ]
+  },
+  {
+    "outputFileName": "wwwroot/css/Cart.min.css",
+    "inputFiles": [
+      "wwwroot/css/Cart.css"
+    ]
   }
 ]

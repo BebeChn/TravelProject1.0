@@ -1,12 +1,9 @@
 ﻿using TravelProject1._0.Models.DTO;
 namespace TravelProject1._0.Models.ViewModel
 {
-    public class UpdateUserViewModel : PostUserVewModel
+    public class UpdateUserViewModel 
     {
         public int UserId { get; set; }
-
-        public string OldPassword { get; set; }
-
         public string Name { get; set; } 
 
         public string Email { get; set; }
@@ -18,9 +15,6 @@ namespace TravelProject1._0.Models.ViewModel
 
         public string Phone { get; set; }
 
-        public string? Address { get; set; }
-        public string PasswordHash { get; set; } 
-        public string Salt { get; set; }
-
+     
     }
 }

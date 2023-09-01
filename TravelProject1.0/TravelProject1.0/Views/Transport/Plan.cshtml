@@ -20,10 +20,10 @@
     <div class="container">
         <nav>
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                <button style="width:20%;border:1px solid gray;" class="nav-link active" id="nav-plan-tab" data-bs-toggle="tab" data-bs-target="#nav-plan" type="button" role="tab" aria-controls="nav-plan" aria-selected="true">方案</button>
-                <button style="width:20%;border:1px solid gray;" class="nav-link" id="nav-caption-tab" data-bs-toggle="tab" data-bs-target="#nav-caption" type="button" role="tab" aria-controls="nav-caption" aria-selected="false">商品說明</button>
-                <button style="width:20%;border:1px solid gray;" class="nav-link" id="nav-describe-tab" data-bs-toggle="tab" data-bs-target="#nav-describe" type="button" role="tab" aria-controls="nav-describe" aria-selected="false">購買須知</button>
-                <button style="width:20%;border:1px solid gray;" class="nav-link" id="nav-rating-tab" data-bs-toggle="tab" data-bs-target="#nav-rating" type="button" role="tab" aria-controls="nav-rating" aria-selected="false">評價</button>
+                <button style="width:10%;border:1px solid gray;" class="nav-link active" id="nav-plan-tab" data-bs-toggle="tab" data-bs-target="#nav-plan" type="button" role="tab" aria-controls="nav-plan" aria-selected="true">方案</button>
+                <button style="width:10%;border:1px solid gray;" class="nav-link" id="nav-caption-tab" data-bs-toggle="tab" data-bs-target="#nav-caption" type="button" role="tab" aria-controls="nav-caption" aria-selected="false">商品說明</button>
+                <button style="width:10%;border:1px solid gray;" class="nav-link" id="nav-describe-tab" data-bs-toggle="tab" data-bs-target="#nav-describe" type="button" role="tab" aria-controls="nav-describe" aria-selected="false">購買須知</button>
+                <button style="width:10%;border:1px solid gray;" class="nav-link" id="nav-rating-tab" data-bs-toggle="tab" data-bs-target="#nav-rating" type="button" role="tab" aria-controls="nav-rating" aria-selected="false">評價</button>
             </div>
         </nav>
 
@@ -70,6 +70,11 @@
                                     <div class="col-md-6">
                                         <h2>選擇項目</h2>
                                         <div>
+                                            <h4>單價：</h4>
+                                            <div class="plan-price">
+                                                <span class="price">NT{{p.planPrice}}</span>
+                                            </div>
+                                            <br />
                                             <h4>數量：</h4>
                                             <div class="quantity d-flex">
                                                 <button class="btn minus info" v-on:click="minusNum">-</button>

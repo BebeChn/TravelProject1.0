@@ -45,7 +45,7 @@
                     @* 商品名稱搜尋 *@
                     <div class="search">
                         <span class="title_color search-title">搜尋：</span>
-                        <input @*@@keyup="planecategoryFilter"*@ class="inp-search" v-model="search" type="text" placeholder="請輸入商品名稱" />
+                        <input @@keyup="planecategoryFilter" class="inp-search" v-model="search" type="text" placeholder="請輸入商品名稱" />
                     </div>
                     @* 排序 *@
                     <div class="sort d-flex align-items-center">
@@ -67,7 +67,7 @@
                     </div>
                 </div>
                 @* 商品 *@
-                <div class="row product-items" v-for="item in showProduct">
+                <div class="row product-items" v-for="item in PlaneTK_catgoryDTOes">
                     <div class="col-md-3">
                         @* <img :src="item.img" />*@
                     </div>
@@ -97,9 +97,7 @@
                           :next-link-class="'lnr lnr-chevron-right'"
                           :container-class="'pagination'">
                 </paginate>
-                <!--
 
-                -->
                 @*                <paginate :page-count="total"
                 :click-handler="changePage"
                 :prev-text="'Prevg'"
@@ -190,7 +188,22 @@
                             });
                     }
                 },
+                //篩選
+                planecategoryFilter: function () {
+                    let _this = this;
 
+
+                    _this.PlaneTK_catgoryDTOes = _this.PlaneTK_catgoryDTOes.filter(item => item.productName.match(_this.search));
+
+
+
+
+                    // 重新獲得數據
+                    if (_this.search == '') {
+                        _this.PlaneTK_catgoryGET();
+                    }
+
+                },
                 //列表
                 tablelist: function (id) {
                     let _this = this;
@@ -220,11 +233,19 @@
                     let _this = this;
                     _this.currentPage = n;
 
-                    //_this.showProduct2();
+                    _this.showProduct2();
 
 
                 },
+                showProduct2: function () {
+                    let _this = this;
 
+
+                    var start = (_this.currentPage - 1) * _this.itemPage;
+                    var end = start + _this.itemPage;
+                    _this.PlaneTK_catgoryDTOes = _this.PlaneTK_catgoryDTOes.slice(start, end);
+
+                },
 
 
 
@@ -234,31 +255,8 @@
 
             },
             computed: {
-                //篩選
-                planecategoryFilter: function () {
-                    let _this = this;
 
 
-                    return _this.PlaneTK_catgoryDTOes.filter(item => item.productName.match(_this.search));
-
-
-
-
-                    // 重新獲得數據
-                    if (_this.search == '') {
-                        _this.PlaneTK_catgoryGET();
-                    }
-
-                },
-                showProduct: function () {
-                    let _this = this;
-
-
-                    var start = (_this.currentPage - 1) * _this.itemPage;
-                    var end = start + _this.itemPage;
-                    return _this.planecategoryFilter.slice(start, end);
-
-                },
                 //這個是顯示下面頁簽的頁數的總數
                 total: function () {
                     let _this = this;

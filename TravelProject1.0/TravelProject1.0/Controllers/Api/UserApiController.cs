@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using System.Net.Mail;
 using System.Net;
 using Azure.Core;
+using NuGet.Versioning;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -28,14 +29,14 @@ namespace TravelProject1._0.Controllers.Api
     {
         private readonly ILogger<HomeController> _logger;
         private readonly TravelProjectAzureContext _context;
-        private readonly ConcurrentDictionary<string, VerificationCodeData> _verificationCodes = new ConcurrentDictionary<string, VerificationCodeData>();
+        private readonly ConcurrentDictionary<string, VerificationCode> _verificationCodes = new ConcurrentDictionary<string, VerificationCode>();
         private readonly IEmailSender _emailSender;
         public UserApiController(ILogger<HomeController> logger, TravelProjectAzureContext context, IEmailSender emailSender)
 
         {
             _logger = logger;
             _context = context;
-            _verificationCodes = new ConcurrentDictionary<string, VerificationCodeData>();
+            _verificationCodes = new ConcurrentDictionary<string, VerificationCode>();
             _emailSender = emailSender;
 
         }
@@ -69,25 +70,7 @@ namespace TravelProject1._0.Controllers.Api
             };
             return userDTO;
         }
-        // GET api/<UserApiController>/5
-        [HttpGet("{id}")]
-        //public async Task<IActionResult> getpeople()
-        //{
-        //    //IQueryable<User> userQry = _context.Users;
-        //    //UserDTO[] user=await userQry
-        //    //    .Select(u => new UserDTO
-        //    //    {
-        //    //        Name=u.Name,
-        //    //        Email = u.Email,
-        //    //        Gender = u.Gender,
-        //    //        Birthday=u.Birthday, 
-        //    //        Phone = u.Phone,
-        //    //    })
-        //    //    .ToArrayAsync();
 
-        //    return Ok();
-        //}
-        // POST api/<UserApiController>
         [HttpPost]
         public async Task<bool> PostUser(PostUserVewModel register)
         {
@@ -127,8 +110,10 @@ namespace TravelProject1._0.Controllers.Api
                 _context.SaveChanges();
 
                 List<Claim> claims = new List<Claim>();
+                claims.Add(new Claim(ClaimTypes.NameIdentifier, register.Id.ToString()));
                 claims.Add(new Claim(ClaimTypes.Name, $"{register.Name}"));
                 claims.Add(new Claim("Email", register.Email));
+                claims.Add(new Claim(ClaimTypes.Role, "user"));
                 ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 ClaimsPrincipal principal = new ClaimsPrincipal(identity);
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
@@ -161,9 +146,9 @@ namespace TravelProject1._0.Controllers.Api
                 // 將密碼轉換成二進位
                 string passwordWithSalt = password + salt;
                 byte[] passwordBytes = Encoding.UTF8.GetBytes(passwordWithSalt);
-                // 計算密碼哈希
+                // 計算哈希
                 byte[] hashBytes = SHA256.ComputeHash(passwordBytes);
-                // 將密碼哈希轉換為Base64编碼的字串
+                // 將哈希轉換為Base64編碼的字串
                 return Convert.ToBase64String(hashBytes);
             }
         }
@@ -195,20 +180,20 @@ namespace TravelProject1._0.Controllers.Api
 
             //判斷傳入的密碼是否更改
 
-            if (UpdateUser.Password != null)
-            {
-                string hashedPassword = HashPassword(UpdateUser.Password, user.Salt);
-                if (UpdateUser.PasswordHash == hashedPassword)
-                {
-                    return BadRequest("密碼不可重複");
-                }
-                else
-                {
-                    string salt = GenerateSalt();
-                    user.Salt = salt;
-                    user.PasswordHash = hashedPassword;
-                }
-            }
+            //if (UpdateUser.Password != null)
+            //{
+            //    string hashedPassword = HashPassword(UpdateUser.Password, user.Salt);
+            //    if (UpdateUser.PasswordHash == hashedPassword)
+            //    {
+            //        return BadRequest("密碼不可重複");
+            //    }
+            //    else
+            //    {
+            //        string salt = GenerateSalt();
+            //        user.Salt = salt;
+            //        user.PasswordHash = hashedPassword;
+            //    }
+            //}
 
             // 修改其他個資
             user.Email = UpdateUser.Email;
@@ -216,11 +201,10 @@ namespace TravelProject1._0.Controllers.Api
             user.Name = UpdateUser.Name;
             user.Phone = UpdateUser.Phone;
             user.Gender = UpdateUser.Gender;
-            user.PasswordHash = UpdateUser.PasswordHash;
-            user.Salt = UpdateUser.Salt;
 
 
-            _context.Entry(UpdateUser).State = EntityState.Modified;
+
+            _context.Entry(user).State = EntityState.Modified;
             try
             {
                 await _context.SaveChangesAsync();
@@ -233,7 +217,7 @@ namespace TravelProject1._0.Controllers.Api
         }
 
         [HttpPost]
-        public async Task<IActionResult> SendVerificationCode([FromBody] ForgotPasswordViewModel forget)
+        public async Task<IActionResult> SendVerificationCode(int id, [FromBody] ForgotPasswordViewModel forget)
         {
             try
             {
@@ -243,11 +227,16 @@ namespace TravelProject1._0.Controllers.Api
                 string verificationCode = GenerateVerificationCode();
                 string codeId = Guid.NewGuid().ToString();
 
-                var verificationCodeData = new VerificationCodeData
+                var verificationCodeData = new VerificationCode
                 {
+
                     Code = verificationCode,
                     ExpiryTime = DateTime.UtcNow.AddMinutes(10) // 設定驗證碼的有效期
                 };
+                VerificationCode vc = await _context.VerificationCodes.FindAsync(id);
+                _context.VerificationCodes.Add(verificationCodeData);
+
+                _context.SaveChanges();
 
                 _verificationCodes.TryAdd(codeId, verificationCodeData);
 
@@ -261,28 +250,33 @@ namespace TravelProject1._0.Controllers.Api
             }
         }
         [HttpPost]
-        public IActionResult VerifyCode([FromBody] VerifyCodeRequest request)
+        public async Task<IActionResult> VerifyCode([FromBody] VerificationCodeViewModel request)
         {
-
-            if (request.Code != request.CodeId)
+            try
             {
-                return BadRequest("錯誤的驗證碼或是驗證碼時效過期.");
-            }
+                var verificationCodeData = await _context.VerificationCodes
+             .FirstOrDefaultAsync(v => v.Code == request.Code);
 
-            //if (request.ExpiryTime < DateTime.UtcNow)
-            //{
-            //    _verificationCodes.TryRemove(request.CodeId, out _);
-            //    return BadRequest("驗證碼過期.");
-            //}
+                if (verificationCodeData == null)
+                {
+                    return BadRequest("錯誤的驗證碼或是驗證碼時效過期.");
+                }
 
-            if (request.Code == request.Code)
-            {
-                _verificationCodes.TryRemove(request.CodeId, out _);
+                //if (verificationCodeData.ExpiryTime < DateTime.UtcNow)
+                //{
+                //    _verificationCodes.TryRemove("request.CodeId", out _);
+                //    return BadRequest("驗證碼過期.");
+                //}
+                _context.VerificationCodes.Remove(verificationCodeData);
+                await _context.SaveChangesAsync();
                 return Ok("驗證碼驗證成功");
             }
-
-            return BadRequest("錯誤驗證碼.");
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"錯誤: {ex.Message}");
+            }
         }
+
 
         private string GenerateVerificationCode()
         {
@@ -307,78 +301,27 @@ namespace TravelProject1._0.Controllers.Api
                 user.Salt = salt;
 
                 await _context.SaveChangesAsync();
-                var isAuthenticated = await AuthenticateUser(user.Email, request.NewPassword);
-                if (isAuthenticated)
-                {
-                    return Ok(new { Message = "密碼成功重設" });
-                }
-                else
-                {
-                    return BadRequest(new { Message = "重設密碼" });
-                }
+
+                return Ok(new { Message = "密碼成功重設" });
+
+
             }
             else
             {
                 return BadRequest(new { Message = "重設密碼" });
             }
         }
-        private async Task<bool> AuthenticateUser(string email, string password)
-        {
-            string providedPassword = password; 
-            string userEmail = email; 
-
-            var user = _context.Users.FirstOrDefault(u => u.Email == userEmail);
-
-            if (user != null)
-            {
-                string storedHashedPassword = user.PasswordHash; 
-                string storedSalt = user.Salt;
-
-                string hashedPassword = HashPassword(providedPassword, storedSalt); 
-
-                if (hashedPassword == storedHashedPassword)
-                {
-                    var claims = new List<Claim>();
-                    claims.Add(new Claim(ClaimTypes.Name, user.Name));
-                    claims.Add(new Claim("Email", user.Email));
-
-                    var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                    var principal = new ClaimsPrincipal(identity);
-
-                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
-
-                   
-                    return true;
-                }
-                else
-                {
-                  
-                    return false;
-                }
-            }
-                return false;
-        }
-
-        private bool VerifyPassword(string password, string hashedPassword, string salt)
-        {
-            string hashedPasswordToCompare = HashPassword(password, salt);
-            return hashedPasswordToCompare == hashedPassword;
-        }
 
 
     }
 
 
 
-    public class VerificationCodeData
-    {
-        public string Code { get; set; }
-        public DateTime ExpiryTime { get; set; }
-    }
+
 
 }
 
-    
+
 
 
 

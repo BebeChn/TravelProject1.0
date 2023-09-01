@@ -24,7 +24,7 @@ namespace TravelProject1._0.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly TravelProjectAzureContext _context;
-        //private readonly EmailSender _sender;
+       
         public UserController(ILogger<HomeController> logger, TravelProjectAzureContext context/*, EmailSender sender*/)
 
         {
@@ -59,9 +59,10 @@ namespace TravelProject1._0.Controllers
             {
                 
                 var claims = new List<Claim>();//身份驗證訊息
-                 claims.Add(new Claim(ClaimTypes.Name,userselect.Name));
-                  claims.Add(new Claim(ClaimTypes.Email, userselect.Email));
-
+                claims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
+                claims.Add(new Claim(ClaimTypes.Name,userselect.Name));
+                claims.Add(new Claim(ClaimTypes.Email, userselect.Email));
+                claims.Add(new Claim(ClaimTypes.Role, "user"));
                 ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 ClaimsPrincipal principal = new ClaimsPrincipal(identity);
                 HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, new AuthenticationProperties
@@ -129,7 +130,10 @@ namespace TravelProject1._0.Controllers
         {
             return View();
         }
-
+        public IActionResult UserOrderDetails()
+        {
+            return View();
+        }
         public IActionResult UpdateUser(int id)
         {
             return View();
@@ -140,58 +144,17 @@ namespace TravelProject1._0.Controllers
             UserDTO user = new UserDTO();
             return (Email=="user.Email" && password == "user.password");
         }
-
-
-
-        //[HttpPost]
-        //public async Task<IActionResult> SendVerificationCode(string email)
-        //{
-        //    var user = _context.Users.FirstOrDefault(u => u.Email == email);
-        //    if (user != null)
-        //    {
-
-        //        string verificationCode = GenerateVerificationCode();
-        //        user.VerificationCode = verificationCode;
-        //        _context.SaveChanges();
-
-
-        //        await _sender.SendEmailAsync(email, "驗證碼", $"你的驗證碼: {verificationCode}");
-
-        //        return RedirectToAction("VerifyCode");
-        //    }
-        //    else
-        //    {
-        //        ModelState.AddModelError("", "不存在的Email");
-        //        return View();
-        //    }
-        //}
-
-
-
         [HttpGet]
         public IActionResult VerifyCode()
         {
             return View();
         }
+        [HttpGet]
+        public IActionResult UserCenter()
+        {
+            return View();
+        }
 
-        //[HttpPost]
-        //public IActionResult VerifyCode(string code)
-        //{
-
-        //    var user = _context.Users.FirstOrDefault(u => u.VerificationCode == code);
-        //    if (user != null)
-        //    {
-        //        // Code is valid, you can proceed with further actions
-        //        // For example, mark the email as verified or allow password reset
-        //        return RedirectToAction("Index", "Home");
-        //    }
-        //    else
-        //    {
-        //        ModelState.AddModelError("", "不合法的驗證碼");
-
-        //        return View();
-        //    }
-        //}
     }
 
 

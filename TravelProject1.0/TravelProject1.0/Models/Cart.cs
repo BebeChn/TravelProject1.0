@@ -11,7 +11,13 @@ public partial class Cart
 
     public int ProductId { get; set; }
 
-    public short? Quantity { get; set; }
+    public short? CartQuantity { get; set; }
+
+    public decimal? CartPrice { get; set; }
+
+    public string? CartName { get; set; }
+
+    public DateTime? CartDate { get; set; }
 
     public virtual Product Product { get; set; } = null!;
 

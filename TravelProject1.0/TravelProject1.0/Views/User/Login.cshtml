@@ -1,6 +1,6 @@
 ﻿@model TravelProject1._0.Models.DTO.UserDTO
 @section Styles
-{
+    {
     <link href="~/css/login.min.css" rel="stylesheet" />
 }
 
@@ -10,18 +10,18 @@
 
 <h1>會員登入</h1>
 
-<div id="app" class="app-container">
-   
-        <form action="@Url.Action("Login")" method="post" class="login">
-     <br>
-     <br>
+<div id="app" class="app-container element">
+
+    <form action="@Url.Action("Login")" method="post" class="login">
+        <br>
+        <br>
         <div class="inputbox">
-            
+
             <input type="text" asp-for="@Model.Email" required />
             <span asp-validation-for="@Model.Email">帳號</span>
         </div>
         <br>
-        <div class="inputbox">        
+        <div class="inputbox">
             <input type="password" type="Password" asp-for="@Model.Password" required />
             <span asp-validation-for="@Model.Password">密碼</span>
         </div>
@@ -29,24 +29,25 @@
             <label asp-for="@Model.RememberMe" class="labelstyle">
                 <input class="form-check-input" asp-for="@Model.RememberMe" />
                 @Html.DisplayNameFor(m=>m.RememberMe)
-            </label >
+            </label>
             <a id="forgot-password" asp-action="ForgetPassword">忘記密碼</a>
         </div>
-        <input class="dup" type="submit" value="登入" /> 
-        
-          </form>
-    <a class="dup btn"  asp-controller="User" asp-action="Register">註冊</a>
-      </div>
+        <input class="dup" type="submit" value="登入" />
+        <div style="font-size: 24px;">還不是會員嗎?立即註冊!!!</div>
+        <a class="dup btn" asp-controller="User" asp-action="Register">註冊</a>
+    </form>
+
+</div>
      
 
 @section Scripts {
 
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
     <script>
-       
+
         // let app = new Vue({
         //     data: {
-               
+
         //     },
         //     el: "#app",
         //     computed: {

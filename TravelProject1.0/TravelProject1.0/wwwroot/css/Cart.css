@@ -1,27 +1,60 @@
-﻿table thead tr th {
+﻿thead tr th {
+    font-size: 32px;
     text-align: center;
-}
-
-table tbody tr td {
-    text-align: center;
-}
-
-.inp-checkbox {
-    width: 50%;
-    height: 50%;
-}
-
-.btn-delete {
-    background-color: red;
     color: white;
 }
 
+    thead tr th input {
+        width: 30px;
+        height: 30px;
+    }
+
+tbody tr td {
+    font-size: 28px;
+    text-align: center;
+}
+
+    tbody tr td input {
+        width: 30px;
+        height: 30px;
+    }
+
+.btn-delete {
+    color: white;
+    transition: all 0.3s ease;
+}
+
+    .btn-delete:hover {
+        font-size: 20px;
+        color: white;
+    }
+
 .total {
-    text-align: end;
+    justify-content: end;
+    text-align: right;
+    margin: 0px auto 0px auto;
+    margin-top:20px;
+}
+
+.calculate{
+    margin-bottom:20px;
+}
+
+.total-title {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.total-price{
+    font-size:24px;
 }
 
 .btn-buy {
-    text-align: end;
-    background-color: blue;
     color: white;
+    transition: all 0.3s ease;
 }
+
+    .btn-buy:hover {
+        font-size: 22px;
+        color: white;
+    }

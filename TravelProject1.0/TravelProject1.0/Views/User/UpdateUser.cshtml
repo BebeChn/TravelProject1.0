@@ -21,10 +21,6 @@
             <td>{{user.phone}}</td>
     </tr>
     <tr>
-        <th>地址</th>
-            <td>{{user.address}}</td>
-    </tr>
-    <tr>
         <th>性別</th>
             <td>{{user.gender}}</td>
     </tr>
@@ -52,23 +48,23 @@
                     <table>
                     <tr>
                         <th>使用者名稱</th>
-                        <td><input v-model="user.name" /></td>
+                            <td><input v-model="user.name" /></td>
                     </tr>
                     <tr>
                         <th>郵件</th>
-                        <td><input v-model="user.email" /></td>
+                            <td><input v-model="user.email" /></td>
                     </tr>
                     <tr>
                         <th>電話</th>
-                        <td><input v-model="user.phone" /></td>
+                            <td><input v-model="user.phone" /></td>
                     </tr>
                     <tr>
                         <th>性別</th>
-                        <td><input v-model="user.gender" /></td>
+                            <td><input v-model="user.gender" /></td>
                     </tr>
                     <tr>
                         <th>生日</th>
-                        <td><input v-model="user.birthday" /></td>
+                            <td><input v-model="user.birthday" /></td>
                     </tr>
                     </table>
                 </div>
@@ -114,9 +110,9 @@
                 UpdateUser: function () {
                     let _this = this;
                     let request = {
+                        UserId:"1",
                         Name: _this.userUpdate.name,
                         Email: _this.userUpdate.email,
-                        Address: _this.userUpdate.address,
                         Phone: _this.userUpdate.phone,
                         Gender: _this.userUpdate.gender,  
                         Birthday: _this.userUpdate.birthday,
