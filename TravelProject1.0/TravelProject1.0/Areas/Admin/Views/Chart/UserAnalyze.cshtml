@@ -1,0 +1,65 @@
+﻿<div style="width:100%">
+	<div id="member" style="min-width:100%;height:400px"></div>
+</div>
+
+
+
+@section Scripts
+	{
+	<script src="https://code.highcharts.com/highcharts.js"></script>
+	<script src="https://code.highcharts.com/modules/exporting.js"></script>
+	<script src="https://code.highcharts.com/modules/export-data.js"></script>
+	<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.5.0/axios.min.js" integrity="sha512-aoTNnqZcT8B4AmeCFmiSnDlc4Nj/KPaZyB5G7JnOnUEkdNpCZs1LCankiYi01sLTyWy+m2P+W4XM+BuQ3Q4/Dg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script>
+
+		const container = document.querySelector('#member');
+		let data = {};
+		axios.get("https://localhost:7025/api/ChartApi/GetUsers")
+			.then(response => {
+				data = response.data;
+				const xAxisCate = Object.keys(data.payingMemberAgeGroup);
+				const xSeriesData = Object.values(data.payingMemberAgeGroup);
+				const oSeriesData = Object.values(data.nonPayingMemberAgeGroup);
+
+				var myChart = Highcharts.chart(container, {
+					chart: {
+						type: "column",
+					},
+					title: {
+						text: "會員年齡分佈",
+					},
+					subtitle: {
+						text: "會員總數" + data.totalMember,
+					},
+					credits: {
+						enabled: false
+					},
+					legend: {
+						// 圖例設定
+					},
+					tooltip: {
+						// 提示框設定
+					},
+					xAxis: {
+						categories: xAxisCate,
+					},
+					yAxis: {
+						title: {
+							text: "佔比"
+						}
+					},
+					series: [{
+						name: "有消費會員",
+						data: xSeriesData
+					},
+					{
+						name: "未消費會員",
+						data: oSeriesData
+					}]
+				});
+			}).catch(err => {
+				alert('請聯絡系統管理員');
+			});
+	</script>
+}

@@ -1,0 +1,45 @@
+﻿@* @{
+    Layout = "~/Views/User/UserCenter.cshtml";
+} *@
+<title>會員歷史訂單</title>
+<link rel="stylesheet" href="styles.css">
+
+<div id="app">
+    <header>
+        <h1>會員歷史訂單</h1>
+    </header>
+    <div class="container">
+        <table class="order-table">
+            <thead>
+                <tr>
+                    <th>訂單編號</th>
+                    <th>訂購日期</th>
+                    <th>金額</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="order in orders" :key="order.orderId">
+                    <td>{{ order.orderId }}</td>
+                    <td>{{ order.orderDate }}</td>
+                    <td>{{ order.amount }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+@section Scripts{
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+    <script src="app.js"></script>
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                orders: [
+                    { orderId: 'ORD001', orderDate: '2023-09-15', amount: '$200.00' },
+                    { orderId: 'ORD002', orderDate: '2023-09-18', amount: '$350.00' },
+                
+                ]
+            }
+        });
+    </script>
+    }

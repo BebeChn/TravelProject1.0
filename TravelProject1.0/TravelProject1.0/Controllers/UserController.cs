@@ -59,9 +59,10 @@ namespace TravelProject1._0.Controllers
             {
                 
                 var claims = new List<Claim>();//身份驗證訊息
-                 claims.Add(new Claim(ClaimTypes.Name,userselect.Name));
-                  claims.Add(new Claim(ClaimTypes.Email, userselect.Email));
-
+                claims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
+                claims.Add(new Claim(ClaimTypes.Name,userselect.Name));
+                claims.Add(new Claim(ClaimTypes.Email, userselect.Email));
+                claims.Add(new Claim(ClaimTypes.Role, "user"));
                 ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 ClaimsPrincipal principal = new ClaimsPrincipal(identity);
                 HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, new AuthenticationProperties
@@ -129,7 +130,10 @@ namespace TravelProject1._0.Controllers
         {
             return View();
         }
-
+        public IActionResult UserOrderDetails()
+        {
+            return View();
+        }
         public IActionResult UpdateUser(int id)
         {
             return View();
@@ -140,19 +144,17 @@ namespace TravelProject1._0.Controllers
             UserDTO user = new UserDTO();
             return (Email=="user.Email" && password == "user.password");
         }
-
-
-
-        
-
-
         [HttpGet]
         public IActionResult VerifyCode()
         {
             return View();
         }
+        [HttpGet]
+        public IActionResult UserCenter()
+        {
+            return View();
+        }
 
-        
     }
 
 
