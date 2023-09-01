@@ -20,9 +20,9 @@
                 <th></th>
             </tr>
         </thead>
-        <tbody class="cart" v-for="c in cartItem">
+        <tbody class="cart" v-for="(c,index) in cartItem" :key="c.cartId">
             <tr class="cart-item">
-                <td align="center" valign="middle"><input class="inp-cart" type="checkbox" onclick="totalPrice()" /></td>
+                <td align="center" valign="middle"><input class="inp-cart" type="checkbox" /></td>
                 <td align="center" valign="middle"><img style="width:100px;height:100px;" src="~/lib/image/mountain.jpeg" /></td>
                 <td align="center" valign="middle">{{c.cartName}}</td>
                 <td align="center" valign="middle" class="cart-quantity">{{c.cartQuantity}}</td>
@@ -35,6 +35,7 @@
     <div class="total">
         <div class="calculate">
             <span class="total-title">總金額：</span>
+            <input class="total-price" v-model="totalPrice" disabled />
             <span class="total-price">NT0</span>
         </div>
         <div>
@@ -50,7 +51,8 @@
         var app = new Vue({
             el: '#app',
             data: {
-                cartItem: []
+                cartItem: [],
+                total: 0
             },
             mounted: function () {
                 let _this = this;
@@ -63,6 +65,12 @@
                     }).catch(error => {
                         console.log(error);
                     })
+            },
+            computed: {
+                totalPrice: function () {
+                    let _this = this;
+                    return _this.total = _this.cartItem[0].cartQuantity * _this.cartItem[0].cartPrice;
+                }
             }
         })
     </script>
