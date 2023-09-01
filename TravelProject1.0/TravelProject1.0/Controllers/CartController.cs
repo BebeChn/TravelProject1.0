@@ -21,17 +21,9 @@ namespace TravelProject1._0.Controllers
             List<CartViewModel> CartItems = Session.
                 GetObjectFromJson<List<CartViewModel>>(HttpContext.Session, "cart");
 
-            //計算商品總額
-            if (CartItems != null)
-            {
-                ViewBag.Total = CartItems.Sum(m => m.CartPrice);
-            }
-            else
-            {
-                ViewBag.Total = 0;
-            }
-
             return View();
         }
+       
+       
     }
 }

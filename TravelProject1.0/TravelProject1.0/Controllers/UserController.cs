@@ -140,19 +140,12 @@ namespace TravelProject1._0.Controllers
             UserDTO user = new UserDTO();
             return (Email=="user.Email" && password == "user.password");
         }
-
-
-
-        
-
-
         [HttpGet]
         public IActionResult VerifyCode()
         {
             return View();
         }
-
-        
+   
     }
 
 

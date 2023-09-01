@@ -86,5 +86,20 @@ namespace TravelProject1._0.Controllers.Api
 
             return Ok(new { Message = "商品已從購物車移除" });
         }
+        public async Task<CartSummaryViewModel> GetCartSummary(int userId)
+        {
+            var cartItems = await _context.Carts
+                .Where(c => c.UserId == userId)
+                .ToListAsync();
+
+            int totalQuantity = cartItems.Sum(item => item.CartQuantity.GetValueOrDefault());
+            decimal totalPrice = cartItems.Sum(item => (item.CartPrice * item.CartQuantity).GetValueOrDefault());
+
+            return new CartSummaryViewModel
+            {
+                TotalQuantity = totalQuantity,
+                TotalPrice = totalPrice
+            };
+        }
     }
 }
