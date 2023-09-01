@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using System.Net.Mail;
 using System.Net;
 using Azure.Core;
+using NuGet.Versioning;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -28,14 +29,14 @@ namespace TravelProject1._0.Controllers.Api
     {
         private readonly ILogger<HomeController> _logger;
         private readonly TravelProjectAzureContext _context;
-        private readonly ConcurrentDictionary<string, VerificationCodeData> _verificationCodes = new ConcurrentDictionary<string, VerificationCodeData>();
+        private readonly ConcurrentDictionary<string, VerificationCode> _verificationCodes = new ConcurrentDictionary<string, VerificationCode>();
         private readonly IEmailSender _emailSender;
         public UserApiController(ILogger<HomeController> logger, TravelProjectAzureContext context, IEmailSender emailSender)
 
         {
             _logger = logger;
             _context = context;
-            _verificationCodes = new ConcurrentDictionary<string, VerificationCodeData>();
+            _verificationCodes = new ConcurrentDictionary<string, VerificationCode>();
             _emailSender = emailSender;
 
         }
@@ -69,25 +70,7 @@ namespace TravelProject1._0.Controllers.Api
             };
             return userDTO;
         }
-        // GET api/<UserApiController>/5
-        [HttpGet("{id}")]
-        //public async Task<IActionResult> getpeople()
-        //{
-        //    //IQueryable<User> userQry = _context.Users;
-        //    //UserDTO[] user=await userQry
-        //    //    .Select(u => new UserDTO
-        //    //    {
-        //    //        Name=u.Name,
-        //    //        Email = u.Email,
-        //    //        Gender = u.Gender,
-        //    //        Birthday=u.Birthday, 
-        //    //        Phone = u.Phone,
-        //    //    })
-        //    //    .ToArrayAsync();
 
-        //    return Ok();
-        //}
-        // POST api/<UserApiController>
         [HttpPost]
         public async Task<bool> PostUser(PostUserVewModel register)
         {
@@ -232,7 +215,7 @@ namespace TravelProject1._0.Controllers.Api
         }
 
         [HttpPost]
-        public async Task<IActionResult> SendVerificationCode([FromBody] ForgotPasswordViewModel forget)
+        public async Task<IActionResult> SendVerificationCode(int id, [FromBody] ForgotPasswordViewModel forget)
         {
             try
             {
@@ -242,11 +225,16 @@ namespace TravelProject1._0.Controllers.Api
                 string verificationCode = GenerateVerificationCode();
                 string codeId = Guid.NewGuid().ToString();
 
-                var verificationCodeData = new VerificationCodeData
+                var verificationCodeData = new VerificationCode
                 {
+
                     Code = verificationCode,
                     ExpiryTime = DateTime.UtcNow.AddMinutes(10) // 設定驗證碼的有效期
                 };
+                VerificationCode vc = await _context.VerificationCodes.FindAsync(id);
+                _context.VerificationCodes.Add(verificationCodeData);
+
+                _context.SaveChanges();
 
                 _verificationCodes.TryAdd(codeId, verificationCodeData);
 
@@ -260,29 +248,33 @@ namespace TravelProject1._0.Controllers.Api
             }
         }
         [HttpPost]
-        public IActionResult VerifyCode([FromBody] VerificationCodeViewModel request)
+        public async Task<IActionResult> VerifyCode([FromBody] VerificationCodeViewModel request)
         {
-            var verificationCodeData = new VerificationCodeData();
-
-            if (verificationCodeData.Code != request.Code)
+            try
             {
-                return BadRequest("錯誤的驗證碼或是驗證碼時效過期.");
-            }
+                var verificationCodeData = await _context.VerificationCodes
+             .FirstOrDefaultAsync(v => v.Code == request.Code);
 
-            //if (request.ExpiryTime < DateTime.UtcNow)
-            //{
-            //    _verificationCodes.TryRemove(request.CodeId, out _);
-            //    return BadRequest("驗證碼過期.");
-            //}
+                if (verificationCodeData == null)
+                {
+                    return BadRequest("錯誤的驗證碼或是驗證碼時效過期.");
+                }
 
-            if (verificationCodeData.Code == request.Code)
-            {
-                _verificationCodes.TryRemove(request.CodeId, out _);
+                //if (verificationCodeData.ExpiryTime < DateTime.UtcNow)
+                //{
+                //    _verificationCodes.TryRemove("request.CodeId", out _);
+                //    return BadRequest("驗證碼過期.");
+                //}
+                _context.VerificationCodes.Remove(verificationCodeData);
+                await _context.SaveChangesAsync();
                 return Ok("驗證碼驗證成功");
             }
-
-            return BadRequest("錯誤驗證碼.");
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"錯誤: {ex.Message}");
+            }
         }
+
 
         private string GenerateVerificationCode()
         {
@@ -307,27 +299,27 @@ namespace TravelProject1._0.Controllers.Api
                 user.Salt = salt;
 
                 await _context.SaveChangesAsync();
-               
-                  return Ok(new { Message = "密碼成功重設" });
-                
-               
+
+                return Ok(new { Message = "密碼成功重設" });
+
+
             }
             else
             {
                 return BadRequest(new { Message = "重設密碼" });
             }
         }
-       
+
 
     }
 
 
 
-   
+
 
 }
 
-    
+
 
 
 

@@ -39,7 +39,7 @@ public partial class TravelProjectAzureContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
-    public virtual DbSet<VerificationCodeData> VerificationCodeData { get; set; }
+    public virtual DbSet<VerificationCode> VerificationCodes { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -49,7 +49,6 @@ public partial class TravelProjectAzureContext : DbContext
             optionsBuilder.UseSqlServer(Config.GetConnectionString("TravelProject"));
         }
     }
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.UseCollation("Chinese_Taiwan_Stroke_CI_AS");
@@ -259,9 +258,11 @@ public partial class TravelProjectAzureContext : DbContext
             entity.Property(e => e.Phone).HasMaxLength(20);
         });
 
-        modelBuilder.Entity<VerificationCodeData>(entity =>
+        modelBuilder.Entity<VerificationCode>(entity =>
         {
-            entity.HasNoKey();
+            entity.HasKey(e => e.VerificationId);
+
+            entity.ToTable("VerificationCode");
 
             entity.Property(e => e.ExpiryTime).HasColumnType("datetime");
         });
