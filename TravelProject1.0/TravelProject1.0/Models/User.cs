@@ -31,6 +31,8 @@ public partial class User
 
     public string? ResetToken { get; set; }
 
+    public int? RoleId { get; set; }
+
     public virtual ICollection<Cart> Carts { get; set; } = new List<Cart>();
 
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
@@ -38,4 +40,6 @@ public partial class User
     public virtual ICollection<QuestionReport> QuestionReports { get; set; } = new List<QuestionReport>();
 
     public virtual ICollection<Rating> Ratings { get; set; } = new List<Rating>();
+
+    public virtual Role? Role { get; set; }
 }

@@ -20,4 +20,8 @@ public partial class Admin
     public DateTime? CreateDate { get; set; }
 
     public DateTime? LoginDate { get; set; }
+
+    public int? RoleId { get; set; }
+
+    public virtual Role? RoleNavigation { get; set; }
 }

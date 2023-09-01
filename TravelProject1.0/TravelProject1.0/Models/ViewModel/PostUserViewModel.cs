@@ -4,7 +4,7 @@ namespace TravelProject1._0.Models.ViewModel
 {
     public class PostUserVewModel
     {
-
+        public int Id { get; set; }
         public string Name { get; set; } = null!;
 
         public string Email { get; set; }
