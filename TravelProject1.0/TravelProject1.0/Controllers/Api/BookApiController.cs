@@ -16,6 +16,7 @@ namespace TravelProject1._0.Controllers.Api
             _context = context;
         }
 
+        //取得住宿資料
         public IEnumerable<BookDTO> GetBooks()
         {
             var test = _context.Products.Where(b => b.Id == 2).Select(r => new
@@ -35,5 +36,36 @@ namespace TravelProject1._0.Controllers.Api
             });
 
         }
-    }
+
+        //商品價格排序低到高
+        [HttpGet]
+
+        public async Task<IEnumerable<BookDTO>> BookOrderByPrice() 
+        {
+            return _context.Products.Where(b => b.Id == 2).OrderBy(b => b.Price).Select(b => new BookDTO
+            {
+                ProductId=b.ProductId,
+                ProductName=b.ProductName,
+                Price = b.Price,
+                MainDescribe = b.MainDescribe,
+                Img = b.Img
+            });
+        }
+
+        //商品價格排序高到低
+        [HttpGet]
+
+        public async Task<IEnumerable<BookDTO>> BookOrderByDescendingPrice() 
+        {
+            return _context.Products.Where(b => b.Id == 2).OrderByDescending(b => b.Price).Select(b => new BookDTO
+            {
+                ProductId= b.ProductId,
+                ProductName=b.ProductName,
+                Price = b.Price,
+                MainDescribe = b.MainDescribe,
+                Img = b.Img
+            });
+        }
+
+	}
 }
