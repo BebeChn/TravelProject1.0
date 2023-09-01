@@ -97,7 +97,16 @@
                           :next-link-class="'lnr lnr-chevron-right'"
                           :container-class="'pagination'">
                 </paginate>
+                <!--
 
+                -->
+                @*                <paginate :page-count="total"
+                :click-handler="changePage"
+                :prev-text="'Prevg'"
+                :next-text="'Next'"
+                :container-class="'pagination'"
+                >
+                </paginate>*@
             </ul>
         </nav>
     </div>
@@ -204,6 +213,8 @@
 
                 },
 
+                //將當前頁數傳參數給currentPage
+                //分頁     改變當前頁數傳回給showProduct
                 changePage: function (n) {
                     //alert("change");
                     let _this = this;
@@ -242,14 +253,14 @@
                 showProduct: function () {
                     let _this = this;
 
-                    //_this.PlaneTK_catgoryDTOes = _this.xxx;
 
-
+                    //下一次  再切就是5~10頁
                     var start = (_this.currentPage - 1) * _this.itemPage;
                     var end = start + _this.itemPage;
                     return _this.planecategoryFilter.slice(start, end);
 
                 },
+                //這個是顯示下面頁簽的頁數的總數
                 total: function () {
                     let _this = this;
 
