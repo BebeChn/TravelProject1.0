@@ -129,7 +129,10 @@ namespace TravelProject1._0.Controllers
         {
             return View();
         }
-
+        public IActionResult UserOrderDetails()
+        {
+            return View();
+        }
         public IActionResult UpdateUser(int id)
         {
             return View();
@@ -145,7 +148,12 @@ namespace TravelProject1._0.Controllers
         {
             return View();
         }
-   
+        [HttpGet]
+        public IActionResult UserCenter()
+        {
+            return View();
+        }
+
     }
 
 
