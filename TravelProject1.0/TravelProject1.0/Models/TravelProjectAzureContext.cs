@@ -131,22 +131,19 @@ public partial class TravelProjectAzureContext : DbContext
 
             entity.ToTable("Order Detail");
 
-            entity.Property(e => e.Id)
-                .ValueGeneratedOnAdd()
-                .HasColumnName("ID");
+            entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.OrderId).HasColumnName("OrderID");
             entity.Property(e => e.PlanId).HasColumnName("PlanID");
             entity.Property(e => e.UnitPrice).HasColumnType("money");
 
-            entity.HasOne(d => d.IdNavigation).WithOne(p => p.OrderDetail)
-                .HasForeignKey<OrderDetail>(d => d.Id)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Order Detail__ID__74AE54BC");
+            entity.HasOne(d => d.Order).WithMany(p => p.OrderDetails)
+                .HasForeignKey(d => d.OrderId)
+                .HasConstraintName("FK_Order Detail_Orders");
 
             entity.HasOne(d => d.Plan).WithMany(p => p.OrderDetails)
                 .HasForeignKey(d => d.PlanId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Order Det__PlanI__73BA3083");
+                .HasConstraintName("FK_Order Detail_Plan1");
         });
 
         modelBuilder.Entity<Plan>(entity =>
@@ -159,6 +156,11 @@ public partial class TravelProjectAzureContext : DbContext
             entity.Property(e => e.Name).HasMaxLength(50);
             entity.Property(e => e.PlanPrice).HasColumnType("money");
             entity.Property(e => e.ProductId).HasColumnName("ProductID");
+
+            entity.HasOne(d => d.Product).WithMany(p => p.Plans)
+                .HasForeignKey(d => d.ProductId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Plan_Products");
         });
 
         modelBuilder.Entity<PlanCalendar>(entity =>
@@ -184,6 +186,8 @@ public partial class TravelProjectAzureContext : DbContext
 
             entity.Property(e => e.ProductId).HasColumnName("ProductID");
             entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.Latitude).HasMaxLength(50);
+            entity.Property(e => e.Longitude).HasMaxLength(50);
             entity.Property(e => e.Price).HasColumnType("money");
             entity.Property(e => e.ProductName).HasMaxLength(50);
 

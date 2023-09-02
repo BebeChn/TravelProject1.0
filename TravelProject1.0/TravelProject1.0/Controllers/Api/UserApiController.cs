@@ -18,6 +18,11 @@ using System.Net.Mail;
 using System.Net;
 using Azure.Core;
 using NuGet.Versioning;
+using NuGet.Packaging.Rules;
+using TravelProject1._0.Models.ProductDTO;
+using NuGet.Protocol;
+using AspNetCoreHero.ToastNotification.Helpers;
+using Microsoft.AspNetCore.SignalR;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -310,6 +315,34 @@ namespace TravelProject1._0.Controllers.Api
             {
                 return BadRequest(new { Message = "重設密碼" });
             }
+        }
+        [HttpGet]
+        public IEnumerable<OrderDetailsDTO> OrderDetails()
+        {
+            Claim user = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
+            string? idu = user.Value;
+            int id = Convert.ToInt32(idu);
+
+            var users = _context.Orders.Include(o => o.OrderDetail).Where(o => o.UserId == 69)
+                 .Select(o => new OrderDetailsDTO
+                 {
+                       PlanId = o.OrderDetail.PlanId,
+                       OrderId = o.OrderDetail.OrderId,
+                       Quantity = o.OrderDetail.Quantity,
+                       UnitPrice = o.OrderDetail.UnitPrice,
+                 }).ToList();
+            return users;
+
+            //return _context.Orders.Include(o => o.OrderDetail).Where(o => o.UserId == 69)
+            //    .Select(o => new OrderDetailsDTO
+            //{
+            //    UserId=o.UserId,
+            //    PlanId = o.OrderDetail.PlanId,
+            //    OrderId = o.OrderDetail.OrderId,
+            //    Quantity=o.OrderDetail.Quantity,
+            //    UnitPrice=o.OrderDetail.UnitPrice,
+
+            //});
         }
 
 

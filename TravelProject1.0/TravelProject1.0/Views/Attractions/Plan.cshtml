@@ -4,6 +4,7 @@
 
 @section Styles{
     <link href="~/css/attractions-plan.min.css" rel="stylesheet" asp-append-version="true" />
+    <link rel="stylesheet" href="https://unpkg.com/vue2-datepicker/index.css">
 }
 
 <section class="breadcrumb_area">
@@ -63,7 +64,7 @@
                                         <h2>選擇日期</h2>
                                         <template>
                                             <div>
-                                                <date-picker v-model="planDate" valueType="format"></date-picker>
+                                                <date-picker v-model="p.selected.date" valueType="format"></date-picker>
                                             </div>
                                         </template>
                                     </div>
@@ -77,18 +78,18 @@
                                             <br />
                                             <h4>數量：</h4>
                                             <div class="quantity d-flex">
-                                                <button class="btn minus info" v-on:click="minusNum">-</button>
-                                                <input class="quantity-num" v-bind:value="num" disabled>
-                                                <button class="btn plus info" v-on:click="plusNum">+</button>
+                                                <button class="btn minus info" v-on:click="minusNum(p.selected)">-</button>
+                                                <input class="quantity-num" v-model="p.selected.num" readonly>
+                                                <button class="btn plus info" v-on:click="plusNum((p.selected))">+</button>
                                             </div>
                                             <br />
                                             <h4>總金額：</h4>
                                             <div class="total">
-                                                <input class="total-price" v-model="calculate" disabled />
+                                                <input class="total-price" v-bind:value="calculate(p)" disabled />
                                             </div>
                                         </div>
                                         <div class="buy">
-                                            <a class="btn theme_btn button_hover info" v-on:click="addCart">加入購物車</a>
+                                            <a class="btn theme_btn button_hover info" v-on:click="addCart(p)">加入購物車</a>
                                             <a class="btn theme_btn button_hover info">立即訂購</a>
                                         </div>
                                     </div>
@@ -203,19 +204,15 @@
 
 @section Scripts{
     <script src="https://unpkg.com/vue2-datepicker/index.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
     <script>
         let baseAddress = "https://localhost:7025";
         Vue.component('datePicker', DatePicker);
         var app = new Vue({
             el: '#app',
             data: {
-                plan: {},
-                product: {},
-                queries: '',
-                planDate: null,
-                num: 0,
-                totalPrice: 0
+                plan: [],
+                product: [],
+                queries: ''
             },
             mounted: function () {
                 let _this = this;
@@ -226,7 +223,7 @@
                     .then(response => {
                         if (response.ok) return response.json();
                     }).then(data => {
-                        _this.plan = data;
+                        _this.plan = data.map(x => ({ ...x, selected: { date: "", num: 0 } }));
                     }).catch(error => {
                         alert(error);
                     });
@@ -241,27 +238,32 @@
             },
             methods: {
                 //數量選擇
-                plusNum: function () {
-                    let _this = this;
-                    return _this.num++;
+                plusNum: function (model) {
+                    model.num++;
                 },
-                minusNum: function () {
-                    let _this = this;
-                    if (_this.num == 0) { return _this.num = 0; }
-                    return _this.num--;
+                minusNum: function (model) {
+                    if (model.num == 0) {
+                        model.num = 0;
+                    } else {
+                        model.num--;
+                    }
+                },
+                //計算總金額
+                calculate: function (p) {
+                    return p.planPrice * p.selected.num;
                 },
 
                 //加入購物車
-                addCart: function () {
+                addCart: function (model) {
                     let _this = this;
                     _this.queries = window.location.pathname.slice("18");
                     let cartData = {
-                        userId: 1,
+                        userId: 69,
                         productId: _this.queries,
-                        cartName: _this.plan[0].name,
-                        cartPrice: _this.totalPrice,
-                        cartQuantity: _this.num,
-                        cartDate: _this.planDate
+                        cartName: model.name,
+                        cartPrice: model.planPrice,
+                        cartQuantity: model.selected.num,
+                        cartDate: model.selected.date
                     };
 
                     fetch(`${baseAddress}/api/CartApi/AddToCart`, {
@@ -277,12 +279,6 @@
                     }).catch(error => {
                         console.log(error);
                     })
-                }
-            },
-            computed: {
-                calculate: function () {
-                    let _this = this;
-                    return _this.totalPrice = _this.plan[0].planPrice * _this.num;
                 }
             }
         })
