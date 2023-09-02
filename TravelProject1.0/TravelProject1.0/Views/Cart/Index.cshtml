@@ -28,15 +28,14 @@
                 <td align="center" valign="middle" class="cart-quantity">{{c.cartQuantity}}</td>
                 <td align="center" valign="middle" class="cart-price">{{c.cartPrice}}</td>
                 <td align="center" valign="middle">{{c.cartDate}}</td>
-                <td align="center" valign="middle"><button class="btn btn-delete danger"><i class="fa-solid fa-trash-can"></i>刪除</button></td>
+                <td align="center" valign="middle"><button class="btn btn-delete danger" v-on:click="removeItem(c)"><i class="fa-solid fa-trash-can"></i>刪除</button></td>
             </tr>
         </tbody>
     </table>
     <div class="total">
         <div class="calculate">
             <span class="total-title">總金額：</span>
-            <input class="total-price" v-model="totalPrice" disabled />
-            <span class="total-price">NT0</span>
+            <input class="total-price" readonly />
         </div>
         <div>
             <button class="btn btn-buy info">前往結帳</button>
@@ -51,8 +50,7 @@
         var app = new Vue({
             el: '#app',
             data: {
-                cartItem: [],
-                total: 0
+                cartItem: []
             },
             mounted: function () {
                 let _this = this;
@@ -61,15 +59,19 @@
                         if (response.ok) return response.json();
                     }).then(data => {
                         _this.cartItem = data;
-                        console.log(_this.cartItem);
                     }).catch(error => {
                         console.log(error);
                     })
             },
-            computed: {
-                totalPrice: function () {
+            methods: {
+                removeItem: function () {
                     let _this = this;
-                    return _this.total = _this.cartItem[0].cartQuantity * _this.cartItem[0].cartPrice;
+                    fetch(`${baseAddress}/api/CartApi/RemoveFromCart`, { method: "DELETE" })
+                        .then(response => {
+                            if (response.ok) console.log("刪除成功!")
+                        }).catch(error => {
+                            console.log(error);
+                        })
                 }
             }
         })
