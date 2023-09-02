@@ -59,7 +59,7 @@ namespace TravelProject1._0.Controllers
             {
                 
                 var claims = new List<Claim>();//身份驗證訊息
-                claims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
+                claims.Add(new Claim(ClaimTypes.NameIdentifier, userselect.UserId.ToString()));
                 claims.Add(new Claim(ClaimTypes.Name,userselect.Name));
                 claims.Add(new Claim(ClaimTypes.Email, userselect.Email));
                 claims.Add(new Claim(ClaimTypes.Role, "user"));

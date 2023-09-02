@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 using TravelProject1._0.Helper;
 using TravelProject1._0.Models;
 using TravelProject1._0.Models.ViewModel;
@@ -22,10 +24,15 @@ namespace TravelProject1._0.Controllers.Api
 
         [HttpGet]
         [Route("{id}")]
-        public async Task<IQueryable<CartViewModel>> GetCart(int id)
+        [Authorize]
+        public async Task<IQueryable<CartViewModel>> GetCart()
         {
-            return _context.Carts.Where(c => c.UserId == id).Select(c => new CartViewModel
+            Claim user = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
+            string? idu = user.Value;
+            int id = Convert.ToInt32(idu);
+            return _context.Carts.Where(c => c.UserId ==id).Select(c => new CartViewModel
             {
+                ProductId = c.ProductId,
                 CartName = c.CartName,
                 CartPrice = c.CartPrice,
                 CartQuantity = c.CartQuantity,
@@ -36,11 +43,16 @@ namespace TravelProject1._0.Controllers.Api
         [HttpPost]
         public async Task<IActionResult> AddToCart([FromBody] CartViewModel model)
         {
-            if (model == null) return BadRequest();
-
+            if (model == null)
+            {
+                return BadRequest();
+            }
+            Claim user = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
+            string? idu = user.Value;
+            int id = Convert.ToInt32(idu);
             Cart item = new Cart
             {
-                UserId = model.UserId,
+                UserId = id,
                 ProductId = model.ProductId,
                 CartName = model.CartName,
                 CartPrice = model.CartPrice,
@@ -63,10 +75,16 @@ namespace TravelProject1._0.Controllers.Api
         }
         public async Task<IActionResult> RemoveFromCart([FromBody] CartViewModel model)
         {
-            if (model == null) return BadRequest();
+            if (model == null)
+            {
+                return BadRequest();
+            }
+            Claim user = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
+            string? idu = user.Value;
+            int id = Convert.ToInt32(idu);
 
             var cartItem = await _context.Carts.FirstOrDefaultAsync(c =>
-                c.UserId == model.UserId && c.ProductId == model.ProductId);
+                c.UserId == id && c.ProductId == model.ProductId);
 
             if (cartItem == null)
             {
@@ -86,10 +104,14 @@ namespace TravelProject1._0.Controllers.Api
 
             return Ok(new { Message = "商品已從購物車移除" });
         }
-        public async Task<CartSummaryViewModel> GetCartSummary(int userId)
+        public async Task<CartSummaryViewModel> GetCartSummary()
         {
+            Claim user = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
+            string? idu = user.Value;
+            int id = Convert.ToInt32(idu);
+
             var cartItems = await _context.Carts
-                .Where(c => c.UserId == userId)
+                .Where(c => c.UserId == id)
                 .ToListAsync();
 
             int totalQuantity = cartItems.Sum(item => item.CartQuantity.GetValueOrDefault());
