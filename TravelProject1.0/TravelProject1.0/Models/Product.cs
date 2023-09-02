@@ -21,9 +21,15 @@ public partial class Product
 
     public string? Img { get; set; }
 
+    public string? Longitude { get; set; }
+
+    public string? Latitude { get; set; }
+
     public virtual ICollection<Cart> Carts { get; set; } = new List<Cart>();
 
     public virtual Category IdNavigation { get; set; } = null!;
+
+    public virtual ICollection<Plan> Plans { get; set; } = new List<Plan>();
 
     public virtual ICollection<Rating> Ratings { get; set; } = new List<Rating>();
 }

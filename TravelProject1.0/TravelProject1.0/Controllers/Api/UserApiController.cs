@@ -20,6 +20,9 @@ using Azure.Core;
 using NuGet.Versioning;
 using NuGet.Packaging.Rules;
 using TravelProject1._0.Models.ProductDTO;
+using NuGet.Protocol;
+using AspNetCoreHero.ToastNotification.Helpers;
+using Microsoft.AspNetCore.SignalR;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -314,20 +317,32 @@ namespace TravelProject1._0.Controllers.Api
             }
         }
         [HttpGet]
-        public IEnumerable <OrderDetailsDTO> OrderDetails()
+        public IEnumerable<OrderDetailsDTO> OrderDetails()
         {
-            Claim user = HttpContext.User.Claims.FirstOrDefault(x=>x.Type==ClaimTypes.NameIdentifier);
+            Claim user = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
             string? idu = user.Value;
             int id = Convert.ToInt32(idu);
-            return _context.OrderDetails.Where(x => x.Id == id).Select(x => new OrderDetailsDTO
-            {
 
-                OrderId = x.Id,
-                PlanId = x.PlanId,
-                Quantity = x.Quantity,
-                UnitPrice = x.UnitPrice,
+            var users = _context.Orders.Include(o => o.OrderDetail).Where(o => o.UserId == 69)
+                 .Select(o => new OrderDetailsDTO
+                 {
+                       PlanId = o.OrderDetail.PlanId,
+                       OrderId = o.OrderDetail.OrderId,
+                       Quantity = o.OrderDetail.Quantity,
+                       UnitPrice = o.OrderDetail.UnitPrice,
+                 }).ToList();
+            return users;
 
-            }).ToList();
+            //return _context.Orders.Include(o => o.OrderDetail).Where(o => o.UserId == 69)
+            //    .Select(o => new OrderDetailsDTO
+            //{
+            //    UserId=o.UserId,
+            //    PlanId = o.OrderDetail.PlanId,
+            //    OrderId = o.OrderDetail.OrderId,
+            //    Quantity=o.OrderDetail.Quantity,
+            //    UnitPrice=o.OrderDetail.UnitPrice,
+
+            //});
         }
 
 
