@@ -4,6 +4,7 @@
 
 @section Styles{
     <link href="~/css/attractions-plan.min.css" rel="stylesheet" asp-append-version="true" />
+    <link rel="stylesheet" href="https://unpkg.com/vue2-datepicker/index.css">
 }
 
 <section class="breadcrumb_area">
@@ -282,6 +283,9 @@
             computed: {
                 calculate: function () {
                     let _this = this;
+                    for (var i = 0; i < _this.plan;i++){
+                        
+                    }
                     return _this.totalPrice = _this.plan[0].planPrice * _this.num;
                 }
             }
