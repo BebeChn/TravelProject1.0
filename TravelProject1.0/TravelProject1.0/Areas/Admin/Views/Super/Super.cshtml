@@ -1,0 +1,86 @@
+﻿@section Styles{
+	<link href="~/css/planetk.css" rel="stylesheet" />
+	<link href="~/css/Super.css" rel="stylesheet" />	
+	<style>
+		td {
+			height: 50px;
+			border: 1px solid silver;
+			text-align:center;
+		}
+	</style>
+}
+
+<div id="app">
+	<br />
+	<br />
+	<br />
+	<div>
+		<div style="color:black;font-size:36px;">管理員管理</div>
+		<div class="row" style="width:25%;margin-left:800px;">
+			關鍵字搜尋：<input type="text" v-model="Filter" class="form-control" placeholder="請輸入篩選關鍵字" />
+		</div>
+	</div>
+	
+	<br />
+	<br />
+
+	<div class="container">
+		<table style="width:1000px;color:black;border:1px solid rgb(242, 242, 242)">
+			<tr>
+				<td>AdminID</td>
+				<td>管理權限</td>
+				<td>管理人</td>
+				<td>帳號</td>
+				<td>建立日期</td>
+				<td>上線時間</td>
+			</tr>
+			<tr v-for="item in SuperDTOes">
+				<td>{{item.id}}</td>
+				<td>{{item.describe}}</td>
+				<td>{{item.name}}</td>
+				<td>{{item.account}}</td>
+				<td>{{item.createDate | formatDate}}</td>
+				<td>{{item.loginDate | formatDate}}</td>
+			</tr>
+		</table>
+	</div>
+
+	
+</div>
+
+@section Scripts{
+	<script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js" integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script>
+		var baseAddress = "https://localhost:7025";
+		var vueApp = new Vue({
+			el: '#app',
+			data: {
+				SuperDTOes: [],
+				Filter: '',
+			},
+			mounted: function () {
+				let _this = this;
+
+				fetch(`${baseAddress}/api/SuperApi/SuperGET`).then(response => {
+					if (response.ok) return response.json()
+				}).then(data => {
+					_this.SuperDTOes = data;
+					console.log(data);
+				}).catch(error => {
+					console.log(error);
+				})
+			},
+			filters: {
+				formatDate: function (str) {
+					if (!str) return "";
+					var d = new Date(str)
+					return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`
+				}
+			},
+			methods: {
+				
+			}
+		})
+	</script>
+}

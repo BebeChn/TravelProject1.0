@@ -20,4 +20,6 @@ public partial class Plan
     public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
 
     public virtual ICollection<PlanCalendar> PlanCalendars { get; set; } = new List<PlanCalendar>();
+
+    public virtual Product Product { get; set; } = null!;
 }

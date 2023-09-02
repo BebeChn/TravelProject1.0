@@ -20,6 +20,9 @@ using Azure.Core;
 using NuGet.Versioning;
 using NuGet.Packaging.Rules;
 using TravelProject1._0.Models.ProductDTO;
+using NuGet.Protocol;
+using AspNetCoreHero.ToastNotification.Helpers;
+using Microsoft.AspNetCore.SignalR;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -314,29 +317,25 @@ namespace TravelProject1._0.Controllers.Api
             }
         }
         [HttpGet]
-        public IEnumerable <OrderDetailsDTO> OrderDetails()
+        public IEnumerable<OrderInfo> OrderDetails()
         {
-            Claim user = HttpContext.User.Claims.FirstOrDefault(x=>x.Type==ClaimTypes.NameIdentifier);
+            Claim user = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
             string? idu = user.Value;
             int id = Convert.ToInt32(idu);
-            return _context.OrderDetails.Where(x => x.Id == id).Select(x => new OrderDetailsDTO
-            {
-
-                OrderId = x.Id,
-                PlanId = x.PlanId,
-                Quantity = x.Quantity,
-                UnitPrice = x.UnitPrice,
-
-            }).ToList();
+            return _context.Orders.Include(o => o.OrderDetails).Where(o => o.UserId == id)
+                .Select(o => new OrderInfo
+                {
+                    OrderDate = o.OrderDate,
+                    OrderId = o.OrderId,
+                    Detail = o.OrderDetails.Select(z => new OrderDetailDto
+                    {
+                        PlanId = z.PlanId,
+                        Quantity = z.Quantity,
+                        UnitPrice = z.UnitPrice
+                    })
+                });
         }
-
-
     }
-
-
-
-
-
 }
 
 
