@@ -311,6 +311,11 @@ namespace TravelProject1._0.Controllers.Api
                 return BadRequest(new { Message = "重設密碼" });
             }
         }
+        //public string GenerateVerificationCode()
+        //{
+        //    Random random = new Random();
+        //    return random.Next(1000, 9999).ToString();
+        //}
 
 
     }
