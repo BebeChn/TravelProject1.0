@@ -58,7 +58,7 @@
 							</span>
 							<span>|</span>
 							<span class="">
-								 <a href="#" @* v-on:click="orderbyPrice" *@><i class="fas fa-funnel-dollar"></i>金額高低</a>
+								<a href="#" v-on:click="priceSort"><i class="fas fa-funnel-dollar"></i>金額高低</a>
 							</span>
 						</h4>
 					</div>
@@ -111,6 +111,7 @@
 
 @section Scripts{
 	<script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js" integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 	<script>
 		var baseAddress = "https://localhost:7025";
@@ -119,8 +120,12 @@
 			el: '#app',
 			data: {
 				books: [],
-				search: ''
+				search: '',
+				priceOrderby: [],
+				count: 0
 			},
+
+			//取得住宿類別
 			mounted: function () {
 				var _this = this;
 				fetch(`${baseAddress}/api/BookApi/GetBooks`, { method: 'GET' })
@@ -134,12 +139,36 @@
 						alert(error);
 					})
 			},
-			method: {
-
+			methods: {
+				//價格排序
+				priceSort: function () {
+					var _this = this;
+					_this.count++;
+					if (_this.count % 2 != 0) {
+						fetch(`${baseAddress}/api/BookApi/BookOrderbyPrice`, { method: "GET" })
+							.then(response => {
+								if (response.ok) return response.json();
+							}).then(data => {
+								_this.books = data;
+							}).catch(error => {
+								alert(error);
+							});
+					}
+					else {
+						fetch(`${baseAddress}/api/BookApi/BookOrderByDescendingPrice`, { method: "GET" })
+							.then(response => {
+								if (response.ok) return response.json()
+							}).then(data => {
+								_this.books = data
+							}).catch(error => {
+								alert(error)
+							})
+					}
+				}
 			},
 			computed: {
 				booksfilter: function () {
-					return this.books.filter(b => b.productName.match(this.search));
+					return this.books.filter(b => b.productName.match(this.search))
 				}
 			}
 		})

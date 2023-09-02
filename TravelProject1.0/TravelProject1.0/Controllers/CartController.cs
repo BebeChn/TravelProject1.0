@@ -27,13 +27,12 @@ namespace TravelProject1._0.Controllers
                 {
                     string userId = claim.Value;
                     Console.WriteLine("User ID: " + userId);
-                }
-               
+                }  
             }
-            //id=HttpContext.User.Claims.Where(x=>x.Email==)
-            ////向 Session 取得商品列表
-            //List<CartViewModel> CartItems = Session.
-            //    GetObjectFromJson<List<CartViewModel>>(HttpContext.Session, "cart");
+
+            //向 Session 取得商品列表
+            List<CartViewModel> CartItems = Session.
+                GetObjectFromJson<List<CartViewModel>>(HttpContext.Session, "cart");
 
             return View();
         }

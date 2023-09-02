@@ -18,9 +18,11 @@
 		axios.get("https://localhost:7025/api/ChartApi/GetUsers")
 			.then(response => {
 				data = response.data;
-				const xAxisCate = Object.keys(data.payingMemberAgeGroup);
-				const xSeriesData = Object.values(data.payingMemberAgeGroup);
-				const oSeriesData = Object.values(data.nonPayingMemberAgeGroup);
+				const Age = Object.keys(data.payingMemberAgeGroup);
+				const paying = Object.values(data.payingMemberAgeGroup);
+				const nonPaying = Object.values(data.nonPayingMemberAgeGroup);
+				const female = Object.values(data.female);
+				const male = Object.values(data.male);
 
 				var myChart = Highcharts.chart(container, {
 					chart: {
@@ -42,20 +44,28 @@
 						// 提示框設定
 					},
 					xAxis: {
-						categories: xAxisCate,
+						categories: Age,
 					},
 					yAxis: {
 						title: {
-							text: "佔比"
+							text: "人數"
 						}
 					},
 					series: [{
 						name: "有消費會員",
-						data: xSeriesData
+						data: paying
 					},
 					{
 						name: "未消費會員",
-						data: oSeriesData
+						data: nonPaying
+					},
+					{
+						name: "男性",
+						data: male
+					},
+					{
+						name: "女性",
+						data: female
 					}]
 				});
 			}).catch(err => {
