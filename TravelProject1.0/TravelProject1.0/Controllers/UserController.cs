@@ -16,6 +16,7 @@ using System.Net;
 using System.Web;
 using System.Data.SqlClient;
 using Microsoft.Win32;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TravelProject1._0.Controllers
 {
@@ -130,10 +131,12 @@ namespace TravelProject1._0.Controllers
         {
             return View();
         }
+        [Authorize]
         public IActionResult UserOrderDetails()
         {
             return View();
         }
+        [Authorize]
         public IActionResult UpdateUser(int id)
         {
             return View();

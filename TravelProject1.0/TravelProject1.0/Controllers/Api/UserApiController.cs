@@ -18,6 +18,8 @@ using System.Net.Mail;
 using System.Net;
 using Azure.Core;
 using NuGet.Versioning;
+using NuGet.Packaging.Rules;
+using TravelProject1._0.Models.ProductDTO;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -311,11 +313,22 @@ namespace TravelProject1._0.Controllers.Api
                 return BadRequest(new { Message = "重設密碼" });
             }
         }
-        //public string GenerateVerificationCode()
-        //{
-        //    Random random = new Random();
-        //    return random.Next(1000, 9999).ToString();
-        //}
+        [HttpGet]
+        public IEnumerable <OrderDetailsDTO> OrderDetails()
+        {
+            Claim user = HttpContext.User.Claims.FirstOrDefault(x=>x.Type==ClaimTypes.NameIdentifier);
+            string? idu = user.Value;
+            int id = Convert.ToInt32(idu);
+            return _context.OrderDetails.Where(x => x.Id == id).Select(x => new OrderDetailsDTO
+            {
+
+                OrderId = x.Id,
+                PlanId = x.PlanId,
+                Quantity = x.Quantity,
+                UnitPrice = x.UnitPrice,
+
+            }).ToList();
+        }
 
 
     }

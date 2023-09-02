@@ -27,6 +27,7 @@
         </table>
     </div>
 </div>
+<div> </div>
 @section Scripts{
     <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
     <script src="app.js"></script>
@@ -35,11 +36,15 @@
             el: '#app',
             data: {
                 orders: [
-                    { orderId: 'ORD001', orderDate: '2023-09-15', amount: '$200.00' },
-                    { orderId: 'ORD002', orderDate: '2023-09-18', amount: '$350.00' },
-                
                 ]
-            }
+            },
+            method: {
+                getOrderDetails: function () 
+                {
+                    axios.get().then()
+                }
+            },
+
         });
     </script>
     }
