@@ -13,5 +13,11 @@
         public string? MainDescribe { get; set; }
 
         public string? Img { get; set; }
-    }
+
+        public string? Longgitude { get; set;}
+
+		public string? Latitude { get; set; }
+
+
+	}
 }

@@ -25,7 +25,9 @@ namespace TravelProject1._0.Controllers.Api
 				ProductId = b.ProductId,
 				ShortDescribe = b.ShortDescribe,
 				SubDescribe = b.SubDescribe,
-				Img = b.Img
+				Img = b.Img,
+				//Longgitude=b.Longgitude,
+				//Latitude=b.Latitude
 			});
 		}
 
@@ -36,7 +38,8 @@ namespace TravelProject1._0.Controllers.Api
 				Name = c.Name,
 				Describe = c.Describe,
 				PlanId = c.PlanId,
-				PlanImg = c.PlanImg
+				PlanImg = c.PlanImg,
+				PlanPrice= c.PlanPrice,
 			});
 		}
 
