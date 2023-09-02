@@ -316,34 +316,34 @@ namespace TravelProject1._0.Controllers.Api
                 return BadRequest(new { Message = "重設密碼" });
             }
         }
-        [HttpGet]
-        public IEnumerable<OrderDetailsDTO> OrderDetails()
-        {
-            Claim user = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
-            string? idu = user.Value;
-            int id = Convert.ToInt32(idu);
+        //[HttpGet]
+        //public IEnumerable<OrderDetailsDTO> OrderDetails()
+        //{
+        //    Claim user = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
+        //    string? idu = user.Value;
+        //    int id = Convert.ToInt32(idu);
 
-            var users = _context.Orders.Include(o => o.OrderDetail).Where(o => o.UserId == 69)
-                 .Select(o => new OrderDetailsDTO
-                 {
-                       PlanId = o.OrderDetail.PlanId,
-                       OrderId = o.OrderDetail.OrderId,
-                       Quantity = o.OrderDetail.Quantity,
-                       UnitPrice = o.OrderDetail.UnitPrice,
-                 }).ToList();
-            return users;
+            //    //var users = _context.Orders.Include(o => o.OrderDetails).Where(o => o.UserId == 69)
+            //    //     .Select(o => new OrderDetailsDTO
+            //    //     {
+            //    //           PlanId = o.,
+            //    //           OrderId = o.OrderDetails.OrderId,
+            //    //           Quantity = o.OrderDetails.Quantity,
+            //    //           UnitPrice = o.OrderDetails.UnitPrice,
+            //    //     }).ToList();
+            //    //return users;
 
-            //return _context.Orders.Include(o => o.OrderDetail).Where(o => o.UserId == 69)
+            //return _context.Orders.Include(o => o.OrderDetails).Where(o => o.UserId == 69)
             //    .Select(o => new OrderDetailsDTO
-            //{
-            //    UserId=o.UserId,
-            //    PlanId = o.OrderDetail.PlanId,
-            //    OrderId = o.OrderDetail.OrderId,
-            //    Quantity=o.OrderDetail.Quantity,
-            //    UnitPrice=o.OrderDetail.UnitPrice,
+            //    {
+            //        UserId = o.UserId,
+            //        PlanId = o.OrderDetails.p
+            //        OrderId = o.OrderDetails.OrderId,
+            //        Quantity = o.OrderDetails.Quantity,
+            //        UnitPrice = o.OrderDetails.UnitPrice,
 
-            //});
-        }
+            //    });
+        //}
 
 
     }
