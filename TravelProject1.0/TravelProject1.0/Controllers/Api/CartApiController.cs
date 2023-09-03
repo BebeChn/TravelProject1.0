@@ -110,6 +110,7 @@ namespace TravelProject1._0.Controllers.Api
             return Ok(new { Message = "商品已從購物車移除" });
         }
 
+
         [HttpGet]
         public async Task<CartSummaryViewModel> GetCartSummary()
         {
