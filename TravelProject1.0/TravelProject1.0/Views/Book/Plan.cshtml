@@ -56,29 +56,41 @@
 							</div>
 						</div>
 						<div class="col-md-2 card-end">
-							<button class="btn theme_btn button_hover info" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">選擇</button>
+							<button class="btn theme_btn button_hover info" data-bs-toggle="collapse" :data-bs-target="'#collapse'+index" aria-expanded="true" :aria-controls="'collapse'+index">選擇</button>
 						</div>
-						<div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+						<div :id="'collapse'+index" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
 							<div class="accordion-body">
 								<div class="row">
 									<div class="col-md-6">
 										<h2>選擇日期</h2>
 										<template>
 											<div>
-												<date-picker v-model="selectDate" valueType="format"></date-picker>
+												<date-picker v-model="c.selected.plandate" valueType="format"></date-picker>
 											</div>
 										</template>
 									</div>
 									<div class="col-md-6">
 										<h2>選擇項目</h2>
 										<div>
-											<span>數量：</span>
+											<h4>單價：</h4>
+											<div class="plan-price">
+												<span class="price">NT:{{c.planPrice}}</span>
+											</div>
 											<br />
-											<span>金額：</span>
-											<span>NT0</span>
+											<h4>數量：</h4>
+											<div class="quantity d-flex">
+												<button class="btn minus info" v-on:click="minusNum(c.selected)">-</button>
+												<input class="quantity-num" v-model="c.selected.number" disabled>
+												<button class="btn plus info" v-on:click="plusNum(c.selected)">+</button>
+											</div>
+											<br />
+											<h4>總金額：</h4>
+											<div class="total">
+												<input class="total-price" v-model="calculate(c)" disabled />
+											</div>
 										</div>
-										<div>
-											<a class="btn theme_btn button_hover info" @* v-on:click="sendDateToDatabase" *@>加入購物車</a>
+										<div class="buy">
+											<a class="btn theme_btn button_hover info" v-on:click="sendDateToDatabase">加入購物車</a>
 											<a class="btn theme_btn button_hover info">立即訂購</a>
 										</div>
 									</div>
@@ -120,12 +132,12 @@
 			@* 分頁3 *@
 			<div class="tab-pane fade" id="nav-describe" role="tabpanel" aria-labelledby="nav-describe-tab">
 				@*購買須知*@
-				<div class="container describe" v-for="b in bookss">
+				<div class="container describe">
 					<div>
 						<h2 class="title">購買須知</h2>
 						<ul>
 							<li>
-								<p>{{b.describe}}</p>
+								<p>{{b.shortDescribe}}</p>
 							</li>
 						</ul>
 					</div>
@@ -198,7 +210,7 @@
 
 @section Scripts{
 	<script src="https://unpkg.com/vue2-datepicker/index.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js" integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 	<script>
 		var baseAddress = "https://localhost:7025";
 		Vue.component('datePicker', DatePicker);
@@ -207,8 +219,7 @@
 			data: {
 				book: [],
 				bookss: [],
-				queries: '',
-				selectDate: null
+				queries: ''
 			},
 			mounted: function () {
 				var _this = this;
@@ -232,27 +243,45 @@
 							return response.json();
 						}
 					}).then(data => {
-						_this.bookss = data;
+						_this.bookss = data.map(b => ({ ...b, selected: { plandate: "", number: 0 } }));
 					}).catch(error => {
 						alert(error);
 					})
 			},
-			method: {
-				// sendDateToDatabase: function () {
-				// 	let _this = this;
-				// 	_this.queries = window.location.pathname.slice("11");
+			methods: {
+				sendDateToDatabase: function () {
+					let _this = this;
+					_this.queries = window.location.pathname.slice("11");
 
-				// 	const formattedDate = new Date(this.selectedDate).toUString();
+					const formattedDate = new Date(this.selectDate).toUString();
 
-				// 	axios.post('/api/CartApi/AddToCart', { userId: 69, productId: _this.queries, cartName: _this.plan[0].name, cartPrice: _this.totalPrice, cartQuantity: _this.num, cartDate: _this.selectedDate })
-				// 		.then(response => {
-				// 			console.log('加入購物車成功^_^');
-				// 			_this.selectDate = null;
-				// 		})
-				// 		.catch(error => {
-				// 			console.log('發生錯誤', error);
-				// 		})
-				// },
+					axios.post('/api/CartApi/AddToCart', { userId: 69, productId: _this.queries, cartName: _this.plan[0].name, cartPrice: _this.totalPrice, cartQuantity: _this.num, cartDate: _this.selectedDate })
+						.then(response => {
+							console.log('加入購物車成功^_^');
+							_this.selectDate = null;
+						})
+						.catch(error => {
+							console.log('發生錯誤', error);
+						})
+				},
+
+
+				//數量選擇
+				plusNum: function (c) {
+					c.number++;
+				},
+				minusNum: function (c) {
+					if (_this.num == 0) {
+						c.number = 0;
+					}
+					else {
+						c.number--;
+					}
+				},
+				//數量加總
+				calculate: function (c) {
+					return c.planPrice * c.selected.number;
+				}
 			}
 		})
 	</script>

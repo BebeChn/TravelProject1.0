@@ -316,42 +316,26 @@ namespace TravelProject1._0.Controllers.Api
                 return BadRequest(new { Message = "重設密碼" });
             }
         }
-        //[HttpGet]
-        //public IEnumerable<OrderDetailsDTO> OrderDetails()
-        //{
-        //    Claim user = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
-        //    string? idu = user.Value;
-        //    int id = Convert.ToInt32(idu);
-
-            //    //var users = _context.Orders.Include(o => o.OrderDetails).Where(o => o.UserId == 69)
-            //    //     .Select(o => new OrderDetailsDTO
-            //    //     {
-            //    //           PlanId = o.,
-            //    //           OrderId = o.OrderDetails.OrderId,
-            //    //           Quantity = o.OrderDetails.Quantity,
-            //    //           UnitPrice = o.OrderDetails.UnitPrice,
-            //    //     }).ToList();
-            //    //return users;
-
-            //return _context.Orders.Include(o => o.OrderDetails).Where(o => o.UserId == 69)
-            //    .Select(o => new OrderDetailsDTO
-            //    {
-            //        UserId = o.UserId,
-            //        PlanId = o.OrderDetails.p
-            //        OrderId = o.OrderDetails.OrderId,
-            //        Quantity = o.OrderDetails.Quantity,
-            //        UnitPrice = o.OrderDetails.UnitPrice,
-
-            //    });
-        //}
-
-
+        [HttpGet]
+        public IEnumerable<OrderInfo> OrderDetails()
+        {
+            Claim user = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
+            string? idu = user.Value;
+            int id = Convert.ToInt32(idu);
+            return _context.Orders.Include(o => o.OrderDetails).Where(o => o.UserId == id)
+                .Select(o => new OrderInfo
+                {
+                    OrderDate = o.OrderDate,
+                    OrderId = o.OrderId,
+                    Detail = o.OrderDetails.Select(z => new OrderDetailDto
+                    {
+                        PlanId = z.PlanId,
+                        Quantity = z.Quantity,
+                        UnitPrice = z.UnitPrice
+                    })
+                });
+        }
     }
-
-
-
-
-
 }
 
 

@@ -63,7 +63,7 @@
                                         <h2>選擇日期</h2>
                                         <template>
                                             <div>
-                                                <date-picker v-model="time1" valueType="format"></date-picker>
+                                                <date-picker v-model="p.selected.date" valueType="format"></date-picker>
                                             </div>
                                         </template>
                                     </div>
@@ -77,17 +77,17 @@
                                             <br />
                                             <h4>數量：</h4>
                                             <div class="quantity d-flex">
-                                                <button class="btn minus info" v-on:click="minusNum">-</button>
-                                                <input class="quantity-num" v-bind:value="num" disabled>
-                                                <button class="btn plus info" v-on:click="plusNum">+</button>
+                                                <button class="btn minus info" v-on:click="minusNum(p.selected)">-</button>
+                                                <input class="quantity-num" v-model="p.selected.num" readonly>
+                                                <button class="btn plus info" v-on:click="plusNum(p.selected)">+</button>
                                             </div>
                                             <h4>總金額：</h4>
                                             <div class="total">
-                                                <span class="total-price">NT{{totalPrice}}</span>
+                                                <input class="total-price" v-bind:value="calculate(p)" readonly />
                                             </div>
                                         </div>
                                         <div class="buy">
-                                            <a class="btn theme_btn button_hover info">加入購物車</a>
+                                            <a class="btn theme_btn button_hover info" v-on:click="addCart(p)">加入購物車</a>
                                             <a class="btn theme_btn button_hover info">立即訂購</a>
                                         </div>
                                     </div>
@@ -206,7 +206,6 @@
 
 @section Scripts{
     <script src="https://unpkg.com/vue2-datepicker/index.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
     <script>
         var baseAddress = "https://localhost:7025";
         Vue.component('datePicker', DatePicker);
@@ -215,10 +214,7 @@
             data: {
                 plan: [],
                 product: [],
-                queries: '',
-                time1: null,
-                num: 0,
-                totalPrice: 0
+                queries: ''
             },
             mounted: function () {
                 var _this = this;
@@ -229,7 +225,7 @@
                     .then(response => {
                         if (response.ok) return response.json();
                     }).then(data => {
-                        _this.plan = data;
+                        _this.plan = data.map(x => ({ ...x, selected: { date: "", num: 0 } }));
                     }).catch(error => {
                         alert(error);
                     });
@@ -244,14 +240,47 @@
             },
             methods: {
                 //數量選擇
-                plusNum: function () {
-                    let _this = this;
-                    return _this.num++;
+                plusNum: function (model) {
+                    model.num++;
                 },
-                minusNum: function () {
+                minusNum: function (model) {
+                    if (model.num == 0) {
+                        model.num = 0;
+                    } else {
+                        model.num--;
+                    }
+                },
+                //計算總金額
+                calculate: function (p) {
+                    return p.planPrice * p.selected.num;
+                },
+
+                //加入購物車
+                addCart: function (model) {
                     let _this = this;
-                    if (_this.num == 0) { return _this.num = 0; }
-                    return _this.num--;
+                    _this.queries = window.location.href.slice("38");
+                    let cartData = {
+                        userId: 69,
+                        productId: _this.queries,
+                        cartName: model.name,
+                        cartPrice: model.planPrice * model.selected.num,
+                        cartQuantity: model.selected.num,
+                        cartDate: model.selected.date
+                    };
+
+                    fetch(`${baseAddress}/api/CartApi/AddToCart`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(cartData)
+                    }).then(response => {
+                        if (response.ok) {
+                            alert("商品已加入購物車!");
+                        } else {
+                            throw new Error("無法將商品加入購物車!");
+                        }
+                    }).catch(error => {
+                        console.log(error);
+                    })
                 }
             }
         })

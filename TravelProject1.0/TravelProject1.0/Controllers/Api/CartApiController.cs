@@ -22,6 +22,7 @@ namespace TravelProject1._0.Controllers.Api
             _context = context;
         }
 
+        //取得購物車商品
         [HttpGet]
         [Route("{id}")]
         [Authorize]
@@ -30,18 +31,20 @@ namespace TravelProject1._0.Controllers.Api
             Claim user = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
             string? idu = user.Value;
             int id = Convert.ToInt32(idu);
-            return _context.Carts.Where(c => c.UserId ==id).Select(c => new CartViewModel
+
+            return _context.Carts.Where(c => c.UserId == id).Select(c => new CartViewModel
             {
                 ProductId = c.ProductId,
                 CartName = c.CartName,
                 CartPrice = c.CartPrice,
                 CartQuantity = c.CartQuantity,
-                CartDate = c.CartDate
+                CartDate = c.CartDate.GetValueOrDefault().ToString("u")
             });
         }
 
+        //加入購物車
         [HttpPost]
-        public async Task<IActionResult> AddToCart([FromBody] CartViewModel model)
+        public async Task<IActionResult> AddToCart([FromBody] AddCartViewModel model)
         {
             if (model == null)
             {
@@ -52,7 +55,7 @@ namespace TravelProject1._0.Controllers.Api
             int id = Convert.ToInt32(idu);
             Cart item = new Cart
             {
-                UserId = id,
+                UserId = model.UserId,
                 ProductId = model.ProductId,
                 CartName = model.CartName,
                 CartPrice = model.CartPrice,
@@ -73,6 +76,9 @@ namespace TravelProject1._0.Controllers.Api
 
             return Ok(new { Message = "商品已加入購物車" });
         }
+
+        //刪除購物車項目
+        [HttpDelete]
         public async Task<IActionResult> RemoveFromCart([FromBody] CartViewModel model)
         {
             if (model == null)
@@ -101,9 +107,10 @@ namespace TravelProject1._0.Controllers.Api
             {
                 return BadRequest(ex);
             }
-
             return Ok(new { Message = "商品已從購物車移除" });
         }
+
+        [HttpGet]
         public async Task<CartSummaryViewModel> GetCartSummary()
         {
             Claim user = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);

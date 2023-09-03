@@ -10,7 +10,7 @@
     }
 
 tbody tr td {
-    font-size: 28px;
+    font-size: 24px;
     text-align: center;
 }
 
@@ -33,11 +33,11 @@ tbody tr td {
     justify-content: end;
     text-align: right;
     margin: 0px auto 0px auto;
-    margin-top:20px;
+    margin-top: 20px;
 }
 
-.calculate{
-    margin-bottom:20px;
+.calculate {
+    margin-bottom: 20px;
 }
 
 .total-title {
@@ -45,8 +45,13 @@ tbody tr td {
     font-weight: bold;
 }
 
-.total-price{
-    font-size:24px;
+.total-price {
+    font-size: 24px;
+    margin-right: 50px;
+    border:none;
+    width:150px;
+    text-align:center;
+    color:red;
 }
 
 .btn-buy {

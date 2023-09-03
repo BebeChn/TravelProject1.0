@@ -126,8 +126,8 @@
             <div class="tab-pane fade" id="nav-describe" role="tabpanel" aria-labelledby="nav-describe-tab">
                 @*購買須知*@
                 <div class="container">
-                    <h2>購買須知</h2>
                     <div>
+                        <h2 class="title">購買須知</h2>
                         <ul>
                             <li>
                                 <p>{{x.shortDescribe}}</p>
@@ -261,7 +261,7 @@
                         userId: 69,
                         productId: _this.queries,
                         cartName: model.name,
-                        cartPrice: model.planPrice,
+                        cartPrice: model.planPrice * model.selected.num,
                         cartQuantity: model.selected.num,
                         cartDate: model.selected.date
                     };

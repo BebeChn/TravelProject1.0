@@ -1,52 +1,107 @@
 ﻿@* @{
     Layout = "~/Views/User/UserCenter.cshtml";
 } *@
-<title>會員歷史訂單</title>
-<link rel="stylesheet" href="styles.css">
 
-<div id="app">
-    <header>
-        <h1>會員歷史訂單</h1>
-    </header>
+@section Styles{
+    <link href="~/css/attractions.css" rel="stylesheet" />
+}
+<section id="app" class="accomodation_area">
+    <h1>會員歷史訂單</h1>
     <div class="container">
-        <table class="order-table">
-            <thead>
-                <tr>
-                    <th>訂單編號</th>
-                    <th>方案名稱</th>
-                    <th>數量</th>
-                    <th>單價</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="o in oredrs">
-                    <td>{{o.orderId}}</td>
-                    <td>{{o.planId}}</td>
-                    <td>{{o.quantity}}</td>
-                    <td>{{o.unitPrice}}</td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="row">
+            <div class="col-md-8">
+                <div class="row">
+                    <div class="row product-items" v-for="o in orders">
+                        <div class="col-md-3" v-for="d in o.detail">
+                            <img class="img-product" src="" />
+                        </div>
+                        <div class="col-md-7 d_flex align-items-center">
+                            <div class="about_content ">
+                                <h2 class="title title_color">{{o.orderId}}</h2>
+                                <span>{{o.orderDate}}</span>
+                                <span>{{d.quantity}}</span>
+                                <span>{{d.unitprice}}</span>
+                                
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <span class="product-price">@* ${{a.price}}起 *@</span>
+                            <a @* :href="'/Attractions/Plan/'+a.productId" *@ class="button_hover theme_btn_two info">選擇方案</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="blog_right_sidebar">
+                    <aside class="single_sidebar_widget post_category_widget">
+                        <h4 class="widget_title">會員資料</h4>
+                        <ul class="list_style cat-list">
+                            <li>
+                                <a href="#" class="d-flex justify-content-between" >
+                                    <p>個人資訊</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="d-flex justify-content-between">
+                                    <p>商品訂單</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="d-flex justify-content-between">
+                                    <p>收藏夾</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="d-flex justify-content-between">
+                                    <p>喜愛</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </aside>
+                </div>
+            </div>
+        </div>
+        
     </div>
-</div>
-<div> </div>
+    </section>
+
+
 @section Scripts{
-    <script src="app.js"></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js" integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
         var baseAddress = "https://localhost:7025";
+
+        // 讀取名為 "your_authentication_cookie_name" 的 Cookie
+        var authenticationCookie = getCookie("CookieAuthenticationDefaults.AuthenticationScheme");
+
         var vueApp = new Vue({
             el: '#app',
             data: {
-                orders: {},
+                orders: [
+                    {
+                        orderDate: "",
+                        orderId: "",
+                        detail: [
+                            {
+                                planId: "", quantity: "", unitPrice: "",
+                            }
+                        ]
+                    }
+                ]
             },
             mounted: function () {
                 let _this = this;
                 fetch(`${baseAddress}/api/UserApi/OrderDetails`, {
-                    method: "GET"
+                    method: "GET",
+                    headers: {
+                        "Authorization": "Bearer " + authenticationCookie
+                    }
                 }).then(response => {
                     if (response.ok) {
                         return response.json();
+                    } else {
+                        throw new Error("錯誤代碼為 " + response.status);
                     }
                 }).then(data => {
                     _this.orders = data;
@@ -58,5 +113,69 @@
         });
 
 
+        // 定義一個函數用於獲取指定名稱的 Cookie
+        function getCookie(name) {
+            // 定義 Cookie 名稱的前綴，搜尋匹配的 Cookie
+            var namePre = name + "=";
+
+            // 使用分號分隔所有 Cookie，將它們存儲在一個陣列中
+            var cookies = document.cookie.split(';');
+
+            // 遍歷 Cookie 陣列
+            for (var i = 0; i < cookies.length; i++) {
+                // 獲取當前替代的 Cookie
+                var cookie = cookies[i];
+
+                // 去掉 Cookie 值首部的空格（如果有的話）
+                while (cookie.charAt(0) === ' ') cookie = cookie.substring(1, cookie.length);
+
+                // 檢查 Cookie 是否以我們指定的名稱前綴開頭
+                if (cookie.indexOf(namePre) === 0) {
+                    return cookie.substring(namePre.length, cookie.length);
+                }
+            }
+
+            // 如果未找到匹配的 Cookie，返回 null
+            return null;
+        }
+
+
+
     </script>
     }
+  
+@* <title>會員歷史訂單</title>
+<link rel="stylesheet" href="styles.css">
+
+<div id="app">
+   
+    <div class="container">
+        <table class="order-table">
+            <thead>
+                <tr>
+                    <th>訂單編號</th>
+                    <th>方案名稱</th>
+                    <th>數量</th>
+                    <th>單價</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="o in orders">
+                    <td>{{o.orderId}}</td>
+                    <td>{{o.orderDate}}</td>
+                    <td>
+                        <span v-for="detail in o.detail">{{detail.planId}}</span>
+                    </td>
+                    <td>
+                        <span v-for="detail in o.detail">{{detail.quantity}}</span>
+                    </td>
+                    <td>
+                        <span v-for="detail in o.detail">{{detail.unitPrice}}</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+ *@
+
