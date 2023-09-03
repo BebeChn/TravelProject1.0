@@ -13,33 +13,104 @@
             <thead>
                 <tr>
                     <th>訂單編號</th>
-                    <th>訂購日期</th>
-                    <th>金額</th>
+                    <th>方案名稱</th>
+                    <th>數量</th>
+                    <th>單價</th>
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="order in orders" :key="order.orderId">
-                    <td>{{ order.orderId }}</td>
-                    <td>{{ order.orderDate }}</td>
-                    <td>{{ order.amount }}</td>
+                <tr v-for="o in orders">
+                    <td>{{o.orderId}}</td>
+                    <td>{{o.orderDate}}</td>
+                    <td>
+                        <span v-for="detail in o.detail">{{detail.planId}}</span>
+                    </td>
+                    <td>
+                        <span v-for="detail in o.detail">{{detail.quantity}}</span>
+                    </td>
+                    <td>
+                        <span v-for="detail in o.detail">{{detail.unitPrice}}</span>
+                    </td>
                 </tr>
             </tbody>
         </table>
     </div>
 </div>
+<div> </div>
 @section Scripts{
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
-    <script src="app.js"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js" integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
-        new Vue({
+        var baseAddress = "https://localhost:7025";
+
+        // 讀取名為 "your_authentication_cookie_name" 的 Cookie
+        var authenticationCookie = getCookie("CookieAuthenticationDefaults.AuthenticationScheme");
+
+        var vueApp = new Vue({
             el: '#app',
             data: {
                 orders: [
-                    { orderId: 'ORD001', orderDate: '2023-09-15', amount: '$200.00' },
-                    { orderId: 'ORD002', orderDate: '2023-09-18', amount: '$350.00' },
-                
+                    {  
+                        orderDate: "",
+                        orderId: "",
+                        detail: [
+                            {
+                                planId: "", quantity: "", unitPrice: "",
+                            }                            
+                        ]
+                    }
                 ]
+            },
+            mounted: function () {
+                let _this = this;
+                fetch(`${baseAddress}/api/UserApi/OrderDetails`, {
+                    method: "GET",
+                    headers: {
+                        "Authorization": "Bearer " + authenticationCookie
+                    }
+                }).then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        throw new Error("錯誤代碼為 " + response.status);
+                    }
+                }).then(data => {
+                    _this.orders = data;
+                    console.log(data);
+                }).catch(err => {
+                    alert(err);
+                });
             }
         });
+
+        
+        // 定義一個函數用於獲取指定名稱的 Cookie
+        function getCookie(name) {
+            // 定義 Cookie 名稱的前綴，搜尋匹配的 Cookie
+            var namePre = name + "=";
+
+            // 使用分號分隔所有 Cookie，將它們存儲在一個陣列中
+            var cookies = document.cookie.split(';');
+
+            // 遍歷 Cookie 陣列
+            for (var i = 0; i < cookies.length; i++) {
+                // 獲取當前替代的 Cookie
+                var cookie = cookies[i];
+
+                // 去掉 Cookie 值首部的空格（如果有的話）
+                while (cookie.charAt(0) === ' ') cookie = cookie.substring(1, cookie.length);
+
+                // 檢查 Cookie 是否以我們指定的名稱前綴開頭
+                if (cookie.indexOf(namePre) === 0) {
+                    return cookie.substring(namePre.length, cookie.length);
+                }
+            }
+
+            // 如果未找到匹配的 Cookie，返回 null
+            return null;
+        }
+
+
+
     </script>
     }

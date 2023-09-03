@@ -1,27 +1,65 @@
-﻿<div style="width:100%">
+﻿@section Styles
+	{
+	
+}
+
+@* user柱狀圖分析 *@
+<div style="width:100%">
 	<div id="member" style="min-width:100%;height:400px"></div>
 </div>
+
+<nav>
+	<div class="nav nav-tabs" id="nav-tab" role="tablist">
+		<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">男女會員佔比</button>
+		<button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Profile</button>
+		<button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Contact</button>
+	</div>
+</nav>
+<div class="tab-content" id="nav-tabContent">
+	<div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+		@* UserPie圓餅圖 *@
+		<figure class="highcharts-figure">
+			<div id="container"></div>
+			<p class="highcharts-description">
+				<i>*OPPO includes OnePlus since Q3 2021</i><br><br>
+				Chart demonstrating the use of a 3D pie layout.
+				The "Xiaomi" slice has been selected, and is offset from the pie.
+				Click on slices to select and unselect them.
+				Note that 3D pies, while decorative, can be hard to read, and the
+				viewing angles can make slices close to the user appear larger than they
+				are.
+			</p>
+		</figure>
+	</div>
+	<div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">456</div>
+	<div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">789</div>
+</div>
+
+
 
 
 
 @section Scripts
 	{
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
 	<script src="https://code.highcharts.com/highcharts.js"></script>
 	<script src="https://code.highcharts.com/modules/exporting.js"></script>
 	<script src="https://code.highcharts.com/modules/export-data.js"></script>
 	<script src="https://code.highcharts.com/modules/accessibility.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.5.0/axios.min.js" integrity="sha512-aoTNnqZcT8B4AmeCFmiSnDlc4Nj/KPaZyB5G7JnOnUEkdNpCZs1LCankiYi01sLTyWy+m2P+W4XM+BuQ3Q4/Dg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script src="https://code.highcharts.com/highcharts-3d.js"></script>
 	<script>
-
+		//user柱狀圖分析
 		const container = document.querySelector('#member');
 		let data = {};
-		axios.get("https://localhost:7025/api/ChartApi/GetUsers")
+		axios.get("/api/ChartApi/GetUsers")
 			.then(response => {
 				data = response.data;
-				const xAxisCate = Object.keys(data.payingMemberAgeGroup);
-				const xSeriesData = Object.values(data.payingMemberAgeGroup);
-				const oSeriesData = Object.values(data.nonPayingMemberAgeGroup);
-
+				const Age = Object.keys(data.payingMemberAgeGroup);
+				const paying = Object.values(data.payingMemberAgeGroup);
+				const nonPaying = Object.values(data.nonPayingMemberAgeGroup);
+				const female = Object.values(data.female);
+				const male = Object.values(data.male);
 				var myChart = Highcharts.chart(container, {
 					chart: {
 						type: "column",
@@ -42,24 +80,85 @@
 						// 提示框設定
 					},
 					xAxis: {
-						categories: xAxisCate,
+						categories: Age,
 					},
 					yAxis: {
 						title: {
-							text: "佔比"
+							text: "人數"
 						}
 					},
 					series: [{
-						name: "有消費會員",
-						data: xSeriesData
+						name: "已消費會員",
+						data: paying
 					},
 					{
 						name: "未消費會員",
-						data: oSeriesData
+						data: nonPaying
+					},
+					{
+						name: "男性",
+						data: male
+					},
+					{
+						name: "女性",
+						data: female
 					}]
 				});
 			}).catch(err => {
-				alert('請聯絡系統管理員');
+				alert('會員年齡分佈數據異常,請聯絡系統管理員');
+			});
+		//user柱狀圖分析
+
+		//UserPie圓餅圖
+		let genderData = {};
+
+		axios.get("/api/ChartApi/GetUserGender")
+			.then(response => {
+				response.data;
+				Highcharts.chart('container', {
+					chart: {
+						type: 'pie',
+						options3d: {
+							enabled: true,
+							alpha: 45,
+							beta: 0
+						}
+					},
+					title: {
+						text: '男性會員/女性會員佔比',
+						align: 'center'
+					},
+					subtitle: {
+						text: '',
+						align: 'left'
+					},
+					accessibility: {
+						point: {
+							valueSuffix: '%'
+						}
+					},
+					tooltip: {
+						pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+					},
+					plotOptions: {
+						pie: {
+							allowPointSelect: true,
+							cursor: 'pointer',
+							depth: 45,
+							dataLabels: {
+								enabled: true,
+								format: '{point.name}'
+							}
+						}
+					},
+					series: [{
+						type: 'pie',
+						name: 'Share',
+						data: response.data
+					}]
+				});
+			}).catch(err => {
+				alert('請聯絡管理員')
 			});
 	</script>
 }

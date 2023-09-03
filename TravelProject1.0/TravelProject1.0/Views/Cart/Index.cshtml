@@ -22,21 +22,20 @@
         </thead>
         <tbody class="cart" v-for="(c,index) in cartItem" :key="c.cartId">
             <tr class="cart-item">
-                <td align="center" valign="middle"><input class="inp-cart" type="checkbox" /></td>
+                <td align="center" valign="middle"><input class="inp-cart" type="checkbox" v-model="c.checked" /></td>
                 <td align="center" valign="middle"><img style="width:100px;height:100px;" src="~/lib/image/mountain.jpeg" /></td>
                 <td align="center" valign="middle">{{c.cartName}}</td>
                 <td align="center" valign="middle" class="cart-quantity">{{c.cartQuantity}}</td>
                 <td align="center" valign="middle" class="cart-price">{{c.cartPrice}}</td>
-                <td align="center" valign="middle">{{c.cartDate}}</td>
-                <td align="center" valign="middle"><button class="btn btn-delete danger"><i class="fa-solid fa-trash-can"></i>刪除</button></td>
+                <td align="center" valign="middle">{{c.cartDate | formatDate}}</td>
+                <td align="center" valign="middle"><button class="btn btn-delete danger" v-on:click="removeItem(c)" v-bind:disabled="!c.checked"><i class="fa-solid fa-trash-can"></i></button></td>
             </tr>
         </tbody>
     </table>
     <div class="total">
         <div class="calculate">
             <span class="total-title">總金額：</span>
-            <input class="total-price" v-model="totalPrice" disabled />
-            <span class="total-price">NT0</span>
+            <input class="total-price" readonly />
         </div>
         <div>
             <button class="btn btn-buy info">前往結帳</button>
@@ -51,8 +50,7 @@
         var app = new Vue({
             el: '#app',
             data: {
-                cartItem: [],
-                total: 0
+                cartItem: []
             },
             mounted: function () {
                 let _this = this;
@@ -60,17 +58,41 @@
                     .then(response => {
                         if (response.ok) return response.json();
                     }).then(data => {
-                        _this.cartItem = data;
-                        console.log(_this.cartItem);
+                        _this.cartItem = data.map(x => ({ ...x, checked: false }));
                     }).catch(error => {
                         console.log(error);
                     })
             },
-            computed: {
-                totalPrice: function () {
-                    let _this = this;
-                    return _this.total = _this.cartItem[0].cartQuantity * _this.cartItem[0].cartPrice;
+            filters: {
+                formatDate: function (str) {
+                    if (!str) return "";
+                    var d = new Date(str);
+                    return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
                 }
+            },
+            methods: {
+                removeItem: function (model) {
+                    let _this = this;
+                    let itemData = {
+                        userId: 69,
+                        productId: model.productId,
+                        cartName: model.cartName,
+                        cartQuantity: model.cartQuantity,
+                        cartPrice: model.cartPrice,
+                        cartDate: model.cartDate
+                    };
+
+                    fetch(`${baseAddress}/api/CartApi/RemoveFromCart`,
+                        {
+                            method: "DELETE",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(itemData)
+                        }).then(response => {
+                            if (response.ok) alert("商品刪除成功!");
+                        }).catch(error => {
+                            console.log(error);
+                        })
+                },
             }
         })
     </script>

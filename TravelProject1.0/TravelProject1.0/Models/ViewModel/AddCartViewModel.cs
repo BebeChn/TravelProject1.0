@@ -1,6 +1,6 @@
 ﻿namespace TravelProject1._0.Models.ViewModel
 {
-    public class CartViewModel
+    public class AddCartViewModel
     {
         public int UserId { get; set; }
 
@@ -12,6 +12,6 @@
 
         public string? CartName { get; set; }
 
-        public string CartDate { get; set; }
+        public DateTime? CartDate { get; set; }
     }
 }

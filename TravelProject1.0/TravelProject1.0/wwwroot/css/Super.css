@@ -1,0 +1,25 @@
+﻿.btninline {
+    display: inline-block;
+}
+
+
+#app {
+    background-color: white;
+    
+    font-weight: bold;
+}
+
+
+
+
+.horizontal-text {
+    display: flex;
+    flex-direction: row; /* 设置横向排列 */
+    align-items: center; /* 水平居中对齐 */
+    justify-content: center; /* 垂直居中对齐 */
+}
+
+.horizontal-text span {
+        white-space: nowrap; /* 防止文本换行 */
+        transform: rotate(0deg); /* 将文本旋转角度重置为0度 */
+}

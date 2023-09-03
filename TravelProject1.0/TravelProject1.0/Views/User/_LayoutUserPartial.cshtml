@@ -1,0 +1,26 @@
+﻿@{
+    ViewData["Title"] = "會員中心";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <nav>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="User" asp-action="UpdateUser">個人資訊</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="User" asp-action="UserOrderDetails">訂單歷史</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">收藏夾</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">通知與消息</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>

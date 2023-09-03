@@ -34,7 +34,7 @@ namespace TravelProject1._0.Controllers
 
 
 
-        [HttpGet]
+        //[HttpGet]
         public async Task<IEnumerable<PlaneTKDTO>> PlaneTK_catgoryGET()
         {
 
@@ -54,7 +54,7 @@ namespace TravelProject1._0.Controllers
         }
 
 
-        [HttpGet]
+        //[HttpGet]
 
 
 
