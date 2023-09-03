@@ -263,7 +263,7 @@
                         userId: 69,
                         productId: _this.queries,
                         cartName: model.name,
-                        cartPrice: model.planPrice,
+                        cartPrice: model.planPrice * model.selected.num,
                         cartQuantity: model.selected.num,
                         cartDate: model.selected.date
                     };
