@@ -26,7 +26,7 @@ namespace TravelProject1._0.Controllers.Api
 				ShortDescribe = b.ShortDescribe,
 				SubDescribe = b.SubDescribe,
 				Img = b.Img,
-				Longgitude = b.Longgitude,
+				Longitude = b.Longitude,
 				Latitude = b.Latitude
 			});
 		}
