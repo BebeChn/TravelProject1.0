@@ -1,5 +1,5 @@
 ﻿@section Styles{
-    <link href="~/css/planetk.css" rel="stylesheet" />
+
     <link href="~/css/admindashboard.css" rel="stylesheet" />
 }
 <div id="app">
@@ -47,24 +47,25 @@
     <!--第三段-->
     <div class="container-fluid row ">
         <!--管理選單-->
-        <div class="col-2">
-            </div>
-@*        <div class="col-2">
-            <ul class="list-group">
-                <!--管理選單列-->  <!--改道layout用-->
-                                <a class="btn" href="https://localhost:7025/api/Admin/Admin">使用者管理</a>
-                <a class="btn" href="https://localhost:7025/api/Order/Order">訂單管理</a>
-                <a class="btn" href="http://127.0.0.1:5500/admin.html">數據分析</a>
-                <a class="btn" href="https://localhost:7025/api/Merchandise/Merchandise">商品管理</a>
-                <!--管理選單底-->
-            </ul>
+        <div class="col-3">
+        </div>
+        @*        <div class="col-2">
+        <ul class="list-group">
+        <!--管理選單列-->  <!--改道layout用-->
+        <a class="btn" href="https://localhost:7025/api/Admin/Admin">使用者管理</a>
+        <a class="btn" href="https://localhost:7025/api/Order/Order">訂單管理</a>
+        <a class="btn" href="http://127.0.0.1:5500/admin.html">數據分析</a>
+        <a class="btn" href="https://localhost:7025/api/Merchandise/Merchandise">商品管理</a>
+        <!--管理選單底-->
+        </ul>
         </div>*@
         <!--顯示管理內容-->
-        <div class="col-10  ">
+        <div class="col-9  ">
             <table class="table table-bordered  table-responsive  ">
                 <thead>
                     <tr>
-                        <td>ID
+                        <td>
+                            ID
                             <br />
                             <br />
                         </td>
@@ -107,7 +108,7 @@
                             <td>{{item.gender}}</td>
                             <td>{{item.address}}</td>
                             <td>{{item.email}}</td>
-                            <td>{{item.birthday}}</td>
+                            <td style="white-space: nowrap;">{{  formatDate( item.birthday )}}</td>
                             <td>
                                 <button type="button" class="btn  btn-warning" @@click="edit(item.userId)">
                                     <div class="horizontal-text">
@@ -127,17 +128,9 @@
                 </tbody>
             </table>
         </div>
-        <!--顯示更多內容-->
-        <div class="col-10">
-        </div>
-        <br />
-        <br />
-
-
-
         <!--最後一句-->
     </div>
-
+</div>
 
 
     @section Scripts{
@@ -178,8 +171,14 @@
                     //alert("mount");
                     _this.filterUser();
                 },
-                methods: {
 
+                methods: {
+                    //轉換日期
+                    formatDate: function (str) {
+                        if (!str) return "";
+                        var d = new Date(str);
+                        return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+                    },
 
                     filterUser: function () {
                         //alert("篩選");
