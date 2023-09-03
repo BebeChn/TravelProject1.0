@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Linq;
 using System.Configuration;
 using System.Security.Permissions;
@@ -61,7 +62,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 		}
 
 		[HttpGet]
-		public async Task<UsersAnalyzeDTO> GetUsers()
+		public async Task<GetUsersAnalyzeDTO> GetUsers()
 		{
 			var users = _db.Users.Select(u => new
 			{
@@ -123,7 +124,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 				}
 			}
 
-			UsersAnalyzeDTO uaDTO = new UsersAnalyzeDTO();
+			GetUsersAnalyzeDTO uaDTO = new GetUsersAnalyzeDTO();
 			uaDTO.TotalMember = users.Count();
 			uaDTO.PayingMemberAgeGroup = payingMemberAgeGroup;
 			uaDTO.NonPayingMemberAgeGroup = nonPayingMemberAgeGroup;
@@ -132,11 +133,11 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 			return uaDTO;
 		}
 
-		[HttpGet]
-		public async Task<object> GetUserGender()
+		[HttpGet]	
+		public async Task<IEnumerable<GetUserGenderDTO>> GetUserGender()
 		{
 			return _db.Users.AsNoTracking().Where(x => !string.IsNullOrEmpty(x.Gender))
-			.Select(x => x.Gender).GroupBy(x => x).Select(x => new
+			.Select(x => x.Gender).GroupBy(x => x).Select(x => new GetUserGenderDTO
 			{
 				Name = x.Key == "F" ? "女性" : "男性",
 				y = x.Count()
@@ -178,17 +179,41 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 
 			//return guDTO;
 		}
-		//public async Task<object> Object()
-		//{
 
-		//	var user = _db.Orders.Include(o => o.OrderDetail).Where(o => o.UserId == 69)
-		//		.Select( o => new OrderDetailDTO {
-		//			PlanId = o.OrderDetail.PlanId,
-		//			OrderId = o.OrderDetail.OrderId,
-		//			Quantity = o.OrderDetail.Quantity,
-		//			UnitPrice = o.OrderDetail.UnitPrice,
-		//		}).ToList();
-		//	return user;
-		//}
+		[HttpGet]
+		public async Task<IEnumerable<GetUserAgeGroupCount>> GetUserAgeGroup()
+		{
+			var ageGroups = new List<GetUserAgeGroupCount>();
+			int minAge = 18;
+			int maxAge = 97;
+			int rangeAge = 5;
+
+			for (int startAge = minAge; startAge < maxAge; startAge += rangeAge)
+			{
+				int endAge = startAge + rangeAge - 1;
+
+				var ageGroup = _db.Users.AsNoTracking()
+					.Where(u => u.Age.HasValue && u.Age >= startAge && u.Age <= endAge)
+					.Select(u => u.Age)
+					.ToList() // 執行查詢並取得資料
+					.GroupBy(age => new
+					{
+						StartAge = startAge,
+						EndAge = endAge
+					})
+					.Select(group => new GetUserAgeGroupCount
+					{
+						Name = $"{group.Key.StartAge}-{group.Key.EndAge}歲",
+						y = group.Count(),
+					})
+					.ToList();
+
+				ageGroups.AddRange(ageGroup);
+			}
+
+			return ageGroups;
+		}
 	}
+
+	
 }
