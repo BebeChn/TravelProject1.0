@@ -30,25 +30,26 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 			});
 		}
 
-		//[HttpPost]
-		//public async Task<IEnumerable<SuperDTO>> SuperSearch(SuperDTO SuperDTO)
-		//{
-		//	return _db.Admins.Where(y =>
-		//	y.Id == SuperDTO.Id ||
-		//	y.Name.Contains(SuperDTO.Name) ||
-		//	y.Describe.Contains(SuperDTO.Describe) ||
-		//	y.Account.Contains(SuperDTO.Account)
-		//	|| y.CreateDate == (SuperDTO.CreateDate) ||
-		//	y.LoginDate == (SuperDTO.LoginDate)
-		//	).Select(x => new SuperDTO
-		//	{
-		//		Id = x.Id,
-		//		Name = x.Name,
-		//		Describe = x.Describe,
-		//		Account = x.Account,
-		//		CreateDate = x.CreateDate,
-		//		LoginDate = x.LoginDate
-		//	});
-		//}
+		[HttpPost]
+		public async Task<IEnumerable<SuperFilterDTO>> SuperSearch(SuperFilterDTO SuperFilterDTO)
+		{
+			return _db.Admins.Where(y =>
+			y.Id == SuperFilterDTO.Id ||
+			y.Name.Contains(SuperFilterDTO.Name) ||
+			y.Describe.Contains(SuperFilterDTO.Describe) ||
+			y.Account.Contains(SuperFilterDTO.Account)||
+			y.CreateDate ==(SuperFilterDTO.CreateDate)||
+			y.LoginDate == (SuperFilterDTO.LoginDate)
+			).Select(x => new SuperFilterDTO
+			{
+				Id = x.Id,
+				Name = x.Name,
+				Describe = x.Describe,
+				Account = x.Account,
+				CreateDate=x.CreateDate,
+				LoginDate = x.LoginDate
+
+			});
+		}
 	}
 }
