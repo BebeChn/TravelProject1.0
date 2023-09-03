@@ -1,6 +1,6 @@
 ﻿namespace TravelProject1._0.Areas.Admin.Models.ChartViewModel
 {
-	public class UsersAnalyzeDTO
+	public class GetUsersAnalyzeDTO
 	{
 		public int TotalMember { get; set; }
 		public Dictionary<string,int> Male { get; set; }

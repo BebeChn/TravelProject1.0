@@ -11,7 +11,7 @@
     <table class="table table-striped table-bordered table-hover">
         <thead class="info">
             <tr>
-                <th><input type="checkbox" /></th>
+                <th><input type="checkbox" v-on:click="selectAll" v-model="allCheck" /></th>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -25,32 +25,56 @@
                 <td align="center" valign="middle"><input class="inp-cart" type="checkbox" v-model="c.checked" /></td>
                 <td align="center" valign="middle"><img style="width:100px;height:100px;" src="~/lib/image/mountain.jpeg" /></td>
                 <td align="center" valign="middle">{{c.cartName}}</td>
-                <td align="center" valign="middle" class="cart-quantity">{{c.cartQuantity}}</td>
-                <td align="center" valign="middle" class="cart-price">{{c.cartPrice}}</td>
+                <td align="center" valign="middle">{{c.cartQuantity}}</td>
+                <td align="center" valign="middle">{{c.cartPrice}}</td>
                 <td align="center" valign="middle">{{c.cartDate | formatDate}}</td>
-                <td align="center" valign="middle"><button class="btn btn-delete danger" v-on:click="removeItem(c)" v-bind:disabled="!c.checked"><i class="fa-solid fa-trash-can"></i></button></td>
+                <td align="center" valign="middle"><button class="btn btn-delete danger" v-on:click="deleteModal(c)" v-bind:disabled="!c.checked" data-bs-toggle="modal" data-bs-target="#deleteItem"><i class="fa-solid fa-trash-can"></i></button></td>
             </tr>
         </tbody>
     </table>
     <div class="total">
         <div class="calculate">
-            <span class="total-title">總金額：</span>
-            <input class="total-price" readonly />
-        </div>
-        <div>
+            <span class="total-title">合計：</span>
+            <input class="total-price" v-bind:value="totalPrice(cartItem)" readonly />
             <button class="btn btn-buy info">前往結帳</button>
+        </div>
+    </div>
+
+    @* 刪除提示modal *@
+    <div class="modal fade" id="deleteItem" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">刪除商品</h1>
+                </div>
+                <div class="modal-body">
+                    <h4>您確定要刪除所選商品嗎?</h4>
+                    <div>商品名稱:{{remove.cartName}}</div>
+                    <div>數量:{{remove.cartQuantity}}</div>
+                    <div>總金額:{{remove.cartPrice}}</div>
+                    <div>使用日期:{{remove.cartDate | formatDate}}</div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-delete danger" v-on:click="removeItem">刪除</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
+
+
 @section Scripts{
-    @* <script src="~/js/cart.js"></script> *@
     <script>
         let baseAddress = "https://localhost:7025";
         var app = new Vue({
             el: '#app',
             data: {
-                cartItem: []
+                cartItem: [],
+                allCheck: false,
+                resultPrice: 0,
+                remove: {}
             },
             mounted: function () {
                 let _this = this;
@@ -64,6 +88,7 @@
                     })
             },
             filters: {
+                //日期格式
                 formatDate: function (str) {
                     if (!str) return "";
                     var d = new Date(str);
@@ -71,28 +96,54 @@
                 }
             },
             methods: {
+                deleteModal: function (model) {
+                    let _this = this;
+                    _this.remove = Object.assign({}, model)
+                },
+
+                //刪除商品項目
                 removeItem: function (model) {
                     let _this = this;
-                    let itemData = {
-                        userId: 69,
-                        productId: model.productId,
-                        cartName: model.cartName,
-                        cartQuantity: model.cartQuantity,
-                        cartPrice: model.cartPrice,
-                        cartDate: model.cartDate
-                    };
-
                     fetch(`${baseAddress}/api/CartApi/RemoveFromCart`,
                         {
                             method: "DELETE",
                             headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify(itemData)
+                            body: JSON.stringify(_this.remove)
                         }).then(response => {
                             if (response.ok) alert("商品刪除成功!");
+                            location.href = "/cart";
                         }).catch(error => {
                             console.log(error);
                         })
                 },
+
+                //全選
+                selectAll: function () {
+                    let _this = this;
+                    if (!_this.allCheck) {
+                        for (var i = 0; i < _this.cartItem.length; i++) {
+                            var check = _this.cartItem[i].checked = true;
+                        }
+                        return check;
+                    } else {
+                        for (var i = 0; i < _this.cartItem.length; i++) {
+                            var check = _this.cartItem[i].checked = false;
+                        }
+                        return check;
+                    }
+                },
+
+                //合計
+                totalPrice: function (model) {
+                    let _this = this;
+                    let total = 0;
+                    for (var i = 0; i < _this.cartItem.length; i++) {
+                        if (model[i].checked == true) {
+                            total = total + model[i].cartPrice
+                        }
+                    }
+                    return total;
+                }
             }
         })
     </script>

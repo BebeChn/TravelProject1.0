@@ -10,16 +10,16 @@
 
 <nav>
 	<div class="nav nav-tabs" id="nav-tab" role="tablist">
-		<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">男女會員佔比</button>
-		<button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Profile</button>
+		<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">男女會員分佈圖</button>
+		<button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">年齡分佈圖</button>
 		<button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Contact</button>
 	</div>
 </nav>
 <div class="tab-content" id="nav-tabContent">
+	@* 會員男女佔比圓餅圖 *@
 	<div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-		@* UserPie圓餅圖 *@
 		<figure class="highcharts-figure">
-			<div id="container"></div>
+			<div id="genderGroup"></div>
 			<p class="highcharts-description">
 				<i>*OPPO includes OnePlus since Q3 2021</i><br><br>
 				Chart demonstrating the use of a 3D pie layout.
@@ -31,7 +31,24 @@
 			</p>
 		</figure>
 	</div>
-	<div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">456</div>
+	@* 會員男女佔比圓餅圖 *@
+
+	@* 哥年齡層佔比 *@
+	<div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+		<figure class="highcharts-figure">
+			<div id="ageGroup"></div>
+			<p class="highcharts-description">
+				<i>*OPPO includes OnePlus since Q3 2021</i><br><br>
+				Chart demonstrating the use of a 3D pie layout.
+				The "Xiaomi" slice has been selected, and is offset from the pie.
+				Click on slices to select and unselect them.
+				Note that 3D pies, while decorative, can be hard to read, and the
+				viewing angles can make slices close to the user appear larger than they
+				are.
+			</p>
+		</figure>
+	</div>
+	@* 哥年齡層佔比 *@
 	<div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">789</div>
 </div>
 
@@ -60,7 +77,7 @@
 				const nonPaying = Object.values(data.nonPayingMemberAgeGroup);
 				const female = Object.values(data.female);
 				const male = Object.values(data.male);
-				var myChart = Highcharts.chart(container, {
+				let myChart = Highcharts.chart(container, {
 					chart: {
 						type: "column",
 					},
@@ -110,12 +127,16 @@
 		//user柱狀圖分析
 
 		//UserPie圓餅圖
-		let genderData = {};
-
+		const genderGroup = document.querySelector('#genderGroup');
 		axios.get("/api/ChartApi/GetUserGender")
 			.then(response => {
-				response.data;
-				Highcharts.chart('container', {
+				let femaleCount = 0;
+				let maleCount = 0;
+				response.data.forEach(item => {
+					if (item.name === "男性") maleCount = item.y;
+					if (item.name === "女性") femaleCount = item.y;
+				});
+				Highcharts.chart('genderGroup', {
 					chart: {
 						type: 'pie',
 						options3d: {
@@ -129,7 +150,7 @@
 						align: 'center'
 					},
 					subtitle: {
-						text: '',
+						text: `男性會員:${maleCount}<br/>女性會員:${femaleCount}`,
 						align: 'left'
 					},
 					accessibility: {
@@ -153,12 +174,64 @@
 					},
 					series: [{
 						type: 'pie',
-						name: 'Share',
+						name: '佔比',
 						data: response.data
 					}]
 				});
 			}).catch(err => {
-				alert('請聯絡管理員')
+				alert('User男女佔比數據異常，請聯絡管理員')
 			});
+		//UserPie圓餅圖
+
+		//會員年齡層佔比
+		const ageGroup = document.querySelector('#ageGroup')
+		axios.get("/api/ChartApi/GetUserAgeGroup")
+			.then(response => {
+				Highcharts.chart('ageGroup', {
+					chart: {
+						type: 'pie',
+						options3d: {
+							enabled: true,
+							alpha: 45,
+							beta: 0
+						}
+					},
+					title: {
+						text: '各年齡層佔比',
+						align: 'center'
+					},
+					subtitle: {
+						text: ``,
+						align: 'left'
+					},
+					accessibility: {
+						point: {
+							valueSuffix: '%'
+						}
+					},
+					tooltip: {
+						pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+					},
+					plotOptions: {
+						pie: {
+							allowPointSelect: true,
+							cursor: 'pointer',
+							depth: 45,
+							dataLabels: {
+								enabled: true,
+								format: '{point.name}'
+							}
+						}
+					},
+					series: [{
+						type: 'pie',
+						name: '佔比',
+						data: response.data
+					}]
+				});
+			}).catch(err => {
+				alert('User男女佔比數據異常，請聯絡管理員')
+			});
+		//會員年齡層佔比
 	</script>
 }
