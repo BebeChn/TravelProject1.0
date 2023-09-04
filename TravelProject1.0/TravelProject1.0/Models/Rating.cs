@@ -15,6 +15,8 @@ public partial class Rating
 
     public string? Describe { get; set; }
 
+    public DateTime RatingDate { get; set; }
+
     public virtual Product Product { get; set; } = null!;
 
     public virtual User User { get; set; } = null!;

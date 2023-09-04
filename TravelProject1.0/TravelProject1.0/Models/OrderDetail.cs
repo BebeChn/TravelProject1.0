@@ -7,7 +7,7 @@ public partial class OrderDetail
 {
     public int Id { get; set; }
 
-    public int? OrderId { get; set; }
+    public int OrderId { get; set; }
 
     public int PlanId { get; set; }
 
@@ -17,7 +17,9 @@ public partial class OrderDetail
 
     public float? Discount { get; set; }
 
-    public virtual Order? Order { get; set; }
+    public DateTime? UseDate { get; set; }
+
+    public virtual Order Order { get; set; } = null!;
 
     public virtual Plan Plan { get; set; } = null!;
 }

@@ -75,7 +75,7 @@
                         </div>
                     </div>
                     <div class="col-md-2">
-                        <span class="product-price">${{t.price}}起</span>
+                        <span class="product-price">{{t.price | formatCurrency}}起</span>
                         <a :href="'/Transport/Plan/'+t.productId" class="button_hover theme_btn_two info">選擇方案</a>
                     </div>
                 </div>
@@ -171,6 +171,13 @@
                 },
                 total: function () {
                     return Math.ceil(this.transport.length / this.itemPage);
+                }
+            },
+            filters: {
+                //貨幣格式
+                formatCurrency: function (val) {
+                    if (typeof val !== "number") return val;
+                    return val.toLocaleString('zh-TW', { style: 'currency', currency: 'TWD', minimumFractionDigits: 0 });
                 }
             }
         })

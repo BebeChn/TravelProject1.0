@@ -1,36 +1,35 @@
 ﻿@section Styles{
-    <link href="~/css/planetk.css" rel="stylesheet" />
+
     <link href="~/css/admindashboard.css" rel="stylesheet" />
 }
 <div id="app">
-    <div class="container">
-        <br>
+        <div class="container">
+    <br>
     </div>
     <!--頁首-->
-    <header class="container-fluid row">
-        <!--區塊-->
-        <!--區塊-->
+        <header class="container-fluid row">
+    <!--區塊-->
+    <!--區塊-->
     </header>
     <!--頁首底-->
     <!--第一段-->
-    <div class="container-fluid row  justify-content-between">
+    <div class="container-fluid row   ">
         <div class="col-2"></div>
-        <button type="button" class="btn solid  col-2" @@click="Datehigh">時間由大到小</button>
+        <button type="button" class="btn solid  col-3 " style="font-weight: bold;font-size: 1.2rem;" @@click="Datehigh">時間由大到小排序</button>
         <br>
-        <button type="button" class="btn solid  col-2" @@click="Datelower">時間由小到大</button>
+        <button type="button" class="btn solid  col-3" style="font-weight: bold;font-size: 1.2rem;" @@click="Datelower">時間由小到大排序</button>
         <div class="col-4"></div>
     </div>
     <br>
     <!--第二段-->
-    <div class="container-fluid row justify-content-start">
+    <div class="container-fluid    ">
+
         <!--為什麼在nav裡面   因為這樣線才剛好對齊-->
-        <nav class="navbar bg-body ">
-            <div class="col-1"></div>
+        <nav class="navbar bg-body   justify-content-end ">
             @*            <div class="col-2">
             <button type="button" class="btn btn-success" @@click="showModal">新增會員紀錄</button>
             </div>*@
-            <div class="col-3"></div>
-            <div class="form-group col-5">
+            <div class="form-group ">
                 <form class="d-flex" role="search">
                     <!--輸入關鍵字-->
                     <input style="width: 300px; height:70px;" class="form-control" type="text" placeholder="Search" aria-label="Search"
@@ -40,275 +39,266 @@
                     </button>
                 </form>
                 <!--為什麼在nav裡面   因為這樣線才剛好對齊-->
+            </div>
         </nav>
     </div>
     <!--第二段底-->
     <br>
     <!--第三段-->
-    <div class="container-fluid row ">
+    <div class="container-fluid  ">
         <!--管理選單-->
-        <div class="col-2">
-            </div>
-@*        <div class="col-2">
-            <ul class="list-group">
-                <!--管理選單列-->  <!--改道layout用-->
-                                <a class="btn" href="https://localhost:7025/api/Admin/Admin">使用者管理</a>
-                <a class="btn" href="https://localhost:7025/api/Order/Order">訂單管理</a>
-                <a class="btn" href="http://127.0.0.1:5500/admin.html">數據分析</a>
-                <a class="btn" href="https://localhost:7025/api/Merchandise/Merchandise">商品管理</a>
-                <!--管理選單底-->
-            </ul>
+        @*        <div class="col-2">
+        <ul class="list-group">
+        <!--管理選單列-->  <!--改道layout用-->
+        <a class="btn" href="https://localhost:7025/api/Admin/Admin">使用者管理</a>
+        <a class="btn" href="https://localhost:7025/api/Order/Order">訂單管理</a>
+        <a class="btn" href="http://127.0.0.1:5500/admin.html">數據分析</a>
+        <a class="btn" href="https://localhost:7025/api/Merchandise/Merchandise">商品管理</a>
+        <!--管理選單底-->
+        </ul>
         </div>*@
         <!--顯示管理內容-->
-        <div class="col-10  ">
-            <table class="table table-bordered  table-responsive  ">
-                <thead>
-                    <tr>
-                        <td>ID
-                            <br />
-                            <br />
+
+        <table class="table table-bordered  ">
+            <thead>
+                <tr>
+                    <td>
+                        ID
+                        <br />
+                        <br />
+                    </td>
+                    <td>姓名</td>
+                    <td>性別</td>
+                    <td>信箱</td>
+                    <td>日期</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="item in AdminDTOes">
+                    <template v-if="item.Edit==true">
+                        <td>{{item.userId}}</td>
+                        <td><input v-model="item.name" /></td>
+                        <td><input v-model="item.gender" /></td>
+                        <td><input v-model="item.email" /></td>
+                        <td><input v-model="item.birthday" /></td>
+                        <td>
+                            <button type="button" class="btn btn-success" @@click="update(item)">
+                                <div class="horizontal-text">
+                                    <span>更新</span>
+                                </div>
+                            </button>
                         </td>
-                        <td>姓名</td>
-                        <td>性別</td>
-                        <td>地址</td>
-                        <td>信箱</td>
-                        <td>日期</td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="item in AdminDTOes">
-                        <template v-if="item.Edit==true">
-                            <td>{{item.userId}}</td>
-                            <td><input v-model="item.name" /></td>
-                            <td><input v-model="item.gender" /></td>
-                            <td><input v-model="item.address" /></td>
-                            <td><input v-model="item.email" /></td>
-                            <td><input v-model="item.birthday" /></td>
-                            <td>
-                                <button type="button" class="btn btn-success" @@click="update(item)">
-                                    <div class="horizontal-text">
-                                        <span>更新</span>
-                                    </div>
-                                </button>
-                            </td>
-                            <td>
-                                <button type="button" class="btn btn-info" @@click="cancel">
-                                    <div class="horizontal-text">
-                                        <span>取消</span>
-                                    </div>
-                                </button>
-                            </td>
-                        </template>
-                        <template v-else>
-                            <td>{{item.userId}}</td>
-                            <td>{{item.name}}</td>
-                            <td>{{item.gender}}</td>
-                            <td>{{item.address}}</td>
-                            <td>{{item.email}}</td>
-                            <td>{{item.birthday}}</td>
-                            <td>
-                                <button type="button" class="btn  btn-warning" @@click="edit(item.userId)">
-                                    <div class="horizontal-text">
-                                        <span>修改</span>
-                                    </div>
-                                </button>
-                            </td>
-                            <td>
-                                <button type="button" class="btn btn-danger" @@click="deleteUsr(item.userId)">
-                                    <div class="horizontal-text">
-                                        <span>刪除</span>
-                                    </div>
-                                </button>
-                            </td>
-                        </template>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <!--顯示更多內容-->
-        <div class="col-10">
-        </div>
-        <br />
-        <br />
+                        <td>
+                            <button type="button" class="btn btn-info" @@click="cancel">
+                                <div class="horizontal-text">
+                                    <span>取消</span>
+                                </div>
+                            </button>
+                        </td>
+                    </template>
+                    <template v-else>
+                        <td>{{item.userId}}</td>
+                        <td>{{item.name}}</td>
+                        <td>{{item.gender}}</td>
+                        <td>{{item.email}}</td>
+                        <td style="white-space: nowrap;">{{  formatDate( item.birthday )}}</td>
+                        <td>
+                            <button type="button" class="btn  btn-warning" @@click="edit(item.userId)">
+                                <div class="horizontal-text">
+                                    <span>修改</span>
+                                </div>
+                            </button>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-danger" @@click="deleteUsr(item.userId)">
+                                <div class="horizontal-text">
+                                    <span>刪除</span>
+                                </div>
+                            </button>
+                        </td>
+                    </template>
+                </tr>
+            </tbody>
+        </table>
 
-
+        <!--col9-->
 
         <!--最後一句-->
     </div>
+</div>
 
 
-
-    @section Scripts{
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js" integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-        <script src="https://unpkg.com/vue@next"></script>
-        <script src="~/js/planetk.js"></script>
-        <script>
-            var baseAddress = "https://localhost:7025"
-
-
-            var vueApp = {
-                data() {
-                    return {
-                        AdminDTOes: [],
-                        filter: '',
-                        name: '',
-                        gender: '',
-                        address: '',
-                        email: '',
-                        createDate: '',
-                        originalname: '',
-                        originalgender: '',
-                        originaladdress: '',
-                        originalemail: '',
-                        originalbirthday: '',
-                        //新增
-                        Addname: '',
-                        Addgender: '',
-                        Addaddress: '',
-                        Addemail: '',
-                        Addbirthday: '',
+@section Scripts{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js" integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://unpkg.com/vue@next"></script>
+    <script src="~/js/planetk.js"></script>
+    <script>
+        var baseAddress = "https://localhost:7025"
 
 
-                    };
+        var vueApp = {
+            data() {
+                return {
+                    AdminDTOes: [],
+                    filter: '',
+                    name: '',
+                    gender: '',
+                    email: '',
+                    createDate: '',
+                    originalname: '',
+                    originalgender: '',
+                    originalemail: '',
+                    originalbirthday: '',
+                    //新增
+                    Addname: '',
+                    Addgender: '',
+                    Addemail: '',
+                    Addbirthday: '',
+
+
+                };
+            },
+            mounted: function () {
+                let _this = this;
+                //alert("mount");
+                _this.filterUser();
+            },
+
+            methods: {
+                //轉換日期
+                formatDate: function (str) {
+                    if (!str) return "";
+                    var d = new Date(str);
+                    return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
                 },
-                mounted: function () {
+
+                filterUser: function () {
+                    //alert("篩選");
                     let _this = this;
-                    //alert("mount");
-                    _this.filterUser();
-                },
-                methods: {
-
-
-                    filterUser: function () {
-                        //alert("篩選");
-                        let _this = this;
-                        var request = {};
-                        //axios.get(`${baseAddress}/api/Admin/AdminGET`)
-                        request.UserId = isNaN(_this.filterUser) ? -1 : Number(_this.Filter);
-                        request.Name = request.Address = request.Email = _this.filter;
-                        axios.post(`${baseAddress}/api/Admin/AdminSearch`, request)
-                            .then(response => {
-                                _this.AdminDTOes = response.data;
-                                for (var i = 0; i < _this.AdminDTOes.length; i++) {
-                                    var item = _this.AdminDTOes[i];
-                                    item.Edit = false;
-                                }
-                            })
-                            .catch(err => {
-                                alert(err);
-                            });
-                    },
-
-
-                    edit: function (userId) {
-                        //alert("edit");
-                        let _this = this;
-                        for (var i = 0; i < _this.AdminDTOes.length; i++) {
-                            var item = _this.AdminDTOes[i];
-                            if (item.userId == userId) {
-                                item.Edit = true;
-                                _this.originalname = item.name
-                                _this.originalgender = item.gender
-                                _this.originaladdress = item.address
-                                _this.originalemail = item.email
-                                _this.originalbirthday = item.birthday
+                    var request = {};
+                    //axios.get(`${baseAddress}/api/Admin/AdminGET`)
+                    request.UserId = isNaN(_this.filterUser) ? -1 : Number(_this.Filter);
+                    request.Name = request.Email = _this.filter;
+                    axios.post(`${baseAddress}/api/Admin/AdminSearch`, request)
+                        .then(response => {
+                            _this.AdminDTOes = response.data;
+                            for (var i = 0; i < _this.AdminDTOes.length; i++) {
+                                var item = _this.AdminDTOes[i];
+                                item.Edit = false;
                             }
+                        })
+                        .catch(err => {
+                            alert(err);
+                        });
+                },
+
+
+                edit: function (userId) {
+                    //alert("edit");
+                    let _this = this;
+                    for (var i = 0; i < _this.AdminDTOes.length; i++) {
+                        var item = _this.AdminDTOes[i];
+                        if (item.userId == userId) {
+                            item.Edit = true;
+                            _this.originalname = item.name
+                            _this.originalgender = item.gender
+                            _this.originalemail = item.email
+                            _this.originalbirthday = item.birthday
                         }
-                    },
+                    }
+                },
 
 
-                    update: function (item) {
-                        //alert("update");
-                        let _this = this;
-                        var request = {};
+                update: function (item) {
+                    //alert("update");
+                    let _this = this;
+                    var request = {};
 
-                        request.UserId = item.userId;
-                        request.Name = item.name;
-                        request.Gender = item.gender;
-                        request.Address = item.address;
-                        request.Email = item.email;
-                        request.Birthday = item.birthday;
-                        axios.put(`${baseAddress}/api/Admin/AdminPUT/${item.userId}`, request).then(response => {
+                    request.UserId = item.userId;
+                    request.Name = item.name;
+                    request.Gender = item.gender;
+                    request.Email = item.email;
+                    request.Birthday = item.birthday;
+                    axios.put(`${baseAddress}/api/Admin/AdminPUT/${item.userId}`, request).then(response => {
+                        alert(response.data);
+                        _this.filterUser();
+                    }).catch(err => {
+                        alert(err);
+                    });
+                },
+
+
+                cancel: function () {
+                    //alert("cancel")
+                    let _this = this;
+                    for (var i = 0; i < _this.AdminDTOes.length; i++) {
+                        var item = _this.AdminDTOes[i];
+                        if (item.Edit == true) {
+                            item.Edit = false;
+                            item.name = _this.originalname
+                            item.gender = _this.originalgender
+                            item.email = _this.originalemail
+                            item.birthday = _this.originalbirthday
+                        }
+                    }
+                },
+
+
+                deleteUsr: function (userId) {
+                    //alert("delete");
+                    var ret = confirm("確定要刪除嗎");
+                    let _this = this;
+
+                    if (ret == true) {
+                        axios.delete(`${baseAddress}/api/Admin/AdminDELETE/${userId}`).then(response => {
                             alert(response.data);
                             _this.filterUser();
                         }).catch(err => {
                             alert(err);
-                        });
-                    },
+                        })
+                    }
+                },
 
 
-                    cancel: function () {
-                        //alert("cancel")
-                        let _this = this;
-                        for (var i = 0; i < _this.AdminDTOes.length; i++) {
-                            var item = _this.AdminDTOes[i];
-                            if (item.Edit == true) {
+                Datelower: function () {
+                    let _this = this;
+                    axios.get(`${baseAddress}/api/Admin/Datelower`)
+                        .then(response => {
+                            _this.AdminDTOes = response.data;
+                            for (var i = 0; i < _this.AdminDTOes.length; i++) {
+                                var item = _this.AdminDTOes[i];
                                 item.Edit = false;
-                                item.name = _this.originalname
-                                item.gender = _this.originalgender
-                                item.address = _this.originaladdress
-                                item.email = _this.originalemail
-                                item.birthday = _this.originalbirthday
                             }
-                        }
-                    },
+                        })
+                        .catch(err => {
+                            alert(err);
+                        });
+                },
 
 
-                    deleteUsr: function (userId) {
-                        //alert("delete");
-                        var ret = confirm("確定要刪除嗎");
-                        let _this = this;
-
-                        if (ret == true) {
-                            axios.delete(`${baseAddress}/api/Admin/AdminDELETE/${userId}`).then(response => {
-                                alert(response.data);
-                                _this.filterUser();
-                            }).catch(err => {
-                                alert(err);
-                            })
-                        }
-                    },
-
-
-                    Datelower: function () {
-                        let _this = this;
-                        axios.get(`${baseAddress}/api/Admin/Datelower`)
-                            .then(response => {
-                                _this.AdminDTOes = response.data;
-                                for (var i = 0; i < _this.AdminDTOes.length; i++) {
-                                    var item = _this.AdminDTOes[i];
-                                    item.Edit = false;
-                                }
-                            })
-                            .catch(err => {
-                                alert(err);
-                            });
-                    },
+                Datehigh: function () {
+                    let _this = this;
+                    axios.get(`${baseAddress}/api/Admin/Datehigh`)
+                        .then(response => {
+                            _this.AdminDTOes = response.data;
+                            for (var i = 0; i < _this.AdminDTOes.length; i++) {
+                                var item = _this.AdminDTOes[i];
+                                item.Edit = false;
+                            }
+                        })
+                        .catch(err => {
+                            alert(err);
+                        });
+                },
 
 
-                    Datehigh: function () {
-                        let _this = this;
-                        axios.get(`${baseAddress}/api/Admin/Datehigh`)
-                            .then(response => {
-                                _this.AdminDTOes = response.data;
-                                for (var i = 0; i < _this.AdminDTOes.length; i++) {
-                                    var item = _this.AdminDTOes[i];
-                                    item.Edit = false;
-                                }
-                            })
-                            .catch(err => {
-                                alert(err);
-                            });
-                    },
-
-
-                    //顯示畫面而已
-                    showModal: function () {
-                        //alert("新增會員");
-                        $("#insertModal").modal("show");
-                    },
+                //顯示畫面而已
+                showModal: function () {
+                    //alert("新增會員");
+                    $("#insertModal").modal("show");
+                },
 
 
 
@@ -316,22 +306,22 @@
 
 
 
-                    //最後一段
-                }
-            };
+                //最後一段
+            }
+        };
 
-            var app = Vue.createApp(vueApp).mount("#app");
-        </script>
-
-
+        var app = Vue.createApp(vueApp).mount("#app");
+    </script>
 
 
 
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
-              integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
-                integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous">
-        </script>
-        <script src="https://kit.fontawesome.com/ea5c2c7c03.js" crossorigin="anonymous"></script>
+
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous">
+    </script>
+    <script src="https://kit.fontawesome.com/ea5c2c7c03.js" crossorigin="anonymous"></script>
 
     }

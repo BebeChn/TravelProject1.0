@@ -84,7 +84,8 @@ namespace TravelProject1._0.Controllers.Api
                 ProductName = p.ProductName,
                 MainDescribe = p.MainDescribe,
                 SubDescribe = p.SubDescribe,
-                ShortDescribe = p.ShortDescribe
+                ShortDescribe = p.ShortDescribe,
+                Img = p.Img
             });
         }
     }

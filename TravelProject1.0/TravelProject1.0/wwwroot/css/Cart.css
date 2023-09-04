@@ -48,10 +48,10 @@ tbody tr td {
 .total-price {
     font-size: 24px;
     margin-right: 50px;
-    border:none;
-    width:150px;
-    text-align:center;
-    color:red;
+    border: none;
+    width: 150px;
+    text-align: center;
+    color: red;
 }
 
 .btn-buy {
@@ -63,3 +63,11 @@ tbody tr td {
         font-size: 22px;
         color: white;
     }
+
+.modal-title {
+    color: white;
+}
+
+.modal-body {
+    font-size: 20px;
+}

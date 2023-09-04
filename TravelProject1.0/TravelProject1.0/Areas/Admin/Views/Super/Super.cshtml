@@ -17,7 +17,7 @@
 	<div>
 		<div style="color:black;font-size:36px;">管理員管理</div>
 		<div class="row" style="width:25%;margin-left:800px;">
-			關鍵字搜尋：<input type="text" v-model="Filter" class="form-control" placeholder="請輸入篩選關鍵字" />
+			關鍵字搜尋：<input type="text" v-model="Filter" class="form-control" placeholder="請輸入篩選關鍵字" @*  @@keyup="filterEmployees" *@  />
 		</div>
 	</div>
 	
@@ -34,13 +34,15 @@
 				<td>建立日期</td>
 				<td>上線時間</td>
 			</tr>
-			<tr v-for="item in SuperDTOes">
+			<tr v-for="item in filterAdmin">
 				<td>{{item.id}}</td>
 				<td>{{item.describe}}</td>
 				<td>{{item.name}}</td>
 				<td>{{item.account}}</td>
-				<td>{{item.createDate | formatDate}}</td>
-				<td>{{item.loginDate | formatDate}}</td>
+				<td>{{item.createDate}}</td>
+				<td>{{item.loginDate}}</td>
+@* 				<td>{{item.createDate | formatDate}}</td>
+				<td>{{item.loginDate | formatDate}}</td> *@
 			</tr>
 		</table>
 	</div>
@@ -61,6 +63,7 @@
 			},
 			mounted: function () {
 				let _this = this;
+				// _this.filterEmployees();
 
 				fetch(`${baseAddress}/api/SuperApi/SuperGET`).then(response => {
 					if (response.ok) return response.json()
@@ -74,12 +77,30 @@
 			filters: {
 				formatDate: function (str) {
 					if (!str) return "";
-					var d = new Date(str)
-					return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`
+					var d = new Date(str);
+					return `${d.getFullYear()}/${d.getMonth() + 1}/${d.getDate()}`
 				}
 			},
 			methods: {
-				
+				// filterEmployees: function () {
+				// 	//alert("篩選");
+				// 	let _this = this;
+				// 	var request = {};
+				// 	request.Id = isNaN(Number(_this.Filter)) ? -1 : Number(_this.Filter);
+				// 	request.Name = request.Describe = request.Account = request.CreateDate = request.LoginDate = _this.Filter;
+				// 	axios.post(`${baseAddress}/api/SuperApi/SuperSearch`, request)
+				// 		.then(response => {
+				// 			_this.SuperDTOes = response.data;
+				// 		}).catch(err => {
+				// 			alert(err);
+				// 		});
+				// },
+			},
+			computed: {
+				filterAdmin: function () {
+					let _this = this;
+					return _this.SuperDTOes.filter(s => s.name.match(_this.Filter));
+				}
 			}
 		})
 	</script>

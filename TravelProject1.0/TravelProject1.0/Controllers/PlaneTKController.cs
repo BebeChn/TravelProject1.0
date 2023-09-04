@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
+using Microsoft.EntityFrameworkCore;
 using System.Numerics;
 using TravelProject1._0.Models;
 using TravelProject1._0.Models.DTO;
@@ -22,7 +23,7 @@ namespace TravelProject1._0.Controllers
 
 
 
-        //目錄============================================
+        //============================================就是商品目錄
 
 
         public IActionResult PlaneTK_catgory()
@@ -136,7 +137,7 @@ namespace TravelProject1._0.Controllers
 
 
 
-        //=======================================================
+        //=======================================================plan   商品本身
         //商品
         [HttpGet]
         public IActionResult PlaneTK_sale()
@@ -146,7 +147,7 @@ namespace TravelProject1._0.Controllers
             return View();
         }
 
-
+        //給商品頁目錄用
         [HttpGet("{id}")]
         public IActionResult PlaneTK_sale(int id)
         {
@@ -157,7 +158,7 @@ namespace TravelProject1._0.Controllers
 
         //GET資料
         [HttpGet("{id}")]
-        public async Task<IEnumerable<PlaneTKDTO>> PlaneTKGETID(int id)
+        public async Task<IEnumerable<PlaneTKDTO>> PlaneTK_Product(int id)
         {
 
             return _db.Products.Where(p => p.Id == 1
@@ -172,6 +173,25 @@ namespace TravelProject1._0.Controllers
                     SubDescribe = op.SubDescribe,
                     ShortDescribe = op.ShortDescribe,
                 });
+        }
+
+        //GET plan資料
+        //取得商品方案
+        //IQueryable就是顯示一筆紀錄  IEnumerable就是一堆紀錄 集合
+        [HttpGet]
+        [Route("{id}")]
+        public async Task<IQueryable<PlaneTK_salePlanDTO>> PlaneTK_salePlan(int id)
+        {
+            return _db.Plans.Where(p => p.ProductId == id)
+                .Select(x => new PlaneTK_salePlanDTO
+            {
+                PlanId = x.PlanId,
+                ProductId = x.ProductId,
+                Name = x.Name,
+                Describe = x.Describe,
+                PlanImg = x.PlanImg,
+                PlanPrice = x.PlanPrice
+            });
         }
 
     }
