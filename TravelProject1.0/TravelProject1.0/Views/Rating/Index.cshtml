@@ -3,45 +3,101 @@
 }
 
 @section Styles{
+    <link rel="stylesheet" href="https://unpkg.com/vue2-datepicker/index.css">
+    <style>
+        div textarea {
+            font-size: 20px;
+            resize: none;
+            height: 300px;
+            width: 100%;
+        }
 
+        .form-btn {
+            text-align: center;
+        }
+
+        .btn-submit {
+            color: white;
+            font-size: 22px;
+            width: 20%;
+            transition: all 0.3s ease;
+        }
+
+            .btn-submit:hover {
+                color: white;
+                font-size: 26px;
+            }
+
+        .planInfo {
+            margin-left: 40px;
+        }
+    </style>
 }
 
 <div id="app" class="container">
     <div class="row">
         <div class="col-md-7">
-            <h2>請給這個商品打個分數</h2>
-            <p><i class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i></p>
-            <h4>評論內容</h4>
-            <textarea></textarea>
+            <div>
+                <h1>商品評價</h1>
+                <h4>評價日期:</h4>
+                <template>
+                    <div>
+                        <date-picker v-model="date" valueType="format"></date-picker>
+                    </div>
+                </template>
+                <h4>評分:</h4>
+                <p><i class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i></p>
+                <h4>評論內容:</h4>
+                <textarea v-model="describe"></textarea>
+                <div class="form-btn">
+                    <button class="btn btn-submit info" v-on:click="addRating">送出</button>
+                </div>
+            </div>
         </div>
-        <div class="col-md-4" style="margin-left:50px;">
+        <div class="col-md-4 planInfo">
             <img src="~/lib/image/snowboard.jpg" style="width:100%;height:200px;" />
             <h2>商品名稱</h2>
+            <h4>使用日期:</h4>
             <h4>數量:</h4>
             <h4>價格:</h4>
-            <h4>使用日期:</h4>
         </div>
     </div>
 </div>
 
 @section Scripts{
+    <script src="https://unpkg.com/vue2-datepicker/index.min.js"></script>
     <script>
         var baseAddress = "https://localhost:7025";
+        Vue.component('datePicker', DatePicker);
         var app = new Vue({
             el: '#app',
             data: {
-
+                date: "",
+                ratingScore: 5,
+                describe: ""
             },
             mounted: function () {
 
             },
             methods: {
-                productRating: function () {
-                    fetch().then(response => {
+                addRating: function () {
+                    let _this = this;
+                    let ratingData = {
+                        productId: 61,
+                        ratingDate: _this.date,
+                        ratingScore: _this.ratingScore,
+                        describe: _this.describe
+                    };
+
+                    fetch(`${baseAddress}/api/RatingApi/PostRating`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(ratingData)
+                    }).then(response => {
                         if (response.ok) {
                             alert("商品評價成功");
                         } else {
-                            throw new alert("評價失敗");
+                            throw new Error("有資料未填寫");
                         }
                     }).catch(error => {
                         console.log(error);
