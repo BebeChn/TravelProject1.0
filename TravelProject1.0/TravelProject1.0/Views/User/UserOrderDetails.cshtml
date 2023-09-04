@@ -9,31 +9,32 @@
     <h1>會員歷史訂單</h1>
     <div class="container">
         <div class="row">
-            <div class="col-md-8">
-                <div class="row">
-                    <div class="row product-items" v-for="o in orders">
-                        <div class="col-md-3" v-for="d in o.detail">
-                            <img class="img-product" src="" />
+            <div class="col-md-9">
+                <div class="row" v-for="o in orders">
+                    <div class="row product-items" v-for="d in o.detail">
+                       
+                        <div class="col-md-3" >
+                            <img class="" src="" />
                         </div>
-                        <div class="col-md-7 d_flex align-items-center">
+                        <div class="col-md-5  align-items-center">
                             <div class="about_content ">
-                                <h2 class="title title_color">{{o.orderId}}</h2>
-                                <span>{{o.orderDate}}</span>
-                                <span>{{d.quantity}}</span>
-                                <span>{{d.unitprice}}</span>
-                                
+                                <div>{{o.orderDate}}</div>     
+                                <div>{{d.quantity}}</div>
+                                <div>{{d.unitPrice}}</div>
                             </div>
                         </div>
-                        <div class="col-md-2">
-                            <span class="product-price">@* ${{a.price}}起 *@</span>
-                            <a @* :href="'/Attractions/Plan/'+a.productId" *@ class="button_hover theme_btn_two info">選擇方案</a>
-                        </div>
-                    </div>
+                        <div class="col-md-4">
+                            <a class="button_hover theme_btn_two genric-btn info circle">聯絡商家</a>
+                            <br />
+                            <a class="button_hover theme_btn_two genric-btn info-border circle arrow">給予評論<span class="lnr lnr-arrow-right"></span></a>
+                        </div>         
                 </div>
             </div>
-            <div class="col-md-4">
+            </div>
+            <div class="col-md-3">
                 <div class="blog_right_sidebar">
                     <aside class="single_sidebar_widget post_category_widget">
+                        <img class="" src="" />
                         <h4 class="widget_title">會員資料</h4>
                         <ul class="list_style cat-list">
                             <li>
