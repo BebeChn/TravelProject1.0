@@ -39,7 +39,7 @@ namespace TravelProject1._0.Controllers.Api
                 RatingDate = model.RatingDate
             };
 
-            _dbContext.AddAsync(rating);
+            await _dbContext.AddAsync(rating);
 
             try
             {
@@ -50,6 +50,29 @@ namespace TravelProject1._0.Controllers.Api
                 return BadRequest(ex);
             }
             return Ok();
+        }
+
+        //取得商品評價資訊
+        [HttpGet]
+        public async Task<IQueryable<RatingInfo>> GetPlanInfo()
+        {
+            Claim user = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
+            string? idu = user.Value;
+            int id = Convert.ToInt32(idu);
+
+            return _dbContext.Plans.Include(p => p.OrderDetails).Where(p => p.ProductId == 61 && p.PlanId == 10).Select(p => new RatingInfo
+            {
+                PlanId = p.PlanId,
+                ProductId = p.ProductId,
+                Name = p.Name,
+                PlanImg = p.PlanImg,
+                OrderDetails = p.OrderDetails.Select(o => new OrderDetailDto
+                {
+                    Quantity = o.Quantity,
+                    UnitPrice = o.UnitPrice,
+                    UseDate = o.UseDate
+                })
+            });
         }
     }
 }

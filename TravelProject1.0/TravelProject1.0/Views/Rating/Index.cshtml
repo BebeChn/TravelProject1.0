@@ -4,34 +4,7 @@
 
 @section Styles{
     <link rel="stylesheet" href="https://unpkg.com/vue2-datepicker/index.css">
-    <style>
-        div textarea {
-            font-size: 20px;
-            resize: none;
-            height: 300px;
-            width: 100%;
-        }
-
-        .form-btn {
-            text-align: center;
-        }
-
-        .btn-submit {
-            color: white;
-            font-size: 22px;
-            width: 20%;
-            transition: all 0.3s ease;
-        }
-
-            .btn-submit:hover {
-                color: white;
-                font-size: 26px;
-            }
-
-        .planInfo {
-            margin-left: 40px;
-        }
-    </style>
+    <link href="~/css/rating.css" rel="stylesheet" asp-append-version="true" />
 }
 
 <div id="app" class="container">
@@ -39,27 +12,40 @@
         <div class="col-md-7">
             <div>
                 <h1>商品評價</h1>
-                <h4>評價日期:</h4>
-                <template>
-                    <div>
-                        <date-picker v-model="date" valueType="format"></date-picker>
+                <div class="rating-date">
+                    <h4>評價日期:</h4>
+                    <template>
+                        <div>
+                            <date-picker v-model="date" valueType="format" @@input="todayDate"></date-picker>
+                        </div>
+                    </template>
+                </div>
+                <div class="rating-star">
+                    <h4>評分:</h4>
+                    <div class="star">
+                        <i class="fa-solid fa-star fa-2xl"
+                           v-for="(star, index) in stars"
+                           :key="index"
+                           v-on:click="rate(index+1)"
+                           :class="{ 'active': index < selectedStar }">
+                        </i>
                     </div>
-                </template>
-                <h4>評分:</h4>
-                <p><i class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i></p>
-                <h4>評論內容:</h4>
-                <textarea v-model="describe"></textarea>
+                </div>
+                <div>
+                    <h4>評論內容:</h4>
+                    <textarea class="txt-describe" v-model="describe"></textarea>
+                </div>
                 <div class="form-btn">
                     <button class="btn btn-submit info" v-on:click="addRating">送出</button>
                 </div>
             </div>
         </div>
-        <div class="col-md-4 planInfo">
-            <img src="~/lib/image/snowboard.jpg" style="width:100%;height:200px;" />
-            <h2>商品名稱</h2>
-            <h4>使用日期:</h4>
-            <h4>數量:</h4>
-            <h4>價格:</h4>
+        <div class="col-md-4 planInfo" v-for="p in planInfo">
+            <img class="img-plan" :src="p.planImg" />
+            <h2>{{p.name}}</h2>
+            <h4>使用日期:{{p.orderDetails[0].useDate | formatDate}}</h4>
+            <h4>數量:{{p.orderDetails[0].quantity}}</h4>
+            <h4>總價:{{p.orderDetails[0].unitPrice * p.orderDetails[0].quantity | formatCurrency}}</h4>
         </div>
     </div>
 </div>
@@ -72,20 +58,31 @@
         var app = new Vue({
             el: '#app',
             data: {
-                date: "",
-                ratingScore: 5,
-                describe: ""
+                planInfo: [],
+                date: new Date(),
+                describe: "",
+                stars: [1, 2, 3, 4, 5],
+                selectedStar: -1
             },
             mounted: function () {
-
+                let _this = this;
+                fetch(`${baseAddress}/api/RatingApi/GetPlanInfo`, { method: "GET" })
+                    .then(response => {
+                        if (response.ok) return response.json();
+                    }).then(data => {
+                        _this.planInfo = data;
+                    }).catch(error => {
+                        console.log(error);
+                    })
             },
             methods: {
+                //商品評價
                 addRating: function () {
                     let _this = this;
                     let ratingData = {
                         productId: 61,
                         ratingDate: _this.date,
-                        ratingScore: _this.ratingScore,
+                        ratingScore: _this.selectedStar,
                         describe: _this.describe
                     };
 
@@ -102,6 +99,35 @@
                     }).catch(error => {
                         console.log(error);
                     })
+                },
+
+                //評分
+                rate: function (score) {
+                    if (score >= 1 && score <= 5) {
+                        this.selectedStar = score;
+                    }
+                },
+
+                //日期限制
+                todayDate: function (d) {
+                    let today = new Date();
+                    if (d !== today) {
+                        this.date = today;
+                    }
+                }
+            },
+            filters: {
+                //日期格式
+                formatDate: function (str) {
+                    if (!str) return "";
+                    var d = new Date(str);
+                    return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+                },
+
+                //貨幣格式
+                formatCurrency: function (val) {
+                    if (typeof val !== "number") return val;
+                    return val.toLocaleString('zh-TW', { style: 'currency', currency: 'TWD', minimumFractionDigits: 0 });
                 }
             }
         })

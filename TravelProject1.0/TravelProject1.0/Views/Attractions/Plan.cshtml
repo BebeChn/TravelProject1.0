@@ -64,7 +64,7 @@
                                         <h2>選擇日期</h2>
                                         <template>
                                             <div>
-                                                <date-picker v-model="p.selected.date" valueType="format"></date-picker>
+                                                <date-picker v-model="p.selected.date" valueType="format" @@input="minDate"></date-picker>
                                             </div>
                                         </template>
                                     </div>
@@ -237,6 +237,17 @@
                     })
             },
             methods: {
+                //日期限制
+                minDate(d) {
+                    let _this = this;
+                    const today = new Date();
+                    for (var i = 0; i < _this.plan.length; i++) {
+                        if (d < today) {
+                            _this.plan[i].selected.date = today;
+                        }
+                    }
+                },
+
                 //數量選擇
                 plusNum: function (model) {
                     model.num++;
@@ -258,7 +269,6 @@
                     let _this = this;
                     _this.queries = window.location.pathname.slice("18");
                     let cartData = {
-                        userId: 69,
                         productId: _this.queries,
                         cartName: model.name,
                         cartPrice: model.planPrice * model.selected.num,
