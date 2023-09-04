@@ -69,7 +69,7 @@
 		//user柱狀圖分析
 		const container = document.querySelector('#member');
 		let data = {};
-		axios.get("/api/ChartApi/GetUsers")
+		axios.get("/api/UserChartApi/GetUsers")
 			.then(response => {
 				data = response.data;
 				const Age = Object.keys(data.payingMemberAgeGroup);
@@ -128,7 +128,7 @@
 
 		//UserPie圓餅圖
 		const genderGroup = document.querySelector('#genderGroup');
-		axios.get("/api/ChartApi/GetUserGender")
+		axios.get("/api/UserChartApi/GetUserGender")
 			.then(response => {
 				let femaleCount = 0;
 				let maleCount = 0;
@@ -185,7 +185,7 @@
 
 		//會員年齡層佔比
 		const ageGroup = document.querySelector('#ageGroup')
-		axios.get("/api/ChartApi/GetUserAgeGroup")
+		axios.get("/api/UserChartApi/GetUserAgeGroup")
 			.then(response => {
 				Highcharts.chart('ageGroup', {
 					chart: {
@@ -230,8 +230,10 @@
 					}]
 				});
 			}).catch(err => {
-				alert('User男女佔比數據異常，請聯絡管理員')
+				alert('各年齡層佔比數據異常，請聯絡管理員')
 			});
 		//會員年齡層佔比
+
+		//
 	</script>
 }

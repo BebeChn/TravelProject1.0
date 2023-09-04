@@ -195,7 +195,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 				var ageGroup = _db.Users.AsNoTracking()
 					.Where(u => u.Age.HasValue && u.Age >= startAge && u.Age <= endAge)
 					.Select(u => u.Age)
-					.ToList() // 執行查詢並取得資料
+					.ToList() 
 					.GroupBy(age => new
 					{
 						StartAge = startAge,
