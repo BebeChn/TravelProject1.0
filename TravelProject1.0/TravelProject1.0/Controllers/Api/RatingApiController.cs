@@ -35,7 +35,8 @@ namespace TravelProject1._0.Controllers.Api
                 UserId = id,
                 ProductId = model.ProductId,
                 RatingScore = model.RatingScore,
-                Describe = model.Describe
+                Describe = model.Describe,
+                RatingDate = model.RatingDate
             };
 
             _dbContext.AddAsync(rating);
