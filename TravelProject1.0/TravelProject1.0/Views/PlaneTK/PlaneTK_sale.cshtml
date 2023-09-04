@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "景點方案";
+    ViewData["Title"] = "機票方案";
 }
 
 @section Styles{
@@ -11,7 +11,7 @@
     <div class="overlay bg-parallax" data-stellar-ratio="0.8" data-stellar-vertical-offset="0" data-background=""></div>
     <div class="container">
         <div class="page-cover text-center">
-            <h2 class="page-cover-tittle">Attractions Plan</h2>
+            <h2 class="page-cover-tittle">Plane Plan</h2>
         </div>
     </div>
 </section>
@@ -27,13 +27,13 @@
                 <button style="width:10%;border:1px solid gray;" class="nav-link" id="nav-rating-tab" data-bs-toggle="tab" data-bs-target="#nav-rating" type="button" role="tab" aria-controls="nav-rating" aria-selected="false">評價</button>
             </div>
         </nav>
-
+         
         <div class="tab-content" id="nav-tabContent" v-for="x in product">
-            @* 分頁1(方案) *@
+            @* 分頁1(方案)====列出產品 *@
             <div class="tab-pane fade show active" id="nav-plan" role="tabpanel" aria-labelledby="nav-plan-tab">
                 <div class="row product-describe">
                     <div class="col-md-4">
-                        <img class="img-product" @* :src="x.img" *@ />
+                        <img class="img-product"  :src="x.img"  />
                     </div>
                     <div class="col-md-8 d_flex align-items-center">
                         <div class="about_content ">
@@ -42,11 +42,11 @@
                         </div>
                     </div>
                 </div>
-                @* 商品方案 *@
+                @* 商品方案=======列出方案 *@
                 <div class="card" v-for="(p,index) in plan" :key="p.planId">
                     <div class="row">
                         <div class="col-md-3">
-                            <img class="img-plan" @* :src="p.planImg" *@ />
+                            <img class="img-plan"  :src="p.planImg"  />
                         </div>
                         <div class="col-md-7">
                             <div class="card-body">

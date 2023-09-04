@@ -2,6 +2,10 @@
     <link href="~/css/planetk.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://unpkg.com/@@vuepic/vue-datepicker@latest/dist/main.css">
+
+
 }
 <section class="breadcrumb_area">
     <div class="overlay bg-parallax" data-stellar-ratio="0.8" data-stellar-vertical-offset="0" data-background=""></div>
@@ -63,7 +67,7 @@
                                         <h2>選擇日期</h2>
                                         <template>
                                             <div>
-                                                <date-picker v-model="p.selected.date" valueType="format"></date-picker>
+                                                <datepicker v-model="p.selected.date" valueType="format"></datepicker>
                                             </div>
                                         </template>
                                     </div>
@@ -210,6 +214,8 @@
     </script>
     <script src="https://kit.fontawesome.com/ea5c2c7c03.js" crossorigin="anonymous"></script>
 
+    <script src="https://unpkg.com/vue@latest"></script>
+    <script src="https://unpkg.com/@@vuepic/vue-datepicker@latest"></script>
 
 
     <script>
@@ -221,6 +227,9 @@
                     PlaneTK_ProductDTOes: [],
                     PlaneTK_salePlanDTOes: [],
                 };
+            },
+            components: {
+                datepicker: VueDatePicker
             },
             mounted: function () {
                 let _this = this;
