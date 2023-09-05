@@ -7,72 +7,66 @@
     <style>
         .formatError
         {
-            color: #dc3545;
+            color: red;
             font-size: .875em;
         }
-
-        .form-group {
-            text-align: center;
-        }
-       
-       
+    
    
     </style>
 
           
 }
-<h1>註冊會員</h1>
-<div id="app">
-    <div class="panel-heading">
-    <div class="panel panel-primary">
-            <div class="panel-body">
-                <div class="form-group">
-                    <label for="name" class="labelname ">姓名:</label>
-                    <input type="text" class="inputname" v-model.trim="name" required />
+<h1 style="text-align:center">註冊會員</h1>
+<div id="app" class="center  element">
+ 
+    <div>
+            <div class="inputbox ">
+                    <input type="text" v-model.trim="name" required />
+                    <span>姓名</span>
                     <div v-if="!isValid(name,validType.name)" class="formatError">您輸入的格式錯誤</div>
                  @*    <div v-if="usernameTaken">該用戶名已存在</div> *@
                 </div>
-                <div class="form-group">
-                    <label for="gender" class="labelgender"></label>
+                <div>
+                    <label for="gender" >性別</label>
                     <input type="radio" v-model="gender" value="F" />男
                     <input type="radio" v-model="gender" value="M" />女
                 </div>
-                <div class="form-group">
-                    <label for="birthday">生日:</label>
-                    <input v-model.trim="birthday" type="datetime" class="inpubirthday" />
+        <div class="inputbox">
+                    <input v-model.trim="birthday" type="datetime" required />
+                    <span>生日</span>
                     <div class="formatError" v-if="!isValid(birthday,validType.birthday)">您輸入的格式不正確</div>
                 </div>
-                <div class="form-group">
-                    <label for="email" class="labelemail ">Email:</label>
-                    <input v-model.trim="email" class="inputemail" type="email" name="email" id="emailInput" placeholder="必填" required />
+        <div class="inputbox">
+                    <input v-model.trim="email" type="email" name="email" id="emailInput" required />
+                    <span>郵件</span>
                     <div class="formatError" v-if="!isValid(email,validType.email)" id="emailError">您輸入的格式不正確</div>
                 </div>
-            
-            <div class="form-group">
-                <label for="phone">Phone:</label>
-                    <input v-model.trim="phone" type="text" class="inputphone">
+
+        <div class="inputbox ">
+            <input v-model.trim="phone" type="text" required/>
+                    <span>電話</span>
                 <div class="formatError" v-if="!isValid(phone,validType.phone)">您輸入的格式不正確</div>
             </div>
-            <div class="form-group">
-                <label for="password">密碼:</label>
-                    <input v-model.trim="password" type="password" class="inputpassword ">
+        <div class="inputbox ">
+            <input v-model.trim="password" type="password" required/>
+                    <span>密碼</span>
                 <div class="formatError" v-if="!isValid(password,validType.password)">您輸入的格式不正確</div>
             </div>
-            <div class="form-group">
-                <label for="confirmPassword">重複輸入密碼:</label>
-                    <input type="password" class="inputpassword ">
+        <div class="inputbox">
+            <input type="password" required />
+                    <span>重複輸入密碼</span>
                 <div class="invalid-feedback">已被註冊、或您輸入的格式不正確</div>
             </div>
             @* <div v-if="passwordmatch()" class="invalid-feedback ">兩次所輸入密碼不一致</div> *@
-        </div>
-        <div class="panel-footer">
+       
+        <div>
                 <button type="button" class="dup" id="submitButton" @@click="Register">註冊</button>
         </div>
-        </div>
     </div>
+  
+</div>
 
-
-<div class="modal fade" id="ErrorAlert" tabindex="-1" role="dialog">
+@* <div class="modal fade" id="ErrorAlert" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -83,8 +77,8 @@
             </div>
         </div>
     </div>
-</div> 
-</div>
+</div>  *@
+
 
 @section Scripts{
     <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
