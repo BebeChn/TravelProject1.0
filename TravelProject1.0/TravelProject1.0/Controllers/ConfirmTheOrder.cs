@@ -2,7 +2,7 @@
 
 namespace TravelProject1._0.Controllers
 {
-	public class CheckOutController : Controller
+	public class ConfirmTheOrder : Controller
 	{
 		public IActionResult Index()
 		{
