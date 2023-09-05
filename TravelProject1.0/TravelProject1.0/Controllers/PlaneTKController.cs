@@ -25,7 +25,7 @@ namespace TravelProject1._0.Controllers
 
         //============================================就是商品目錄
 
-
+        //商品目錄頁
         public IActionResult PlaneTK_catgory()
         {
             return View();
@@ -36,6 +36,7 @@ namespace TravelProject1._0.Controllers
 
 
         //[HttpGet]
+        //取得商品
         public async Task<IEnumerable<PlaneTKDTO>> PlaneTK_catgoryGET()
         {
 
@@ -55,13 +56,13 @@ namespace TravelProject1._0.Controllers
         }
 
 
-        //[HttpGet]
+        
 
 
 
 
 
-        //
+        //金額低到高
         public async Task<IEnumerable<PlaneTKDTO>> pricelower()
         {
             return _db.Products.Where(y => y.Id == 1).
@@ -83,7 +84,7 @@ namespace TravelProject1._0.Controllers
 
 
 
-        //
+        //金額高到低
         public async Task<IEnumerable<PlaneTKDTO>> priceheigh()
         {
             return _db.Products.Where(y => y.Id == 1).
@@ -138,7 +139,7 @@ namespace TravelProject1._0.Controllers
 
 
         //=======================================================plan   商品本身
-        //商品
+        //商品頁
         [HttpGet]
         public IActionResult PlaneTK_sale()
         {
@@ -147,7 +148,7 @@ namespace TravelProject1._0.Controllers
             return View();
         }
 
-        //給商品頁目錄用
+        //給商品目錄頁用
         [HttpGet("{id}")]
         public IActionResult PlaneTK_sale(int id)
         {
@@ -156,7 +157,8 @@ namespace TravelProject1._0.Controllers
             return View();
         }
 
-        //GET資料
+        //GET Product資料
+        //取得商品
         [HttpGet("{id}")]
         public async Task<IEnumerable<PlaneTKDTO>> PlaneTK_Product(int id)
         {
