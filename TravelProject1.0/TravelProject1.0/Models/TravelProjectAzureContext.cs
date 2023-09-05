@@ -51,6 +51,7 @@ public partial class TravelProjectAzureContext : DbContext
             optionsBuilder.UseSqlServer(Config.GetConnectionString("TravelProject"));
         }
     }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.UseCollation("Chinese_Taiwan_Stroke_CI_AS");
