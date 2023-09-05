@@ -53,7 +53,7 @@ namespace TravelProject1._0.Controllers.Api
         //}
         // GET: api/Employees/5
         [HttpGet("{id}")]
-        public async Task<UserDTO> GetUser(int id)
+        public async Task<UpdateUserDTO> GetUser(int id)
         {
             if (_context.Users == null)
             {
@@ -65,7 +65,7 @@ namespace TravelProject1._0.Controllers.Api
             {
                 return null;
             }
-            UserDTO userDTO = new UserDTO
+            UpdateUserDTO usersDTO = new UpdateUserDTO
             {
                 Name = users.Name,
                 Email = users.Email,
@@ -73,7 +73,7 @@ namespace TravelProject1._0.Controllers.Api
                 Gender = users.Gender,
                 Phone = users.Phone,
             };
-            return userDTO;
+            return usersDTO;
         }
 
         [HttpPost]
