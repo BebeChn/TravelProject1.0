@@ -331,7 +331,9 @@ namespace TravelProject1._0.Controllers.Api
                     {
                         PlanId = z.PlanId,
                         Quantity = z.Quantity,
-                        UnitPrice = z.UnitPrice
+                        UnitPrice = z.UnitPrice,
+                        Odimg = z.Odimg,
+                        Odname = z.Odname,
                     })
                 });
         }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 using TravelProject1._0.Models;
 using TravelProject1._0.Models.DTO;
 
@@ -33,22 +34,28 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 		[HttpPost]
 		public async Task<IEnumerable<SuperFilterDTO>> SuperSearch(SuperFilterDTO SuperFilterDTO)
 		{
-			return _db.Admins.Where(y =>
-			y.Id == SuperFilterDTO.Id ||
-			y.Name.Contains(SuperFilterDTO.Name) ||
-			y.Describe.Contains(SuperFilterDTO.Describe) ||
-			y.Account.Contains(SuperFilterDTO.Account)||
-			y.CreateDate ==(SuperFilterDTO.CreateDate)||
-			y.LoginDate == (SuperFilterDTO.LoginDate)
-			).Select(x => new SuperFilterDTO
+			IEnumerable<TravelProject1._0.Models.Admin> query = _db.Admins;
+			if (SuperFilterDTO.Id!=0 || SuperFilterDTO.RoleId!=0)
+			{
+				query = query.Where(y =>
+					y.Id == SuperFilterDTO.Id ||
+					//y.RoleId == SuperFilterDTO.RoleId ||
+					y.Name.Contains(SuperFilterDTO.Name) ||
+					y.Account.Contains(SuperFilterDTO.Account) ||
+					y.Password.Contains(SuperFilterDTO.Password) ||
+					y.Role.Contains(SuperFilterDTO.Role) ||
+					y.Describe.Contains(SuperFilterDTO.Describe) ||
+					y.Account.Contains(SuperFilterDTO.Account)
+				);
+			}
+			return query.Select(x => new SuperFilterDTO
 			{
 				Id = x.Id,
 				Name = x.Name,
 				Describe = x.Describe,
 				Account = x.Account,
-				CreateDate=x.CreateDate,
-				LoginDate = x.LoginDate
-
+				CreateDate=x.CreateDate.GetValueOrDefault().ToString("u"),
+				LoginDate = x.LoginDate.GetValueOrDefault().ToString("u")
 			});
 		}
 	}
