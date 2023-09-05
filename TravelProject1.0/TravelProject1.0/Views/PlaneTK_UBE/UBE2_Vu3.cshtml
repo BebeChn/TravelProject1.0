@@ -1,12 +1,12 @@
-﻿@{
-    ViewData["Title"] = "機票方案";
-}
+﻿@section Styles{
+    <link href="~/css/planetk.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
 
-@section Styles{
-    <link href="~/css/attractions-plan.min.css" rel="stylesheet" asp-append-version="true" />
-    <link rel="stylesheet" href="https://unpkg.com/vue2-datepicker/index.css">
-}
+    <link rel="stylesheet" href="https://unpkg.com/@@vuepic/vue-datepicker@latest/dist/main.css">
 
+
+}
 <section class="breadcrumb_area">
     <div class="overlay bg-parallax" data-stellar-ratio="0.8" data-stellar-vertical-offset="0" data-background=""></div>
     <div class="container">
@@ -18,7 +18,7 @@
 
 <section id="app" class="about_history_area section_gap">
     <div class="container">
-        @* 分頁按鈕 *@
+        @* 分頁按鈕 ===============================================================================*@
         <nav>
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
                 <button style="width:10%;border:1px solid gray;" class="nav-link active" id="nav-plan-tab" data-bs-toggle="tab" data-bs-target="#nav-plan" type="button" role="tab" aria-controls="nav-plan" aria-selected="true">方案</button>
@@ -27,31 +27,34 @@
                 <button style="width:10%;border:1px solid gray;" class="nav-link" id="nav-rating-tab" data-bs-toggle="tab" data-bs-target="#nav-rating" type="button" role="tab" aria-controls="nav-rating" aria-selected="false">評價</button>
             </div>
         </nav>
-         
-        <div class="tab-content" id="nav-tabContent" v-for="x in product">
-            @* 分頁1(方案)====列出產品 *@
+
+
+
+        @* 分頁1(方案)========================================================================= *@
+        @* 商品   這頁是拿商品======================================================= *@
+        <div class="tab-content" id="nav-tabContent" v-for="item in PlaneTK_ProductDTOes">
             <div class="tab-pane fade show active" id="nav-plan" role="tabpanel" aria-labelledby="nav-plan-tab">
                 <div class="row product-describe">
                     <div class="col-md-4">
-                        <img class="img-product"  :src="x.img"  />
+                        <img class="img-product" :src="item.img" />
                     </div>
                     <div class="col-md-8 d_flex align-items-center">
                         <div class="about_content ">
-                            <h2 class="title title_color">{{x.productName}}</h2>
-                            <p>{{x.mainDescribe}}</p>
+                            <h2 class="title title_color">{{item.productName}}</h2>
+                            <p>{{item.mainDescribe}}</p>
                         </div>
                     </div>
                 </div>
-                @* 商品方案=======列出方案 *@
-                <div class="card" v-for="(p,index) in plan" :key="p.planId">
+                @* 商品方案  這頁是拿商品方案======================================================= *@
+                <div class="card" v-for="(y,index) in PlaneTK_salePlanDTOes" :key="p.planId">
                     <div class="row">
                         <div class="col-md-3">
-                            <img class="img-plan"  :src="p.planImg"  />
+                            <img class="img-plan" @* :src="p.planImg" *@ />
                         </div>
                         <div class="col-md-7">
                             <div class="card-body">
-                                <h3>{{p.name}}</h3>
-                                <p>{{p.describe}}</p>
+                                <h3>{{y.name}}</h3>
+                                <p>{{y.describe}}</p>
                             </div>
                         </div>
                         <div class="col-md-2 card-end">
@@ -64,7 +67,7 @@
                                         <h2>選擇日期</h2>
                                         <template>
                                             <div>
-                                                <date-picker v-model="p.selected.date" valueType="format"></date-picker>
+                                                <datepicker v-model="p.selected.date" valueType="format"></datepicker>
                                             </div>
                                         </template>
                                     </div>
@@ -73,7 +76,7 @@
                                         <div>
                                             <h4>單價：</h4>
                                             <div class="plan-price">
-                                                <span class="price">NT{{p.planPrice}}</span>
+                                                <span class="price">NT{{y.planPrice}}</span>
                                             </div>
                                             <br />
                                             <h4>數量：</h4>
@@ -99,7 +102,7 @@
                     </div>
                 </div>
             </div>
-            @* 分頁2(商品說明) *@
+            @* 分頁2(商品說明)========================================================================== *@
             <div class="tab-pane fade" id="nav-caption" role="tabpanel" aria-labelledby="nav-caption-tab">
                 @*商品說明*@
                 <div class="container">
@@ -108,10 +111,10 @@
                         <div class="col-md-8 offset-2 text-center">
                             <div class="row">
                                 <div class="col-md-4">
-                                    <img class="img-caption" src="~/lib/image/mountain.jpeg" />
+                                    @*<img class="img-caption" src="~/lib/image/mountain.jpeg" />*@
                                 </div>
                                 <div class="col-md-8">
-                                    <p>{{x.subDescribe}}</p>
+                                    <p>{{item.subDescribe}}</p>
                                 </div>
                             </div>
                         </div>
@@ -122,7 +125,7 @@
                     </div>
                 </div>
             </div>
-            @* 分頁3(購買須知) *@
+            @* 分頁3(購買須知)================================================================= *@
             <div class="tab-pane fade" id="nav-describe" role="tabpanel" aria-labelledby="nav-describe-tab">
                 @*購買須知*@
                 <div class="container">
@@ -130,13 +133,13 @@
                         <h2 class="title">購買須知</h2>
                         <ul>
                             <li>
-                                <p>{{x.shortDescribe}}</p>
+                                <p>{{item.shortDescribe}}</p>
                             </li>
                         </ul>
                     </div>
                 </div>
             </div>
-            @* 分頁4(評價) *@
+            @* 分頁4(評價)====================================================================== *@
             <div class="tab-pane fade" id="nav-rating" role="tabpanel" aria-labelledby="nav-rating-tab">
                 <div class="container">
                     <h2>商品評價</h2>
@@ -202,85 +205,125 @@
     </div>
 </section>
 
+<!--第四段底-->
 @section Scripts{
-    <script src="https://unpkg.com/vue2-datepicker/index.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js" integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://unpkg.com/vue@next"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous">
+    </script>
+    <script src="https://kit.fontawesome.com/ea5c2c7c03.js" crossorigin="anonymous"></script>
+
+    <script src="https://unpkg.com/vue@latest"></script>
+    <script src="https://unpkg.com/@@vuepic/vue-datepicker@latest"></script>
+
+
     <script>
-        let baseAddress = "https://localhost:7025";
-        Vue.component('datePicker', DatePicker);
-        var app = new Vue({
-            el: '#app',
-            data: {
-                plan: [],
-                product: [],
-                queries: ''
+        var baseAddress = "https://localhost:7025"
+        var WebsiteIndex = window.location.pathname.replace('/api/PlaneTK/PlaneTK_sale/', '')
+        var vueApp = {
+            data() {
+                return {
+                    PlaneTK_ProductDTOes: [],
+                    PlaneTK_salePlanDTOes: [],
+                };
+            },
+            components: {
+                datepicker: VueDatePicker
             },
             mounted: function () {
                 let _this = this;
-                //queryString
-                _this.queries = window.location.pathname.replace('/api/PlaneTK/PlaneTK_sale/', '');
+                _this.PlaneTKGETID();
 
-                fetch(`${baseAddress}/api/PlaneTK/PlaneTK_salePlan/${_this.queries}`, { method: "GET" })
-                    .then(response => {
-                        if (response.ok) return response.json();
-                    }).then(data => {
-                        _this.plan = data.map(x => ({ ...x, selected: { date: "", num: 0 } }));
-                    }).catch(error => {
-                        alert(error);
-                    });
-                fetch(`${baseAddress}/api/PlaneTK/PlaneTK_Product/${_this.queries}`, { method: "GET" })
-                    .then(response => {
-                        if (response.ok) return response.json();
-                    }).then(data => {
-                        _this.product = data;
-                    }).catch(error => {
-                        alert(error);
-                    })
+
             },
             methods: {
-                //數量選擇
-                plusNum: function (model) {
-                    model.num++;
-                },
-                minusNum: function (model) {
-                    if (model.num == 0) {
-                        model.num = 0;
-                    } else {
-                        model.num--;
-                    }
-                },
-                //計算總金額
-                calculate: function (p) {
-                    return p.planPrice * p.selected.num;
-                },
 
-                //加入購物車
-                addCart: function (model) {
+
+
+                //GET機票商品
+                PlaneTKGETID: function () {
                     let _this = this;
-                    _this.queries = window.location.pathname.replace('/api/PlaneTK/PlaneTK_sale/', '');
-                    let cartData = {
-                        userId: 69,
-                        productId: _this.queries,
-                        cartName: model.name,
-                        cartPrice: model.planPrice * model.selected.num,
-                        cartQuantity: model.selected.num,
-                        cartDate: model.selected.date
-                    };
+                    //alert("篩選");
+                    var request = {};
 
-                    fetch(`${baseAddress}/api/CartApi/AddToCart`, {
-                        method: 'POST',
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify(cartData)
-                    }).then(response => {
-                        if (response.ok) {
-                            alert("商品已加入購物車!");
-                        } else {
-                            throw new Error("無法將商品加入購物車!");
-                        }
-                    }).catch(error => {
-                        console.log(error);
-                    })
-                }
-            }
-        })
+
+                    axios.get(`${baseAddress}/api/PlaneTK/PlaneTK_Product/${WebsiteIndex}`)
+                        .then(response => {
+                            _this.PlaneTKGETIDDTOes = response.data;
+
+                        })
+                        .catch(err => {
+                            alert(err);
+                        });
+                },
+
+                //GET機票plan
+                PlaneTK_salePlan: function () {
+                    let _this = this;
+                    //alert("篩選");
+                    var request = {};
+
+                    axios.get(`${baseAddress}/api/PlaneTK/PlaneTK_salePlan/${WebsiteIndex}`)
+                        .then(response => {
+                            _this.PlaneTK_salePlanDTOes = response.data;
+
+                        })
+                        .catch(err => {
+                            alert(err);
+                        });
+                },
+                ////數量選擇
+                //plusNum: function (model) {
+                //    model.num++;
+                //},
+                //minusNum: function (model) {
+                //    if (model.num == 0) {
+                //        model.num = 0;
+                //    } else {
+                //        model.num--;
+                //    }
+                //},
+                ////計算總金額
+                //calculate: function (p) {
+                //    return p.planPrice * p.selected.num;
+                //},
+                //加入購物車
+                //addCart: function (model) {
+                //    let _this = this;
+                //    _this.queries = window.location.pathname.slice("18");
+                //    let cartData = {
+                //        userId: 69,
+                //        productId: _this.queries,
+                //        cartName: model.name,
+                //        cartPrice: model.planPrice * model.selected.num,
+                //        cartQuantity: model.selected.num,
+                //        cartDate: model.selected.date
+                //    };
+
+                //    fetch(`${baseAddress}/api/CartApi/AddToCart`, {
+                //        method: 'POST',
+                //        headers: { "Content-Type": "application/json" },
+                //        body: JSON.stringify(cartData)
+                //    }).then(response => {
+                //        if (response.ok) {
+                //            alert("商品已加入購物車!");
+                //        } else {
+                //            throw new Error("無法將商品加入購物車!");
+                //        }
+                //    }).catch(error => {
+                //        console.log(error);
+                //    })
+
+
+
+
+
+            },
+        };
+
+        var app = Vue.createApp(vueApp).mount("#app");
+
     </script>
-}
+
+    }

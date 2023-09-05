@@ -51,6 +51,7 @@ public partial class TravelProjectAzureContext : DbContext
             optionsBuilder.UseSqlServer(Config.GetConnectionString("TravelProject"));
         }
     }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.UseCollation("Chinese_Taiwan_Stroke_CI_AS");
@@ -135,9 +136,11 @@ public partial class TravelProjectAzureContext : DbContext
             entity.Property(e => e.OrderId).HasColumnName("OrderID");
             entity.Property(e => e.PlanId).HasColumnName("PlanID");
             entity.Property(e => e.UnitPrice).HasColumnType("money");
+            entity.Property(e => e.UseDate).HasColumnType("date");
 
             entity.HasOne(d => d.Order).WithMany(p => p.OrderDetails)
                 .HasForeignKey(d => d.OrderId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Order Detail_Orders");
 
             entity.HasOne(d => d.Plan).WithMany(p => p.OrderDetails)
@@ -223,6 +226,7 @@ public partial class TravelProjectAzureContext : DbContext
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.Describe).HasMaxLength(200);
             entity.Property(e => e.ProductId).HasColumnName("ProductID");
+            entity.Property(e => e.RatingDate).HasColumnType("date");
             entity.Property(e => e.UserId).HasColumnName("UserID");
 
             entity.HasOne(d => d.Product).WithMany(p => p.Ratings)

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -44,12 +45,14 @@ namespace TravelProject1._0.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IEnumerable<AdminDTO>> AdminSearch(AdminDTO AdminDTO)
         {
+            
+
             return _db.Users.Where(y =>
             y.UserId == AdminDTO.UserId ||
             y.Name.Contains(AdminDTO.Name) ||
             y.Gender.Contains(AdminDTO.Gender) ||
             y.Email.Contains(AdminDTO.Email)
-            || y.Birthday == (AdminDTO.Birthday)
+            //|| y.Birthday == AdminDTO.Birthday
             ).Select(x => new AdminDTO
             {
                 UserId = x.UserId,
@@ -89,7 +92,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers
             User.Name = AdminDTO.Name;
             User.Gender = AdminDTO.Gender;
             User.Email = AdminDTO.Email;
-            User.Birthday = AdminDTO.Birthday;
+            //User.Birthday = AdminDTO.Birthday;
             _db.Entry(User).State = EntityState.Modified;
 
             try
@@ -194,7 +197,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers
                     Name = z.Name,
                     Gender = z.Gender,
                     Email = z.Email,
-                    Birthday = z.Birthday,
+                    //Birthday = z.Birthday,
                 });
         }
 
@@ -208,7 +211,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers
                     Name = z.Name,
                     Gender = z.Gender,
                     Email = z.Email,
-                    Birthday = z.Birthday,
+                    //Birthday = z.Birthday,
                 });
         }
     }

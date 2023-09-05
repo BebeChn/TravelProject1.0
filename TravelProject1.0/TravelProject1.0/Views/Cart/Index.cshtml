@@ -26,7 +26,7 @@
                 <td align="center" valign="middle"><img style="width:100px;height:100px;" src="~/lib/image/mountain.jpeg" /></td>
                 <td align="center" valign="middle">{{c.cartName}}</td>
                 <td align="center" valign="middle">{{c.cartQuantity}}</td>
-                <td align="center" valign="middle">{{c.cartPrice}}</td>
+                <td align="center" valign="middle">{{c.cartPrice | formatCurrency}}</td>
                 <td align="center" valign="middle">{{c.cartDate | formatDate}}</td>
                 <td align="center" valign="middle"><button class="btn btn-delete danger" v-on:click="deleteModal(c)" v-bind:disabled="!c.checked" data-bs-toggle="modal" data-bs-target="#deleteItem"><i class="fa-solid fa-trash-can"></i></button></td>
             </tr>
@@ -35,7 +35,7 @@
     <div class="total">
         <div class="calculate">
             <span class="total-title">合計：</span>
-            <input class="total-price" v-bind:value="totalPrice(cartItem)" readonly />
+            <input class="total-price" v-bind:value="totalPrice(cartItem) | formatCurrency" readonly />
             <button class="btn btn-buy info">前往結帳</button>
         </div>
     </div>
@@ -44,14 +44,14 @@
     <div class="modal fade" id="deleteItem" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header info">
                     <h1 class="modal-title fs-5" id="exampleModalLabel">刪除商品</h1>
                 </div>
                 <div class="modal-body">
                     <h4>您確定要刪除所選商品嗎?</h4>
                     <div>商品名稱:{{remove.cartName}}</div>
                     <div>數量:{{remove.cartQuantity}}</div>
-                    <div>總金額:{{remove.cartPrice}}</div>
+                    <div>總金額:{{remove.cartPrice | formatCurrency}}</div>
                     <div>使用日期:{{remove.cartDate | formatDate}}</div>
                 </div>
                 <div class="modal-footer">
@@ -93,14 +93,20 @@
                     if (!str) return "";
                     var d = new Date(str);
                     return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+                },
+
+                //貨幣格式
+                formatCurrency: function (val) {
+                    if (typeof val !== "number") return val;
+                    return val.toLocaleString('zh-TW', { style: 'currency', currency: 'TWD', minimumFractionDigits: 0 });
                 }
             },
             methods: {
+                //刪除modal
                 deleteModal: function (model) {
                     let _this = this;
                     _this.remove = Object.assign({}, model)
                 },
-
                 //刪除商品項目
                 removeItem: function (model) {
                     let _this = this;
