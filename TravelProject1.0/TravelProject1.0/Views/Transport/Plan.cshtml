@@ -63,7 +63,7 @@
                                         <h2>選擇日期</h2>
                                         <template>
                                             <div>
-                                                <date-picker v-model="p.selected.date" valueType="format"></date-picker>
+                                                <date-picker v-model="p.selected.date" valueType="format" @@input="minDate"></date-picker>
                                             </div>
                                         </template>
                                     </div>
@@ -143,57 +143,17 @@
                 <div class="container">
                     <h2>商品評價</h2>
                     <div class="comments-area">
-                        <div class="comment-list">
+                        <div class="comment-list" v-for="r in rating">
                             <div class="single-comment justify-content-between d-flex">
                                 <div class="user justify-content-between d-flex">
-                                    <div class="thumb">
-                                    </div>
                                     <div class="desc">
-                                        <h5><a href="#">Emilly Blunt</a></h5>
-                                        <p class="date">December 4, 2017 at 3:12 pm </p>
-                                        <p class="comment">
-                                            Never say goodbye till the end comes!
-                                        </p>
+                                        <h5><a href="#">使用者名稱</a></h5>
+                                        <p class="date">{{r.ratingDate | formatDate}}</p>
+                                        <div class="star">
+                                            <i class="fa-solid fa-star fa-2xl" v-for="(star,index) in r.ratingScore"></i>
+                                        </div>
+                                        <p class="comment">{{r.describe}}</p>
                                     </div>
-                                </div>
-                                <div class="reply-btn">
-                                    <a href="" class="btn-reply text-uppercase">reply</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="comment-list">
-                            <div class="single-comment justify-content-between d-flex">
-                                <div class="user justify-content-between d-flex">
-                                    <div class="thumb">
-                                    </div>
-                                    <div class="desc">
-                                        <h5><a href="#">Maria Luna</a></h5>
-                                        <p class="date">December 4, 2017 at 3:12 pm </p>
-                                        <p class="comment">
-                                            Never say goodbye till the end comes!
-                                        </p>
-                                    </div>
-                                </div>
-                                <div class="reply-btn">
-                                    <a href="" class="btn-reply text-uppercase">reply</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="comment-list">
-                            <div class="single-comment justify-content-between d-flex">
-                                <div class="user justify-content-between d-flex">
-                                    <div class="thumb">
-                                    </div>
-                                    <div class="desc">
-                                        <h5><a href="#">Ina Hayes</a></h5>
-                                        <p class="date">December 4, 2017 at 3:12 pm </p>
-                                        <p class="comment">
-                                            Never say goodbye till the end comes!
-                                        </p>
-                                    </div>
-                                </div>
-                                <div class="reply-btn">
-                                    <a href="" class="btn-reply text-uppercase">reply</a>
                                 </div>
                             </div>
                         </div>
@@ -214,13 +174,13 @@
             data: {
                 plan: [],
                 product: [],
+                rating:[],
                 queries: ''
             },
             mounted: function () {
                 var _this = this;
-
                 _this.queries = window.location.href.slice("38");
-
+                //方案
                 fetch(`${baseAddress}/api/TransportApi/GetPlan/${_this.queries}`, { method: "GET" })
                     .then(response => {
                         if (response.ok) return response.json();
@@ -229,6 +189,7 @@
                     }).catch(error => {
                         alert(error);
                     });
+                //商品
                 fetch(`${baseAddress}/api/TransportApi/GetProduct/${_this.queries}`, { method: "GET" })
                     .then(response => {
                         if (response.ok) return response.json();
@@ -236,9 +197,29 @@
                         _this.product = data;
                     }).catch(error => {
                         alert(error);
-                    })
+                    });
+                //評價
+                fetch(`${baseAddress}/api/AttractionsApi/GetRating/${_this.queries}`, { method: "GET" })
+                    .then(response => {
+                        if (response.ok) return response.json();
+                    }).then(data => {
+                        _this.rating = data;
+                    }).catch(error => {
+                        console.log(error);
+                    });
             },
             methods: {
+                //日期限制
+                minDate(d) {
+                    let _this = this;
+                    const today = new Date();
+                    for (var i = 0; i < _this.plan.length; i++) {
+                        if (d < today) {
+                            _this.plan[i].selected.date = today;
+                        }
+                    }
+                },
+
                 //數量選擇
                 plusNum: function (model) {
                     model.num++;
@@ -260,7 +241,6 @@
                     let _this = this;
                     _this.queries = window.location.href.slice("38");
                     let cartData = {
-                        userId: 69,
                         productId: _this.queries,
                         cartName: model.name,
                         cartPrice: model.planPrice * model.selected.num,

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Drawing.Printing;
+using System.Security.Claims;
 using TravelProject1._0.Models;
 using TravelProject1._0.Models.DTO;
 
@@ -88,6 +89,19 @@ namespace TravelProject1._0.Controllers.Api
                 SubDescribe = p.SubDescribe,
                 ShortDescribe = p.ShortDescribe,
                 Img = p.Img
+            });
+        }
+
+        //商品評價
+        [HttpGet]
+        [Route("{id}")]
+        public async Task<IQueryable<RatingDTO>> GetRating(int id)
+        {
+            return _dbContext.Ratings.Where(r => r.ProductId == id).Select(r => new RatingDTO
+            {
+                RatingScore = r.RatingScore,
+                Describe = r.Describe,
+                RatingDate = r.RatingDate
             });
         }
     }
