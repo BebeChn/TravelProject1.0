@@ -10,11 +10,11 @@ namespace TravelProject1._0.Models.DTO
 
         public decimal? UnitPrice { get; set; }
 
-<<<<<<< HEAD
+
         public DateTime? UseDate { get; set; }
-=======
+
         public string? Odname { get; set; }
         public string? Odimg { get; set; }
->>>>>>> Bebe
+
     }
 }
