@@ -173,7 +173,7 @@ button:focus {
         -ms-transform: translateX(-100%);
         transform: translateX(-100%);
         z-index: -1;
-        background: #f8b100;
+        background:#222222;
         -webkit-transition: all 0.3s linear;
         -o-transition: all 0.3s linear;
         transition: all 0.3s linear;

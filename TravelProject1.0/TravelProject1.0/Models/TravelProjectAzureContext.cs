@@ -51,7 +51,6 @@ public partial class TravelProjectAzureContext : DbContext
             optionsBuilder.UseSqlServer(Config.GetConnectionString("TravelProject"));
         }
     }
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.UseCollation("Chinese_Taiwan_Stroke_CI_AS");
@@ -133,6 +132,8 @@ public partial class TravelProjectAzureContext : DbContext
             entity.ToTable("Order Detail");
 
             entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.Odimg).HasColumnName("ODImg");
+            entity.Property(e => e.Odname).HasColumnName("ODname");
             entity.Property(e => e.OrderId).HasColumnName("OrderID");
             entity.Property(e => e.PlanId).HasColumnName("PlanID");
             entity.Property(e => e.UnitPrice).HasColumnType("money");
