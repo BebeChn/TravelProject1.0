@@ -110,26 +110,40 @@ namespace TravelProject1._0.Controllers.Api
             return Ok(new { Message = "商品已從購物車移除" });
         }
 
-
-        [HttpGet]
-        public async Task<CartSummaryViewModel> GetCartSummary()
+        //購物車項目移至訂單
+        [HttpPost]
+        public async Task<IActionResult> AddOrder([FromBody] AddOrderViewModel model)
         {
+            if (model == null) return BadRequest();
+
             Claim user = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
             string? idu = user.Value;
             int id = Convert.ToInt32(idu);
 
-            var cartItems = await _context.Carts
-                .Where(c => c.UserId == id)
-                .ToListAsync();
-
-            int totalQuantity = cartItems.Sum(item => item.CartQuantity.GetValueOrDefault());
-            decimal totalPrice = cartItems.Sum(item => (item.CartPrice * item.CartQuantity).GetValueOrDefault());
-
-            return new CartSummaryViewModel
+            AddOrderViewModel order = new AddOrderViewModel
             {
-                TotalQuantity = totalQuantity,
-                TotalPrice = totalPrice
+                OrderName = model.OrderName,
+                orderDetails = model.orderDetails.Select(o => new Models.DTO.OrderDetailDto
+                {
+                    PlanId = o.PlanId,
+                    Quantity = o.Quantity,
+                    UnitPrice = o.UnitPrice,
+                    UseDate = o.UseDate,
+                    Odname = o.Odname
+                })
             };
+
+            _context.Add(order);
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+            return Ok();
         }
     }
 }

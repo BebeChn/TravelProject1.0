@@ -1,107 +1,23 @@
-﻿/*畫面切換*/
-.plan {
-    display: "";
-    margin-top: 30px;
-}
-
-.caption {
-    display: "";
-    margin-top: 30px;
-}
-
-.describe {
-    display: "";
-    margin-top: 30px;
-}
-
-.rating {
-    display: "";
-    margin-top: 30px;
+﻿.product-describe {
+    margin-bottom: 30px;
 }
 
 .img-product {
-    width: 100%;
-    border-radius: 20px;
-}
-
-.pagination {
-    margin-top: 5px;
-    justify-content: space-evenly;
-}
-
-.btn-switch {
-    background-color: cornflowerblue;
-    color: white;
+    width: 220px;
+    height: 160px;
     border-radius: 10px;
-    font-size: 20px;
-    transition: all 0.3s ease
 }
-
-    .btn-switch:hover {
-        background-color: #4E76EE;
-        color: white;
-        font-size: 26px;
-    }
 
 .card {
     margin-bottom: 5px;
 }
 
-.title {
-    font-size: 36px;
-    font-weight: bold;
-}
-
 .img-plan {
     width: 100%;
-    height: 100%;
-    border-radius: 20px;
-}
-
-.card-title {
-    font-size: 28px;
-    font-weight: bold;
 }
 
 .card-end {
     text-align: right;
-}
-
-.plan-price {
-    font-size: 28px;
-    font-weight: bold;
-    color: red;
-}
-
-.btn-heart {
-    color: pink;
-    font-size: 20px;
-    transition: all 0.3s ease;
-}
-
-    .btn-heart:hover {
-        color: red;
-        font-size: 26px;
-    }
-
-.btn-plan {
-    background-color: darkturquoise;
-    color: white;
-    border-radius: 5px;
-    width: 100%;
-    font-size: 20px;
-    font-weight: bold;
-    transition: all 0.3s ease;
-}
-
-    .btn-plan:hover {
-        background-color: #4EEEC6;
-        color: white;
-        font-size: 24px;
-    }
-
-.product-descripts {
-    margin-bottom: 36px;
 }
 
 .img-caption {
@@ -109,16 +25,44 @@
     border-radius: 10px;
 }
 
-.sub-title {
+.quantity {
+    justify-content: center;
+    align-items: center;
+    height: 80px;
+    margin-bottom: 20px;
+}
+
+.quantity-num {
+    font-size: 28px;
+    width: 100px;
+    text-align: center;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.quantity button {
     font-weight: bold;
+    color: white;
 }
 
-.sub-descripts {
-    text-align: justify;
+.buy {
+    text-align: center;
 }
 
-.img-user {
-    border-radius: 50%;
-    width: 100%;
-    height: 100%;
+.plan-price {
+    text-align: center;
+}
+
+.price {
+    font-size: 40px;
+}
+
+.total {
+    text-align: center;
+    margin-bottom: 12px;
+}
+
+.total-price {
+    font-size: 40px;
+    text-align: center;
 }
