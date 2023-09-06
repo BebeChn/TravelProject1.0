@@ -158,7 +158,7 @@ namespace TravelProject1._0.Controllers
         }
 
         //GET Product資料
-        //取得商品
+        //取得商品一個
         [HttpGet("{id}")]
         public async Task<IEnumerable<PlaneTKDTO>> PlaneTK_Product(int id)
         {
@@ -193,6 +193,23 @@ namespace TravelProject1._0.Controllers
                 Describe = x.Describe,
                 PlanImg = x.PlanImg,
                 PlanPrice = x.PlanPrice
+            });
+        }
+
+
+
+
+        //GET商品
+        [HttpGet]
+        [Route("{id}")]
+        public async Task<IQueryable<RatingDTO>> PlaneTK_GetRate(int id)
+        {
+            return _db.Ratings.Where(r => r.ProductId == id)
+                .Select(r => new RatingDTO
+            {
+                RatingScore = r.RatingScore,
+                Describe = r.Describe,
+                RatingDate = r.RatingDate
             });
         }
 
