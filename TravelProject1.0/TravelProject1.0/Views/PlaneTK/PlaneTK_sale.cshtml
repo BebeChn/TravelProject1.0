@@ -27,13 +27,13 @@
                 <button style="width:10%;border:1px solid gray;" class="nav-link" id="nav-rating-tab" data-bs-toggle="tab" data-bs-target="#nav-rating" type="button" role="tab" aria-controls="nav-rating" aria-selected="false">評價</button>
             </div>
         </nav>
-         
+
         <div class="tab-content" id="nav-tabContent" v-for="x in product">
-            @* 分頁1(方案)====列出產品 *@
+            @* 分頁1(方案) *@
             <div class="tab-pane fade show active" id="nav-plan" role="tabpanel" aria-labelledby="nav-plan-tab">
                 <div class="row product-describe">
                     <div class="col-md-4">
-                        <img class="img-product"  :src="x.img"  />
+                        <img class="img-product" @* :src="x.img" *@ />
                     </div>
                     <div class="col-md-8 d_flex align-items-center">
                         <div class="about_content ">
@@ -42,11 +42,11 @@
                         </div>
                     </div>
                 </div>
-                @* 商品方案=======列出方案 *@
+                @* 商品方案 *@
                 <div class="card" v-for="(p,index) in plan" :key="p.planId">
                     <div class="row">
                         <div class="col-md-3">
-                            <img class="img-plan"  :src="p.planImg"  />
+                            <img class="img-plan" @* :src="p.planImg" *@ />
                         </div>
                         <div class="col-md-7">
                             <div class="card-body">
@@ -141,57 +141,17 @@
                 <div class="container">
                     <h2>商品評價</h2>
                     <div class="comments-area">
-                        <div class="comment-list">
+                        <div class="comment-list" v-for="r in rating">
                             <div class="single-comment justify-content-between d-flex">
                                 <div class="user justify-content-between d-flex">
-                                    <div class="thumb">
-                                    </div>
                                     <div class="desc">
-                                        <h5><a href="#">Emilly Blunt</a></h5>
-                                        <p class="date">December 4, 2017 at 3:12 pm </p>
-                                        <p class="comment">
-                                            Never say goodbye till the end comes!
-                                        </p>
+                                        <h5><a href="#">使用者名稱</a></h5>
+                                        <p class="date">{{r.ratingDate | formatDate}}</p>
+                                        <div class="star">
+                                            <i class="fa-solid fa-star fa-2xl" v-for="(star,index) in r.ratingScore"></i>
+                                        </div>
+                                        <p class="comment">{{r.describe}}</p>
                                     </div>
-                                </div>
-                                <div class="reply-btn">
-                                    <a href="" class="btn-reply text-uppercase">reply</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="comment-list">
-                            <div class="single-comment justify-content-between d-flex">
-                                <div class="user justify-content-between d-flex">
-                                    <div class="thumb">
-                                    </div>
-                                    <div class="desc">
-                                        <h5><a href="#">Maria Luna</a></h5>
-                                        <p class="date">December 4, 2017 at 3:12 pm </p>
-                                        <p class="comment">
-                                            Never say goodbye till the end comes!
-                                        </p>
-                                    </div>
-                                </div>
-                                <div class="reply-btn">
-                                    <a href="" class="btn-reply text-uppercase">reply</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="comment-list">
-                            <div class="single-comment justify-content-between d-flex">
-                                <div class="user justify-content-between d-flex">
-                                    <div class="thumb">
-                                    </div>
-                                    <div class="desc">
-                                        <h5><a href="#">Ina Hayes</a></h5>
-                                        <p class="date">December 4, 2017 at 3:12 pm </p>
-                                        <p class="comment">
-                                            Never say goodbye till the end comes!
-                                        </p>
-                                    </div>
-                                </div>
-                                <div class="reply-btn">
-                                    <a href="" class="btn-reply text-uppercase">reply</a>
                                 </div>
                             </div>
                         </div>
@@ -206,19 +166,20 @@
     <script src="https://unpkg.com/vue2-datepicker/index.min.js"></script>
     <script>
         let baseAddress = "https://localhost:7025";
-        Vue.component('datePicker', DatePicker);
+        Vue.component( DatePicker);
         var app = new Vue({
             el: '#app',
             data: {
                 plan: [],
                 product: [],
-                queries: ''
+                rating: [],
+                queries: '',
             },
             mounted: function () {
                 let _this = this;
-                //queryString
+                 
                 _this.queries = window.location.pathname.replace('/api/PlaneTK/PlaneTK_sale/', '');
-
+                //取得方案
                 fetch(`${baseAddress}/api/PlaneTK/PlaneTK_salePlan/${_this.queries}`, { method: "GET" })
                     .then(response => {
                         if (response.ok) return response.json();
@@ -227,6 +188,7 @@
                     }).catch(error => {
                         alert(error);
                     });
+                //取得商品
                 fetch(`${baseAddress}/api/PlaneTK/PlaneTK_Product/${_this.queries}`, { method: "GET" })
                     .then(response => {
                         if (response.ok) return response.json();
@@ -235,8 +197,29 @@
                     }).catch(error => {
                         alert(error);
                     })
+                // 
+                fetch(`${baseAddress}/api/PlaneTK/PlaneTK_GetRate/${_this.queries}`, { method: "GET" })
+                    .then(response => {
+                        if (response.ok) return response.json();
+                    }).then(data => {
+                        _this.rating = data;
+                    }).catch(error => {
+                        console.log(error);
+                    })
+
+
             },
             methods: {
+                //
+                minDate(d) {
+                    let _this = this;
+                    const today = new Date();
+                    for (var i = 0; i < _this.plan.length; i++) {
+                        if (d < today) {
+                            _this.plan[i].selected.date = today;
+                        }
+                    }
+                },
                 //數量選擇
                 plusNum: function (model) {
                     model.num++;
@@ -258,14 +241,12 @@
                     let _this = this;
                     _this.queries = window.location.pathname.replace('/api/PlaneTK/PlaneTK_sale/', '');
                     let cartData = {
-                        userId: 69,
                         productId: _this.queries,
                         cartName: model.name,
                         cartPrice: model.planPrice * model.selected.num,
                         cartQuantity: model.selected.num,
                         cartDate: model.selected.date
                     };
-
                     fetch(`${baseAddress}/api/CartApi/AddToCart`, {
                         method: 'POST',
                         headers: { "Content-Type": "application/json" },
@@ -279,6 +260,20 @@
                     }).catch(error => {
                         console.log(error);
                     })
+                }
+            },
+            filters: {
+                //
+                formatCurrency: function (val) {
+                    if (typeof val !== "number") return val;
+                    return val.toLocaleString('zh-TW', { style: 'currency', currency: 'TWD', minimumFractionDigits: 0 });
+                },
+
+                //
+                formatDate: function (str) {
+                    if (!str) return "";
+                    var d = new Date(str);
+                    return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
                 }
             }
         })
