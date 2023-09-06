@@ -25,28 +25,84 @@
     text-align: center;
     background: lightgray;
 }
-.justify {
+.center {
     display: flex;
-    text-align: center;
+    align-items: center;
     justify-content: center;
+    height: 100vh;
+   
 }
+.element {
+    background-image: url('../images/images.project/plan/korea/istockphoto-835391546-612x612.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.inputbox {
+    position: relative;
+    width: 270px;
+}
+
+    .inputbox input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid deepskyblue;
+        background: white;
+        border-radius: 5px;
+        outline: none;
+        color: black;
+        font-size: 1em;
+    }
+
+    .inputbox span {
+        position: absolute;
+        left: 0;
+        padding: 10px;
+        pointer-events: none;
+        font-size: 1em;
+        color: grey;
+        text-transform: uppercase;
+        transition: 0.5s;
+    }
+
+    .inputbox input:valid ~ span, .inputbox input:focus ~ span {
+        color: aqua;
+        transform: translateX(10px) translateY(-7px);
+        font-size: 0.65em;
+        padding: 0 10px;
+        background: black;
+        border-left: 1px solid deepskyblue;
+        border-right: 1px solid deepskyblue;
+        letter-spacing: 0.2em;
+    }
+    /*    .inputbox:nth-child(2) input:valid ~ span, .inputboxx:nth-child(2) input:valid ~ span {
+        background-color: deepskyblue;
+        color:black;
+        border-radius:2px;
+    }*/
+    .inputbox input:valid, .inputbox input:focus {
+        border: 1px solid deepskyblue;
+    }
 
 .dup {
     display: block;
-    margin: 20px auto;
+    margin: 20px 80px;
     text-align: center;
     background-color: #fad384;
-    padding: 12px;
+    padding: 8px;
     font-size: 15px;
-    border-radius: 22px;
+    border-radius: 18px;
     outline: none;
     color: rgb(19, 23, 27);
-    width: 150px;
-    background-color: deepskyblue;
-    color: black;
-    border: 2px solid #070505;
+    width: 100px;
+    background-color: white;
+    border: 1px solid deepskyblue;
     cursor: pointer;
 }
+
+    .dup:hover {
+        border: 1.5px solid black;
+    }
 
 .labelstyle {
     text-align: center;
