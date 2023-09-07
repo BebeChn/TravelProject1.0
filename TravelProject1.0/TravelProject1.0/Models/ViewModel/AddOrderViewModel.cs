@@ -8,6 +8,10 @@ namespace TravelProject1._0.Models.ViewModel
 
         public string? OrderName { get; set; }
 
-        public IEnumerable<AddOrder> orderDetails { get; set; }
+        public int PlanId { get; set; }
+
+        public decimal? UnitPrice { get; set; }
+
+        public short? Quantity { get; set; }
     }
 }

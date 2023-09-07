@@ -53,6 +53,7 @@ public partial class TravelProjectAzureContext : DbContext
             optionsBuilder.UseSqlServer(Config.GetConnectionString("TravelProject"));
         }
     }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.UseCollation("Chinese_Taiwan_Stroke_CI_AS");
@@ -88,13 +89,13 @@ public partial class TravelProjectAzureContext : DbContext
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.CartDate).HasColumnType("date");
             entity.Property(e => e.CartPrice).HasColumnType("money");
-            entity.Property(e => e.ProductId).HasColumnName("ProductID");
+            entity.Property(e => e.PlanId).HasColumnName("PlanID");
             entity.Property(e => e.UserId).HasColumnName("UserID");
 
-            entity.HasOne(d => d.Product).WithMany(p => p.Carts)
-                .HasForeignKey(d => d.ProductId)
+            entity.HasOne(d => d.Plan).WithMany(p => p.Carts)
+                .HasForeignKey(d => d.PlanId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Cart__ProductID__71D1E811");
+                .HasConstraintName("FK_Cart_Plan");
 
             entity.HasOne(d => d.User).WithMany(p => p.Carts)
                 .HasForeignKey(d => d.UserId)

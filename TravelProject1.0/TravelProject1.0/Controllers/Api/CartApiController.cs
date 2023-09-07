@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using TravelProject1._0.Helper;
 using TravelProject1._0.Models;
+using TravelProject1._0.Models.DTO;
 using TravelProject1._0.Models.ViewModel;
 
 namespace TravelProject1._0.Controllers.Api
@@ -34,7 +35,7 @@ namespace TravelProject1._0.Controllers.Api
 
             return _context.Carts.Where(c => c.UserId == id).Select(c => new CartViewModel
             {
-                ProductId = c.ProductId,
+                PlanId = c.PlanId,
                 CartName = c.CartName,
                 CartPrice = c.CartPrice,
                 CartQuantity = c.CartQuantity,
@@ -56,7 +57,7 @@ namespace TravelProject1._0.Controllers.Api
             Cart item = new Cart
             {
                 UserId = model.UserId,
-                ProductId = model.ProductId,
+                PlanId = model.PlanId,
                 CartName = model.CartName,
                 CartPrice = model.CartPrice,
                 CartQuantity = model.CartQuantity,
@@ -90,7 +91,7 @@ namespace TravelProject1._0.Controllers.Api
             int id = Convert.ToInt32(idu);
 
             var cartItem = await _context.Carts.FirstOrDefaultAsync(c =>
-                c.UserId == id && c.ProductId == model.ProductId);
+                c.UserId == id && c.PlanId == model.PlanId);
 
             if (cartItem == null)
             {
@@ -120,29 +121,33 @@ namespace TravelProject1._0.Controllers.Api
             string? idu = user.Value;
             int id = Convert.ToInt32(idu);
 
-            AddOrderViewModel order = new AddOrderViewModel
-            {
-                UserId = model.UserId,
-                OrderName = model.OrderName,
-                orderDetails = model.orderDetails.Select(o => new Models.DTO.AddOrder
-                {
-                    Quantity = o.Quantity,
-                    UnitPrice = o.UnitPrice,
-                    UseDate = o.UseDate,
-                    Odname = o.Odname
-                })
-            };
-
-            _context.Add(order);
-
             try
             {
+                Order order = new Order
+                {
+                    UserId = model.UserId,
+                    OrderName = model.OrderName,
+                };
+
+                _context.Add(order);
+                await _context.SaveChangesAsync();
+
+                OrderDetail orderDetail = new OrderDetail
+                {
+                    OrderId = order.OrderId,
+                    PlanId = model.PlanId,
+                    Quantity = model.Quantity,
+                    UnitPrice = model.UnitPrice
+                };
+
+                _context.Add(orderDetail);
                 await _context.SaveChangesAsync();
             }
             catch (Exception ex)
             {
                 return BadRequest(ex);
             }
+
             return Ok();
         }
     }
