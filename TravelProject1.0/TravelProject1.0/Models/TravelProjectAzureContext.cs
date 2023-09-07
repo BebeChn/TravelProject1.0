@@ -46,13 +46,9 @@ public partial class TravelProjectAzureContext : DbContext
     public virtual DbSet<VerificationCode> VerificationCodes { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        if (!optionsBuilder.IsConfigured)
-        {
-            IConfigurationRoot Config = new ConfigurationBuilder().SetBasePath(AppDomain.CurrentDomain.BaseDirectory).AddJsonFile("appsettings").Build();
-            optionsBuilder.UseSqlServer(Config.GetConnectionString("TravelProject"));
-        }
-    }
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Server=tcp:thm10201.database.windows.net,1433;Initial Catalog=TravelProjectAzure;Persist Security Info=False;User ID=allen955103;Password=AAA12345!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=True;Connection Timeout=30;");
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.UseCollation("Chinese_Taiwan_Stroke_CI_AS");
@@ -88,13 +84,13 @@ public partial class TravelProjectAzureContext : DbContext
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.CartDate).HasColumnType("date");
             entity.Property(e => e.CartPrice).HasColumnType("money");
-            entity.Property(e => e.ProductId).HasColumnName("ProductID");
+            entity.Property(e => e.PlanId).HasColumnName("PlanID");
             entity.Property(e => e.UserId).HasColumnName("UserID");
 
-            entity.HasOne(d => d.Product).WithMany(p => p.Carts)
-                .HasForeignKey(d => d.ProductId)
+            entity.HasOne(d => d.Plan).WithMany(p => p.Carts)
+                .HasForeignKey(d => d.PlanId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Cart__ProductID__71D1E811");
+                .HasConstraintName("FK_Cart_Plan");
 
             entity.HasOne(d => d.User).WithMany(p => p.Carts)
                 .HasForeignKey(d => d.UserId)
@@ -119,9 +115,7 @@ public partial class TravelProjectAzureContext : DbContext
 
             entity.ToTable("CollectTable");
 
-            entity.Property(e => e.CollectId)
-                .ValueGeneratedNever()
-                .HasColumnName("CollectID");
+            entity.Property(e => e.CollectId).HasColumnName("CollectID");
             entity.Property(e => e.ProductId).HasColumnName("ProductID");
             entity.Property(e => e.UserId).HasColumnName("UserID");
 

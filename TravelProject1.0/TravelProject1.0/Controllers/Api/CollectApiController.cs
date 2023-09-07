@@ -8,33 +8,38 @@ using TravelProject1._0.Models;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using System.Collections.Concurrent;
 using TravelProject1._0.Services;
+using Microsoft.CodeAnalysis;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TravelProject1._0.Controllers.Api
 {
+    [Route("api/CollectApi/[Action]")]
     public class CollectApiController : Controller
     {
 
         private readonly TravelProjectAzureContext _context;
         private readonly IUserIdentityService _userIdentityService;
 
-        public CollectApiController( TravelProjectAzureContext context,IUserIdentityService userIdentityService)
+        public CollectApiController(TravelProjectAzureContext context, IUserIdentityService userIdentityService)
 
-        {         
+        {
             _context = context;
             _userIdentityService = userIdentityService;
         }
-
+        [Authorize]
         [HttpPost]
-        public async Task<bool> PostCollect(PostCollectViewModel collect)
+        public async Task<IActionResult> PostCollect([FromBody]PostCollectViewModel collect)
         {
+            //int userId = _userIdentityService.GetUserId();
+            //HttpContext.Response.Cookies.Append("userID", userId.ToString());
             try
             {
-                int userId = _userIdentityService.GetUserId();
+
                 // 創建收藏夾實體
                 CollectTable newCollect = new CollectTable
                 {
-                    ProductId=collect.ProductId,
-                    UserId = userId,
+                    ProductId = collect.ProductId,
+                    UserId = collect.UserId,
                 };
 
                 // 添加收藏到資料庫
@@ -42,41 +47,39 @@ namespace TravelProject1._0.Controllers.Api
                 _context.CollectTables.Add(newCollect);
 
                 _context.SaveChanges();
+                
             }
-
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return false;
+                return BadRequest(new { ErrorMessage = "收藏失败" });
             }
-            return true;
+            return Ok();
         }
+        [Authorize]
         [HttpDelete]
-        public async Task<bool> DeleteCollect(PostCollectViewModel collect)
+        public async Task<string> DeleteCollect(int id)
         {
+            if (_context.CollectTables == null)
+            {
+                return "刪除失敗";
+            }
+            var collector = await _context.CollectTables.FindAsync(id);
+            if (collector == null)
+            {
+                return "刪除失敗";
+            }
             try
             {
-                int userId = _userIdentityService.GetUserId();
-                // 創建收藏夾實體
-                CollectTable newCollect = new CollectTable
-                {
-                    ProductId = collect.ProductId,
-                    UserId = userId,
-                };
-
-                // 添加收藏到資料庫
-
-                _context.CollectTables.Remove(newCollect);
-
-                _context.SaveChanges();
+                _context.CollectTables.Remove(collector);
+                await _context.SaveChangesAsync();
             }
-
-            catch (Exception ex)
+            catch
             {
-                Console.WriteLine(ex.Message);
-                return false;
+                return "刪除關聯失敗";
             }
-            return true;
+            return "刪除成功";
         }
+
     }
 }
