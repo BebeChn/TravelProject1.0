@@ -127,24 +127,28 @@
                 addOrder: function (model) {
                     console.log(model);
                     let _this = this;
-                    let orderData = {
-                        orderName: model.cartName,
-                        planId: 61,
-                        quantity: model.cartQuantity,
-                        unitPrice: _this.totalPrice,
-                        UseDate: model.cartDate,
-                        Odname: model.cartName
-                    };
-                    console.log(orderData);
-                    fetch(`${baseAddress}/api/CartApi/AddOrder`, {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify(orderData)
-                    }).then(response => {
-                        if (response.ok) alert("成功");
-                    }).catch(error => {
-                        console.log(error);
-                    })
+                    for (var i = 0; i < _this.cartItem.length; i++) {
+                        if (model[i].checked == true) {
+                            let orderData = {
+                                userId:69,
+                                orderName: model[i].cartName,
+                                quantity: model[i].cartQuantity,
+                                unitPrice: model[i].cartPrice,
+                                useDate: model[i].cartDate,
+                                odname: model[i].cartName
+                            };
+                            console.log(orderData);
+                            fetch(`${baseAddress}/api/CartApi/AddOrder`, {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify(orderData)
+                            }).then(response => {
+                                if (response.ok) alert("成功");
+                            }).catch(error => {
+                                console.log(error);
+                            })
+                        }
+                    }
                 },
 
                 //全選
