@@ -125,7 +125,7 @@ namespace TravelProject1._0.Controllers.Api
             {
                 Order order = new Order
                 {
-                    UserId = model.UserId,
+                    UserId = id,
                     OrderName = model.OrderName,
                 };
 
