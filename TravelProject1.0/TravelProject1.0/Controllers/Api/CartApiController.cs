@@ -122,10 +122,10 @@ namespace TravelProject1._0.Controllers.Api
 
             AddOrderViewModel order = new AddOrderViewModel
             {
+                UserId = model.UserId,
                 OrderName = model.OrderName,
-                orderDetails = model.orderDetails.Select(o => new Models.DTO.OrderDetailDto
+                orderDetails = model.orderDetails.Select(o => new Models.DTO.AddOrder
                 {
-                    PlanId = o.PlanId,
                     Quantity = o.Quantity,
                     UnitPrice = o.UnitPrice,
                     UseDate = o.UseDate,
