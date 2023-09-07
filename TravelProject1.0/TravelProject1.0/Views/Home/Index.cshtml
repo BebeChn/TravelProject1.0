@@ -10,6 +10,12 @@
             height:250px;
             border-radius:10px;
         }
+        .red{
+        color:red;
+        }
+        .red2{
+        color:red;
+        }
     </style>
 }
 
@@ -124,6 +130,8 @@
                         <div class="tags">
                             <a href="#" class="button_hover tag_btn">Travel</a>
                             <a href="#" class="button_hover tag_btn">Life Style</a>
+                            <i class="fa-regular fa-heart fa-beat red" style="cursor: pointer;" id="heart-icon"></i>
+                          
                         </div>
                         <a href="#"><h4 class="sec_h4">Low Cost Advertising</h4></a>
                         <p>世間的事情都是如此當你刻意地追求時，它就像蝴蝶一樣振翅飛遠；當你專心致志之時，意外的收穫已悄悄來到你的身邊！</p>
@@ -171,6 +179,9 @@
 
 @section Scripts {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>
+    
+    <script src="~/js/heart.js"></script>
+    
     <script>
         let baseAddress = "https://localhost:7025";
         let app = new Vue({
