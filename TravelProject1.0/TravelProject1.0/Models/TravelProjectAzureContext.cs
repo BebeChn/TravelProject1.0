@@ -120,9 +120,7 @@ public partial class TravelProjectAzureContext : DbContext
 
             entity.ToTable("CollectTable");
 
-            entity.Property(e => e.CollectId)
-                .ValueGeneratedNever()
-                .HasColumnName("CollectID");
+            entity.Property(e => e.CollectId).HasColumnName("CollectID");
             entity.Property(e => e.ProductId).HasColumnName("ProductID");
             entity.Property(e => e.UserId).HasColumnName("UserID");
 
