@@ -21,6 +21,8 @@ public partial class TravelProjectAzureContext : DbContext
 
     public virtual DbSet<Category> Categories { get; set; }
 
+    public virtual DbSet<CollectTable> CollectTables { get; set; }
+
     public virtual DbSet<Order> Orders { get; set; }
 
     public virtual DbSet<OrderDetail> OrderDetails { get; set; }
@@ -51,7 +53,6 @@ public partial class TravelProjectAzureContext : DbContext
             optionsBuilder.UseSqlServer(Config.GetConnectionString("TravelProject"));
         }
     }
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.UseCollation("Chinese_Taiwan_Stroke_CI_AS");
@@ -112,12 +113,30 @@ public partial class TravelProjectAzureContext : DbContext
             entity.Property(e => e.Name).HasMaxLength(10);
         });
 
+        modelBuilder.Entity<CollectTable>(entity =>
+        {
+            entity.HasKey(e => e.CollectId);
+
+            entity.ToTable("CollectTable");
+
+            entity.Property(e => e.CollectId)
+                .ValueGeneratedNever()
+                .HasColumnName("CollectID");
+            entity.Property(e => e.ProductId).HasColumnName("ProductID");
+            entity.Property(e => e.UserId).HasColumnName("UserID");
+
+            entity.HasOne(d => d.Product).WithMany(p => p.CollectTables)
+                .HasForeignKey(d => d.ProductId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_CollectTable_Products");
+        });
+
         modelBuilder.Entity<Order>(entity =>
         {
             entity.HasKey(e => e.OrderId).HasName("PK__Orders__C3905BAFF4E1F948");
 
             entity.Property(e => e.OrderId).HasColumnName("OrderID");
-            entity.Property(e => e.OrderDate).HasColumnType("datetime");
+            entity.Property(e => e.OrderDate).HasColumnType("date");
             entity.Property(e => e.UserId).HasColumnName("UserID");
 
             entity.HasOne(d => d.User).WithMany(p => p.Orders)
