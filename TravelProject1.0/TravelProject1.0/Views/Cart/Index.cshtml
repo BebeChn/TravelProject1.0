@@ -74,7 +74,7 @@
                 cartItem: [],
                 allCheck: false,
                 resultPrice: 0,
-                remove: {}
+                remove: []
             },
             mounted: function () {
                 let _this = this;
@@ -125,17 +125,15 @@
 
                 //加至訂單
                 addOrder: function (model) {
-                    console.log(model);
                     let _this = this;
                     for (var i = 0; i < _this.cartItem.length; i++) {
                         if (model[i].checked == true) {
                             let orderData = {
-                                userId:69,
+                                userId: 69,
                                 orderName: model[i].cartName,
+                                planId: model[i].planId,
                                 quantity: model[i].cartQuantity,
-                                unitPrice: model[i].cartPrice,
-                                useDate: model[i].cartDate,
-                                odname: model[i].cartName
+                                unitPrice: model[i].cartPrice
                             };
                             console.log(orderData);
                             fetch(`${baseAddress}/api/CartApi/AddOrder`, {

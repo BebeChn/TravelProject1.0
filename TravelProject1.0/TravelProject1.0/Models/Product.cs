@@ -25,8 +25,6 @@ public partial class Product
 
     public string? Latitude { get; set; }
 
-    public virtual ICollection<Cart> Carts { get; set; } = new List<Cart>();
-
     public virtual ICollection<CollectTable> CollectTables { get; set; } = new List<CollectTable>();
 
     public virtual Category IdNavigation { get; set; } = null!;

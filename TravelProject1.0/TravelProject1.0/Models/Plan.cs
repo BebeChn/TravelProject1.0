@@ -17,6 +17,8 @@ public partial class Plan
 
     public decimal PlanPrice { get; set; }
 
+    public virtual ICollection<Cart> Carts { get; set; } = new List<Cart>();
+
     public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
 
     public virtual ICollection<PlanCalendar> PlanCalendars { get; set; } = new List<PlanCalendar>();
