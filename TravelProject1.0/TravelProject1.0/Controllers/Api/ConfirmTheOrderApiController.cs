@@ -38,13 +38,14 @@ namespace TravelProject1._0.Controllers.Api
 
         //取得訂單資訊
         [HttpGet]
-        public async Task<IQueryable<ConfirmTheOrderViewModel>> GetOrders()
+        [Route("{id}")]
+        public async Task<IQueryable<ConfirmTheOrderViewModel>> GetOrders(int orderId)
         {
             Claim user = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
             string? idu = user.Value;
             int id = Convert.ToInt32(idu);
 
-            return _dbContext.Orders.Include(o => o.OrderDetails).Where(o => o.UserId == id).Select(o => new ConfirmTheOrderViewModel
+            return _dbContext.Orders.Include(o => o.OrderDetails).Where(o => o.UserId == id && o.OrderId == orderId).Select(o => new ConfirmTheOrderViewModel
             {
                 OrderId = o.OrderId,
                 OrderDate = o.OrderDate,

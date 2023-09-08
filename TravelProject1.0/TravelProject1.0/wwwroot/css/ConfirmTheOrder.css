@@ -63,3 +63,15 @@ table tr td {
     color: red;
     width: 200px;
 }
+
+.modal-title {
+    color: white;
+}
+
+.points{
+    justify-content:center;
+}
+
+.points button {
+    color: white;
+}
