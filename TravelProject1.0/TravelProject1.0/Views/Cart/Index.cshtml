@@ -36,7 +36,7 @@
         <div class="calculate">
             <span class="total-title">合計：</span>
             <input class="total-price" v-bind:value="totalPrice(cartItem) | formatCurrency" readonly />
-            <button class="btn btn-buy info" v-on:click="addOrder(cartItem)">前往結帳</button>
+            <a class="btn btn-buy info" v-on:click="addOrder(cartItem)">前往結帳</a>
         </div>
     </div>
 
@@ -74,7 +74,8 @@
                 cartItem: [],
                 allCheck: false,
                 resultPrice: 0,
-                remove: []
+                remove: [],
+                orderId:[]
             },
             mounted: function () {
                 let _this = this;
