@@ -7,21 +7,30 @@ using NToastNotify.Helpers;
 using NuGet.Packaging;
 using System.Collections.Immutable;
 using System.Reflection.Metadata.Ecma335;
-using TravelProject1._0.Areas.Admin.Models.ChartViewModel.HotelChartDTO;
 using TravelProject1._0.Models;
-
+using TravelProject1._0.Areas.Admin.Models.ChartViewModel.HotelChartDTO;
 namespace TravelProject1._0.Areas.Admin.Controllers.Api.AnalyzeAPI
 {
 	[Area("Admin")]
-	[Route("api/HotelChartApi/{action}")]
+	[Route("api/SaleChartApi/{action}")]
 	[ApiController]
-	public class HotelChartApiController : ControllerBase
+	public class SaleChartApiController : ControllerBase
 	{
 		private TravelProjectAzureContext _db;
 
-		public HotelChartApiController(TravelProjectAzureContext db)
+		public SaleChartApiController(TravelProjectAzureContext db)
 		{
 			_db = db;
+		}
+
+		[HttpGet]
+		public async Task<IEnumerable<object>> GetYearSales()
+		{
+
+
+
+
+			return null;
 		}
 
 		//[HttpGet]
@@ -120,16 +129,6 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api.AnalyzeAPI
 		public async Task<IEnumerable<GetSalesDTO>> GetAttractionsSales()
 		{
 			return await GetSales(4);
-		}
-
-		[HttpGet]
-		public async Task<IEnumerable<object>> GetYearSales()
-		{
-			
-			
-			
-			
-			return null;
 		}
 	}
 }

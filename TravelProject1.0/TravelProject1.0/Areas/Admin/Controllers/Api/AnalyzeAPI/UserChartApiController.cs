@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Linq;
 using System.Configuration;
 using System.Security.Permissions;
+using TravelProject1._0.Areas.Admin.Models.ChartViewModel.HotelChartDTO;
 using TravelProject1._0.Areas.Admin.Models.ChartViewModel.UserChartDTO;
 using TravelProject1._0.Models;
 
@@ -45,7 +46,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 		{
 			return ageGroups.ToDictionary(group => group, _ => 0);
 		}
-		
+
 		private string GetAgeGroup(int? age)
 		{
 			foreach (var ageGroup in ageGroups)
@@ -133,7 +134,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 			return uaDTO;
 		}
 
-		[HttpGet]	
+		[HttpGet]
 		public async Task<IEnumerable<GetUserGenderDTO>> GetUserGender()
 		{
 			return _db.Users.AsNoTracking().Where(x => !string.IsNullOrEmpty(x.Gender))
@@ -195,7 +196,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 				var ageGroup = _db.Users.AsNoTracking()
 					.Where(u => u.Age.HasValue && u.Age >= startAge && u.Age <= endAge)
 					.Select(u => u.Age)
-					.ToList() 
+					.ToList()
 					.GroupBy(age => new
 					{
 						StartAge = startAge,
@@ -215,13 +216,29 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 		}
 
 		[HttpGet]
-		public async Task<IEnumerable<object>> sasds()
+		public async Task<IEnumerable<HighChart3DGraph>> GetIsPayAndNoPaying()
 		{
+			var asd = new Dictionary<string, int>();
+			var userIds = await _db.Users.AsNoTracking().Include(u => u.Orders).Select(u => u.UserId).ToListAsync();
+			var orderUserIds = await _db.Orders.AsNoTracking().Select(o => o.UserId).ToListAsync();
+			var paying = userIds.Intersect(orderUserIds);
+			var noPaying = userIds.Except(orderUserIds);
 
+			var result = new List<HighChart3DGraph>
+			{
+				new HighChart3DGraph
+				{
+					Name = "已消費會員",
+					y = paying.Count(),
+				},
+				new HighChart3DGraph
+				{
+					Name = "未消費會員",
+					y = noPaying.Count(),
+				}
+			};
 
-
-
-			return null;
+			return result;
 		}
 	}
 }

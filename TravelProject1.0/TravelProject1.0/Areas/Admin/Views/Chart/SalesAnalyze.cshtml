@@ -101,7 +101,7 @@
 		//銷售柱狀圖分析
 
 		//飛機票券銷售3D餅圖
-		axios.get('/api/HotelChartApi/GetAirplaneSales')
+		axios.get('/api/SaleChartApi/GetAirplaneSales')
 			.then(response => {
 				var chart = Highcharts.chart('airplane', {
 					chart: {
@@ -141,7 +141,7 @@
 		//飛機票券銷售3D餅圖
 
 		//住宿票券銷售3D餅圖
-		axios.get("/api/HotelChartApi/GetHotelSales").then(response => {
+		axios.get("/api/SaleChartApi/GetHotelSales").then(response => {
 			var chart = Highcharts.chart('hotel', {
 				chart: {
 					type: 'pie',
@@ -180,7 +180,7 @@
 		//住宿票券銷售3D餅圖
 
 		//交通票券銷售3D餅圖
-		axios.get("/api/HotelChartApi/GetTransportationSales").then(response => {
+		axios.get("/api/SaleChartApi/GetTransportationSales").then(response => {
 			var chart = Highcharts.chart('transportation', {
 				chart: {
 					type: 'pie',
@@ -219,7 +219,7 @@
 		//交通票券銷售3D餅圖
 
 		//景點票券銷售3D餅圖
-		axios.get("/api/HotelChartApi/GetAttractionsSales").then(response => {
+		axios.get("/api/SaleChartApi/GetAttractionsSales").then(response => {
 			var chart = Highcharts.chart('attractions', {
 				chart: {
 					type: 'pie',

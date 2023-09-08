@@ -12,7 +12,7 @@
 	<div class="nav nav-tabs" id="nav-tab" role="tablist">
 		<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">男女會員佔比</button>
 		<button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">年齡佔比</button>
-		<button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">已/未消費會員佔比</button>
+		<button class="nav-link" id="nav-getIsPayAndNoPaying-tab" data-bs-toggle="tab" data-bs-target="#nav-getIsPayAndNoPaying" type="button" role="tab" aria-controls="nav-getIsPayAndNoPaying" aria-selected="false">已/未消費會員佔比</button>
 	</div>
 </nav>
 <div class="tab-content" id="nav-tabContent">
@@ -49,7 +49,9 @@
 		</figure>
 	</div>
 	@* 各年齡層佔比 *@
-	<div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">789</div>
+	<div class="tab-pane fade" id="nav-getIsPayAndNoPaying" role="tabpanel" aria-labelledby="nav-getIsPayAndNoPaying-tab">
+		<div id="getIsPayAndNoPaying" style="height: 400px"></div>
+	</div>
 </div>
 
 
@@ -67,8 +69,6 @@
 	<script src="https://code.highcharts.com/highcharts-3d.js"></script>
 	<script>
 		//user柱狀圖分析
-		const container = document.querySelector('#member');
-		let data = {};
 		axios.get("/api/UserChartApi/GetUsers")
 			.then(response => {
 				data = response.data;
@@ -77,7 +77,7 @@
 				const nonPaying = Object.values(data.nonPayingMemberAgeGroup);
 				const female = Object.values(data.female);
 				const male = Object.values(data.male);
-				let myChart = Highcharts.chart(container, {
+				let myChart = Highcharts.chart('member', {
 					chart: {
 						type: "column",
 					},
@@ -183,7 +183,6 @@
 		//UserPie圓餅圖
 
 		//會員年齡層佔比
-		const ageGroup = document.querySelector('#ageGroup')
 		axios.get("/api/UserChartApi/GetUserAgeGroup")
 			.then(response => {
 				Highcharts.chart('ageGroup', {
@@ -233,6 +232,54 @@
 			});
 		//會員年齡層佔比
 
-		//
+		//已消費/未消費會員佔比
+		axios.get("/api/UserChartApi/GetIsPayAndNoPaying")
+			.then(response => {
+				Highcharts.chart('getIsPayAndNoPaying', {
+					chart: {
+						type: 'pie',
+						options3d: {
+							enabled: true,
+							alpha: 45,
+							beta: 0
+						}
+					},
+					title: {
+						text: '已/未消費會員佔比',
+						align: 'center'
+					},
+					subtitle: {
+						text: '',
+						align: 'left'
+					},
+					accessibility: {
+						point: {
+							valueSuffix: '%'
+						}
+					},
+					tooltip: {
+						pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+					},
+					plotOptions: {
+						pie: {
+							allowPointSelect: true,
+							cursor: 'pointer',
+							depth: 45,
+							dataLabels: {
+								enabled: true,
+								format: '{point.name}'
+							}
+						}
+					},
+					series: [{
+						type: 'pie',
+						name: '佔比',
+						data: response.data
+					}]
+				});
+			}).catch(err => {
+				alert('已/未消費會員佔比數據異常，請聯絡管理員')
+			});
+
 	</script>
 }
