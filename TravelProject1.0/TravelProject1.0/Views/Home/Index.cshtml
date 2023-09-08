@@ -103,7 +103,7 @@
                     <div class="about_content ">
                         <h2 class="title title_color">本月銷售王</h2>
                         <p>有一個清醒的頭腦比有一個聰明的頭腦更重要；有一種良好的習慣比有一種熟練的技巧更實用；有一股青春活力比有一副健全的臂膀更有力；有一身勇氣和膽識比有一門知識更強勁。</p>
-                        <a href="#" class="button_hover theme_btn_two info">Request Custom Price</a>
+                        <a href="#" class="button_hover theme_btn_two info">看更多選擇</a>
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -121,7 +121,7 @@
                 <p>關於旅行，關於生活，如此而已。 </p>
             </div>
             <div class="row mb_30">
-                <div class="col-lg-4 col-md-6" v-for="(pp, index) in productplan" :key="pp.collectId">
+                <div class="col-lg-4 col-md-6" v-for="pp in productplan" :key="pp.collectId">
                     <div class="single-recent-blog-post">
                         <div class="thumb">
                             <img class="img-fluid" :src="pp.img" />
@@ -158,7 +158,6 @@
             data: {
                 products: [],
                 productplan: [],
-
             },
             mounted: function () {
                 let _this = this;
@@ -194,22 +193,27 @@
                             body: JSON.stringify(dom)
                         }).then(response => {
                             if (response.ok)
-                                conosole.log("成功");
+                                console.log("成功");
                         }).catch(err => {
                             alert("錯誤");
                         })
                     }
                     else {
+                        var dom =
+                        {
+                            userId:69,
+                            ProductId: pp.productId
+                        };
                         fetch(`${baseAddress}/api/CollectApi/DeleteCollect`, {
                             method: "DELETE",
-                            headers: { "Content-Type": "application/json" },
+                            headers: {"Content-Type":"application/json"},
                             body: JSON.stringify(dom)
                         })
                             .then(response => {
                                 if (response.ok)
-                                    conosole.log("刪除成功");
+                                    console.log("刪除成功");
                             }).catch(err => {
-                                alert("刪除失敗");
+                                console.log("刪除失敗");
                             })
                     }
                     pp.heartIcon = !pp.heartIcon;

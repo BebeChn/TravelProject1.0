@@ -11,5 +11,9 @@ public partial class CollectTable
 
     public int UserId { get; set; }
 
+    public string? CollectName { get; set; }
+
+    public string? CollectImage { get; set; }
+
     public virtual Product Product { get; set; } = null!;
 }
