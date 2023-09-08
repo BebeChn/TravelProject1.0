@@ -29,8 +29,6 @@ public partial class TravelProjectAzureContext : DbContext
 
     public virtual DbSet<Plan> Plans { get; set; }
 
-    public virtual DbSet<PlanCalendar> PlanCalendars { get; set; }
-
     public virtual DbSet<Product> Products { get; set; }
 
     public virtual DbSet<QuestionReport> QuestionReports { get; set; }
@@ -53,7 +51,6 @@ public partial class TravelProjectAzureContext : DbContext
             optionsBuilder.UseSqlServer(Config.GetConnectionString("TravelProject"));
         }
     }
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.UseCollation("Chinese_Taiwan_Stroke_CI_AS");
@@ -121,6 +118,8 @@ public partial class TravelProjectAzureContext : DbContext
             entity.ToTable("CollectTable");
 
             entity.Property(e => e.CollectId).HasColumnName("CollectID");
+            entity.Property(e => e.CollectImage).HasMaxLength(50);
+            entity.Property(e => e.CollectName).HasMaxLength(50);
             entity.Property(e => e.ProductId).HasColumnName("ProductID");
             entity.Property(e => e.UserId).HasColumnName("UserID");
 
@@ -184,23 +183,6 @@ public partial class TravelProjectAzureContext : DbContext
                 .HasForeignKey(d => d.ProductId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Plan_Products");
-        });
-
-        modelBuilder.Entity<PlanCalendar>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Plan Cal__3214EC27B569FF60");
-
-            entity.ToTable("Plan Calendar");
-
-            entity.Property(e => e.Id).HasColumnName("ID");
-            entity.Property(e => e.Date).HasColumnType("date");
-            entity.Property(e => e.PlanId).HasColumnName("PlanID");
-            entity.Property(e => e.Price).HasColumnType("money");
-
-            entity.HasOne(d => d.Plan).WithMany(p => p.PlanCalendars)
-                .HasForeignKey(d => d.PlanId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Plan Cale__PlanI__778AC167");
         });
 
         modelBuilder.Entity<Product>(entity =>
