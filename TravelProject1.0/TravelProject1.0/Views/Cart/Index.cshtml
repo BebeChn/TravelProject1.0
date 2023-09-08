@@ -36,7 +36,7 @@
         <div class="calculate">
             <span class="total-title">合計：</span>
             <input class="total-price" v-bind:value="totalPrice(cartItem) | formatCurrency" readonly />
-            <a :href="'ConfirmTheOrder/Index'+orderId" class="btn btn-buy info" v-on:click="addOrder(cartItem)">確認訂購資訊</a>
+            <button class="btn btn-buy info" v-on:click="addOrder(cartItem)">確認訂購資訊</button>
         </div>
     </div>
 
@@ -73,7 +73,7 @@
                 allCheck: false,
                 resultPrice: 0,
                 remove: [],
-                orderId: []
+                orderId: ""
             },
             mounted: function () {
                 let _this = this;
@@ -140,6 +140,7 @@
                             }).then(response => {
                                 if (response.ok) {
                                     _this.orderId = response.headers.get('OrderID');
+                                    window.location.href = '/ConfirmTheOrder/Index/' + _this.orderId;
                                 }
                             }).catch(error => {
                                 console.log(error);

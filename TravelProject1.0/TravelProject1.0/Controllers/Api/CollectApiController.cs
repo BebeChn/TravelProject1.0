@@ -44,6 +44,8 @@ namespace TravelProject1._0.Controllers.Api
                  CollectId = c.CollectId,
                  ProductId = c.ProductId,
                  UserId = userId,
+                 CollectImage = c.CollectImage,
+                 CollectName = c.CollectName,
             }).ToListAsync();
             if (collects == null || collects.Count == 0)
             {

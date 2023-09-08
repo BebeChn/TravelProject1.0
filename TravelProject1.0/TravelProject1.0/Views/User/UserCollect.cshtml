@@ -51,9 +51,11 @@
                         <span> 商品價格</span>
                     </l>
                     <li v-for="favorite in favorites"  class="favorite-item">
+                        <img class="img-fluid" :src="favorite.CollectImage" />
+                        <span class="favorite-collectName">{{favorite.collectName}}</span>
                         <span class="favorite-collectId">{{favorite.collectId}}</span>         
                         <span class="favorite-productId">{{favorite.productId}}</span>
-                        <button class="btn btn-delete danger" @@click="removeFavorite(favorite)"><i class="fa-solid fa-trash-can"></i> 删除</button>
+                        <button class="btn btn-delete danger" v-on:click="deleteModal(c)" @* v-bind:disabled="!c.checked" *@ data-bs-toggle="modal" data-bs-target="#deleteItem"><i class="fa-solid fa-trash-can"></i>删除</button>
                     </li>
                 </ul>
             </div>
@@ -92,6 +94,24 @@
             </div>
         </div>
     </div>
+
+
+    <div class="modal fade" id="deleteItem" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header info">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">刪除商品</h1>
+                </div>
+                <div class="modal-body">
+                 
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-delete danger" @@click="removeFavorite(favorite)">刪除</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 
@@ -117,6 +137,11 @@
                     });
             },
             methods: {
+                //刪除modal
+                deleteModal: function (model) {
+                    let _this = this;
+                    _this.remove = Object.assign({}, model)
+                },
                 removeFavorite(favorite) {
                     var dom =
                     {

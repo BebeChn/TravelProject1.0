@@ -185,7 +185,8 @@
                         var dom =
                         {
                             userId: 69,
-                            ProductId: pp.productId
+                            ProductId: pp.productId,
+                            ProductName:pp.productName,
                         };
                         fetch(`${baseAddress}/api/CollectApi/PostCollect`, {
                             method: "POST",
