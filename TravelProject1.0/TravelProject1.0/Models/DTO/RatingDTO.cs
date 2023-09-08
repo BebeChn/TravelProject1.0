@@ -9,5 +9,7 @@
         public short RatingScore { get; set; }
 
         public string? Describe { get; set; }
+
+        public DateTime RatingDate { get; set; }
     }
 }

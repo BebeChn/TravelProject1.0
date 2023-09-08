@@ -3,56 +3,66 @@
 } *@
 
 @section Styles{
-    <link href="~/css/attractions.css" rel="stylesheet" />
+    <link href="~/css/orderdetails.css" rel="stylesheet" />
 }
 <section id="app" class="accomodation_area">
-    <h1>會員歷史訂單</h1>
+    <h1 style="text-align:center">會員歷史訂單</h1>
     <div class="container">
         <div class="row">
-            <div class="col-md-8">
-                <div class="row">
-                    <div class="row product-items" v-for="o in orders">
-                        <div class="col-md-3" v-for="d in o.detail">
-                            <img class="img-product" src="" />
+            <div class="col-md-9">
+                <div class="row" v-for="o in orders">
+                    <div class="row product-items outer-box" v-for="d in o.detail">
+                        <div class="col-md-3" >
+                            <img class="" :src="d.odimg" style="width:100%" />
                         </div>
-                        <div class="col-md-7 d_flex align-items-center">
+                        <div class="col-md-6  align-items-center">
                             <div class="about_content ">
-                                <h2 class="title title_color">{{o.orderId}}</h2>
-                                <span>{{o.orderDate}}</span>
-                                <span>{{d.quantity}}</span>
-                                <span>{{d.unitprice}}</span>
-                                
+                                <div class="my-title">
+                                    <labe >訂購名稱:</labe>{{d.odname}}
+                                </div>
+                                <br />
+                                <div class="my-text">
+                                    <labe>訂購日期:</labe>{{o.orderDate | formatDate}}
+                                    </div>     
+                                <div class="my-text"> <labe>數量:</labe>{{d.quantity}}</div>
+                                <div class="my-text"> <labe>訂購價格:</labe>{{d.unitPrice}}</div>
+
                             </div>
                         </div>
-                        <div class="col-md-2">
-                            <span class="product-price">@* ${{a.price}}起 *@</span>
-                            <a @* :href="'/Attractions/Plan/'+a.productId" *@ class="button_hover theme_btn_two info">選擇方案</a>
-                        </div>
-                    </div>
+                        <div class="col-md-3">
+                            <a class="button_hover theme_btn_two genric-btn info circle">聯絡商家</a>
+                            <br />
+                            <button asp-controller="Rating" asp-action="Index" class="genric-btn info-border circle arrow">給予評論<i class="fa-solid fa-arrow-right" style="margin-left:10px;"></i></button>
+                        </div>         
                 </div>
             </div>
-            <div class="col-md-4">
+            </div>
+            <div class="col-md-3">
                 <div class="blog_right_sidebar">
                     <aside class="single_sidebar_widget post_category_widget">
+                        <div style="text-align:center">
+                        <img class="" src="~/img/dog.jpg" style="border-radius:50%;width:150px;height:150px"/>
+                        </div>
+                        <br />
                         <h4 class="widget_title">會員資料</h4>
                         <ul class="list_style cat-list">
                             <li>
-                                <a href="#" class="d-flex justify-content-between" >
+                                <a asp-controller="User" asp-action="UpdateUser" class="d-flex justify-content-between">
                                     <p>個人資訊</p>
                                 </a>
                             </li>
                             <li>
-                                <a href="#" class="d-flex justify-content-between">
+                                <a asp-controller="User" asp-action="UserOrderDetails" class="d-flex justify-content-between" >
                                     <p>商品訂單</p>
                                 </a>
                             </li>
                             <li>
-                                <a href="#" class="d-flex justify-content-between">
+                                <a asp-controller="User" asp-action="Index" class="d-flex justify-content-between">
                                     <p>收藏夾</p>
                                 </a>
                             </li>
                             <li>
-                                <a href="#" class="d-flex justify-content-between">
+                                <a asp-controller="User" asp-action="Index" class="d-flex justify-content-between">
                                     <p>喜愛</p>
                                 </a>
                             </li>
@@ -84,11 +94,19 @@
                         orderId: "",
                         detail: [
                             {
-                                planId: "", quantity: "", unitPrice: "",
+                                planId: "", quantity: "", unitPrice: "", odimg: "", odname:"",
                             }
                         ]
                     }
                 ]
+            },
+            filters: {
+                //日期格式
+                formatDate: function (str) {
+                    if (!str) return "";
+                    var d = new Date(str);
+                    return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+                },
             },
             mounted: function () {
                 let _this = this;
@@ -143,39 +161,3 @@
 
     </script>
     }
-  
-@* <title>會員歷史訂單</title>
-<link rel="stylesheet" href="styles.css">
-
-<div id="app">
-   
-    <div class="container">
-        <table class="order-table">
-            <thead>
-                <tr>
-                    <th>訂單編號</th>
-                    <th>方案名稱</th>
-                    <th>數量</th>
-                    <th>單價</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="o in orders">
-                    <td>{{o.orderId}}</td>
-                    <td>{{o.orderDate}}</td>
-                    <td>
-                        <span v-for="detail in o.detail">{{detail.planId}}</span>
-                    </td>
-                    <td>
-                        <span v-for="detail in o.detail">{{detail.quantity}}</span>
-                    </td>
-                    <td>
-                        <span v-for="detail in o.detail">{{detail.unitPrice}}</span>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
- *@
-

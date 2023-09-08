@@ -36,7 +36,7 @@
         <div class="calculate">
             <span class="total-title">合計：</span>
             <input class="total-price" v-bind:value="totalPrice(cartItem) | formatCurrency" readonly />
-            <button class="btn btn-buy info">前往結帳</button>
+            <button class="btn btn-buy info" v-on:click="addOrder(cartItem)">前往結帳</button>
         </div>
     </div>
 
@@ -74,7 +74,7 @@
                 cartItem: [],
                 allCheck: false,
                 resultPrice: 0,
-                remove: {}
+                remove: []
             },
             mounted: function () {
                 let _this = this;
@@ -121,6 +121,31 @@
                         }).catch(error => {
                             console.log(error);
                         })
+                },
+
+                //加至訂單
+                addOrder: function (model) {
+                    let _this = this;
+                    for (var i = 0; i < _this.cartItem.length; i++) {
+                        if (model[i].checked == true) {
+                            let orderData = {
+                                orderName: model[i].cartName,
+                                planId: model[i].planId,
+                                quantity: model[i].cartQuantity,
+                                unitPrice: model[i].cartPrice
+                            };
+                            console.log(orderData);
+                            fetch(`${baseAddress}/api/CartApi/AddOrder`, {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify(orderData)
+                            }).then(response => {
+                                if (response.ok) alert("成功");
+                            }).catch(error => {
+                                console.log(error);
+                            })
+                        }
+                    }
                 },
 
                 //全選

@@ -173,7 +173,7 @@ button:focus {
         -ms-transform: translateX(-100%);
         transform: translateX(-100%);
         z-index: -1;
-        background: #f8b100;
+        background:#222222;
         -webkit-transition: all 0.3s linear;
         -o-transition: all 0.3s linear;
         transition: all 0.3s linear;
@@ -459,6 +459,9 @@ button:focus {
 }
 
     .banner_area .bg-parallax {
+        background-image: url('../img/homeindex.jpg');
+        width:100%;
+        height:100%;
         opacity: 0.50;
     }
 

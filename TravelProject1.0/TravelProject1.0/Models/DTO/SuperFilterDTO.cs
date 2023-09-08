@@ -14,9 +14,9 @@
 
 		public string Describe { get; set; } = null!;
 
-		public DateTime? CreateDate { get; set; }
+		public string? CreateDate { get; set; }
 
-		public DateTime? LoginDate { get; set; }
+		public string? LoginDate { get; set; }
 
 		public int? RoleId { get; set; }
 	}
