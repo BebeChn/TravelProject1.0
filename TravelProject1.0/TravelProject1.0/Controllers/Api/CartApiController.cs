@@ -143,6 +143,8 @@ namespace TravelProject1._0.Controllers.Api
 
                 _context.Add(orderDetail);
                 await _context.SaveChangesAsync();
+
+                Response.Headers.Add("OrderID", order.OrderId.ToString());
             }
             catch (Exception ex)
             {

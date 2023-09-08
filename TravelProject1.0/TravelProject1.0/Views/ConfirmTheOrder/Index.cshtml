@@ -34,7 +34,7 @@
                         <input class="money" v-bind:value="calculate(orders) | formatCurrency" readonly />
                     </div>
                     <div class="discount">
-                        <h5>是否使用點數折抵(每300點折抵1元)?</h5>
+                        <span>是否使用點數折抵(每300點折抵1元)?</span>
                         <button class="btn btn-point info" data-bs-toggle="modal" data-bs-target="#pointsDiscount">是</button>
                         <button class="btn btn-point info" v-on:click="showPrice">否</button>
                     </div>
@@ -71,8 +71,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <h5>每300點折抵1元</h5>
-                    <label>請選擇折抵點數：</label>
+                    <h5>請選擇折抵點數(每300點折抵1元)：</h5>
                     <div class="points d-flex">
                         <button class="btn minus info" v-on:click="minus">-</button>
                         <input class="points-num" v-bind:value="pointNum" readonly>
