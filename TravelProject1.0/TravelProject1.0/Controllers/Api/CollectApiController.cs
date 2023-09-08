@@ -55,8 +55,13 @@ namespace TravelProject1._0.Controllers.Api
             [HttpPost]
             public async Task<IActionResult> PostCollect([FromBody] PostCollectViewModel collect)
             {
-                //int userId = _userIdentityService.GetUserId();
-                //HttpContext.Response.Cookies.Append("userID", userId.ToString());
+            //int userId = _userIdentityService.GetUserId();
+            //HttpContext.Response.Cookies.Append("userID", userId.ToString());
+            //var user = _context.CollectTables.FirstOrDefaultAsync(c => c.ProductId == collect.ProductId);
+            //if (user!= null) 
+            //{
+            //    return BadRequest("已加入收藏夾");
+            //}
                 try
                 {
 
