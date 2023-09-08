@@ -135,10 +135,10 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 		}
 
 		[HttpGet]
-		public async Task<IEnumerable<GetUserGenderDTO>> GetUserGender()
+		public async Task<IEnumerable<HighChart3DGraph>> GetUserGender()
 		{
 			return _db.Users.AsNoTracking().Where(x => !string.IsNullOrEmpty(x.Gender))
-			.Select(x => x.Gender).GroupBy(x => x).Select(x => new GetUserGenderDTO
+			.Select(x => x.Gender).GroupBy(x => x).Select(x => new HighChart3DGraph
 			{
 				Name = x.Key == "F" ? "女性" : "男性",
 				y = x.Count()
@@ -182,9 +182,9 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 		}
 
 		[HttpGet]
-		public async Task<IEnumerable<GetUserAgeGroupCount>> GetUserAgeGroup()
+		public async Task<IEnumerable<HighChart3DGraph>> GetUserAgeGroup()
 		{
-			var ageGroups = new List<GetUserAgeGroupCount>();
+			var ageGroups = new List<HighChart3DGraph>();
 			int minAge = 18;
 			int maxAge = 97;
 			int rangeAge = 5;
@@ -202,7 +202,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 						StartAge = startAge,
 						EndAge = endAge
 					})
-					.Select(group => new GetUserAgeGroupCount
+					.Select(group => new HighChart3DGraph
 					{
 						Name = $"{group.Key.StartAge}-{group.Key.EndAge}歲",
 						y = group.Count()
