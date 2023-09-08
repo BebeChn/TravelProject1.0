@@ -10,6 +10,8 @@ using System.Collections.Concurrent;
 using TravelProject1._0.Services;
 using Microsoft.CodeAnalysis;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using TravelProject1._0.Models.DTO;
 
 namespace TravelProject1._0.Controllers.Api
 {
@@ -26,6 +28,36 @@ namespace TravelProject1._0.Controllers.Api
             _context = context;
             _userIdentityService = userIdentityService;
         }
+        [HttpGet]
+        [HttpGet("{id}")]
+        public async Task<CollectProductDTO> GetCollect()
+        {
+            Claim user = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
+            string? idu = user.Value;
+            int id = Convert.ToInt32(idu);
+
+                if (_context.CollectTables == null)
+                {
+                    return null;
+                }
+                var users = await _context.CollectTables.FirstOrDefaultAsync();
+
+                if (users == null)
+                {
+                    return null;
+                }
+                CollectProductDTO collector = new CollectProductDTO
+                {
+                    CollectId = users.CollectId,
+                    ProductId = users.ProductId,
+                    UserId = id,
+
+                };
+                return collector;
+            
+
+        }
+
         [Authorize]
         [HttpPost]
         public async Task<IActionResult> PostCollect([FromBody]PostCollectViewModel collect)
@@ -58,27 +90,25 @@ namespace TravelProject1._0.Controllers.Api
         }
         [Authorize]
         [HttpDelete]
-        public async Task<string> DeleteCollect(int id)
+        public async Task<IActionResult> DeleteCollect([FromBody]DeleteCollectViewModel model)
         {
-            if (_context.CollectTables == null)
+            //int userId = _userIdentityService.GetUserId();
+            var uid = await _context.CollectTables.FirstOrDefaultAsync(x => x.UserId == model.UserId && x.ProductId == model.ProductId);
+            //HttpContext.Response.Cookies.Append("userID", userId.ToString());
+            if (uid == null)
             {
-                return "刪除失敗";
-            }
-            var collector = await _context.CollectTables.FindAsync(id);
-            if (collector == null)
-            {
-                return "刪除失敗";
+                return NotFound(new { Message = "無法將商品從收藏移除" });
             }
             try
             {
-                _context.CollectTables.Remove(collector);
+                _context.CollectTables.Remove(uid);
                 await _context.SaveChangesAsync();
             }
-            catch
+            catch(Exception ex)
             {
-                return "刪除關聯失敗";
+                return BadRequest(ex);
             }
-            return "刪除成功";
+            return Ok(new { Message = "商品已從收藏夾中移除" });
         }
 
     }

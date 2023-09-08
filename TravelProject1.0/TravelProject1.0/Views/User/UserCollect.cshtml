@@ -1,0 +1,80 @@
+﻿@section Styles {
+    <style>
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .favorites {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .favorite-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #ccc;
+            padding: 10px 0;
+        }
+
+        .favorite-name {
+            flex: 1;
+        }
+
+        .delete-button {
+            background-color: #f00;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+    </style>
+}
+
+  
+        <h1>我的收藏夹</h1>
+    
+    <div class="container">
+        <h2>收藏的项目</h2>
+        <ul class="favorites">
+           
+        </ul>
+    </div>
+    @section Scripts{
+    <script>
+       
+        const favorites = [
+            { id: 1, name: '收藏项 1' },
+            { id: 2, name: '收藏项 2' },
+            { id: 3, name: '收藏项 3' }
+        ];
+
+        const favoritesList = document.querySelector('.favorites');
+
+        favorites.forEach(favorite => {
+            const listItem = document.createElement('li');
+            listItem.classList.add('favorite-item');
+
+            const favoriteName = document.createElement('span');
+            favoriteName.classList.add('favorite-name');
+            favoriteName.textContent = favorite.name;
+
+            const deleteButton = document.createElement('button');
+            deleteButton.classList.add('delete-button');
+            deleteButton.textContent = '删除';
+            deleteButton.addEventListener('click', () => {
+                // 在此处处理删除收藏项的逻辑
+                alert(`删除收藏项 ${favorite.id}`);
+            });
+
+            listItem.appendChild(favoriteName);
+            listItem.appendChild(deleteButton);
+
+            favoritesList.appendChild(listItem);
+        });
+    </script>
+}
