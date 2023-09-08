@@ -127,7 +127,6 @@
 		//user柱狀圖分析
 
 		//UserPie圓餅圖
-		const genderGroup = document.querySelector('#genderGroup');
 		axios.get("/api/UserChartApi/GetUserGender")
 			.then(response => {
 				let femaleCount = 0;
