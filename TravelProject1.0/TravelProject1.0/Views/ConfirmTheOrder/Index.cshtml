@@ -95,12 +95,14 @@
             data: {
                 user: [],
                 orders: [],
+                queries: "",
                 pointNum: 0,
                 total: "",
                 resultPrice: ""
             },
             mounted: function () {
                 let _this = this;
+                _this.queries = window.location.pathname.slice("23");
                 fetch(`${baseAddress}/api/ConfirmTheOrderApi/GetUser`, { method: "GET" })
                     .then(response => {
                         if (response.ok) return response.json();
@@ -109,7 +111,7 @@
                     }).catch(error => {
                         console.log(error);
                     });
-                fetch(`${baseAddress}/api/ConfirmTheOrderApi/GetOrders`, { method: "GET" })
+                fetch(`${baseAddress}/api/ConfirmTheOrderApi/GetOrders/${_this.queries}`, { method: "GET" })
                     .then(response => {
                         if (response.ok) return response.json();
                     }).then(data => {
