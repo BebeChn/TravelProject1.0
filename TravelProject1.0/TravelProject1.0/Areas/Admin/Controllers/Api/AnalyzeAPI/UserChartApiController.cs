@@ -5,19 +5,19 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Linq;
 using System.Configuration;
 using System.Security.Permissions;
-using TravelProject1._0.Areas.Admin.Models.ChartViewModel;
+using TravelProject1._0.Areas.Admin.Models.ChartViewModel.UserChartDTO;
 using TravelProject1._0.Models;
 
 namespace TravelProject1._0.Areas.Admin.Controllers.Api
 {
 	[Area("Admin")]
-	[Route("api/ChartApi/{action}")]
+	[Route("api/UserChartApi/{action}")]
 	[ApiController]
-	public class ChartApiController : ControllerBase
+	public class UserChartApiController : ControllerBase
 	{
 		private readonly TravelProjectAzureContext _db;
 
-		public ChartApiController(TravelProjectAzureContext travelProjectAzureContext)
+		public UserChartApiController(TravelProjectAzureContext travelProjectAzureContext)
 		{
 			_db = travelProjectAzureContext;
 		}
@@ -45,7 +45,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 		{
 			return ageGroups.ToDictionary(group => group, _ => 0);
 		}
-
+		
 		private string GetAgeGroup(int? age)
 		{
 			foreach (var ageGroup in ageGroups)
@@ -195,7 +195,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 				var ageGroup = _db.Users.AsNoTracking()
 					.Where(u => u.Age.HasValue && u.Age >= startAge && u.Age <= endAge)
 					.Select(u => u.Age)
-					.ToList() // 執行查詢並取得資料
+					.ToList() 
 					.GroupBy(age => new
 					{
 						StartAge = startAge,
@@ -204,7 +204,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 					.Select(group => new GetUserAgeGroupCount
 					{
 						Name = $"{group.Key.StartAge}-{group.Key.EndAge}歲",
-						y = group.Count(),
+						y = group.Count()
 					})
 					.ToList();
 
@@ -213,7 +213,15 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 
 			return ageGroups;
 		}
-	}
 
-	
+		[HttpGet]
+		public async Task<IEnumerable<object>> sasds()
+		{
+
+
+
+
+			return null;
+		}
+	}
 }

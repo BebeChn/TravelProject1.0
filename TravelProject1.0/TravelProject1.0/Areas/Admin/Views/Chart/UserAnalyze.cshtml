@@ -10,9 +10,9 @@
 
 <nav>
 	<div class="nav nav-tabs" id="nav-tab" role="tablist">
-		<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">男女會員分佈圖</button>
-		<button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">年齡分佈圖</button>
-		<button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Contact</button>
+		<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">男女會員佔比</button>
+		<button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">年齡佔比</button>
+		<button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">已/未消費會員佔比</button>
 	</div>
 </nav>
 <div class="tab-content" id="nav-tabContent">
@@ -33,7 +33,7 @@
 	</div>
 	@* 會員男女佔比圓餅圖 *@
 
-	@* 哥年齡層佔比 *@
+	@* 各年齡層佔比 *@
 	<div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
 		<figure class="highcharts-figure">
 			<div id="ageGroup"></div>
@@ -48,7 +48,7 @@
 			</p>
 		</figure>
 	</div>
-	@* 哥年齡層佔比 *@
+	@* 各年齡層佔比 *@
 	<div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">789</div>
 </div>
 
@@ -69,7 +69,7 @@
 		//user柱狀圖分析
 		const container = document.querySelector('#member');
 		let data = {};
-		axios.get("/api/ChartApi/GetUsers")
+		axios.get("/api/UserChartApi/GetUsers")
 			.then(response => {
 				data = response.data;
 				const Age = Object.keys(data.payingMemberAgeGroup);
@@ -127,8 +127,7 @@
 		//user柱狀圖分析
 
 		//UserPie圓餅圖
-		const genderGroup = document.querySelector('#genderGroup');
-		axios.get("/api/ChartApi/GetUserGender")
+		axios.get("/api/UserChartApi/GetUserGender")
 			.then(response => {
 				let femaleCount = 0;
 				let maleCount = 0;
@@ -185,7 +184,7 @@
 
 		//會員年齡層佔比
 		const ageGroup = document.querySelector('#ageGroup')
-		axios.get("/api/ChartApi/GetUserAgeGroup")
+		axios.get("/api/UserChartApi/GetUserAgeGroup")
 			.then(response => {
 				Highcharts.chart('ageGroup', {
 					chart: {
@@ -201,7 +200,7 @@
 						align: 'center'
 					},
 					subtitle: {
-						text: ``,
+						text: '',
 						align: 'left'
 					},
 					accessibility: {
@@ -230,8 +229,10 @@
 					}]
 				});
 			}).catch(err => {
-				alert('User男女佔比數據異常，請聯絡管理員')
+				alert('各年齡層佔比數據異常，請聯絡管理員')
 			});
 		//會員年齡層佔比
+
+		//
 	</script>
 }
