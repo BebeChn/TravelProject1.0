@@ -1,6 +1,4 @@
-﻿using TravelProject1._0.Models.DTO;
-
-namespace TravelProject1._0.Models.ViewModel
+﻿namespace TravelProject1._0.Models.DTO
 {
     public class OrderInfo
     {
