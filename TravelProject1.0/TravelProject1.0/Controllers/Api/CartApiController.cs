@@ -127,6 +127,7 @@ namespace TravelProject1._0.Controllers.Api
                 {
                     UserId = id,
                     OrderName = model.OrderName,
+                    OrderDate = DateTime.Now
                 };
 
                 _context.Add(order);
