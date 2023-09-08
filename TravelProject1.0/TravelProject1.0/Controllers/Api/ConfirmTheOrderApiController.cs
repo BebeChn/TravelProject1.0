@@ -38,7 +38,7 @@ namespace TravelProject1._0.Controllers.Api
 
         //取得訂單資訊
         [HttpGet]
-        [Route("{id}")]
+        [Route("{orderId}")]
         public async Task<IQueryable<ConfirmTheOrderViewModel>> GetOrders(int orderId)
         {
             Claim user = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
