@@ -213,5 +213,15 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 
 			return ageGroups;
 		}
+
+		[HttpGet]
+		public async Task<IEnumerable<object>> sasds()
+		{
+
+
+
+
+			return null;
+		}
 	}
 }

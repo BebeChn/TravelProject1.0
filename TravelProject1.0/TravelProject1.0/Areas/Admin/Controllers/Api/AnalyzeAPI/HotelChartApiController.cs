@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore.Internal;
 using NToastNotify.Helpers;
 using NuGet.Packaging;
 using System.Collections.Immutable;
+using System.Reflection.Metadata.Ecma335;
 using TravelProject1._0.Areas.Admin.Models.ChartViewModel.HotelChartDTO;
 using TravelProject1._0.Models;
 
@@ -50,12 +51,12 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api.AnalyzeAPI
 		//}
 
 		[HttpGet]
-		public async Task<IEnumerable<HotelSalesDTO>> GetHotelSales(int categoryId)
+		public async Task<IEnumerable<GetSalesDTO>> GetSales(int categoryId)
 		{
 			DateTime thirteenMonths = DateTime.Now.AddMonths(-13);
 			DateTime nowDateTime = DateTime.Now;
 			var monthSales = new Dictionary<string, decimal>();
-			var hotelIds = await _db.Products.AsNoTracking().Where(p => p.Id == 4).Select(p => p.ProductId).ToListAsync();
+			var hotelIds = await _db.Products.AsNoTracking().Where(p => p.Id == categoryId).Select(p => p.ProductId).ToListAsync();
 			foreach (var hotelId in hotelIds)
 			{
 				var planIds = await _db.Plans.AsNoTracking().Where(p => p.ProductId == hotelId).Select(p => p.PlanId).ToListAsync();
@@ -72,7 +73,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api.AnalyzeAPI
 
 					foreach (var orderDetail in orderDetails)
 					{
-						string monthKey = orderDetail.OrderDate.ToString().Substring(0,6).Replace("/","-");
+						string monthKey = orderDetail.OrderDate.ToString().Substring(0,6);
 
 						if (!monthSales.ContainsKey(monthKey))
 						{
@@ -88,7 +89,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api.AnalyzeAPI
 
 			var sortedMonthlySales = monthSales.OrderBy(kv => kv.Key).ToList();
 
-			var result = sortedMonthlySales.Select(kv => new HotelSalesDTO
+			var result = sortedMonthlySales.Select(kv => new GetSalesDTO
 			{
 				Name = kv.Key,
 				y = kv.Value
@@ -97,10 +98,37 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api.AnalyzeAPI
 			return result;
 		}
 
-		public async Task<IEnumerable<HotelSalesDTO>> GetSales()
+		[HttpGet]
+		public async Task<IEnumerable<GetSalesDTO>> GetAirplaneSales()
 		{
-			List<IEnumerable<HotelSalesDTO>> result = GetHotelSales(1);
+			return await GetSales(1);
+		}
 
+		[HttpGet]
+		public async Task<IEnumerable<GetSalesDTO>> GetHotelSales()
+		{
+			return await GetSales(2);
+		}
+
+		[HttpGet]
+		public async Task<IEnumerable<GetSalesDTO>> GetTransportationSales()
+		{
+			return await GetSales(3);
+		}
+
+		[HttpGet]
+		public async Task<IEnumerable<GetSalesDTO>> GetAttractionsSales()
+		{
+			return await GetSales(4);
+		}
+
+		[HttpGet]
+		public async Task<IEnumerable<object>> GetYearSales()
+		{
+			
+			
+			
+			
 			return null;
 		}
 	}

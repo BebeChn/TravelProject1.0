@@ -10,9 +10,9 @@
 
 <nav>
 	<div class="nav nav-tabs" id="nav-tab" role="tablist">
-		<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">男女會員分佈圖</button>
-		<button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">年齡分佈圖</button>
-		<button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Contact</button>
+		<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">男女會員佔比</button>
+		<button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">年齡佔比</button>
+		<button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">已/未消費會員佔比</button>
 	</div>
 </nav>
 <div class="tab-content" id="nav-tabContent">
@@ -33,7 +33,7 @@
 	</div>
 	@* 會員男女佔比圓餅圖 *@
 
-	@* 哥年齡層佔比 *@
+	@* 各年齡層佔比 *@
 	<div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
 		<figure class="highcharts-figure">
 			<div id="ageGroup"></div>
@@ -48,7 +48,7 @@
 			</p>
 		</figure>
 	</div>
-	@* 哥年齡層佔比 *@
+	@* 各年齡層佔比 *@
 	<div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">789</div>
 </div>
 
@@ -200,7 +200,7 @@
 						align: 'center'
 					},
 					subtitle: {
-						text: ``,
+						text: '',
 						align: 'left'
 					},
 					accessibility: {
