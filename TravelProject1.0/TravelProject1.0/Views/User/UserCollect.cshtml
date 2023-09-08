@@ -1,12 +1,7 @@
-﻿@section Styles {
+﻿@section Styles
+    {
+
     <style>
-        .container {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: #fff;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-        }
 
         .favorites {
             list-style-type: none;
@@ -17,6 +12,14 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            border-bottom: 1px solid #ccc;
+            padding: 10px 0;
+        }
+
+        .favorite-title {
+            display: flex;
+            align-items: center;
+            justify-content:space-around;
             border-bottom: 1px solid #ccc;
             padding: 10px 0;
         }
@@ -35,46 +38,105 @@
     </style>
 }
 
-  
-        <h1>我的收藏夹</h1>
-    
+
+<div id="app">
+    <h1>我的收藏夾</h1>
     <div class="container">
-        <h2>收藏的项目</h2>
-        <ul class="favorites">
-           
-        </ul>
+        <div class="row">
+            <div class="col-9">
+                <h2>收藏的项目</h2>
+                <ul class="favorites">
+                    <li class="favorite-title">
+                        <span> 商品名稱</span>
+                        <span> 商品價格</span>
+                    </l>
+                    <li v-for="favorite in favorites"  class="favorite-item">
+                        <span class="favorite-collectId">{{favorite.collectId}}</span>         
+                        <span class="favorite-productId">{{favorite.productId}}</span>
+                        <button class="delete-button" @@click="removeFavorite(favorite)">删除</button>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-3">
+                <div class="blog_right_sidebar">
+                    <aside class="single_sidebar_widget post_category_widget">
+                        <div style="text-align:center">
+                            <img class="" src="~/img/dog.jpg" style="border-radius:50%;width:150px;height:150px" />
+                        </div>
+                        <br />
+                        <h4 class="widget_title">會員資料</h4>
+                        <ul class="list_style cat-list">
+                            <li>
+                                <a class="d-flex justify-content-between" asp-Controller="User" asp-action="UpdateUser">
+                                    <p>個人資訊</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="d-flex justify-content-between" asp-Controller="User" asp-action="UserOrderDetails">
+                                    <p>商品訂單</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a  class="d-flex justify-content-between" asp-Controller="User" asp-action="UserCollect">
+                                    <p>收藏夾</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="d-flex justify-content-between">
+                                    <p>通知與消息</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </aside>
+                </div>
+            </div>
+        </div>
     </div>
-    @section Scripts{
+</div>
+
+
+@section Scripts{
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js" integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
     <script>
-       
-        const favorites = [
-            { id: 1, name: '收藏项 1' },
-            { id: 2, name: '收藏项 2' },
-            { id: 3, name: '收藏项 3' }
-        ];
-
-        const favoritesList = document.querySelector('.favorites');
-
-        favorites.forEach(favorite => {
-            const listItem = document.createElement('li');
-            listItem.classList.add('favorite-item');
-
-            const favoriteName = document.createElement('span');
-            favoriteName.classList.add('favorite-name');
-            favoriteName.textContent = favorite.name;
-
-            const deleteButton = document.createElement('button');
-            deleteButton.classList.add('delete-button');
-            deleteButton.textContent = '删除';
-            deleteButton.addEventListener('click', () => {
-                // 在此处处理删除收藏项的逻辑
-                alert(`删除收藏项 ${favorite.id}`);
-            });
-
-            listItem.appendChild(favoriteName);
-            listItem.appendChild(deleteButton);
-
-            favoritesList.appendChild(listItem);
+        var baseAddress = "https://localhost:7025";
+        var vueApp = new Vue({
+            el: '#app',
+            data: {
+                favorites: [],
+            },
+            mounted: function () {
+                let _this = this;
+                axios.get('/api/CollectApi/GetCollect')
+                    .then((response) => {
+                        _this.favorites = response.data;
+                    })
+                    .catch((error) => {
+                        console.log('取得後端失敗', error);
+                    });
+            },
+            methods: {
+                removeFavorite(favorite) {
+                    var dom =
+                    {
+                        userId: 69,
+                        ProductId: favorite.productId,
+                    };
+                    fetch(`${baseAddress}/api/CollectApi/DeleteCollect`, {
+                        method: "DELETE",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(dom)
+                    })
+                    .then(response => {
+                            if (response.ok)
+                                console.log("刪除成功");
+                    }).catch(err => {
+                            console.log("刪除失敗");
+                    })
+                },
+            },
         });
     </script>
+
 }

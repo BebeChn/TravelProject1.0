@@ -121,7 +121,7 @@
                 <p>關於旅行，關於生活，如此而已。 </p>
             </div>
             <div class="row mb_30">
-                <div class="col-lg-4 col-md-6" v-for="(pp, index) in productplan" :key="pp.collectId">
+                <div class="col-lg-4 col-md-6" v-for="pp in productplan" :key="pp.collectId">
                     <div class="single-recent-blog-post">
                         <div class="thumb">
                             <img class="img-fluid" :src="pp.img" />
