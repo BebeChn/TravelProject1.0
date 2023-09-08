@@ -9,6 +9,8 @@ using System.Collections.Immutable;
 using System.Reflection.Metadata.Ecma335;
 using TravelProject1._0.Models;
 using TravelProject1._0.Areas.Admin.Models.ChartViewModel.HotelChartDTO;
+using TravelProject1._0.Areas.Admin.Models.ChartViewModel.SaleChartDTO;
+
 namespace TravelProject1._0.Areas.Admin.Controllers.Api.AnalyzeAPI
 {
 	[Area("Admin")]
@@ -23,14 +25,85 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api.AnalyzeAPI
 			_db = db;
 		}
 
-		[HttpGet]
-		public async Task<IEnumerable<object>> GetYearSales()
+		//最開始的程式碼，後來想到或許還有其他方式可以執行
+		//public List<string> GetThirteenMonth()
+		//{
+		//	var oneYear = new List<string>();
+		//	DateTime dateTimeNow = DateTime.Now;
+		//	DateTime thirteenMonth = DateTime.Now.AddMonths(-13);
+		//	for (var startMonth = thirteenMonth; startMonth < dateTimeNow; startMonth = startMonth.AddMonths(1))
+		//	{
+		//		oneYear.Add(startMonth.ToString("Y"));
+		//	}
+		//	return oneYear;
+		//}
+
+		public Dictionary<string, decimal> AddThirteenYear()
 		{
+			var result = new Dictionary<string, decimal>();
+			DateTime dateTimeNow = DateTime.Now;
+			DateTime thirteenMonth = DateTime.Now.AddMonths(-13);
+			for (var startMonth = thirteenMonth; startMonth < dateTimeNow; startMonth = startMonth.AddMonths(1))
+			{
+				result[startMonth.ToString("Y")] = 0;
+			}
+			return result;
+		}
 
+		public Dictionary<string,decimal> GetTicketsSale(Dictionary<string,decimal> dictionary,int categotyId)
+		{
+			var producrIds =  _db.Products.AsNoTracking().Where(p => p.Id == categotyId).Select(p => p.ProductId).ToList();
+			foreach (var productid in producrIds)
+			{ 
+				var planIds =  _db.Plans.Where(p => p.ProductId == productid).Select(p => p.PlanId).ToList();
+				foreach (var planId in planIds)
+				{
+					var orderDetails =  _db.OrderDetails.Where(o => o.PlanId == planId).Select(o => new { 
+						Date = o.Order.OrderDate,
+						Price = o.UnitPrice,
+						Quantity = o.Quantity
+					}).ToList();
+					foreach (var orderDetail in orderDetails)
+					{
+						//DateTime oderDate = orderDetail.Date;
+						//string nowdate = date.ToString("");
+						if (!dictionary.ContainsKey(orderDetail.Date.Value.ToString("Y")))
+						{
+							dictionary[orderDetail.Date.Value.ToString("Y")] = Convert.ToDecimal(orderDetail.Price * orderDetail.Quantity);
+						}
+						else
+						{
+							dictionary[orderDetail.Date.Value.ToString("Y")] += Convert.ToDecimal(orderDetail.Price * orderDetail.Quantity);
+						}
+					}
+				}
+ 			}
 
+			return dictionary;
+		}
 
+		[HttpGet]
+		public async Task<AllTicktesSaleDTO> GetAllTicktesThirteenMonthSale()
+		{
+			var airPlane = AddThirteenYear();
+			var hotel = AddThirteenYear();
+			var transportation = AddThirteenYear();
+			var attractions = AddThirteenYear();
 
-			return null;
+			var airOneYearSale = GetTicketsSale(airPlane,1);
+			var hotelOneYearSale = GetTicketsSale(hotel,2);
+			var transportationOneYearSale = GetTicketsSale(transportation,3);
+			var attractionsOneYearSale = GetTicketsSale(attractions,4);
+
+			AllTicktesSaleDTO atsDTO = new AllTicktesSaleDTO()
+			{
+				Airplane = airOneYearSale,
+				Hotel = hotelOneYearSale,
+				Transportation = transportationOneYearSale,
+				Attractions = attractionsOneYearSale,
+			};
+
+			return atsDTO;
 		}
 
 		//[HttpGet]
@@ -59,7 +132,6 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api.AnalyzeAPI
 		//	return sales;
 		//}
 
-		[HttpGet]
 		public async Task<IEnumerable<GetSalesDTO>> GetSales(int categoryId)
 		{
 			DateTime thirteenMonths = DateTime.Now.AddMonths(-13);
