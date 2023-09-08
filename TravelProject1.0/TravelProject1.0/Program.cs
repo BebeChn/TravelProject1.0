@@ -6,6 +6,7 @@ using TravelProject1._0.Models;
 
 using AspNetCoreHero.ToastNotification.Extensions;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using TravelProject1._0.Services;
 
 namespace TravelProject1._0
 {
@@ -24,8 +25,9 @@ namespace TravelProject1._0
             });
 
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-
+            builder.Services.AddHttpContextAccessor();
             builder.Services.AddTransient<IEmailSender, EmailSender>();
+            builder.Services.AddTransient<IUserIdentityService, UserIdentityService>();
 
             builder.Services.AddControllersWithViews();
 

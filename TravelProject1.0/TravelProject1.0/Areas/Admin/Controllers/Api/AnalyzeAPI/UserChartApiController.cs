@@ -5,19 +5,20 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Linq;
 using System.Configuration;
 using System.Security.Permissions;
-using TravelProject1._0.Areas.Admin.Models.ChartViewModel;
+using TravelProject1._0.Areas.Admin.Models.ChartViewModel.HotelChartDTO;
+using TravelProject1._0.Areas.Admin.Models.ChartViewModel.UserChartDTO;
 using TravelProject1._0.Models;
 
 namespace TravelProject1._0.Areas.Admin.Controllers.Api
 {
 	[Area("Admin")]
-	[Route("api/ChartApi/{action}")]
+	[Route("api/UserChartApi/{action}")]
 	[ApiController]
-	public class ChartApiController : ControllerBase
+	public class UserChartApiController : ControllerBase
 	{
 		private readonly TravelProjectAzureContext _db;
 
-		public ChartApiController(TravelProjectAzureContext travelProjectAzureContext)
+		public UserChartApiController(TravelProjectAzureContext travelProjectAzureContext)
 		{
 			_db = travelProjectAzureContext;
 		}
@@ -133,11 +134,11 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 			return uaDTO;
 		}
 
-		[HttpGet]	
-		public async Task<IEnumerable<GetUserGenderDTO>> GetUserGender()
+		[HttpGet]
+		public async Task<IEnumerable<HighChart3DGraph>> GetUserGender()
 		{
 			return _db.Users.AsNoTracking().Where(x => !string.IsNullOrEmpty(x.Gender))
-			.Select(x => x.Gender).GroupBy(x => x).Select(x => new GetUserGenderDTO
+			.Select(x => x.Gender).GroupBy(x => x).Select(x => new HighChart3DGraph
 			{
 				Name = x.Key == "F" ? "女性" : "男性",
 				y = x.Count()
@@ -181,9 +182,9 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 		}
 
 		[HttpGet]
-		public async Task<IEnumerable<GetUserAgeGroupCount>> GetUserAgeGroup()
+		public async Task<IEnumerable<HighChart3DGraph>> GetUserAgeGroup()
 		{
-			var ageGroups = new List<GetUserAgeGroupCount>();
+			var ageGroups = new List<HighChart3DGraph>();
 			int minAge = 18;
 			int maxAge = 97;
 			int rangeAge = 5;
@@ -195,16 +196,16 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 				var ageGroup = _db.Users.AsNoTracking()
 					.Where(u => u.Age.HasValue && u.Age >= startAge && u.Age <= endAge)
 					.Select(u => u.Age)
-					.ToList() // 執行查詢並取得資料
+					.ToList()
 					.GroupBy(age => new
 					{
 						StartAge = startAge,
 						EndAge = endAge
 					})
-					.Select(group => new GetUserAgeGroupCount
+					.Select(group => new HighChart3DGraph
 					{
 						Name = $"{group.Key.StartAge}-{group.Key.EndAge}歲",
-						y = group.Count(),
+						y = group.Count()
 					})
 					.ToList();
 
@@ -213,7 +214,31 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 
 			return ageGroups;
 		}
-	}
 
-	
+		[HttpGet]
+		public async Task<IEnumerable<HighChart3DGraph>> GetIsPayAndNoPaying()
+		{
+			var asd = new Dictionary<string, int>();
+			var userIds = await _db.Users.AsNoTracking().Include(u => u.Orders).Select(u => u.UserId).ToListAsync();
+			var orderUserIds = await _db.Orders.AsNoTracking().Select(o => o.UserId).ToListAsync();
+			var paying = userIds.Intersect(orderUserIds);
+			var noPaying = userIds.Except(orderUserIds);
+
+			var result = new List<HighChart3DGraph>
+			{
+				new HighChart3DGraph
+				{
+					Name = "已消費會員",
+					y = paying.Count(),
+				},
+				new HighChart3DGraph
+				{
+					Name = "未消費會員",
+					y = noPaying.Count(),
+				}
+			};
+
+			return result;
+		}
+	}
 }

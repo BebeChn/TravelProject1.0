@@ -74,7 +74,7 @@ namespace TravelProject1._0.Controllers.Api
             });
         }
 
-        //取得單一商品
+        //取得單一商品資訊
         [HttpGet]
         [Route("{id}")]
         public async Task<IQueryable<TransportPlanDTO>> GetProduct(int id)

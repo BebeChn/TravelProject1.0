@@ -9,7 +9,7 @@ public partial class Cart
 
     public int UserId { get; set; }
 
-    public int ProductId { get; set; }
+    public int PlanId { get; set; }
 
     public short? CartQuantity { get; set; }
 
@@ -19,7 +19,7 @@ public partial class Cart
 
     public DateTime? CartDate { get; set; }
 
-    public virtual Product Product { get; set; } = null!;
+    public virtual Plan Plan { get; set; } = null!;
 
     public virtual User User { get; set; } = null!;
 }

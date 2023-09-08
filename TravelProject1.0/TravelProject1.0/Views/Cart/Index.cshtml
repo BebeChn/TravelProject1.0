@@ -36,7 +36,7 @@
         <div class="calculate">
             <span class="total-title">合計：</span>
             <input class="total-price" v-bind:value="totalPrice(cartItem) | formatCurrency" readonly />
-            <button class="btn btn-buy info" v-on:click="addOrder(cartItem)">前往結帳</button>
+            <button class="btn btn-buy info" v-on:click="addOrder(cartItem)">確認訂購資訊</button>
         </div>
     </div>
 
@@ -63,8 +63,6 @@
     </div>
 </div>
 
-
-
 @section Scripts{
     <script>
         let baseAddress = "https://localhost:7025";
@@ -74,7 +72,8 @@
                 cartItem: [],
                 allCheck: false,
                 resultPrice: 0,
-                remove: {}
+                remove: [],
+                orderId: ""
             },
             mounted: function () {
                 let _this = this;
@@ -125,26 +124,29 @@
 
                 //加至訂單
                 addOrder: function (model) {
-                    console.log(model);
                     let _this = this;
-                    let orderData = {
-                        orderName: model.cartName,
-                        planId: 61,
-                        quantity: model.cartQuantity,
-                        unitPrice: _this.totalPrice,
-                        UseDate: model.cartDate,
-                        Odname: model.cartName
-                    };
-                    console.log(orderData);
-                    fetch(`${baseAddress}/api/CartApi/AddOrder`, {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify(orderData)
-                    }).then(response => {
-                        if (response.ok) alert("成功");
-                    }).catch(error => {
-                        console.log(error);
-                    })
+                    for (var i = 0; i < _this.cartItem.length; i++) {
+                        if (model[i].checked == true) {
+                            let orderData = {
+                                orderName: model[i].cartName,
+                                planId: model[i].planId,
+                                quantity: model[i].cartQuantity,
+                                unitPrice: model[i].cartPrice
+                            };
+                            fetch(`${baseAddress}/api/CartApi/AddOrder`, {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify(orderData)
+                            }).then(response => {
+                                if (response.ok) {
+                                    _this.orderId = response.headers.get('OrderID');
+                                    window.location.href = '/ConfirmTheOrder/Index/' + _this.orderId;
+                                }
+                            }).catch(error => {
+                                console.log(error);
+                            })
+                        }
+                    }
                 },
 
                 //全選
