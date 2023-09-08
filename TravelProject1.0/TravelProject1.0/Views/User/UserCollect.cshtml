@@ -53,7 +53,7 @@
                     <li v-for="favorite in favorites"  class="favorite-item">
                         <span class="favorite-collectId">{{favorite.collectId}}</span>         
                         <span class="favorite-productId">{{favorite.productId}}</span>
-                        <button class="delete-button" @@click="removeFavorite(favorite)">删除</button>
+                        <button class="btn btn-delete danger" @@click="removeFavorite(favorite)"><i class="fa-solid fa-trash-can"></i> 删除</button>
                     </li>
                 </ul>
             </div>
