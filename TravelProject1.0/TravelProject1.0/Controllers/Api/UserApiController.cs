@@ -23,6 +23,7 @@ using TravelProject1._0.Models.ProductDTO;
 using NuGet.Protocol;
 using AspNetCoreHero.ToastNotification.Helpers;
 using Microsoft.AspNetCore.SignalR;
+using TravelProject1._0.Services;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -36,22 +37,17 @@ namespace TravelProject1._0.Controllers.Api
         private readonly TravelProjectAzureContext _context;
         private readonly ConcurrentDictionary<string, VerificationCode> _verificationCodes = new ConcurrentDictionary<string, VerificationCode>();
         private readonly IEmailSender _emailSender;
-        public UserApiController(ILogger<HomeController> logger, TravelProjectAzureContext context, IEmailSender emailSender)
+        private readonly IUserIdentityService _userIdentityService;
+        public UserApiController(ILogger<HomeController> logger, TravelProjectAzureContext context, IEmailSender emailSender , IUserIdentityService userIdentityService)
 
         {
             _logger = logger;
             _context = context;
             _verificationCodes = new ConcurrentDictionary<string, VerificationCode>();
             _emailSender = emailSender;
-
+            _userIdentityService = userIdentityService;
         }
-        // GET: api/<UserApiController>
-        //[HttpGet]
-        //public IEnumerable<string> Get()
-        //{
-        //    return new string[] { "value1", "value2" };
-        //}
-        // GET: api/Employees/5
+      
         [HttpGet("{id}")]
         public async Task<UpdateUserDTO> GetUser(int id)
         {
@@ -157,21 +153,10 @@ namespace TravelProject1._0.Controllers.Api
                 return Convert.ToBase64String(hashBytes);
             }
         }
-        //[HttpGet("check-username")]
-        //public async Task<ActionResult<bool>> CheckUsernameExists(string username)
-        //{
-        //    if (string.IsNullOrEmpty(username))
-        //    {
-        //        return BadRequest("使用者不能為空.");
-        //    }
-
-        //    bool usernameExists = await _context.Users.AnyAsync(user => user.Name == username);
-        //    return Ok(new { Exists = usernameExists });
-        //}
+      
 
 
-
-        // PUT api/<UserApiController>/5
+        
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUser(int id, UpdateUserViewModel UpdateUser)
         {
@@ -319,10 +304,8 @@ namespace TravelProject1._0.Controllers.Api
         [HttpGet]
         public IEnumerable<OrderInfo> OrderDetails()
         {
-            Claim user = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
-            string? idu = user.Value;
-            int id = Convert.ToInt32(idu);
-            return _context.Orders.Include(o => o.OrderDetails).Where(o => o.UserId == id)
+            var userId = _userIdentityService.GetUserId();
+            return _context.Orders.Include(o => o.OrderDetails).Where(o => o.UserId == userId)
                 .Select(o => new OrderInfo
                 {
                     OrderDate = o.OrderDate,
