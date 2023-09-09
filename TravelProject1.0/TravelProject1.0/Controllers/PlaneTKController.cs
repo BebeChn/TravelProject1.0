@@ -174,6 +174,7 @@ namespace TravelProject1._0.Controllers
                     MainDescribe = op.MainDescribe,
                     SubDescribe = op.SubDescribe,
                     ShortDescribe = op.ShortDescribe,
+                    Img=op.Img,
                 });
         }
 
