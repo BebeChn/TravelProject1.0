@@ -14,24 +14,30 @@
             <div class="card">
                 <div class="card-header info">訂單資訊</div>
                 <div class="card-body">
-                    <table>
+                    <table v-for="(o,index) in orders" :key="o.orderId">
                         <tr>
                             <th>商品名稱</th>
                             <th>數量</th>
                             <th>金額</th>
                             <th>訂購日期</th>
                         </tr>
-                        <tr v-for="(o,index) in orders" :key="o.orderId">
-                            <td>{{o.orderName}}</td>
-                            <td>{{o.confirmTheOrderDetails[0].quantity}}</td>
-                            <td>{{o.confirmTheOrderDetails[0].unitPrice | formatCurrency}}</td>
+                        <tr v-for="(detail, detailIndex) in o.confirmTheOrderDetails" :key="detailIndex">
+                            <td>
+                                {{detail.odname}}
+                            </td>
+                            <td>
+                                {{detail.quantity}}
+                            </td>
+                            <td>
+                                {{detail.unitPrice | formatCurrency}}
+                            </td>
                             <td>{{o.orderDate | formatDate}}</td>
                         </tr>
                     </table>
                     <hr />
                     <div>
                         <span class="card-text">合計：</span>
-                        <input class="money" v-bind:value="calculate(orders) | formatCurrency" readonly />
+                        <input class="money" v-bind:value="calculate() | formatCurrency" readonly />
                     </div>
                     <div class="discount">
                         <span>是否使用點數折抵(每300點折抵1元)?</span>
@@ -122,14 +128,21 @@
             },
             methods: {
                 //合計
-                calculate: function (model) {
+                calculate: function () {
                     let _this = this;
-                    let num = 0;
+                    let totalAmount = 0;
+
                     for (var i = 0; i < _this.orders.length; i++) {
-                        num += model[i].confirmTheOrderDetails[0].unitPrice;
+                        const order = _this.orders[i];
+
+                        for (var j = 0; j < order.confirmTheOrderDetails.length; j++) {
+                            const detail = order.confirmTheOrderDetails[j];
+                            totalAmount += detail.unitPrice;
+                        }
                     }
-                    _this.total = num;
-                    return num;
+
+                    _this.total = totalAmount;
+                    return totalAmount;
                 },
 
                 //不使用點數

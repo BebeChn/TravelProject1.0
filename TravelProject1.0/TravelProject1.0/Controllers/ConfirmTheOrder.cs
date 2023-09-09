@@ -2,11 +2,11 @@
 
 namespace TravelProject1._0.Controllers
 {
-	public class ConfirmTheOrder : Controller
-	{
-		public IActionResult Index()
-		{
-			return View();
-		}
-	}
+    public class ConfirmTheOrder : Controller
+    {
+        public IActionResult Index()
+        {
+            return View();
+        }
+    }
 }

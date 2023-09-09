@@ -10,7 +10,7 @@ namespace TravelProject1._0.Models.ViewModel
 
         public DateTime? OrderDate { get; set; }
 
-        public string? OrderName { get; set; }
+        public string? Odname { get; set; }
 
         public short? Quantity { get; set; }
 

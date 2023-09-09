@@ -113,9 +113,9 @@ namespace TravelProject1._0.Controllers.Api
 
         //購物車項目移至訂單
         [HttpPost]
-        public async Task<IActionResult> AddOrder([FromBody] AddOrderViewModel model)
+        public async Task<IActionResult> AddOrder([FromBody] List<AddOrderViewModel> models)
         {
-            if (model == null) return BadRequest();
+            if (models == null || models.Count == 0) return BadRequest();
 
             Claim user = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
             string? idu = user.Value;
@@ -126,23 +126,26 @@ namespace TravelProject1._0.Controllers.Api
                 Order order = new Order
                 {
                     UserId = id,
-                    OrderName = model.OrderName,
                     OrderDate = DateTime.Now
                 };
 
                 _context.Add(order);
                 await _context.SaveChangesAsync();
 
-                OrderDetail orderDetail = new OrderDetail
+                foreach (var model in models)
                 {
-                    OrderId = order.OrderId,
-                    PlanId = model.PlanId,
-                    Quantity = model.Quantity,
-                    UnitPrice = model.UnitPrice
-                };
+                    OrderDetail orderDetail = new OrderDetail
+                    {
+                        OrderId = order.OrderId,
+                        PlanId = model.PlanId,
+                        Odname = model.Odname,
+                        Quantity = model.Quantity,
+                        UnitPrice = model.UnitPrice
+                    };
 
-                _context.Add(orderDetail);
-                await _context.SaveChangesAsync();
+                    _context.Add(orderDetail);
+                    await _context.SaveChangesAsync();
+                }
 
                 Response.Headers.Add("OrderID", order.OrderId.ToString());
             }

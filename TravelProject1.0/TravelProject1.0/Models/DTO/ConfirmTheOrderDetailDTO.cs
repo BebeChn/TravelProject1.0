@@ -2,6 +2,8 @@
 {
     public class ConfirmTheOrderDetailDTO
     {
+        public string? Odname { get; set; }
+
         public short? Quantity { get; set; }
 
         public decimal? UnitPrice { get; set; }
