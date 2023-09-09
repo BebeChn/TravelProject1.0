@@ -49,9 +49,9 @@ namespace TravelProject1._0.Controllers.Api
             {
                 OrderId = o.OrderId,
                 OrderDate = o.OrderDate,
-                OrderName = o.OrderName,
                 ConfirmTheOrderDetails = o.OrderDetails.Select(od => new ConfirmTheOrderDetailDTO
                 {
+                    Odname = od.Odname,
                     Quantity = od.Quantity,
                     UnitPrice = od.UnitPrice
                 })
