@@ -40,20 +40,20 @@
 
 
 <div id="app">
-    <h1>我的收藏夾</h1>
+    <h1 style="justify-content:center">我的收藏夾</h1>
     <div class="container">
         <div class="row">
             <div class="col-9">
-                <h2>收藏的项目</h2>
+                <h2>收藏的項目</h2>
                 <ul class="favorites">
                     <li class="favorite-title">
                         <span> 商品名稱</span>
                         <span> 商品價格</span>
                     </l>
                     <li v-for="favorite in favorites"  class="favorite-item">
-                        <img class="img-fluid" :src="favorite.CollectImage" />
-                        <span class="favorite-collectName">{{favorite.collectName}}</span>
-                        <span class="favorite-collectId">{{favorite.collectId}}</span>         
+                        <img class="img-fluid" :src="favorite.collectImage" style="width:150px;height:150px;" />
+                        <span  v-model="favorite-collectName">{{favorite.collectName}}</span>
+                       
                         <span class="favorite-productId">{{favorite.productId}}</span>
                         <button class="btn btn-delete danger" v-on:click="deleteModal(c)" @* v-bind:disabled="!c.checked" *@ data-bs-toggle="modal" data-bs-target="#deleteItem"><i class="fa-solid fa-trash-can"></i>删除</button>
                     </li>
@@ -103,7 +103,7 @@
                     <h1 class="modal-title fs-5" id="exampleModalLabel">刪除商品</h1>
                 </div>
                 <div class="modal-body">
-                 
+                  
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-delete danger" @@click="removeFavorite(favorite)">刪除</button>
@@ -147,6 +147,8 @@
                     {
                         userId: 69,
                         ProductId: favorite.productId,
+                        CollectName: favorite.collectName,
+                        CollectImage: favorite.collectImage,
                     };
                     fetch(`${baseAddress}/api/CollectApi/DeleteCollect`, {
                         method: "DELETE",

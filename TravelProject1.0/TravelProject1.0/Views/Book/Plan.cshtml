@@ -19,7 +19,7 @@
 </section>
 
 <section id="app" class="about_history_area section_gap">
-	<div class="container">
+	<div class="container" v-cloak>
 		<nav>
 			<div class="nav nav-tabs" id="nav-tab" role="tablist">
 				<button style="width:10%;border:1px solid gray;" class="nav-link active" id="nav-plan-tab" data-bs-toggle="tab" data-bs-target="#nav-plan" type="button" role="tab" aria-controls="nav-plan" aria-selected="true"><i class="fas fa-bus"></i>方案</button>
@@ -211,7 +211,7 @@
 @section Scripts{
 	<script src="https://unpkg.com/vue2-datepicker/index.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js" integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-	<script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCBjQh1OoQjm4aPIV41r8e3UJ03rMhyUs0&callback=initMap"></script>
+	<script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCBjQh1OoQjm4aPIV41r8e3UJ03rMhyUs0"></script>
 	<script>
 		var baseAddress = "https://localhost:7025";
 		Vue.component('datePicker', DatePicker);

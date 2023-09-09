@@ -20,21 +20,17 @@ namespace TravelProject1._0.Controllers.Api
     {
 
         private readonly TravelProjectAzureContext _context;
+      
         private readonly IUserIdentityService _userIdentityService;
-
-        public CollectApiController(TravelProjectAzureContext context, IUserIdentityService userIdentityService)
-
+        public CollectApiController(TravelProjectAzureContext context,IUserIdentityService userIdentityService)
         {
             _context = context;
             _userIdentityService = userIdentityService;
         }
         [HttpGet]
         public async Task<ActionResult<List<CollectProductDTO>>> GetCollect()
-        {
-
-            Claim user = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
-            string? idu = user.Value;
-            int userId = Convert.ToInt32(idu);
+        { 
+            int userId = _userIdentityService.GetUserId();
             if (_context.CollectTables == null)
             {
                 return NotFound();
@@ -57,21 +53,22 @@ namespace TravelProject1._0.Controllers.Api
             [HttpPost]
             public async Task<IActionResult> PostCollect([FromBody] PostCollectViewModel collect)
             {
-            //int userId = _userIdentityService.GetUserId();
-            //HttpContext.Response.Cookies.Append("userID", userId.ToString());
+            int userId = _userIdentityService.GetUserId();
             //var user = _context.CollectTables.FirstOrDefaultAsync(c => c.ProductId == collect.ProductId);
-            //if (user!= null) 
+            //if (user != null)
             //{
             //    return BadRequest("已加入收藏夾");
             //}
-                try
+            try
                 {
 
                     // 創建收藏夾實體
                     CollectTable newCollect = new CollectTable
                     {
                         ProductId = collect.ProductId,
-                        UserId = collect.UserId,
+                        UserId = userId,
+                        CollectImage = collect.CollectImage,
+                        CollectName = collect.CollectName,
                     };
 
                     // 添加收藏到資料庫
@@ -92,8 +89,8 @@ namespace TravelProject1._0.Controllers.Api
             [HttpDelete]
             public async Task<IActionResult> DeleteCollect([FromBody] DeleteCollectViewModel model)
             {
-                //int userId = _userIdentityService.GetUserId();
-                var uid = await _context.CollectTables.FirstOrDefaultAsync(x => x.UserId == model.UserId && x.ProductId == model.ProductId);
+            int userId = _userIdentityService.GetUserId();
+            var uid = await _context.CollectTables.FirstOrDefaultAsync(x => x.UserId == userId && x.ProductId == model.ProductId);
                 //HttpContext.Response.Cookies.Append("userID", userId.ToString());
                 if (uid == null)
                 {
@@ -110,6 +107,12 @@ namespace TravelProject1._0.Controllers.Api
                 }
                 return Ok(new { Message = "商品已從收藏夾中移除" });
             }
-
+        [HttpGet]
+        [Authorize]
+        public async Task<int[]> GetCollectOfProductId()
+        {
+            return await _context.CollectTables.Where(x => x.UserId == _userIdentityService.GetUserId()).Select(x=> x.ProductId).ToArrayAsync();
         }
+
+    }
     }

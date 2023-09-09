@@ -152,6 +152,8 @@
 </div>
 @section Scripts {
     <script>
+        var isLogin = ('@User.Identity.IsAuthenticated' == "True");
+        
         let baseAddress = "https://localhost:7025";
         let app = new Vue({
             el: "#app",
@@ -167,26 +169,33 @@
                     }).then(data => {
                         _this.products = data;
                     });
-                fetch(`${baseAddress}/api/ProductApi/GetProductPlan`)
-                    .then(response => {
-                        if (response.ok) return response.json();
-                    }).then(data => {
-                        _this.productplan = data.map(x => ({ ...x, heartIcon: false }));
-                    });
+                var task = [_this.getProductPlanApi()];
+                if (isLogin) task.push(_this.getCollectOfProductIdApi());
+                Promise.all(task).then(x => {
+                    var collect = x[1] ? x[1] : [];
+                    _this.productplan = x[0].map(z => ({ ...z, heartIcon: collect.some(c => c == z.productId) }));
+                });
             },
             methods: {
+                getProductPlanApi:async function () {
+                    return await fetch(`${baseAddress}/api/ProductApi/GetProductPlan`).then(x => x.json());
+                },
+                getCollectOfProductIdApi: async function () {
+                    return await fetch(`${baseAddress}/api/CollectApi/GetCollectOfProductId`).then(x => x.json());
+                },
                 ShowMessage: function () {
-                    toastr["success"]("商品已加入購物車！");
+                    toastr["success"]("商品已加入收藏夾！");
                 },
 
                 toggleHeart: function (pp) {
                     let _this = this;
-                    if (!pp.heartIcon) {
+                    if (!isLogin) return;
+                    if (!pp.heartIcon) {       
                         var dom =
-                        {
-                            userId: 69,
+                        {                        
                             ProductId: pp.productId,
-                            ProductName:pp.productName,
+                            CollectName:pp.productName,
+                            CollectImage: pp.img,
                         };
                         fetch(`${baseAddress}/api/CollectApi/PostCollect`, {
                             method: "POST",
@@ -201,9 +210,10 @@
                     }
                     else {
                         var dom =
-                        {
-                            userId:69,
-                            ProductId: pp.productId
+                        {                   
+                            ProductId: pp.productId,
+                            CollectName: pp.productName,
+                            CollectImage: pp.img,
                         };
                         fetch(`${baseAddress}/api/CollectApi/DeleteCollect`, {
                             method: "DELETE",

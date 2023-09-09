@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +9,7 @@ using TravelProject1._0.Helper;
 using TravelProject1._0.Models;
 using TravelProject1._0.Models.DTO;
 using TravelProject1._0.Models.ViewModel;
+using TravelProject1._0.Services;
 
 namespace TravelProject1._0.Controllers.Api
 {
@@ -17,23 +19,22 @@ namespace TravelProject1._0.Controllers.Api
     {
         private readonly ILogger<HomeController> _logger;
         private readonly TravelProjectAzureContext _context;
-        public CartApiController(ILogger<HomeController> logger, TravelProjectAzureContext context)
+        private readonly IUserIdentityService _userIdentityService;
+        public CartApiController(ILogger<HomeController> logger, TravelProjectAzureContext context, IUserIdentityService userIdentityService)
         {
             _logger = logger;
             _context = context;
+            _userIdentityService = userIdentityService;
         }
 
         //取得購物車商品
         [HttpGet]
-        [Route("{id}")]
         [Authorize]
         public async Task<IQueryable<CartViewModel>> GetCart()
         {
-            Claim user = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
-            string? idu = user.Value;
-            int id = Convert.ToInt32(idu);
+            int userId = _userIdentityService.GetUserId();
 
-            return _context.Carts.Where(c => c.UserId == id).Select(c => new CartViewModel
+            return _context.Carts.Where(c => c.UserId == userId).Select(c => new CartViewModel
             {
                 PlanId = c.PlanId,
                 CartName = c.CartName,
@@ -51,12 +52,12 @@ namespace TravelProject1._0.Controllers.Api
             {
                 return BadRequest();
             }
-            Claim user = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
-            string? idu = user.Value;
-            int id = Convert.ToInt32(idu);
+
+            int userId = _userIdentityService.GetUserId();
+
             Cart item = new Cart
             {
-                UserId = model.UserId,
+                UserId = userId,
                 PlanId = model.PlanId,
                 CartName = model.CartName,
                 CartPrice = model.CartPrice,
@@ -86,12 +87,11 @@ namespace TravelProject1._0.Controllers.Api
             {
                 return BadRequest();
             }
-            Claim user = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
-            string? idu = user.Value;
-            int id = Convert.ToInt32(idu);
+
+            var userId = _userIdentityService.GetUserId();
 
             var cartItem = await _context.Carts.FirstOrDefaultAsync(c =>
-                c.UserId == id && c.PlanId == model.PlanId);
+                c.UserId == userId && c.PlanId == model.PlanId);
 
             if (cartItem == null)
             {
@@ -117,15 +117,14 @@ namespace TravelProject1._0.Controllers.Api
         {
             if (models == null || models.Count == 0) return BadRequest();
 
-            Claim user = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
-            string? idu = user.Value;
-            int id = Convert.ToInt32(idu);
+            int userId = _userIdentityService.GetUserId();
 
             try
             {
                 Order order = new Order
                 {
-                    UserId = id,
+                    UserId = userId,
+
                     OrderDate = DateTime.Now
                 };
 
