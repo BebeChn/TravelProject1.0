@@ -1,4 +1,6 @@
-﻿namespace TravelProject1._0.Models.DTO
+﻿using Microsoft.EntityFrameworkCore.Migrations;
+
+namespace TravelProject1._0.Models.DTO
 {
     public class OrderDetailDto
     {
@@ -9,5 +11,9 @@
         public decimal? UnitPrice { get; set; }
 
         public DateTime? UseDate { get; set; }
+
+        public string? Odname { get; set; }
+
+        public string? Odimg { get; set; }
     }
 }

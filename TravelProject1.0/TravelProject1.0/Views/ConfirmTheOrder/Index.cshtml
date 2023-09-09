@@ -1,0 +1,196 @@
+﻿@{
+    ViewData["Title"] = "結帳";
+}
+
+@section Styles{
+    <link href="~/css/confirmtheorder.css" rel="stylesheet" asp-append-version="true" />
+}
+
+<div id="app" class="container">
+    <h1>訂單</h1>
+    <div class="row">
+        <div class="col-md-8">
+            @* 訂單資訊 *@
+            <div class="card">
+                <div class="card-header info">訂單資訊</div>
+                <div class="card-body">
+                    <table v-for="(o,index) in orders" :key="o.orderId">
+                        <tr>
+                            <th>商品名稱</th>
+                            <th>數量</th>
+                            <th>金額</th>
+                            <th>訂購日期</th>
+                        </tr>
+                        <tr v-for="(detail, detailIndex) in o.confirmTheOrderDetails" :key="detailIndex">
+                            <td>
+                                {{detail.odname}}
+                            </td>
+                            <td>
+                                {{detail.quantity}}
+                            </td>
+                            <td>
+                                {{detail.unitPrice | formatCurrency}}
+                            </td>
+                            <td>{{o.orderDate | formatDate}}</td>
+                        </tr>
+                    </table>
+                    <hr />
+                    <div>
+                        <span class="card-text">合計：</span>
+                        <input class="money" v-bind:value="calculate() | formatCurrency" readonly />
+                    </div>
+                    <div class="discount">
+                        <span>是否使用點數折抵(每300點折抵1元)?</span>
+                        <button class="btn btn-point info" data-bs-toggle="modal" data-bs-target="#pointsDiscount">是</button>
+                        <button class="btn btn-point info" v-on:click="showPrice">否</button>
+                    </div>
+                    <div>
+                        <span class="card-text">點數折抵後合計：</span>
+                        <input class="money" v-bind:value="resultPrice | formatCurrency" readonly />
+                    </div>
+                    <div class="buy">
+                        <button class="btn btn-buy info">結帳</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @* 使用者資訊 *@
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header info">訂購人資訊</div>
+                <div class="card-body" v-for="u in user">
+                    <p class="card-text">姓名：{{u.name}}</p>
+                    <p class="card-text">電話：{{u.phone}}</p>
+                    <p class="card-text">Email：{{u.email}}</p>
+                    <p class="card-text">點數：{{u.points}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* 點數折抵Modal *@
+    <div class="modal fade" id="pointsDiscount" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header info">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">點數折抵</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h5>請選擇折抵點數(每300點折抵1元)：</h5>
+                    <div class="points d-flex">
+                        <button class="btn minus info" v-on:click="minus">-</button>
+                        <input class="points-num" v-bind:value="pointNum" readonly>
+                        <button class="btn plus info" v-on:click="plus">+</button>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-point info" data-bs-dismiss="modal" v-on:click="totalPrice">確定</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        var baseAddress = "https://localhost:7025";
+        var app = new Vue({
+            el: "#app",
+            data: {
+                user: [],
+                orders: [],
+                queries: "",
+                pointNum: 0,
+                total: "",
+                resultPrice: ""
+            },
+            mounted: function () {
+                let _this = this;
+                _this.queries = window.location.pathname.slice("23");
+                fetch(`${baseAddress}/api/ConfirmTheOrderApi/GetUser`, { method: "GET" })
+                    .then(response => {
+                        if (response.ok) return response.json();
+                    }).then(data => {
+                        _this.user = data;
+                    }).catch(error => {
+                        console.log(error);
+                    });
+                fetch(`${baseAddress}/api/ConfirmTheOrderApi/GetOrders/${_this.queries}`, { method: "GET" })
+                    .then(response => {
+                        if (response.ok) return response.json();
+                    }).then(data => {
+                        _this.orders = data;
+                    }).catch(error => {
+                        console.log(error);
+                    })
+            },
+            methods: {
+                //合計
+                calculate: function () {
+                    let _this = this;
+                    let totalAmount = 0;
+
+                    for (var i = 0; i < _this.orders.length; i++) {
+                        const order = _this.orders[i];
+
+                        for (var j = 0; j < order.confirmTheOrderDetails.length; j++) {
+                            const detail = order.confirmTheOrderDetails[j];
+                            totalAmount += detail.unitPrice;
+                        }
+                    }
+
+                    _this.total = totalAmount;
+                    return totalAmount;
+                },
+
+                //不使用點數
+                showPrice: function () {
+                    let _this = this;
+                    return _this.resultPrice = _this.total;
+                },
+
+                //點數
+                minus: function () {
+                    let _this = this;
+                    if (_this.pointNum == 0) {
+                        _this.pointNum = 0;
+                    } else {
+                        _this.pointNum -= 300;
+                    }
+                },
+                plus: function () {
+                    let _this = this;
+                    if (_this.pointNum < _this.user[0].points) {
+                        _this.pointNum += 300;
+                        if (_this.pointNum > _this.user[0].points) {
+                            _this.pointNum -= 300;
+                            alert("點數不足!");
+                        }
+                    }
+                },
+
+                //點數折抵後合計
+                totalPrice: function () {
+                    let _this = this;
+                    return _this.resultPrice = _this.total - (_this.pointNum / 300);
+                }
+            },
+            filters: {
+                //貨幣格式
+                formatCurrency: function (val) {
+                    if (typeof val !== "number") return val;
+                    return val.toLocaleString('zh-TW', { style: 'currency', currency: 'TWD', minimumFractionDigits: 0 });
+                },
+
+                //日期格式
+                formatDate: function (str) {
+                    if (!str) return "";
+                    var d = new Date(str);
+                    return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+                }
+            }
+        })
+    </script>
+}

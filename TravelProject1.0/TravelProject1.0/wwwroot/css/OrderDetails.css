@@ -1,0 +1,56 @@
+﻿.my-title {
+    font-family: "Arial", sans-serif; 
+    font-size: 24px;
+    font-weight: bold; 
+    color: #333; 
+}
+.my-text {
+    font-family: "Arial", sans-serif;
+    font-size: 20px;
+    color: #333;
+}
+.outer-box {
+    border: 2px solid cornflowerblue;
+    padding: 10px;
+}
+.search {
+    margin-bottom: 20px;
+}
+
+.search-title {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.inp-search {
+    width: 50%;
+    transition: width 0.4s ease-in-out;
+}
+
+    .inp-search:focus {
+        width: 70%;
+    }
+
+.sort {
+    margin-bottom: 30px;
+}
+
+.sort-title {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.product-items {
+    margin-bottom: 18px;
+}
+
+.img-product {
+    width: 220px;
+    height: 160px;
+    border-radius: 10px;
+}
+
+.product-price {
+    font-size: 24px;
+    font-weight: bold;
+}

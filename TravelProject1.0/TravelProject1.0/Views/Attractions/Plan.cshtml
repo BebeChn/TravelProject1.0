@@ -166,7 +166,7 @@
     <script src="https://unpkg.com/vue2-datepicker/index.min.js"></script>
     <script>
         let baseAddress = "https://localhost:7025";
-        Vue.component('datePicker', DatePicker);
+        Vue.component(DatePicker);
         var app = new Vue({
             el: '#app',
             data: {
@@ -242,7 +242,8 @@
                     let _this = this;
                     _this.queries = window.location.pathname.slice("18");
                     let cartData = {
-                        productId: _this.queries,
+                      
+                        planId: model.planId,
                         cartName: model.name,
                         cartPrice: model.planPrice * model.selected.num,
                         cartQuantity: model.selected.num,

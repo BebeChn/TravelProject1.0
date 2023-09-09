@@ -174,7 +174,7 @@
             data: {
                 plan: [],
                 product: [],
-                rating:[],
+                rating: [],
                 queries: ''
             },
             mounted: function () {
@@ -241,7 +241,7 @@
                     let _this = this;
                     _this.queries = window.location.href.slice("38");
                     let cartData = {
-                        productId: _this.queries,
+                        planId: model.planId,
                         cartName: model.name,
                         cartPrice: model.planPrice * model.selected.num,
                         cartQuantity: model.selected.num,

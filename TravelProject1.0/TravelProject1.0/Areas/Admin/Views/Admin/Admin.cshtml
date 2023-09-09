@@ -179,7 +179,7 @@
                     let _this = this;
                     var request = {};
                     //axios.get(`${baseAddress}/api/Admin/AdminGET`)
-                    request.UserId = isNaN(_this.filterUser) ? -1 : Number(_this.Filter);
+                    //request.UserId = isNaN(_this.filter) ? -1 : Number(_this.filter);
                     request.Name = request.Email = _this.filter;
                     axios.post(`${baseAddress}/api/Admin/AdminSearch`, request)
                         .then(response => {

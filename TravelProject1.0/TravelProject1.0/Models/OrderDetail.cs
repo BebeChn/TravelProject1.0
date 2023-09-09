@@ -19,6 +19,10 @@ public partial class OrderDetail
 
     public DateTime? UseDate { get; set; }
 
+    public string? Odimg { get; set; }
+
+    public string? Odname { get; set; }
+
     public virtual Order Order { get; set; } = null!;
 
     public virtual Plan Plan { get; set; } = null!;

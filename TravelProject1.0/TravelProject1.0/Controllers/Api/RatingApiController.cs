@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +8,7 @@ using System.Security.Claims;
 using TravelProject1._0.Models;
 using TravelProject1._0.Models.DTO;
 using TravelProject1._0.Models.ViewModel;
+using TravelProject1._0.Services;
 
 namespace TravelProject1._0.Controllers.Api
 {
@@ -15,9 +17,11 @@ namespace TravelProject1._0.Controllers.Api
     public class RatingApiController : ControllerBase
     {
         private readonly TravelProjectAzureContext _dbContext;
-        public RatingApiController(TravelProjectAzureContext dbContext)
+        private readonly IUserIdentityService _userIdentityService;
+        public RatingApiController(TravelProjectAzureContext dbContext, IUserIdentityService userIdentityService)
         {
             _dbContext = dbContext;
+            _userIdentityService = userIdentityService;
         }
 
         //商品評價
@@ -26,13 +30,11 @@ namespace TravelProject1._0.Controllers.Api
         {
             if (model == null) return BadRequest();
 
-            Claim user = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
-            string? idu = user.Value;
-            int id = Convert.ToInt32(idu);
+            int userId = _userIdentityService.GetUserId();
 
             Rating rating = new Rating
             {
-                UserId = id,
+                UserId = userId,
                 ProductId = model.ProductId,
                 RatingScore = model.RatingScore,
                 Describe = model.Describe,
@@ -54,13 +56,11 @@ namespace TravelProject1._0.Controllers.Api
 
         //取得商品評價資訊
         [HttpGet]
-        public async Task<IQueryable<RatingInfo>> GetPlanInfo()
+        public async Task<IQueryable<RatingInfo>> GetPlanInfo(int productId, int planId)
         {
-            Claim user = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
-            string? idu = user.Value;
-            int id = Convert.ToInt32(idu);
+            int userId = _userIdentityService.GetUserId();
 
-            return _dbContext.Plans.Include(p => p.OrderDetails).Where(p => p.ProductId == 61 && p.PlanId == 10).Select(p => new RatingInfo
+            return _dbContext.Plans.Include(p => p.OrderDetails).Where(p => p.ProductId == productId && p.PlanId == planId).Select(p => new RatingInfo
             {
                 PlanId = p.PlanId,
                 ProductId = p.ProductId,

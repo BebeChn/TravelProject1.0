@@ -48,9 +48,9 @@ namespace TravelProject1._0.Areas.Admin.Controllers
             
 
             return _db.Users.Where(y =>
-            y.UserId == AdminDTO.UserId ||
+            //y.UserId == AdminDTO.UserId ||
             y.Name.Contains(AdminDTO.Name) ||
-            y.Gender.Contains(AdminDTO.Gender) ||
+            //y.Gender.Contains(AdminDTO.Gender) ||
             y.Email.Contains(AdminDTO.Email)
             //|| y.Birthday == AdminDTO.Birthday
             ).Select(x => new AdminDTO

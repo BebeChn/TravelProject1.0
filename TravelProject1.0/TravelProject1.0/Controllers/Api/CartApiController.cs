@@ -1,12 +1,15 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using TravelProject1._0.Helper;
 using TravelProject1._0.Models;
+using TravelProject1._0.Models.DTO;
 using TravelProject1._0.Models.ViewModel;
+using TravelProject1._0.Services;
 
 namespace TravelProject1._0.Controllers.Api
 {
@@ -16,25 +19,24 @@ namespace TravelProject1._0.Controllers.Api
     {
         private readonly ILogger<HomeController> _logger;
         private readonly TravelProjectAzureContext _context;
-        public CartApiController(ILogger<HomeController> logger, TravelProjectAzureContext context)
+        private readonly IUserIdentityService _userIdentityService;
+        public CartApiController(ILogger<HomeController> logger, TravelProjectAzureContext context, IUserIdentityService userIdentityService)
         {
             _logger = logger;
             _context = context;
+            _userIdentityService = userIdentityService;
         }
 
         //取得購物車商品
         [HttpGet]
-        [Route("{id}")]
         [Authorize]
         public async Task<IQueryable<CartViewModel>> GetCart()
         {
-            Claim user = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
-            string? idu = user.Value;
-            int id = Convert.ToInt32(idu);
+            int userId = _userIdentityService.GetUserId();
 
-            return _context.Carts.Where(c => c.UserId == id).Select(c => new CartViewModel
+            return _context.Carts.Where(c => c.UserId == userId).Select(c => new CartViewModel
             {
-                ProductId = c.ProductId,
+                PlanId = c.PlanId,
                 CartName = c.CartName,
                 CartPrice = c.CartPrice,
                 CartQuantity = c.CartQuantity,
@@ -50,13 +52,13 @@ namespace TravelProject1._0.Controllers.Api
             {
                 return BadRequest();
             }
-            Claim user = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
-            string? idu = user.Value;
-            int id = Convert.ToInt32(idu);
+
+            int userId = _userIdentityService.GetUserId();
+
             Cart item = new Cart
             {
-                UserId = model.UserId,
-                ProductId = model.ProductId,
+                UserId = userId,
+                PlanId = model.PlanId,
                 CartName = model.CartName,
                 CartPrice = model.CartPrice,
                 CartQuantity = model.CartQuantity,
@@ -85,12 +87,11 @@ namespace TravelProject1._0.Controllers.Api
             {
                 return BadRequest();
             }
-            Claim user = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
-            string? idu = user.Value;
-            int id = Convert.ToInt32(idu);
+
+            var userId = _userIdentityService.GetUserId();
 
             var cartItem = await _context.Carts.FirstOrDefaultAsync(c =>
-                c.UserId == id && c.ProductId == model.ProductId);
+                c.UserId == userId && c.PlanId == model.PlanId);
 
             if (cartItem == null)
             {
@@ -110,26 +111,49 @@ namespace TravelProject1._0.Controllers.Api
             return Ok(new { Message = "商品已從購物車移除" });
         }
 
-
-        [HttpGet]
-        public async Task<CartSummaryViewModel> GetCartSummary()
+        //購物車項目移至訂單
+        [HttpPost]
+        public async Task<IActionResult> AddOrder([FromBody] List<AddOrderViewModel> models)
         {
-            Claim user = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
-            string? idu = user.Value;
-            int id = Convert.ToInt32(idu);
+            if (models == null || models.Count == 0) return BadRequest();
 
-            var cartItems = await _context.Carts
-                .Where(c => c.UserId == id)
-                .ToListAsync();
+            int userId = _userIdentityService.GetUserId();
 
-            int totalQuantity = cartItems.Sum(item => item.CartQuantity.GetValueOrDefault());
-            decimal totalPrice = cartItems.Sum(item => (item.CartPrice * item.CartQuantity).GetValueOrDefault());
-
-            return new CartSummaryViewModel
+            try
             {
-                TotalQuantity = totalQuantity,
-                TotalPrice = totalPrice
-            };
+                Order order = new Order
+                {
+                    UserId = userId,
+
+                    OrderDate = DateTime.Now
+                };
+
+                _context.Add(order);
+                await _context.SaveChangesAsync();
+
+                foreach (var model in models)
+                {
+                    OrderDetail orderDetail = new OrderDetail
+                    {
+                        OrderId = order.OrderId,
+                        PlanId = model.PlanId,
+                        Odname = model.Odname,
+                        Quantity = model.Quantity,
+                        UnitPrice = model.UnitPrice
+                    };
+
+                    _context.Add(orderDetail);
+                    await _context.SaveChangesAsync();
+                }
+
+                Response.Headers.Add("OrderID", order.OrderId.ToString());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+
+            return Ok();
         }
     }
 }

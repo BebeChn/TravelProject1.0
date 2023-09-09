@@ -51,19 +51,26 @@ namespace TravelProject1._0.Areas.Admin.Controllers
         
         public async Task<IEnumerable<OrderDTO>> OrderSeachL(OrderDTO order )
         {
+            if (order.OrderId != 0)
+            {
+                return _db.Orders.Where(y =>
+                    y.OrderId == (order.OrderId)
+                    || y.UserId == (order.UserId)
+                    //|| y.OrderDate == (order.OrderDate)
+                    ).Select(x => new OrderDTO
+                    {
+                        OrderId = x.OrderId,
+                        UserId = x.UserId,
+                        OrderDate = x.OrderDate,
+                    });
+            }
 
-
-            return _db.Orders.Where(y =>
-            y.OrderId == (order.OrderId)
-            || y.UserId == (order.UserId)
-            || y.OrderDate == (order.OrderDate)
-            ).Select(x => new OrderDTO
+            return _db.Orders.Select(x => new OrderDTO
             {
                 OrderId = x.OrderId,
                 UserId = x.UserId,
                 OrderDate = x.OrderDate,
             });
-
 
             //try
             //{
@@ -96,8 +103,8 @@ namespace TravelProject1._0.Areas.Admin.Controllers
             }
 
             var ORD = await _db.Orders.FindAsync(id);
-            ORD.OrderId=order.OrderId;
-            ORD.UserId=order.UserId;
+            ORD.OrderId=order.OrderId;            //至少要有orderId  跟要改項目
+            //ORD.UserId=order.UserId;
             ORD.OrderDate=order.OrderDate;
             _db.Entry(ORD).State = EntityState.Modified;
 
@@ -115,7 +122,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers
 
         //
 
-        [HttpDelete("id")]
+        [HttpDelete("{id}")]
 
         public async Task<string> OrderDELETE(int id)
         {
