@@ -26,6 +26,7 @@ namespace TravelProject1._0
 
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
             builder.Services.AddHttpContextAccessor();
+            builder.Services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
             builder.Services.AddTransient<IEmailSender, EmailSender>();
             builder.Services.AddTransient<IUserIdentityService, UserIdentityService>();
 

@@ -197,7 +197,7 @@
                     }).catch(error => {
                         alert(error);
                     })
-                // 
+                //取得使用者評價
                 fetch(`${baseAddress}/api/PlaneTK/PlaneTK_GetRate/${_this.queries}`, { method: "GET" })
                     .then(response => {
                         if (response.ok) return response.json();

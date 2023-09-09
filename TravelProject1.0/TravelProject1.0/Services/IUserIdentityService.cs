@@ -22,7 +22,7 @@ namespace TravelProject1._0.Services
             {
                 return id;
             }
-            throw new InvalidOperationException("User ID not found or invalid.");
+            throw new InvalidOperationException("找不到 User ID");
         }
     }
 }
