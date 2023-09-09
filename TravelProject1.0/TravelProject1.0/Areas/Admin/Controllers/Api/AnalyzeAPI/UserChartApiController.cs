@@ -22,6 +22,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 		{
 			_db = travelProjectAzureContext;
 		}
+
 		List<string> ageGroups = new List<string>
 			{
 				"18-22歲",
