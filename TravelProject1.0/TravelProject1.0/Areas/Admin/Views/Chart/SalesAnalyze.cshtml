@@ -1,5 +1,5 @@
 ﻿@* 各票券年度銷售額柱狀圖分析 *@
-<div style="width:100%">
+<div>
 	<div id="getOneYearSales" style="min-width:100%; min-height:400px"></div>
 </div>
 @* 各票券年度銷售額柱狀圖分析 *@
@@ -55,7 +55,7 @@
 	<script src="https://code.highcharts.com/highcharts-3d.js"></script>
 	<script>
 		//各票券年度銷售柱狀圖分析
-		axios.get("/api/SaleChartApi/GetAllTicktesThirteenMonthSale")
+		axios.get("/api/SaleChartApi/GetAllTicktesThirteenMonthSale2")
 			.then(response => {
 				const xTitle = Object.keys(response.data.airplane);
 				const airplane = Object.values(response.data.airplane);
@@ -79,7 +79,7 @@
 						// 圖例設定
 					},
 					tooltip: {
-						// 提示框設定
+						text:'萬',
 					},
 					xAxis: {
 						categories: xTitle,
