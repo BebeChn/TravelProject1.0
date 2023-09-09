@@ -20,9 +20,9 @@ namespace TravelProject1._0.Controllers.Api
     {
 
         private readonly TravelProjectAzureContext _context;
-        private readonly IUserIdentityService _userIdentityService;
+        private readonly UserIdentityService _userIdentityService;
 
-        public CollectApiController(TravelProjectAzureContext context, IUserIdentityService userIdentityService)
+        public CollectApiController(TravelProjectAzureContext context, UserIdentityService userIdentityService)
 
         {
             _context = context;
@@ -72,6 +72,8 @@ namespace TravelProject1._0.Controllers.Api
                     {
                         ProductId = collect.ProductId,
                         UserId = collect.UserId,
+                        CollectImage = collect.CollectImage,
+                        CollectName = collect.CollectName,
                     };
 
                     // 添加收藏到資料庫
@@ -110,6 +112,18 @@ namespace TravelProject1._0.Controllers.Api
                 }
                 return Ok(new { Message = "商品已從收藏夾中移除" });
             }
+             
+            //public bool GetCollectOfProductId() 
+            //{
+            //Claim user = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
+            //string? idu = user.Value;
+            //int userId = Convert.ToInt32(idu);
+            //var PId = _context.CollectTables.FirstOrDefault(x => x.UserId == userId);
+            //if (PId == null)
+            //{
+
+            //}
+            //}
 
         }
     }
