@@ -5,6 +5,7 @@ using System.Security.Claims;
 using TravelProject1._0.Models;
 using TravelProject1._0.Models.DTO;
 using TravelProject1._0.Models.ViewModel;
+using TravelProject1._0.Services;
 
 namespace TravelProject1._0.Controllers.Api
 {
@@ -13,22 +14,22 @@ namespace TravelProject1._0.Controllers.Api
     public class ConfirmTheOrderApiController : ControllerBase
     {
         private readonly TravelProjectAzureContext _dbContext;
-        public ConfirmTheOrderApiController(TravelProjectAzureContext dbContext)
+        private readonly IUserIdentityService _userIdentityService;
+        public ConfirmTheOrderApiController(TravelProjectAzureContext dbContext, IUserIdentityService userIdentityService)
         {
             _dbContext = dbContext;
+            _userIdentityService = userIdentityService;
         }
 
         //取得聯絡人資訊
         [HttpGet]
         public async Task<IQueryable<ConfirmTheOrderDTO>> GetUser()
         {
-            Claim user = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
-            string? idu = user.Value;
-            int id = Convert.ToInt32(idu);
+            int userId = _userIdentityService.GetUserId();
 
-            return _dbContext.Users.Where(u => u.UserId == id).Select(u => new ConfirmTheOrderDTO
+            return _dbContext.Users.Where(u => u.UserId == userId).Select(u => new ConfirmTheOrderDTO
             {
-                UserId = id,
+                UserId = userId,
                 Name = u.Name,
                 Phone = u.Phone,
                 Email = u.Email,
@@ -41,11 +42,9 @@ namespace TravelProject1._0.Controllers.Api
         [Route("{orderId}")]
         public async Task<IQueryable<ConfirmTheOrderViewModel>> GetOrders(int orderId)
         {
-            Claim user = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
-            string? idu = user.Value;
-            int id = Convert.ToInt32(idu);
+            int userId = _userIdentityService.GetUserId();
 
-            return _dbContext.Orders.Include(o => o.OrderDetails).Where(o => o.UserId == id && o.OrderId == orderId).Select(o => new ConfirmTheOrderViewModel
+            return _dbContext.Orders.Include(o => o.OrderDetails).Where(o => o.UserId == userId && o.OrderId == orderId).Select(o => new ConfirmTheOrderViewModel
             {
                 OrderId = o.OrderId,
                 OrderDate = o.OrderDate,
