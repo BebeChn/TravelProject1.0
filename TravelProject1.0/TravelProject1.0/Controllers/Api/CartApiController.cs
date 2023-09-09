@@ -20,7 +20,7 @@ namespace TravelProject1._0.Controllers.Api
         private readonly ILogger<HomeController> _logger;
         private readonly TravelProjectAzureContext _context;
         private readonly IUserIdentityService _userIdentityService;
-        public CartApiController(ILogger<HomeController> logger, TravelProjectAzureContext context,IUserIdentityService userIdentityService)
+        public CartApiController(ILogger<HomeController> logger, TravelProjectAzureContext context, IUserIdentityService userIdentityService)
         {
             _logger = logger;
             _context = context;
@@ -28,14 +28,11 @@ namespace TravelProject1._0.Controllers.Api
         }
 
         //取得購物車商品
-        [HttpGet]   
+        [HttpGet]
         [Authorize]
         public async Task<IQueryable<CartViewModel>> GetCart()
         {
-            //Claim user = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
-            //string? idu = user.Value;
-            //int id = Convert.ToInt32(idu);
-            int userId=_userIdentityService.GetUserId();
+            int userId = _userIdentityService.GetUserId();
 
             return _context.Carts.Where(c => c.UserId == userId).Select(c => new CartViewModel
             {
@@ -55,8 +52,9 @@ namespace TravelProject1._0.Controllers.Api
             {
                 return BadRequest();
             }
-       
+
             int userId = _userIdentityService.GetUserId();
+
             Cart item = new Cart
             {
                 UserId = userId,
@@ -89,7 +87,8 @@ namespace TravelProject1._0.Controllers.Api
             {
                 return BadRequest();
             }
-               var userId = _userIdentityService.GetUserId();
+
+            var userId = _userIdentityService.GetUserId();
 
             var cartItem = await _context.Carts.FirstOrDefaultAsync(c =>
                 c.UserId == userId && c.PlanId == model.PlanId);
