@@ -29,11 +29,11 @@
         </nav>
 
         <div class="tab-content" id="nav-tabContent" v-for="x in product">
-            @* 分頁1(方案) *@
+            @* 商品 *@
             <div class="tab-pane fade show active" id="nav-plan" role="tabpanel" aria-labelledby="nav-plan-tab">
                 <div class="row product-describe">
                     <div class="col-md-4">
-                        <img class="img-product" @* :src="x.img" *@ />
+                        <img class="img-product" :src="x.img" />
                     </div>
                     <div class="col-md-8 d_flex align-items-center">
                         <div class="about_content ">
@@ -46,7 +46,7 @@
                 <div class="card" v-for="(p,index) in plan" :key="p.planId">
                     <div class="row">
                         <div class="col-md-3">
-                            <img class="img-plan" @* :src="p.planImg" *@ />
+                            <img class="img-plan"  :src="p.planImg"  />
                         </div>
                         <div class="col-md-7">
                             <div class="card-body">
@@ -64,7 +64,7 @@
                                         <h2>選擇日期</h2>
                                         <template>
                                             <div>
-                                                <date-picker v-model="p.selected.date" valueType="format"></date-picker>
+                                                <date-picker v-model="p.selected.date" valueType="format" @@input="minDate"></date-picker>
                                             </div>
                                         </template>
                                     </div>
@@ -197,7 +197,7 @@
                     }).catch(error => {
                         alert(error);
                     })
-                // 
+                //取得使用者評價
                 fetch(`${baseAddress}/api/PlaneTK/PlaneTK_GetRate/${_this.queries}`, { method: "GET" })
                     .then(response => {
                         if (response.ok) return response.json();
@@ -235,13 +235,15 @@
                 calculate: function (p) {
                     return p.planPrice * p.selected.num;
                 },
+               
 
                 //加入購物車
                 addCart: function (model) {
                     let _this = this;
                     _this.queries = window.location.pathname.replace('/api/PlaneTK/PlaneTK_sale/', '');
                     let cartData = {
-                        productId: _this.queries,
+                        userId: 69,
+                        planId: model.planId,
                         cartName: model.name,
                         cartPrice: model.planPrice * model.selected.num,
                         cartQuantity: model.selected.num,

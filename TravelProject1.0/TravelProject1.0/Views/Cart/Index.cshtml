@@ -73,11 +73,12 @@
                 allCheck: false,
                 resultPrice: 0,
                 remove: [],
-                orderId: ""
+                orderId: "",
+                orderDetail: []
             },
             mounted: function () {
                 let _this = this;
-                fetch(`${baseAddress}/api/CartApi/GetCart/69`, { method: "GET" })
+                fetch(`${baseAddress}/api/CartApi/GetCart`, { method: "GET" })
                     .then(response => {
                         if (response.ok) return response.json();
                     }).then(data => {
@@ -128,25 +129,27 @@
                     for (var i = 0; i < _this.cartItem.length; i++) {
                         if (model[i].checked == true) {
                             let orderData = {
-                                orderName: model[i].cartName,
+                                odname: model[i].cartName,
                                 planId: model[i].planId,
                                 quantity: model[i].cartQuantity,
                                 unitPrice: model[i].cartPrice
                             };
-                            fetch(`${baseAddress}/api/CartApi/AddOrder`, {
-                                method: "POST",
-                                headers: { "Content-Type": "application/json" },
-                                body: JSON.stringify(orderData)
-                            }).then(response => {
-                                if (response.ok) {
-                                    _this.orderId = response.headers.get('OrderID');
-                                    window.location.href = '/ConfirmTheOrder/Index/' + _this.orderId;
-                                }
-                            }).catch(error => {
-                                console.log(error);
-                            })
+                            _this.orderDetail.push(orderData);
                         }
                     }
+
+                    fetch(`${baseAddress}/api/CartApi/AddOrder`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(_this.orderDetail)
+                    }).then(response => {
+                        if (response.ok) {
+                            _this.orderId = response.headers.get('OrderID');
+                            window.location.href = '/ConfirmTheOrder/Index/' + _this.orderId;
+                        }
+                    }).catch(error => {
+                        console.log(error);
+                    })
                 },
 
                 //全選

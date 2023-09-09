@@ -634,6 +634,7 @@ button:focus {
 }
 
     .breadcrumb_area .bg-parallax {
+        background-image: url('../lib/image/attractions.jpg');
         opacity: 0.50;
         z-index: -1;
     }

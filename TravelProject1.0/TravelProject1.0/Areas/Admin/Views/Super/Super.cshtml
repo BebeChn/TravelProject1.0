@@ -7,6 +7,10 @@
 			border: 1px solid silver;
 			text-align:center;
 		}
+		.formatError {
+			color: #dc3545;
+			font-size: .875em;
+		}
 	</style>
 }
 
@@ -18,13 +22,17 @@
 		<div style="color:black;font-size:36px;">管理員管理</div>
 		<div class="row" style="width:25%;margin-left:800px;">
 			關鍵字搜尋：<input type="text" v-model="Filter" class="form-control" placeholder="請輸入篩選關鍵字"  @@keyup="filterEmployees"  />
-		</div>
-	</div>
+		</div>		
+	</div>	
 	
 	<br />
 	<br />
 
 	<div class="container">
+		<div class="form-group">
+			@*新增管理員記錄按鍵*@
+			<button type="button" class="btn btn-primary" @@click="showModal">新增管理員</button>
+		</div>
 		<table style="width:1000px;color:black;border:1px solid rgb(242, 242, 242)">
 			<tr>
 				<td>AdminID</td>
@@ -39,20 +47,56 @@
 				<td>{{item.describe}}</td>
 				<td>{{item.name}}</td>
 				<td>{{item.account}}</td>
-@* 				<td>{{item.createDate}}</td>
-				<td>{{item.loginDate}}</td> *@
  				<td>{{item.createDate | formatDate}}</td>
 				<td>{{item.loginDate | formatDate}}</td> 
 			</tr>
 		</table>
 	</div>
 
+	@*新增員工記錄Bootstrap Modal畫面*@
+	<div class="modal fade" id="insertModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="modalTitleId">新增管理人</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div class="form-group">
+						<label class="form-label">管理人：</label>
+						<input v-model.trim="name" type="text" class="form-control" required />
+						<div v-if="!isValid(name,validType.name)" class="formatError">您輸入的格式錯誤</div>
+					</div>
+					<div class="form-group">
+						<label class="form-label">帳號：</label>
+						<input v-model.trim="account" type="email" class="form-control" required />
+						<div class="formatError" v-if="!isValid(account,validType.email)" >您輸入的格式不正確</div>
+					</div>
+					<div class="form-group">
+						<label class="form-label">密碼：</label>
+						<input v-model.trim="password" type="password" class="form-control" required />
+						<div class="formatError" v-if="!isValid(password,validType.password)">您輸入的格式不正確</div>
+					</div>
+					<div class="form-group">
+						<label class="form-label">管理權限描述：</label>
+						<input v-model.trim="describe" type="text" class="form-control" required />
+						<div class="formatError" v-if="!isValid(describe,validType.name)">請輸入管理權限描述</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" @@click="insert">新增</button>
+				</div>
+			</div>
+		</div>
+	</div>
 	
 </div>
 
 @section Scripts{
+
 	<script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js" integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script src="~/js/validation.min.js"></script>
 	<script>
 		var baseAddress = "https://localhost:7025";
 		var vueApp = new Vue({
@@ -60,6 +104,13 @@
 			data: {
 				SuperDTOes: [],
 				Filter: '',
+				name: '',
+				account: '',
+				password: '',
+				role: '',
+				describe: '',
+				createDate: '',
+				validType: validType
 			},
 			mounted: function () {
 				let _this = this;
@@ -82,6 +133,9 @@
 				}
 			},
 			methods: {
+				isValid: function (str, type) {
+					return window.validation(str, type);
+				},
 				filterEmployees: function () {
 					// alert("篩選");
 					let _this = this;
@@ -97,6 +151,34 @@
 							alert(err);
 						});
 				},
+
+				showModal: function () {
+					//alert('新增員工');
+					$("#insertModal").modal('show');
+				},
+				insert: function () {
+					//alert('aa');
+					let _this = this;
+					_this.isValid();
+					var request = {
+						Id: 0,		//不能缺
+						Name: _this.name,
+						Account: _this.account,
+						Password: _this.password,
+						Role: _this.role,
+						Describe:_this.describe,
+						CreateDate: /* _this.createDate */ new Date(),
+						LoginDate: new Date()
+					};
+					axios.post(`${baseAddress}/api/SuperApi/SuperPost`, request)
+						.then(response => {
+							// alert(response.data);
+							$("#insertModal").modal("hide");
+							_this.filterEmployees();
+						}).catch(err => {
+							alert(err);
+						});
+				}
 			}
 			// computed: {
 			// 	filterAdmin: function () {
@@ -105,5 +187,6 @@
 			// 	}
 			// }
 		})
+
 	</script>
 }
