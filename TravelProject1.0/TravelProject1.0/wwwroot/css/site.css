@@ -634,6 +634,7 @@ button:focus {
 }
 
     .breadcrumb_area .bg-parallax {
+        background-image: url('../lib/image/attractions.jpg');
         opacity: 0.50;
         z-index: -1;
     }
@@ -776,7 +777,7 @@ button:focus {
 .facilities_area {
     position: relative;
     z-index: 1;
-    background: #04091e;
+    background-image: url('../img/homeindex.jpg');
     overflow: hidden;
 }
 
@@ -785,13 +786,13 @@ button:focus {
     border-radius: 10px;
     background-color: rgba(249, 249, 255, 0.102);
     padding: 31px 40px 37px;
-    color: #fff;
+    color: black;
     margin-bottom: 30px;
 }
 
     .facilities_item .sec_h4 {
         padding-bottom: 18px;
-        color: #fff;
+        color: black;
     }
 
         .facilities_item .sec_h4 i {

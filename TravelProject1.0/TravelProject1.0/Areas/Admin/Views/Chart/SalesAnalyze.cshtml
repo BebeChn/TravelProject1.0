@@ -1,0 +1,270 @@
+﻿@* 各票券年度銷售額柱狀圖分析 *@
+<div>
+	<div id="getOneYearSales" style="min-width:100%; min-height:400px"></div>
+</div>
+@* 各票券年度銷售額柱狀圖分析 *@
+
+@* 餅塊圖頁簽 *@
+<nav>
+	<div class="nav nav-tabs" id="nav-tab" role="tablist">
+		<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-airplane" type="button" role="tab" aria-controls="nav-airplane" aria-selected="true">飛機年度銷售</button>
+		<button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-hotel" type="button" role="tab" aria-hotel="nav-profile" aria-selected="false">住宿年度銷售</button>
+		<button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-transportation" type="button" role="tab" aria-controls="nav-transportation" aria-selected="false">交通年度銷售</button>
+		<button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-attractions" type="button" role="tab" aria-controls="nav-attractions" aria-selected="false">交通年度銷售</button>
+	</div>
+</nav>
+@* 餅塊圖頁簽 *@
+
+@* 餅塊圖頁簽各內容切換*@
+<div class="tab-content" id="nav-tabContent">
+	@* 飛機 *@
+	<div class="tab-pane fade show active" id="nav-airplane" role="tabpanel" aria-labelledby="nav-airplane-tab" tabindex="0">
+		<div id="airplane" style="height: 400px"></div>
+	</div>
+	@* 飛機 *@
+
+	@* 住宿 *@
+	<div class="tab-pane fade" id="nav-hotel" role="tabpanel" aria-labelledby="nav-hotel-tab" tabindex="0">
+		<div id="hotel" style="height: 400px"></div>
+	</div>
+	@* 住宿 *@
+
+	@* 交通 *@
+	<div class="tab-pane fade" id="nav-transportation" role="tabpanel" aria-labelledby="nav-transportation-tab" tabindex="0">
+		<div id="transportation" style="height: 400px"></div>
+	</div>
+	@* 交通 *@
+
+	@* 景點 *@
+	<div class="tab-pane fade" id="nav-attractions" role="tabpanel" aria-labelledby="nav-attractions-tab" tabindex="0">
+		<div id="attractions" style="height: 400px"></div>
+	</div>
+	@* 景點 *@
+</div>
+@* 餅塊圖頁簽各內容切換*@
+
+
+@section Scripts
+	{
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+	<script src="https://code.highcharts.com/highcharts.js"></script>
+	<script src="https://code.highcharts.com/modules/exporting.js"></script>
+	<script src="https://code.highcharts.com/modules/export-data.js"></script>
+	<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.5.0/axios.min.js" integrity="sha512-aoTNnqZcT8B4AmeCFmiSnDlc4Nj/KPaZyB5G7JnOnUEkdNpCZs1LCankiYi01sLTyWy+m2P+W4XM+BuQ3Q4/Dg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script src="https://code.highcharts.com/highcharts-3d.js"></script>
+	<script>
+		//各票券年度銷售柱狀圖分析
+		axios.get("/api/SaleChartApi/GetAllTicktesThirteenMonthSale2")
+			.then(response => {
+				const xTitle = Object.keys(response.data.airplane);
+				const airplane = Object.values(response.data.airplane);
+				const hotel = Object.values(response.data.hotel);
+				const transportation = Object.values(response.data.transportation);
+				const attractions = Object.values(response.data.attractions);
+				let chart = Highcharts.chart('getOneYearSales', {
+					chart: {
+						type: "column",
+					},
+					title: {
+						text: "各票券月份銷售金額",
+					},
+					subtitle: {
+						text: ''
+					},
+					credits: {
+						enabled: false
+					},
+					legend: {
+						// 圖例設定
+					},
+					tooltip: {
+						text:'萬',
+					},
+					xAxis: {
+						categories: xTitle,
+					},
+					yAxis: {
+						title: {
+							text: "銷售額"
+						}
+					},
+					series: [{
+						name: "飛機票券",
+						data: airplane,
+					},
+					{
+						name: "住宿票券",
+						data: hotel,
+					},
+					{
+						name: "交通票券",
+						data: transportation,
+					},
+					{
+						name: "景點票券",
+						data: attractions,
+					}]
+				});
+			}).catch(err => {
+				alert('年度銷售數據異常，請聯絡管理員');
+			});
+		//各票券年度銷售柱狀圖分析
+
+		//飛機票券銷售3D餅圖
+		axios.get('/api/SaleChartApi/GetAirplaneSales').then(response => {
+			const chart = Highcharts.chart('airplane', {
+				chart: {
+					type: 'pie',
+					options3d: {
+						enabled: true,
+						alpha: 45,
+						beta: 0
+					}
+				},
+				title: {
+					text: '年度銷售'
+				},
+				tooltip: {
+					pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+				},
+				plotOptions: {
+					pie: {
+						allowPointSelect: true,
+						cursor: 'pointer',
+						depth: 35,
+						dataLabels: {
+							enabled: true,
+							format: '{point.name}'
+						}
+					}
+				},
+				series: [{
+					type: 'pie',
+					name: '佔年度銷售',
+					data: response.data
+				}]
+			});
+		}).catch(err => {
+			alert('飛機票券數據異常聯絡體統管理員')
+		});
+		//飛機票券銷售3D餅圖
+
+		//住宿票券銷售3D餅圖
+		axios.get("/api/SaleChartApi/GetHotelSales").then(response => {
+			const chart = Highcharts.chart('hotel', {
+				chart: {
+					type: 'pie',
+					options3d: {
+						enabled: true,
+						alpha: 45,
+						beta: 0
+					}
+				},
+				title: {
+					text: '年度銷售 '
+				},
+				tooltip: {
+					pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+				},
+				plotOptions: {
+					pie: {
+						allowPointSelect: true,
+						cursor: 'pointer',
+						depth: 35,
+						dataLabels: {
+							enabled: true,
+							format: '{point.name}'
+						}
+					}
+				},
+				series: [{
+					type: 'pie',
+					name: '佔年度銷售',
+					data: response.data
+				}]
+			});
+		}).catch(err => {
+			alert('住宿票券數據異常聯絡體統管理員')
+		});
+		//住宿票券銷售3D餅圖
+
+		//交通票券銷售3D餅圖
+		axios.get("/api/SaleChartApi/GetTransportationSales").then(response => {
+			const chart = Highcharts.chart('transportation', {
+				chart: {
+					type: 'pie',
+					options3d: {
+						enabled: true,
+						alpha: 45,
+						beta: 0
+					}
+				},
+				title: {
+					text: '年度銷售 '
+				},
+				tooltip: {
+					pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+				},
+				plotOptions: {
+					pie: {
+						allowPointSelect: true,
+						cursor: 'pointer',
+						depth: 35,
+						dataLabels: {
+							enabled: true,
+							format: '{point.name}'
+						}
+					}
+				},
+				series: [{
+					type: 'pie',
+					name: '佔年度銷售',
+					data: response.data
+				}]
+			});
+		}).catch(err => {
+			alert('交通票券數據異常聯絡體統管理員')
+		});
+		//交通票券銷售3D餅圖
+
+		//景點票券銷售3D餅圖
+		axios.get("/api/SaleChartApi/GetAttractionsSales").then(response => {
+			const chart = Highcharts.chart('attractions', {
+				chart: {
+					type: 'pie',
+					options3d: {
+						enabled: true,
+						alpha: 45,
+						beta: 0
+					}
+				},
+				title: {
+					text: '年度銷售 '
+				},
+				tooltip: {
+					pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+				},
+				plotOptions: {
+					pie: {
+						allowPointSelect: true,
+						cursor: 'pointer',
+						depth: 35,
+						dataLabels: {
+							enabled: true,
+							format: '{point.name}'
+						}
+					}
+				},
+				series: [{
+					type: 'pie',
+					name: '佔年度銷售',
+					data: response.data
+				}]
+			});
+		}).catch(err => {
+			alert('景點票券數據異常聯絡體統管理員')
+		});
+		//景點票券銷售3D餅圖
+	</script>
+}

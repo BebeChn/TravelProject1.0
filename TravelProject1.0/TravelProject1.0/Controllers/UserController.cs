@@ -157,7 +157,10 @@ namespace TravelProject1._0.Controllers
         {
             return View();
         }
-
+        public IActionResult UserCollect()
+        {
+            return View();
+        }
     }
 
 

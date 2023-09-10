@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Drawing;
 using TravelProject1._0.Models;
+using TravelProject1._0.Models.DTO;
 using TravelProject1._0.Models.ProductDTO;
 
 namespace TravelProject1._0.Controllers.Api
@@ -15,7 +16,7 @@ namespace TravelProject1._0.Controllers.Api
         {
             _db = db;
         }
-
+        [HttpGet]
         public async Task<IQueryable<ProductDTO>> GetProduct()
         {
             return _db.Products.Where(x => x.Id == 4).Select(x => new ProductDTO
@@ -26,5 +27,28 @@ namespace TravelProject1._0.Controllers.Api
                 Img = x.Img
             }).Take(4);
         }
+        [HttpGet]
+        public async Task<IQueryable<ProductPlanDTO>> GetProductPlan()
+        {
+            return _db.Products.Where(x => x.Id == 2).Select(x => new ProductPlanDTO
+            {
+                ProductId = x.ProductId,
+                ProductName = x.ProductName,
+                Img = x.Img
+            }).Take(3);
+        }
+        [HttpGet]
+        public IQueryable<AttractionDTO> GetAttractionPlan()
+        {
+            return  _db.Products.Where(x => x.Id == 3).Select(x => new AttractionDTO
+            {
+                ProductId = x.ProductId,
+                ProductName = x.ProductName,
+                Img = x.Img,
+                MainDescribe = x.MainDescribe,
+
+            }).Take(1);
+        }
     }
 }
+

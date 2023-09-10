@@ -4,7 +4,7 @@
     {
         public int UserId { get; set; }
 
-        public int ProductId { get; set; }
+        public int PlanId { get; set; }
 
         public short? CartQuantity { get; set; }
 

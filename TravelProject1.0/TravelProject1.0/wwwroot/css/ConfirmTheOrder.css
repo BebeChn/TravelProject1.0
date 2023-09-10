@@ -1,0 +1,74 @@
+.card {
+    width: 100%;
+}
+
+.card-header {
+    color: white;
+    font-size: 26px;
+    font-weight: bold;
+}
+
+.card-body table {
+    width: 100%;
+}
+
+table {
+    table-layout: fixed;
+}
+
+    table tr th {
+        font-size: 22px;
+    }
+
+    table tr td {
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+.discount {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+    .discount span {
+        font-weight: bold;
+        font-size: 18px;
+    }
+
+.btn-point {
+    color: white;
+    transition: all 0.3s ease;
+}
+
+    .btn-point:hover {
+        color: white;
+        font-size: 20px;
+    }
+
+.buy {
+    text-align: end;
+}
+
+.card-text {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.money {
+    border: none;
+    font-size: 24px;
+    color: red;
+    width: 200px;
+}
+
+.modal-title {
+    color: white;
+}
+
+.points {
+    justify-content: center;
+}
+
+    .points button {
+        color: white;
+    }

@@ -19,13 +19,13 @@
 </section>
 
 <section id="app" class="about_history_area section_gap">
-	<div class="container">
+	<div class="container" v-cloak>
 		<nav>
 			<div class="nav nav-tabs" id="nav-tab" role="tablist">
-				<button style="width:20%;border:1px solid gray;" class="nav-link active" id="nav-plan-tab" data-bs-toggle="tab" data-bs-target="#nav-plan" type="button" role="tab" aria-controls="nav-plan" aria-selected="true"><i class="fas fa-bus"></i>方案</button>
-				<button style="width:20%;border:1px solid gray;" class="nav-link" id="nav-caption-tab" data-bs-toggle="tab" data-bs-target="#nav-caption" type="button" role="tab" aria-controls="nav-caption" aria-selected="false">商品說明</button>
-				<button style="width:20%;border:1px solid gray;" class="nav-link" id="nav-describe-tab" data-bs-toggle="tab" data-bs-target="#nav-describe" type="button" role="tab" aria-controls="nav-describe" aria-selected="false">購買須知</button>
-				<button style="width:20%;border:1px solid gray;" class="nav-link" id="nav-rating-tab" data-bs-toggle="tab" data-bs-target="#nav-rating" type="button" role="tab" aria-controls="nav-rating" aria-selected="false"><i class="fas fa-star"></i>評價</button>
+				<button style="width:10%;border:1px solid gray;" class="nav-link active" id="nav-plan-tab" data-bs-toggle="tab" data-bs-target="#nav-plan" type="button" role="tab" aria-controls="nav-plan" aria-selected="true"><i class="fas fa-bus"></i>方案</button>
+				<button style="width:10%;border:1px solid gray;" class="nav-link" id="nav-caption-tab" data-bs-toggle="tab" data-bs-target="#nav-caption" type="button" role="tab" aria-controls="nav-caption" aria-selected="false">商品說明</button>
+				<button style="width:10%;border:1px solid gray;" class="nav-link" id="nav-describe-tab" data-bs-toggle="tab" data-bs-target="#nav-describe" type="button" role="tab" aria-controls="nav-describe" aria-selected="false">購買須知</button>
+				<button style="width:10%;border:1px solid gray;" class="nav-link" id="nav-rating-tab" data-bs-toggle="tab" data-bs-target="#nav-rating" type="button" role="tab" aria-controls="nav-rating" aria-selected="false"><i class="fas fa-star"></i>評價</button>
 			</div>
 		</nav>
 
@@ -108,19 +108,19 @@
 						<div class="row product-descripts">
 							<div class="col-md-8 offset-2 text-center">
 								<h2 class="title">商品說明</h2>
-								<div class="row">
-									<div class="col-md-4">
-										<img class="img-caption" src="~/lib/image/mountain.jpeg" />
+								<div class="">
+									<div class="col-md-">
+										<p class="sub-descripts">{{b.subDescribe}}</p>	
 									</div>
-									<div class="col-md-8">
-										<p class="sub-descripts">{{b.subDescribe}}</p>
+									<div class="col-md-">
+										<iframe src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3614.7262750585273!2d121.57517497515694!3d25.043361737914925!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMjXCsDAyJzM2LjEiTiAxMjHCsDM0JzM5LjkiRQ!5e0!3m2!1szh-TW!2stw!4v1693712893717!5m2!1szh-TW!2stw" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
 									</div>
 								</div>
 							</div>
 						</div>
 						<div>
 							<h4 class="sub-title">兌換方式</h4>
-							<p class="sub-descripts">QRCode</p>
+							<p class="sub-descripts">現場請出示電子憑證</p>
 						</div>
 						<div>
 							<h4 class="sub-title">時段介紹</h4>
@@ -211,6 +211,7 @@
 @section Scripts{
 	<script src="https://unpkg.com/vue2-datepicker/index.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js" integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCBjQh1OoQjm4aPIV41r8e3UJ03rMhyUs0"></script>
 	<script>
 		var baseAddress = "https://localhost:7025";
 		Vue.component('datePicker', DatePicker);
