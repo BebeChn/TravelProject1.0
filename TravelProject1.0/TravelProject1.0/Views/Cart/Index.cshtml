@@ -142,18 +142,31 @@
                                 _this.orderDetail.push(orderData);
                             }
                         }
-                        fetch(`${baseAddress}/api/CartApi/AddOrder`, {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify(_this.orderDetail)
-                        }).then(response => {
-                            if (response.ok) {
-                                _this.orderId = response.headers.get('OrderID');
-                                window.location.href = '/ConfirmTheOrder/Index/' + _this.orderId;
-                            }
-                        }).catch(error => {
-                            alert(error);
-                        })
+                        var form = document.createElement("form");
+                        form.method = "post";
+                        form.action = "/ConfirmTheOrder/Index";
+                        var inp = document.createElement("input");
+                        inp.type = "hidden";
+                        inp.value = JSON.stringify(_this.orderDetail);
+                        inp.name = "key";
+                        form.append(inp);
+                        document.getElementsByTagName("body")[0].append(form);
+                        form.submit();
+
+
+
+                        // fetch(`${baseAddress}/api/CartApi/AddOrder`, {
+                        //     method: "POST",
+                        //     headers: { "Content-Type": "application/json" },
+                        //     body: JSON.stringify(_this.orderDetail)
+                        // }).then(response => {
+                        //     if (response.ok) {
+                        //         _this.orderId = response.headers.get('OrderID');
+                        //         window.location.href = '/ConfirmTheOrder/Index/' + _this.orderId;
+                        //     }
+                        // }).catch(error => {
+                        //     alert(error);
+                        // })
                     }
                 },
 
