@@ -10,6 +10,7 @@ using System.Reflection.Metadata.Ecma335;
 using TravelProject1._0.Models;
 using TravelProject1._0.Areas.Admin.Models.ChartViewModel.HotelChartDTO;
 using TravelProject1._0.Areas.Admin.Models.ChartViewModel.SaleChartDTO;
+using TravelProject1._0.Models.DTO;
 
 namespace TravelProject1._0.Areas.Admin.Controllers.Api.AnalyzeAPI
 {
@@ -37,52 +38,58 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api.AnalyzeAPI
 		//	}
 		//	return oneYear;
 		//}
-
+		[NonAction]
 		public Dictionary<string, decimal> AddThirteenYear()
 		{
 			var result = new Dictionary<string, decimal>();
-			DateTime dateTimeNow = DateTime.Now;
+			DateTime endDateTime = DateTime.Now.AddMonths(1);
 			DateTime thirteenMonth = DateTime.Now.AddMonths(-13);
-			for (var startMonth = thirteenMonth; startMonth < dateTimeNow; startMonth = startMonth.AddMonths(1))
+			for (var startMonth = thirteenMonth; startMonth < endDateTime; startMonth = startMonth.AddMonths(1))
 			{
-				result[startMonth.ToString("Y")] = 0;
+				result[startMonth.ToString("yyyy-MM")] = 0;
 			}
 			return result;
 		}
 
-		public Dictionary<string,decimal> GetTicketsSale(Dictionary<string,decimal> dictionary,int categotyId)
+		[NonAction]
+		public Dictionary<string, decimal> GetTicketsSale(Dictionary<string, decimal> dictionary, int categotyId)
 		{
-			var producrIds =  _db.Products.AsNoTracking().Where(p => p.Id == categotyId).Select(p => p.ProductId).ToList();
+			DateTime dateTimeNow = DateTime.Now;
+			DateTime thirteenMonth = DateTime.Now.AddMonths(-13);
+			//var orderDetails = _db.Products.AsNoTracking().Where(p => p.Id == categotyId && p.ProductId == p.Plans.)
+			var producrIds = _db.Products.AsNoTracking().Where(p => p.Id == categotyId).Select(p => p.ProductId).ToList();
 			foreach (var productid in producrIds)
-			{ 
-				var planIds =  _db.Plans.Where(p => p.ProductId == productid).Select(p => p.PlanId).ToList();
+			{
+				var planIds = _db.Plans.Where(p => p.ProductId == productid).Select(p => p.PlanId).ToList();
 				foreach (var planId in planIds)
 				{
-					var orderDetails =  _db.OrderDetails.Where(o => o.PlanId == planId).Select(o => new { 
-						Date = o.Order.OrderDate,
-						Price = o.UnitPrice,
-						Quantity = o.Quantity
-					}).ToList();
+					var orderDetails = _db.OrderDetails.Where(o => o.PlanId == planId &&
+					o.Order.OrderDate > thirteenMonth && o.Order.OrderDate <= dateTimeNow)
+						.Select(o => new
+						{
+							Date = o.Order.OrderDate,
+							Price = o.UnitPrice,
+							Quantity = o.Quantity
+						}).ToList();
 					foreach (var orderDetail in orderDetails)
 					{
 						//DateTime oderDate = orderDetail.Date;
 						//string nowdate = date.ToString("");
-						if (!dictionary.ContainsKey(orderDetail.Date.Value.ToString("Y")))
+						if (!dictionary.ContainsKey(orderDetail.Date.Value.ToString("yyyy-MM")))
 						{
-							dictionary[orderDetail.Date.Value.ToString("Y")] = Convert.ToDecimal(orderDetail.Price * orderDetail.Quantity);
+							dictionary[orderDetail.Date.Value.ToString("yyyy-MM")] = Convert.ToDecimal((orderDetail.Price * orderDetail.Quantity) / 10000);
 						}
 						else
 						{
-							dictionary[orderDetail.Date.Value.ToString("Y")] += Convert.ToDecimal(orderDetail.Price * orderDetail.Quantity);
+							dictionary[orderDetail.Date.Value.ToString("yyyy-MM")] += Convert.ToDecimal((orderDetail.Price * orderDetail.Quantity) / 10000);
 						}
 					}
 				}
- 			}
-
+			}
 			return dictionary;
 		}
 
-		[HttpGet]
+		[NonAction]
 		public async Task<AllTicktesSaleDTO> GetAllTicktesThirteenMonthSale()
 		{
 			var airPlane = AddThirteenYear();
@@ -90,13 +97,14 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api.AnalyzeAPI
 			var transportation = AddThirteenYear();
 			var attractions = AddThirteenYear();
 
-			var airOneYearSale = GetTicketsSale(airPlane,1);
-			var hotelOneYearSale = GetTicketsSale(hotel,2);
-			var transportationOneYearSale = GetTicketsSale(transportation,3);
-			var attractionsOneYearSale = GetTicketsSale(attractions,4);
+			var airOneYearSale = GetTicketsSale(airPlane, 1);
+			var hotelOneYearSale = GetTicketsSale(hotel, 2);
+			var transportationOneYearSale = GetTicketsSale(transportation, 3);
+			var attractionsOneYearSale = GetTicketsSale(attractions, 4);
 
 			AllTicktesSaleDTO atsDTO = new AllTicktesSaleDTO()
 			{
+
 				Airplane = airOneYearSale,
 				Hotel = hotelOneYearSale,
 				Transportation = transportationOneYearSale,
@@ -104,6 +112,40 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api.AnalyzeAPI
 			};
 
 			return atsDTO;
+		}
+
+		[HttpGet]
+		public async Task<AllTicktesSaleDTO> GetAllTicktesThirteenMonthSale2()
+		{
+			var orderDetailsList = _db.OrderDetails.AsNoTracking().Include(p => p.Plan).ThenInclude(p => p.Product)
+				.Where(x=> EF.Functions.DateDiffMonth(x.Order.OrderDate,DateTime.Now) < 13 && EF.Functions.DateDiffMonth(x.Order.OrderDate, DateTime.Now)>=0)
+				.GroupBy(x => x.Plan.Product.Id)
+				.Select(x => new { Category = x.Key, Details = x.Select(y => new 
+				{ 
+					OrderDate = y.Order.OrderDate.Value.ToString("yyyy-MM"),
+					y.UnitPrice,
+					y.Quantity 
+				})}).ToList();
+
+			var orderDetailsDicts = orderDetailsList.ToDictionary(x => x.Category, x => {
+				var date = DateTime.Now;
+				var dic = new Dictionary<string, decimal>();
+                for (var i = 12; i >= 0; i--)
+                {
+					var currentMonth = date.AddMonths(-i).ToString("yyyy-MM");
+					dic.Add(currentMonth, x.Details.Where(x=>x.OrderDate == currentMonth).Sum(y => Convert.ToDecimal(y.UnitPrice * y.Quantity) / 10000));
+                }
+				return dic;
+            });			
+			var result = new AllTicktesSaleDTO()
+			{
+				Airplane = orderDetailsDicts[1],
+				Hotel = orderDetailsDicts[2],
+				Transportation = orderDetailsDicts[3],
+				Attractions = orderDetailsDicts[4],
+			};
+
+			return result;
 		}
 
 		//[HttpGet]
@@ -145,16 +187,17 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api.AnalyzeAPI
 				foreach (var planId in planIds)
 				{
 					var orderDetails = await _db.OrderDetails.AsNoTracking()
-						.Where(o => o.PlanId == planId && o.Order.OrderDate >= thirteenMonths &&  o.Order.OrderDate <= nowDateTime)
-						.Select(o => new { 
-							o.Order.OrderDate, 
-							o.UnitPrice ,
+						.Where(o => o.PlanId == planId && o.Order.OrderDate >= thirteenMonths && o.Order.OrderDate <= nowDateTime)
+						.Select(o => new
+						{
+							o.Order.OrderDate,
+							o.UnitPrice,
 							o.Quantity
 						}).ToListAsync();
 
 					foreach (var orderDetail in orderDetails)
 					{
-						string monthKey = orderDetail.OrderDate.ToString().Substring(0,6);
+						string monthKey = orderDetail.OrderDate.ToString().Substring(0, 6);
 
 						if (!monthSales.ContainsKey(monthKey))
 						{
