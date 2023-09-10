@@ -99,7 +99,7 @@
                             <td>{{item.name}}</td>
                             <td>{{item.gender}}</td>
                             <td>{{item.email}}</td>
-                            <td>{{  formatDate( item.birthday )}}</td>
+                            <td>{{formatDate(item.birthday)}}</td>
                             <td>
                                 <div class="d-flex justify-content-around">
                                     <button type="button" class="btn  btn-warning" @@click="edit(item.userId)">
@@ -163,15 +163,17 @@
                 //alert("mount");
                 _this.filterUser();
             },
-
-            methods: {
+            computed:{
                 //轉換日期
-                formatDate: function (str) {
-                    if (!str) return "";
-                    var d = new Date(str);
-                    return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+                formatDate: function(){
+                    return function (str) {
+                        if (!str) return "";
+                        var d = new Date(str);
+                        return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+                    }
                 },
-
+            },
+            methods: {                
                 filterUser: function () {
                     //alert("篩選");
                     let _this = this;
@@ -262,33 +264,17 @@
 
                 Datelower: function () {
                     let _this = this;
-                    axios.get(`${baseAddress}/api/Admin/Datelower`)
-                        .then(response => {
-                            _this.AdminDTOes = response.data;
-                            for (var i = 0; i < _this.AdminDTOes.length; i++) {
-                                var item = _this.AdminDTOes[i];
-                                item.Edit = false;
-                            }
-                        })
-                        .catch(err => {
-                            alert(err);
-                        });
+                    _this.AdminDTOes.sort(function(x,y){
+                        return  new Date(x.birthday) - new Date(y.birthday)
+                    });
                 },
 
 
                 Datehigh: function () {
                     let _this = this;
-                    axios.get(`${baseAddress}/api/Admin/Datehigh`)
-                        .then(response => {
-                            _this.AdminDTOes = response.data;
-                            for (var i = 0; i < _this.AdminDTOes.length; i++) {
-                                var item = _this.AdminDTOes[i];
-                                item.Edit = false;
-                            }
-                        })
-                        .catch(err => {
-                            alert(err);
-                        });
+                    _this.AdminDTOes.sort(function (x, y) {
+                        return  new Date(y.birthday) - new Date(x.birthday)
+                    });
                 },
 
 
@@ -306,6 +292,9 @@
 
                 //最後一段
             }
+
+
+
         };
 
         var app = Vue.createApp(vueApp).mount("#app");
