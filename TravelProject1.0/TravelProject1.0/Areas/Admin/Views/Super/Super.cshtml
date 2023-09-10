@@ -41,14 +41,19 @@
 				<td>帳號</td>
 				<td>建立日期</td>
 				<td>上線時間</td>
+				<td></td>
 			</tr>
 			<tr v-for="item in SuperDTOes">
-				<td>{{item.id}}</td>
-				<td>{{item.describe}}</td>
-				<td>{{item.name}}</td>
-				<td>{{item.account}}</td>
- 				<td>{{item.createDate | formatDate}}</td>
-				<td>{{item.loginDate | formatDate}}</td> 
+					<td>{{item.id}}</td>
+					<td>{{item.describe}}</td>
+					<td>{{item.name}}</td>
+					<td>{{item.account}}</td>
+					<td>{{item.createDate | formatDate}}</td>
+					<td>{{item.loginDate | formatDate}}</td>
+					<td>
+					<button type="button" class="btn btn-warning" @@click="updateModal">編輯</button>
+						<button type="button" class="btn btn-danger" @@click="deleteSuper(item.id)">刪除</button>
+					</td>
 			</tr>
 		</table>
 	</div>
@@ -89,7 +94,46 @@
 			</div>
 		</div>
 	</div>
-	
+
+
+	@*修改員工記錄Bootstrap Modal畫面*@
+	<div class="modal fade" id="updateModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="modalTitleId">修改管理人資料</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div class="form-group">
+						<label class="form-label">管理人：</label>
+						<input v-model.trim="name" type="text" class="form-control" v-bind:value="name" required />
+						<div v-if="!isValid(name,validType.name)" class="formatError">您輸入的格式錯誤</div>
+					</div>
+					<div class="form-group">
+						<label class="form-label">帳號：</label>
+						<input v-model.trim="account" type="email" class="form-control" required />
+						<div class="formatError" v-if="!isValid(account,validType.email)">您輸入的格式不正確</div>
+					</div>
+					<div class="form-group">
+						<label class="form-label">密碼：</label>
+						<input v-model.trim="password" type="password" class="form-control" required />
+						<div class="formatError" v-if="!isValid(password,validType.password)">您輸入的格式不正確</div>
+					</div>
+					<div class="form-group">
+						<label class="form-label">管理權限描述：</label>
+						<input v-model.trim="describe" type="text" class="form-control" required />
+						<div class="formatError" v-if="!isValid(describe,validType.name)">請輸入管理權限描述</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" @@click="update">修改</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
 </div>
 
 @section Scripts{
@@ -110,7 +154,14 @@
 				role: '',
 				describe: '',
 				createDate: '',
-				validType: validType
+				validType: validType,
+				originalDescribe:'',
+				originalName:'',
+				originalAccount:'',
+				originalPassword:'',
+				originalCreateDate:'',
+				originalLoginDate:'',
+				originalRole: ''
 			},
 			mounted: function () {
 				let _this = this;
@@ -151,10 +202,13 @@
 							alert(err);
 						});
 				},
-
 				showModal: function () {
 					//alert('新增員工');
 					$("#insertModal").modal('show');
+				},
+				updateModal: function () {
+					// alert('修改員工');
+					$("#updateModal").modal('show');
 				},
 				insert: function () {
 					//alert('aa');
@@ -178,14 +232,40 @@
 						}).catch(err => {
 							alert(err);
 						});
-				}
+				},
+				deleteSuper: function (id) {
+					//alert("delete");
+					var ret = confirm("確定要刪除嗎？");
+					if (ret == true) {
+						let _this = this;
+						axios.delete(`${baseAddress}/api/SuperApi/SuperDel/${id}`).then(response => {
+							_this.filterEmployees();
+						}).catch(err => {
+							alert(err);
+						});
+					}
+				},
+
+				update: function (item) {
+					//alert("update");
+					let _this = this;
+					var request = {}
+					request.Id = item.Id;
+					request.Name = item.Name;
+					request.Account = item.Account;
+					request.Password = item.Password;
+					request.Role = item.Role;
+					request.Describe = item.Describe;
+					request.Password = item.Password;
+					axios.put(`${baseAddress}/api/SuperApi/PutSuper/${item.id}`, request).then(response => {
+						alert(response.data);
+						_this.filterEmployees();
+					}).catch(err => {
+						alert(err);
+					});
+				},
+
 			}
-			// computed: {
-			// 	filterAdmin: function () {
-			// 		let _this = this;
-			// 		return _this.SuperDTOes.filter(s => s.name.match(_this.Filter));
-			// 	}
-			// }
 		})
 
 	</script>

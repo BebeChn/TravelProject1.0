@@ -5,7 +5,6 @@ using System.Linq;
 using TravelProject1._0.Models.DTO;
 using TravelProject1._0.Models;
 
-
 namespace TravelProject1._0.Areas.Admin.Controllers.Api
 {
 	[Area("Admin")]
@@ -33,6 +32,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 			});
 		}
 
+		//搜尋
 		[HttpPost]
 		public async Task<IEnumerable<SuperFilterDTO>> SuperSearch(SuperFilterDTO SuperFilterDTO)
 		{
@@ -61,6 +61,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 			});
 		}
 
+		//新增
 		[HttpPost]
 		public async Task<string?> SuperPost(SuperDTO SuperDTO)
 		{
@@ -86,6 +87,76 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 			await _db.SaveChangesAsync();
 
 			return "新增員工記錄成功";
+		}
+				
+		// DELETE: api/Employees/5				//刪除資料
+		[HttpDelete("{id}")]
+		public async Task<string?> SuperDel(int id)
+		{
+			if (_db.Admins == null)
+			{
+				return "刪除員工記錄失敗";
+			}
+			var admin = await _db.Admins.FindAsync(id);
+			if (admin == null)
+			{
+				return "刪除員工記錄失敗";
+			}
+
+			try
+			{
+				_db.Admins.Remove(admin);
+				await _db.SaveChangesAsync();
+			}
+			catch (DbUpdateException)
+			{
+				return "刪除員工關聯記錄失敗";
+			}
+			return "刪除員工記錄成功";
+		}
+
+		// PUT: api/Employees/5					//更新資料，依自己設的DTO模型
+		[HttpPut("{id}")]
+		public async Task<string> PutSuper(int id, SuperDTO SuperDTO)
+		{
+			if (id != SuperDTO.Id)
+			{
+				return "更新員工記錄失敗";
+			}
+
+			TravelProject1._0.Models.Admin Sup = await _db.Admins.FindAsync(id);
+			Sup.Describe = SuperDTO.Describe;
+			Sup.Name = SuperDTO.Name;
+			Sup.Account = SuperDTO.Account;
+			Sup.Password = SuperDTO.Password;
+			Sup.CreateDate = SuperDTO.CreateDate;
+			Sup.LoginDate = SuperDTO.LoginDate;
+			Sup.Role = SuperDTO.Role;
+
+			_db.Entry(Sup).State = EntityState.Modified; //存回DTO
+
+			try
+			{
+				await _db.SaveChangesAsync();//存回資料庫
+			}
+			catch (DbUpdateConcurrencyException)
+			{
+				if (!AdminExists(id))
+				{
+					return "更新員工記錄失敗";
+				}
+				else
+				{
+					throw;
+				}
+			}
+			return "更新員工記錄成功";
+		}
+
+
+		private bool AdminExists(int id)
+		{
+			return (_db.Admins?.Any(e => e.Id == id)).GetValueOrDefault();
 		}
 	}
 }
