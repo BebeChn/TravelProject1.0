@@ -98,16 +98,16 @@
     @* 商品銷售王 *@
     <section class="about_history_area section_gap">
         <div class="container">
-            <div class="row">
-                <div class="col-md-6 d_flex align-items-center">
+            <div class="row" v-for="att in attraction">
+                <div class="col-md-6 d_flex align-items-center" >
                     <div class="about_content ">
-                        <h2 class="title title_color">本月銷售王</h2>
-                        <p>有一個清醒的頭腦比有一個聰明的頭腦更重要；有一種良好的習慣比有一種熟練的技巧更實用；有一股青春活力比有一副健全的臂膀更有力；有一身勇氣和膽識比有一門知識更強勁。</p>
-                        <a href="#" class="button_hover theme_btn_two info">看更多選擇</a>
+                        <h2 class="title title_color" style="justify-content:center">本月銷售王</h2>
+                        <p>{{att.mainDescribe}}</p>
+                        <a :href="'/Attractions/Plan/'+att.productId" class="button_hover theme_btn_two info">{{att.productName}}</a>
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <img class="img-fluid" src="~/lib/image/mountain.jpeg" />
+                    <img class="img-fluid" :src="att.img" />
                 </div>
             </div>
         </div>
@@ -142,7 +142,7 @@
                                 </h4>
                             </a>
                             <p>世間的事情都是如此當你刻意地追求時，它就像蝴蝶一樣振翅飛遠；當你專心致志之時，意外的收穫已悄悄來到你的身邊！</p>
-                            <h6 class="date title_color">31st January,2018</h6>
+                           
                         </div>
                     </div>
                 </div>
@@ -160,9 +160,16 @@
             data: {
                 products: [],
                 productplan: [],
+                attraction:[],
             },
             mounted: function () {
                 let _this = this;
+                fetch(`${baseAddress}/api/ProductApi/GetAttractionPlan`)
+                    .then(response => {
+                        if (response.ok) return response.json();
+                    }).then(data => {
+                        _this.attraction = data;
+                    });
                 fetch(`${baseAddress}/api/ProductApi/GetProduct`)
                     .then(response => {
                         if (response.ok) return response.json();
@@ -175,6 +182,7 @@
                     var collect = x[1] ? x[1] : [];
                     _this.productplan = x[0].map(z => ({ ...z, heartIcon: collect.some(c => c == z.productId) }));
                 });
+               
             },
             methods: {
                 getProductPlanApi:async function () {

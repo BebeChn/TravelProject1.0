@@ -1,5 +1,6 @@
 ﻿@{
     ViewData["Title"] = "結帳";
+    var result = string.IsNullOrEmpty(ViewBag.key) ? "[]" : Html.Raw(ViewBag.key);
 }
 
 @section Styles{
@@ -14,14 +15,14 @@
             <div class="card">
                 <div class="card-header info">訂單資訊</div>
                 <div class="card-body">
-                    <table v-for="(o,index) in orders" :key="o.orderId">
+                    <table>
                         <tr>
                             <th>商品名稱</th>
                             <th>數量</th>
                             <th>金額</th>
                             <th>訂購日期</th>
                         </tr>
-                        <tr v-for="(detail, detailIndex) in o.confirmTheOrderDetails" :key="detailIndex">
+                        <tr v-for="(detail, detailIndex) in orders">
                             <td>
                                 {{detail.odname}}
                             </td>
@@ -31,7 +32,7 @@
                             <td>
                                 {{detail.unitPrice | formatCurrency}}
                             </td>
-                            <td>{{o.orderDate | formatDate}}</td>
+                            @* <td>{{o.orderDate | formatDate}}</td> *@
                         </tr>
                     </table>
                     <hr />
@@ -41,15 +42,15 @@
                     </div>
                     <div class="discount">
                         <span>是否使用點數折抵(每300點折抵1元)?</span>
-                        <button class="btn btn-point info" data-bs-toggle="modal" data-bs-target="#pointsDiscount">是</button>
-                        <button class="btn btn-point info" v-on:click="showPrice">否</button>
+                        <button class="btn theme_btn button_hover info" data-bs-toggle="modal" data-bs-target="#pointsDiscount">是</button>
+                        <button class="btn theme_btn button_hover info" v-on:click="showPrice">否</button>
                     </div>
                     <div>
                         <span class="card-text">點數折抵後合計：</span>
                         <input class="money" v-bind:value="resultPrice | formatCurrency" readonly />
                     </div>
                     <div class="buy">
-                        <button class="btn btn-buy info">結帳</button>
+                        <button class="btn theme_btn button_hover info">結帳</button>
                     </div>
                 </div>
             </div>
@@ -100,7 +101,7 @@
             el: "#app",
             data: {
                 user: [],
-                orders: [],
+                orders: @result,
                 queries: "",
                 pointNum: 0,
                 total: "",
@@ -115,32 +116,26 @@
                     }).then(data => {
                         _this.user = data;
                     }).catch(error => {
-                        console.log(error);
+                        alert(error);
                     });
-                fetch(`${baseAddress}/api/ConfirmTheOrderApi/GetOrders/${_this.queries}`, { method: "GET" })
-                    .then(response => {
-                        if (response.ok) return response.json();
-                    }).then(data => {
-                        _this.orders = data;
-                    }).catch(error => {
-                        console.log(error);
-                    })
+                // fetch(`${baseAddress}/api/ConfirmTheOrderApi/GetOrders/${_this.queries}`, { method: "GET" })
+                //     .then(response => {
+                //         if (response.ok) return response.json();
+                //     }).then(data => {
+                //         _this.orders = data;
+                //     }).catch(error => {
+                //         alert(error);
+                //     })
             },
             methods: {
                 //合計
                 calculate: function () {
                     let _this = this;
                     let totalAmount = 0;
-
                     for (var i = 0; i < _this.orders.length; i++) {
                         const order = _this.orders[i];
 
-                        for (var j = 0; j < order.confirmTheOrderDetails.length; j++) {
-                            const detail = order.confirmTheOrderDetails[j];
-                            totalAmount += detail.unitPrice;
-                        }
                     }
-
                     _this.total = totalAmount;
                     return totalAmount;
                 },

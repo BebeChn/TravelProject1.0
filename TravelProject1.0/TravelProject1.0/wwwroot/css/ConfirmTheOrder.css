@@ -12,19 +12,28 @@
     width: 100%;
 }
 
-table tr th {
-    font-size: 22px;
+table {
+    table-layout: fixed;
 }
 
-table tr td {
-    font-size: 18px;
-    font-weight: bold;
-}
+    table tr th {
+        font-size: 22px;
+    }
+
+    table tr td {
+        font-size: 18px;
+        font-weight: bold;
+    }
 
 .discount {
     margin-top: 10px;
     margin-bottom: 10px;
 }
+
+    .discount span {
+        font-weight: bold;
+        font-size: 18px;
+    }
 
 .btn-point {
     color: white;
@@ -39,18 +48,6 @@ table tr td {
 .buy {
     text-align: end;
 }
-
-.btn-buy {
-    width: 20%;
-    color: white;
-    font-size: 20px;
-    transition: all 0.3s ease;
-}
-
-    .btn-buy:hover {
-        font-size: 24px;
-        color: white;
-    }
 
 .card-text {
     font-size: 18px;
@@ -68,10 +65,10 @@ table tr td {
     color: white;
 }
 
-.points{
-    justify-content:center;
+.points {
+    justify-content: center;
 }
 
-.points button {
-    color: white;
-}
+    .points button {
+        color: white;
+    }

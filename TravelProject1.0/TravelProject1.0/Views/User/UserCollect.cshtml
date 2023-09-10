@@ -48,14 +48,13 @@
                 <ul class="favorites">
                     <li class="favorite-title">
                         <span> 商品名稱</span>
-                        <span> 商品價格</span>
-                    </l>
+                        <span> 商品價格</span>         
+                    </li>
                     <li v-for="favorite in favorites"  class="favorite-item">
                         <img class="img-fluid" :src="favorite.collectImage" style="width:150px;height:150px;" />
                         <span  v-model="favorite-collectName">{{favorite.collectName}}</span>
-                       
                         <span class="favorite-productId">{{favorite.productId}}</span>
-                        <button class="btn btn-delete danger" v-on:click="deleteModal(c)" @* v-bind:disabled="!c.checked" *@ data-bs-toggle="modal" data-bs-target="#deleteItem"><i class="fa-solid fa-trash-can"></i>删除</button>
+                        <button class="btn btn-delete danger" data-bs-toggle="modal" data-bs-target="#deleteItem"><i class="fa-solid fa-trash-can"></i>删除</button>
                     </li>
                 </ul>
             </div>
@@ -103,7 +102,8 @@
                     <h1 class="modal-title fs-5" id="exampleModalLabel">刪除商品</h1>
                 </div>
                 <div class="modal-body">
-                  
+                   @*  <h4>您確定要刪除所選收藏嗎?</h4>
+                    <div v-model="favorite-collectName">商品名稱:{{favorite.collectName}}</div> *@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-delete danger" @@click="removeFavorite(favorite)">刪除</button>
@@ -125,6 +125,7 @@
             el: '#app',
             data: {
                 favorites: [],
+                fr:[],
             },
             mounted: function () {
                 let _this = this;
@@ -145,7 +146,6 @@
                 removeFavorite(favorite) {
                     var dom =
                     {
-                        userId: 69,
                         ProductId: favorite.productId,
                         CollectName: favorite.collectName,
                         CollectImage: favorite.collectImage,
