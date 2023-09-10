@@ -129,7 +129,7 @@
                         <div class="details">
                             <div class="tags">
 
-                                <a :href="'/Book/Plan/'+pp.productId" class="button_hover tag_btn">立即購買</a>
+                                <a :href="'/Book/Plan/'+pp.productId" class="button_hover tag_btn" >立即購買</a>
                                 <i class="fa-regular fa-heart fa-beat red "
                                    :class="{ 'fa-solid': pp.heartIcon, 'fa-regular': !pp.heartIcon }"
                                    style="cursor: pointer; float: right; margin-right: 20px;"
@@ -139,10 +139,9 @@
                             <a>
                                 <h4 class="sec_h4">
                                     {{pp.productName}}
-                                </h4>
+                                </h4>           
                             </a>
-                            <p>世間的事情都是如此當你刻意地追求時，它就像蝴蝶一樣振翅飛遠；當你專心致志之時，意外的收穫已悄悄來到你的身邊！</p>
-                           
+                            <p>世間的事情都是如此當你刻意地追求時，它就像蝴蝶一樣振翅飛遠；當你專心致志之時，意外的收穫已悄悄來到你的身邊！</p>                           
                         </div>
                     </div>
                 </div>
@@ -151,7 +150,10 @@
     </section>
 </div>
 @section Scripts {
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>
     <script>
+      
         var isLogin = ('@User.Identity.IsAuthenticated' == "True");
         
         let baseAddress = "https://localhost:7025";
@@ -211,6 +213,7 @@
                             body: JSON.stringify(dom)
                         }).then(response => {
                             if (response.ok)
+                                toastr["success"]("商品已加入收藏夾！");
                                 console.log("成功");
                         }).catch(err => {
                             alert("錯誤");
@@ -230,6 +233,7 @@
                         })
                             .then(response => {
                                 if (response.ok)
+                                    toastr["success"]("商品已移除收藏夾！");
                                     console.log("刪除成功");
                             }).catch(err => {
                                 console.log("刪除失敗");
