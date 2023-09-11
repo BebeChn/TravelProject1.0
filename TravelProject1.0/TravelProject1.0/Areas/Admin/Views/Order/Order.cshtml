@@ -25,42 +25,30 @@
     </div>
     <br>
     <!--第二段-->
-    <nav class="navbar bg-body">
-        <div class="container-fluid justify-content-end">
-            <form class="d-flex" role="search">
-                @* <img src="./pic/search.png" width="100" height="60">*@
-                <input style="width: 300px; height:70px;" class="form-control " type="search" placeholder="Search" aria-label="Search"
-                       v-model="Filter" @@keyup="filterorder">
-                <button class="btn btn-outline-secondary " style="color :#1e2154" @*type="submit"*@>
-                    <Fieldset>搜尋</Fieldset>
-                </button>
-            </form>
+    <div class="container-fluid  row  ">
+        <div class="col-9"></div>
+        <div class="col-3  " style="width:25%; color: gray; ">
+            關鍵字搜尋：<input type="text" v-model="Filter" class="form-control" placeholder="請輸入篩選關鍵字" @@keyup="filterorder" />
         </div>
-    </nav>
+    </div>
     <br>
     <!--第三段-->
     <div class="container-fluid row">
         <!--管理選單-->
-        <div class="col-2">
-            <ul class="list-group">
-                <!--管理選單列--> <!--改道layout用-->
-                @*                <a class="btn" href="https://localhost:7025/api/Admin/Admin">使用者管理</a>
-                <a class="btn" href="https://localhost:7025/api/Order/Order">訂單管理</a>
-                <a class="btn" href="http://127.0.0.1:5500/admin.html">數據分析</a>
-                <a class="btn" href="https://localhost:7025/api/Merchandise/Merchandise">商品管理</a>*@
-                <!--管理選單底-->
-            </ul>
+        <div class="col-1">
         </div>
         <!--管理內容-->
-        <div class="col-10">
+        <div class="col-11">
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <td>OrderId</td>
-                        <td>UserId</td>
-                        <td>OrderDate</td>                        
-                        <td> </td>
-                        <td> </td>
+                        <th>訂單ID</th>
+                        <th>商品ID</th>
+                        <th>數量</th>
+                        <th>折扣</th>
+                        <th>商品價格</th>
+                        <th>成立日期</th>
+                        <th>操作 </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -68,40 +56,47 @@
                     <tr v-for="item in OrderDTOes ">
                         <template v-if="item.Edit==true">
                             <td><label>{{item.orderId}}</label></td>
-                            <td><label>{{item.userId}}</label></td>
-                            <td><input v-model="item.orderDate" /></td>
+                            <td><label>{{item.planId}}</label></td>
+                            <td><input v-model="item.quantity" /></td>
+                            <td><input v-model="item.discount" /></td>
+                            <td><label>{{item.unitPrice}}</label></td>
+                            <td><input v-model="item.useDate" /></td>
                             <td>
-                                <button type="button" class="btn btn-success" @@click="update(item)">
-                                    <div class="horizontal-text">
-                                        <span>儲存</span>
-                                    </div>
-                                </button>
-                            </td>
-                            <td>
-                                <button type="button" class="btn btn-info" @@click="cancel">
-                                    <div class="horizontal-text">
-                                        <span>取消</span>
-                                    </div>
-                                </button>
+                                <div class="d-flex justify-content-around">
+                                    <button type="button" class="btn btn-success" @@click="update(item)">
+                                        <div class="horizontal-text">
+                                            <span>儲存</span>
+                                        </div>
+                                    </button>
+                                    <button type="button" class="btn btn-info" @@click="cancel">
+                                        <div class="horizontal-text">
+                                            <span>取消</span>
+                                        </div>
+                                    </button>
+                                </div>
                             </td>
                         </template>
                         <template v-else>
                             <td><label>{{item.orderId}}</label></td>
-                            <td><label>{{item.userId}}</label></td>
-                            <td><label>{{item.orderDate}}</label></td>
+                            <td><label>{{item.planId}}</label></td>
+                            <td><label>{{item.quantity}}</label> </td>
+                            <td><label>{{item.discount}}</label></td>
+                            <td><label>{{item.unitPrice}}</label></td>
+                            <td><label>{{item.useDate}}</label></td>
                             <td>
-                                <button type="button" class="btn  btn-warning" @@click="edit(item.orderId)">
-                                    <div class="horizontal-text">
-                                        <span>修改</span>
-                                    </div>
-                                </button>
-                            </td>
-                            <td>
-                                <button type="button" class="btn btn-danger" @@click="deleteOrder(item.orderId)">
-                                    <div class="horizontal-text">
-                                        <span>刪除</span>
-                                    </div>
-                                </button>
+                                <div class="d-flex justify-content-around">
+                                    <button type="button" class="btn  btn-warning" @@click="edit(item.orderId,item.planId)">
+                                        <div class="horizontal-text">
+                                            <span>修改</span>
+                                        </div>
+                                    </button>
+
+                                    <button type="button" class="btn btn-danger" @@click="deleteOrder(item.orderId,item.planId)">
+                                        <div class="horizontal-text">
+                                            <span>刪除</span>
+                                        </div>
+                                    </button>
+                                </div>
                             </td>
                         </template>
                     </tr>
@@ -142,7 +137,11 @@
                     OrderDTOes: [],
                     Filter: '',
                     //
-                    originalorderDate: '',
+                    //originalorderDate: '',
+                    //
+                    originalquantity: '',
+                    originaldiscount: '',
+                    originaluseDate: '',
 
                 };
             },
@@ -180,29 +179,33 @@
                     request.UserId = request.OrderId;
                     //request.OrderDate = _this.Filter;
                     axios.post(`${baseAddress}/api/Order/OrderSeachL`, request)
-                    .then(response => {
-                        _this.OrderDTOes = response.data;
-                        for (var i = 0; i < _this.OrderDTOes.length; i++) {
-                            var item = _this.OrderDTOes[i];
-                            item.Edit = false;
-                        }
-                    })
-                    .catch(err => {
-                        alert(err);
-                    });
+                        .then(response => {
+                            _this.OrderDTOes = response.data;
+                            for (var i = 0; i < _this.OrderDTOes.length; i++) {
+                                var item = _this.OrderDTOes[i];
+                                item.Edit = false;
+                            }
+                        })
+                        .catch(err => {
+                            alert(err);
+                        });
 
                 },
 
                 //edit
-                edit: function (orderId) {
+                edit: function (orderId, planId) {
                     //alert("edit");
                     let _this = this;
                     for (var i = 0; i < _this.OrderDTOes.length; i++) {
                         var item = _this.OrderDTOes[i];
-                        if (item.orderId == orderId) {
+                        if (item.orderId == orderId && item.planId == planId) {
                             item.Edit = true;
 
-                            _this.originalorderDate = item.orderDate;
+                            //_this.originalorderDate = item.orderDate;
+                            _this.originalquantity = item.quantity;
+                            _this.originaldiscount = item.discount;
+                            _this.originaluseDate = item.useDate;
+
                         }
                     }
                 },
@@ -213,7 +216,10 @@
                         var item = _this.OrderDTOes[i];
                         if (item.Edit == true) {
                             item.Edit = false;
-                            item.orderDate = _this.originalorderDate;
+                            //item.orderDate = _this.originalorderDate;
+                            item.quantity = _this.originalquantity;
+                            item.discount = _this.originaldiscount;
+                            item.useDate = _this.originaluseDate;
 
                         }
                     }
@@ -224,8 +230,12 @@
                     var request = {};
                     request.orderId = item.orderId;         //至少要有orderId  跟要改項目
                     //request.userId = item.userId;
-                    request.orderDate = item.orderDate;
-                    axios.put(`${baseAddress}/api/Order/OrderPUT/${item.orderId}`, request).then(response => {
+                    //request.orderDate = item.orderDate;
+                    request.quantity = item.quantity;
+                    request.discount = item.discount;
+                    request.useDate = item.useDate;
+
+                    axios.put(`${baseAddress}/api/Order/OrderPUT/${item.orderId}/${item.planId}`, request).then(response => {
                         alert(response.data);
                         _this.filterorder();
                     }).catch(err => {
@@ -233,12 +243,12 @@
                     });
                 },
                 //
-                deleteOrder: function (orderId) {
+                deleteOrder: function (orderId, planId) {
                     var ret = confirm('確定要刪除嗎');
                     let _this = this;
 
                     if (ret == true) {
-                        axios.delete(`${baseAddress}/api/Order/OrderDELETE/${orderId}`).then(response => {
+                        axios.delete(`${baseAddress}/api/Order/OrderDELETE/${orderId}/${planId}`).then(response => {
                             alert(response.data);
                             _this.filterorder();
                         }).catch(err => {

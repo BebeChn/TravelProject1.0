@@ -2,20 +2,24 @@
 {
     public class OrderDTO
     {
+        //OrderDtail用
+
+        public int Id { get; set; }
+
         public int OrderId { get; set; }
 
-        public int UserId { get; set; }
+        public int PlanId { get; set; }
 
-        public DateTime? OrderDate { get; set; }
+        public short? Quantity { get; set; }
 
-        //public virtual OrderDetail? OrderDetail { get; set; }
+        public decimal? UnitPrice { get; set; }
 
-        //public virtual User User { get; set; } = null!;
+        public DateTime? UseDate { get; set; }
+
+        public float? Discount { get; set; }
 
 
-
-
-
+        //Quantity UseDate Discount
 
 
     }
