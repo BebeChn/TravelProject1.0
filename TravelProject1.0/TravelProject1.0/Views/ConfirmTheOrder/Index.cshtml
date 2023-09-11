@@ -20,25 +20,17 @@
                             <th>商品名稱</th>
                             <th>數量</th>
                             <th>金額</th>
-                            <th>訂購日期</th>
                         </tr>
-                        <tr v-for="(detail, detailIndex) in orders">
-                            <td>
-                                {{detail.odname}}
-                            </td>
-                            <td>
-                                {{detail.quantity}}
-                            </td>
-                            <td>
-                                {{detail.unitPrice | formatCurrency}}
-                            </td>
-                            @* <td>{{o.orderDate | formatDate}}</td> *@
+                        <tr v-for="o in orders">
+                            <td>{{o.odname}}</td>
+                            <td>{{o.quantity}}</td>
+                            <td>{{o.unitPrice | formatCurrency}}</td>
                         </tr>
                     </table>
                     <hr />
                     <div>
                         <span class="card-text">合計：</span>
-                        <input class="money" v-bind:value="calculate() | formatCurrency" readonly />
+                        <input class="money" v-bind:value="calculate(orders) | formatCurrency" readonly />
                     </div>
                     <div class="discount">
                         <span>是否使用點數折抵(每300點折抵1元)?</span>
@@ -102,14 +94,12 @@
             data: {
                 user: [],
                 orders: @result,
-                queries: "",
                 pointNum: 0,
                 total: "",
                 resultPrice: ""
             },
             mounted: function () {
                 let _this = this;
-                _this.queries = window.location.pathname.slice("23");
                 fetch(`${baseAddress}/api/ConfirmTheOrderApi/GetUser`, { method: "GET" })
                     .then(response => {
                         if (response.ok) return response.json();
@@ -118,23 +108,15 @@
                     }).catch(error => {
                         alert(error);
                     });
-                // fetch(`${baseAddress}/api/ConfirmTheOrderApi/GetOrders/${_this.queries}`, { method: "GET" })
-                //     .then(response => {
-                //         if (response.ok) return response.json();
-                //     }).then(data => {
-                //         _this.orders = data;
-                //     }).catch(error => {
-                //         alert(error);
-                //     })
             },
             methods: {
                 //合計
-                calculate: function () {
+                calculate: function (model) {
                     let _this = this;
+                    console.log(model);
                     let totalAmount = 0;
-                    for (var i = 0; i < _this.orders.length; i++) {
-                        const order = _this.orders[i];
-
+                    for (var i = 0; i < model.length; i++) {
+                        totalAmount += model[i].unitPrice;
                     }
                     _this.total = totalAmount;
                     return totalAmount;
