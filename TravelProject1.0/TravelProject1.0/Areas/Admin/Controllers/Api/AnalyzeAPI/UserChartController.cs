@@ -12,13 +12,13 @@ using TravelProject1._0.Models;
 namespace TravelProject1._0.Areas.Admin.Controllers.Api
 {
 	[Area("Admin")]
-	[Route("api/UserChartApi/{action}")]
+	[Route("api/UserChart/{action}")]
 	[ApiController]
-	public class UserChartApiController : ControllerBase
+	public class UserChartController : ControllerBase
 	{
 		private readonly TravelProjectAzureContext _db;
 
-		public UserChartApiController(TravelProjectAzureContext travelProjectAzureContext)
+		public UserChartController(TravelProjectAzureContext travelProjectAzureContext)
 		{
 			_db = travelProjectAzureContext;
 		}
