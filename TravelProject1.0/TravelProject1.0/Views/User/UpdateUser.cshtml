@@ -1,19 +1,19 @@
 ﻿@section Styles
     {
-   <style>
-       .eachfield{
+    <style>
+        .eachfield {
             background-color: #faf9f9;
-       }
+        }
 
-        .groundfield{
+        .groundfield {
             background-color: #eeeeee;
         }
-        
+
         .beauty-label {
             font-family: Arial, sans-serif;
             font-size: 16px;
-            color: #333; 
-            margin-bottom: 5px; 
+            color: #333;
+            margin-bottom: 5px;
         }
 
         .beauty-input {
@@ -24,19 +24,20 @@
             border-radius: 4px;
             font-family: Arial, sans-serif;
             font-size: 14px;
-            outline: none; 
+            outline: none;
         }
 
-        .beauty-input:hover {
-           border-color: #007bff; 
-        }
+            .beauty-input:hover {
+                border-color: #007bff;
+            }
 
 
-        .beauty-input:focus {
-           border-color: #007bff; 
-       }
+            .beauty-input:focus {
+                border-color: #007bff;
+            }
+
         .beauty-select {
-            width:100px;
+            width: 100px;
             padding: 10px;
             margin-bottom: 10px;
             border: 1px solid #ccc;
@@ -44,17 +45,17 @@
             font-family: Arial, sans-serif;
             font-size: 14px;
             outline: none;
-          
-        }      
+        }
+
             .beauty-select:hover {
-                border-color: #007bff; 
+                border-color: #007bff;
             }
 
             .beauty-select:focus {
-                border-color: #007bff; 
+                border-color: #007bff;
             }
 
-   </style>
+    </style>
 }
 
 <div id="app" class="groundfield">
@@ -63,33 +64,28 @@
         <br />
         <div class="row">
             <div class="col-md-8 eachfield">
-                
+
                 <span style="font-weight: bold; font-size: 36px; margin-top:50px;margin-bottom:50px;" class="d-flex justify-content-center align-items-center ">帳號設定</span>
                 <div style="font-weight: bold; font-size: 24px; margin-top:50px;margin-bottom:50px;" class="d-flex justify-content-center align-items-center "> 基本設定</div>
-                
+
                 <div class="d-flex flex-column justify-content-center align-items-center ">
-                    
+
                     <div class="mb-3">
                         <label for="username" class="beauty-label">使用者名稱:</label>
-                        <input type="text" id="username" v-model="user.name" class="beauty-input" />
+                        <input type="text" id="username" v-model="user.name" class="beauty-input" readonly />
                         <label for="email" class="beauty-label ms-5">郵件:</label>
-                        <input type="email" id="email" v-model="user.email" class="beauty-input">
+                        <input type="email" id="email" v-model="user.email" class="beauty-input" readonly>
                     </div>
-                    
+
                     <div class="mb-3">
-                        <label for="phone" class="beauty-label ms-1mx-3 ">電話:</label>
-                        <input type="text" id="phone" v-model="user.phone" class="beauty-input">
-                   
-                        <label class="beauty-label ms-5">性別:</label>
-                        <select id="dropdown" class="beauty-select">
-                            <option value="F" v-model="user.gender">女性</option>
-                            <option value="M" v-model="user.gender">男性</option>
-                            <option value="N" v-model="user.gender">不指定</option>
-                        </select>
+                        <label for="phone" class="beauty-label">電話:</label>
+                        <input type="text" id="phone" v-model="user.phone" class="beauty-input" readonly>
+                        <label class="beauty-label">性別:</label>
+                        <input type="text" v-model="user.gender" class="beauty-input" readonly>
                     </div>
                     <div>
                         <label for="birthday" class="beauty-label">生日:</label>
-                        <input type="date" id="birthday" v-model="user.birthday" class="beauty-input">
+                        <input type="text" id="birthday" v-bind:value="user.birthday | formatDate" class="beauty-input" readonly>
                     </div>
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" @@click="putUser(user)">更改資料</button>
                 </div>
@@ -105,7 +101,7 @@
                         <h4 class="widget_title">會員資料</h4>
                         <ul class="list_style cat-list">
                             <li>
-                                <a class="d-flex justify-content-between" asp-Controller="User" asp-action="UpdateUser" >
+                                <a class="d-flex justify-content-between" asp-Controller="User" asp-action="UpdateUser">
                                     <p>個人資訊</p>
                                 </a>
                             </li>
@@ -115,12 +111,12 @@
                                 </a>
                             </li>
                             <li>
-                                <a  class="d-flex justify-content-between" asp-Controller="User" asp-action="UserCollect">
+                                <a class="d-flex justify-content-between" asp-Controller="User" asp-action="UserCollect">
                                     <p>收藏夾</p>
                                 </a>
                             </li>
                             <li>
-                                <a  class="d-flex justify-content-between" >
+                                <a class="d-flex justify-content-between">
                                     <p>通知與消息</p>
                                 </a>
                             </li>
@@ -173,7 +169,6 @@
 
 </div>
 @section Scripts{
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js" integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="~/js/validation.min.js"></script>
     <script>
@@ -188,14 +183,6 @@
             computed: {
 
             },
-            filters: {
-                //日期格式
-                formatDate: function (str) {
-                    if (!str) return "";
-                    var d = new Date(str);
-                    return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
-                },
-            },
             mounted: function () {
                 let _this = this;
                 fetch(`${baseAddress}/api/UserApi/GetUser/69`, {
@@ -205,7 +192,7 @@
                         return response.json();
                     }
                 }).then(data => {
-                    _this.user = data
+                    _this.user = data;
                 }).catch(err => {
                     alert(err);
                 });
@@ -243,6 +230,14 @@
                             console.log(err);
                         });
                 }
+            },
+            filters: {
+                //日期格式
+                formatDate: function (str) {
+                    if (!str) return "";
+                    var d = new Date(str);
+                    return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+                },
             },
         });
 

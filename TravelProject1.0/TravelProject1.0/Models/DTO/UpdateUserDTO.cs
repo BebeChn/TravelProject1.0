@@ -7,7 +7,7 @@
  
         public string Email { get; set; }
 
-        public DateTime? Birthday { get; set; }
+        public string Birthday { get; set; }
  
         public string? Gender { get; set; }
 
