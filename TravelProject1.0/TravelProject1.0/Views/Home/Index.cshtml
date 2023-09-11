@@ -44,7 +44,9 @@
                 <div class="col-lg-3 col-sm-6" v-for="p in products">
                     <div class="accomodation_item text-center">
                         <div class="hotel_img">
+                            <a :href="'/Attractions/Plan/'+p.productId">
                             <img class="img-hot" :src="p.img">
+                            </a>
                             <a :href="'/Attractions/Plan/'+p.productId" class="btn theme_btn button_hover info">立即購買</a>
                         </div>
                         <h4 class="sec_h4">{{p.productName}}</h4>
@@ -92,6 +94,7 @@
                     </div>
                 </div>
             </div>
+       
         </div>
     </section>
 
@@ -100,15 +103,18 @@
         <div class="container">
             <div class="row" v-for="att in attraction">
                 <div class="col-md-6 d_flex align-items-center" >
-                    <div class="about_content ">
-                        <h2 class="title title_color" style="justify-content:center">本月銷售王</h2>
+                    <div class="about_content ">                     
+                            <h2 class="title title_color" style="justify-content:center">本月銷售王: {{att.productName}}</h2>
                         <p>{{att.mainDescribe}}</p>
-                        <a :href="'/Attractions/Plan/'+att.productId" class="button_hover theme_btn_two info">{{att.productName}}</a>
+                        <a :href="'/Attractions/Plan/'+att.productId" class="button_hover theme_btn_two info">立即前往</a>
                     </div>
-                </div>
+                </div>              
                 <div class="col-md-6">
+                    <a :href="'/Attractions/Plan/'+att.productId">
                     <img class="img-fluid" :src="att.img" />
+                    </a>
                 </div>
+                
             </div>
         </div>
     </section>
@@ -123,12 +129,13 @@
             <div class="row mb_30">
                 <div class="col-lg-4 col-md-6" v-for="pp in productplan" :key="pp.collectId">
                     <div class="single-recent-blog-post">
+                        <a :href="'/Book/Plan/'+pp.productId">
                         <div class="thumb">
                             <img class="img-fluid" :src="pp.img" />
                         </div>
+                        </a>
                         <div class="details">
                             <div class="tags">
-
                                 <a :href="'/Book/Plan/'+pp.productId" class="button_hover tag_btn" >立即購買</a>
                                 <i class="fa-regular fa-heart fa-beat red "
                                    :class="{ 'fa-solid': pp.heartIcon, 'fa-regular': !pp.heartIcon }"
@@ -152,6 +159,14 @@
 @section Scripts {
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>
+    <script>
+        toastr.options = {
+            "showDuration": "300", // 顯示時間(單位: 毫秒)
+            "hideDuration": "1000", // 隱藏時間(單位: 毫秒)
+            "timeOut": "5000", // 當超過此設定時間時，則隱藏提示訊息(單位: 毫秒)
+            "extendedTimeOut": "1000", // 當使用者觸碰到提示訊息時，離開後超過此設定時間則隱藏提示訊息(單位: 毫秒)
+        }
+    </script>
     <script>
       
         var isLogin = ('@User.Identity.IsAuthenticated' == "True");
@@ -199,7 +214,7 @@
 
                 toggleHeart: function (pp) {
                     let _this = this;
-                    if (!isLogin) return;
+                    if (!isLogin) return toastr["error"]("商品無法加入收藏夾請先登入！");;
                     if (!pp.heartIcon) {       
                         var dom =
                         {                        
