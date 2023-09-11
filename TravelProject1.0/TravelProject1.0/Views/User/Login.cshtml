@@ -8,15 +8,14 @@
     ViewData["Title"] = "會員登入";
 }
 
-<h1>會員登入</h1>
+
 
 <div id="app" class="app-container element">
-
+    <h1>會員登入</h1>
     <form action="@Url.Action("Login")" method="post" class="login">
         <br>
         <br>
         <div class="inputbox">
-
             <input type="text" asp-for="@Model.Email" required value="AAA@gmail.com" />
             <span asp-validation-for="@Model.Email">帳號</span>
         </div>
@@ -25,15 +24,23 @@
             <input type="password" type="Password" asp-for="@Model.Password" required  value="Abcd1234!"/>
             <span asp-validation-for="@Model.Password" >密碼</span>
         </div>
-        <div class="checkbox mb-3">
-            <label asp-for="@Model.RememberMe" class="labelstyle">
-                <input class="form-check-input" asp-for="@Model.RememberMe" />
-                @Html.DisplayNameFor(m=>m.RememberMe)
-            </label>
-            <a id="forgot-password" asp-action="ForgetPassword">忘記密碼</a>
+        <div class="row">
+            <div class="col-md-8">
+                <div class="checkbox mb-3">
+                    <label asp-for="@Model.RememberMe" class="labelstyle" style="font-size: 18px; color: white; font-weight: bold;">
+                        <input class="form-check-input" asp-for="@Model.RememberMe" />
+                        @Html.DisplayNameFor(m => m.RememberMe)
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="mb-3">
+                    <a id="forgot-password" asp-action="ForgetPassword" style="font-size: 18px; color: #fb6f92; font-weight: bold;">忘記密碼</a>
+                </div>
+            </div>
         </div>
         <input class="dup" type="submit" value="登入" />
-        <div style="font-size: 24px;">還不是會員嗎?立即註冊!!!</div>
+        <div style="font-size: 24px; color: white; font-weight: bold;">還不是會員嗎?立即註冊!!!</div>
         <a class="dup btn" asp-controller="User" asp-action="Register">註冊</a>
     </form>
 
