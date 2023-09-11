@@ -83,7 +83,7 @@
                                     </div>
                                     <div class="buy">
                                         <a class="btn theme_btn button_hover info" v-on:click="addCart(p)">加入購物車</a>
-                                        <a class="btn theme_btn button_hover info">立即訂購</a>
+                                        <a class="btn theme_btn button_hover info" v-on:click="addOrder(p)">立即訂購</a>
                                     </div>
                                 </div>
                             </div>
@@ -107,10 +107,6 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div>
-                        <h4>兌換方式</h4>
-                        <p>QRCode</p>
                     </div>
                     <div>
                         <h4>時段介紹</h4>
@@ -161,6 +157,7 @@
 @section Scripts{
     <script src="https://unpkg.com/vue2-datepicker/index.min.js"></script>
     <script>
+        var isLogin = ('@User.Identity.IsAuthenticated' == "True");
         var baseAddress = "https://localhost:7025";
         Vue.component('datePicker', DatePicker);
         var app = new Vue({
@@ -169,7 +166,8 @@
                 plan: [],
                 product: [],
                 rating: [],
-                queries: ''
+                queries: '',
+                orderDetail: []
             },
             mounted: function () {
                 var _this = this;
@@ -255,6 +253,29 @@
                     }).catch(error => {
                         alert("未登入，無法加入購物車");
                     })
+                },
+
+                //加入訂單
+                addOrder: function (model) {
+                    if (!isLogin) return alert("未登入，無法購買!");
+                    let _this = this;
+                    let orderData = {
+                        odname: model.name,
+                        planId: model.planId,
+                        quantity: model.selected.num,
+                        unitPrice: model.selected.num * model.planPrice
+                    };
+                    _this.orderDetail.push(orderData);
+                    var form = document.createElement("form");
+                    form.method = "post";
+                    form.action = "/ConfirmTheOrder/Index";
+                    var inp = document.createElement("input");
+                    inp.type = "hidden";
+                    inp.value = JSON.stringify(_this.orderDetail);
+                    inp.name = "key";
+                    form.append(inp);
+                    document.getElementsByTagName("body")[0].append(form);
+                    form.submit();
                 }
             },
             filters: {

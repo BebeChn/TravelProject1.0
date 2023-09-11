@@ -16,22 +16,22 @@
                         <h4 class="widget_title">商品種類</h4>
                         <ul class="list_style cat-list">
                             <li>
-                                <a href="#" class="d-flex justify-content-between" v-on:click="keyWord('遊樂園')">
+                                <a href="#" class="d-flex justify-content-between" v-on:click="filterByCategory('遊樂園')">
                                     <p>遊樂園</p>
                                 </a>
                             </li>
                             <li>
-                                <a href="#" class="d-flex justify-content-between">
+                                <a href="#" class="d-flex justify-content-between" v-on:click="filterByCategory('景點')">
                                     <p>景點</p>
                                 </a>
                             </li>
                             <li>
-                                <a href="#" class="d-flex justify-content-between">
+                                <a href="#" class="d-flex justify-content-between" v-on:click="filterByCategory('戶外活動')">
                                     <p>戶外活動</p>
                                 </a>
                             </li>
                             <li>
-                                <a href="#" class="d-flex justify-content-between">
+                                <a href="#" class="d-flex justify-content-between" v-on:click="filterByCategory('展覽')">
                                     <p>展覽</p>
                                 </a>
                             </li>
@@ -156,11 +156,9 @@
                     _this.currentPage = num;
                 },
 
-                //商品有關鍵字做篩選
-                keyWord: function (str) {
-                    let _this = this;
-                    let keyValue = new RegExp(str);
-                    return _this.attractions.filter(k => k.productName.match(keyValue));
+                //列表關鍵字
+                filterByCategory: function (category) {
+                    this.search = category;
                 }
             },
             computed: {
@@ -168,7 +166,7 @@
                 attractionsFilter: function () {
                     let _this = this;
                     _this.currentPage = 1;
-                    return _this.attractions.filter(a => a.productName.match(_this.search));
+                    return _this.attractions.filter(a => a.productName.includes(_this.search));
                 },
 
                 //分頁
