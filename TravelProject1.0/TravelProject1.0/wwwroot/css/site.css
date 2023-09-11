@@ -1,4 +1,4 @@
-/*=================== fonts ====================*/
+﻿/*=================== fonts ====================*/
 
 .col-md-offset-right-1, .col-lg-offset-right-1 {
     margin-right: 8.33333333%;
@@ -777,10 +777,11 @@ button:focus {
 .facilities_area {
     position: relative;
     z-index: 1;
-    background-image: url('../img/homeindex.jpg');
+    background-image: linear-gradient(rgba(0,0,0,0.3),rgba(0,0,0,0.6)),url('../img/homeindex.jpg');
     overflow: hidden;
-    opacity:0.5;
 }
+  
+
 
 .facilities_item {
     border: 1px solid #777777;
@@ -794,7 +795,7 @@ button:focus {
 
     .facilities_item .sec_h4 {
         padding-bottom: 18px;
-        color: black;
+        color: white;
     }
 
         .facilities_item .sec_h4 i {
@@ -974,6 +975,7 @@ button:focus {
         transform: scale(1.23) rotate(10deg);
     }
 
+
 .tags .tag_btn {
     font-size: 12px;
     font-weight: 500;
@@ -986,7 +988,7 @@ button:focus {
 }
 
     .tags .tag_btn:before {
-        background: #f3c300;
+        background: #52c5fd;
     }
 
     .tags .tag_btn + .tag_btn {
