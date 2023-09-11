@@ -14,14 +14,16 @@ namespace TravelProject1._0.Models.DTO
         public string? Address { get; set; }
         [DisplayName("信箱")]
         public string Email { get; set; }
-
-        
-       
-
+             
         public DateTime? Birthday { get; set; }
 
 
+        public string PasswordHash { get; set; } = "";
 
-         
+        public string Phone { get; set; } = "";
+
+
+        //UserID  Name   Phone    Email   PasswordHash   不能為空
+
     }
 }
