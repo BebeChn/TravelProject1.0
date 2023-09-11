@@ -7,7 +7,6 @@ using System.Globalization;
 using System.Linq;
 using TravelProject1._0.Models;
 using TravelProject1._0.Models.DTO;
-using TravelProject1._0.ViewModel;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace TravelProject1._0.Areas.Admin.Controllers
@@ -39,13 +38,14 @@ namespace TravelProject1._0.Areas.Admin.Controllers
                 Name = x.Name,
                 UserId = x.UserId,
                 Email = x.Email,
+                //PasswordHash = x.PasswordHash,
             });
         }
 
         [HttpPost]
         public async Task<IEnumerable<AdminDTO>> AdminSearch(AdminDTO AdminDTO)
         {
-            
+
 
             return _db.Users.Where(y =>
             //y.UserId == AdminDTO.UserId ||
@@ -60,6 +60,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers
                 Gender = x.Gender,
                 Email = x.Email,
                 Birthday = x.Birthday,
+                //PasswordHash = x.PasswordHash,
             });
         }
 
@@ -132,29 +133,29 @@ namespace TravelProject1._0.Areas.Admin.Controllers
         }
 
         //新增
-        //[HttpPost]
-        //public async Task<string> ADDAdmin(AdminDTO AdmDTO)
-        //{
-        //    if (_db.Users == null)
-        //    {
-        //        return null;
-        //    }
-        //    User ADM = new User
-        //    {
-        //        UserId = AdmDTO.UserId,
-        //        Name = AdmDTO.Name,
-        //        Gender = AdmDTO.Gender,
-        //        Address = AdmDTO.Address,
-        //        Email = AdmDTO.Email,
-        //        Birthday = AdmDTO.Birthday,
-        //        Password = AdmDTO.Password,
-        //    };
-        //    _db.Users.Add(ADM);
-        //    await _db.SaveChangesAsync();
-        //    AdmDTO.UserId = ADM.UserId;
-        //    return "成功";
-        //}
-
+        [HttpPost]
+        public async Task<string> ADDAdmin(AdminDTO AdmDTO)
+        {
+            if (_db.Users == null)
+            {
+                return null;
+            }
+            User ADM = new User
+            {
+                UserId = AdmDTO.UserId,
+                Name = AdmDTO.Name,
+                Gender = AdmDTO.Gender,
+                Birthday = AdmDTO.Birthday,
+                Email = AdmDTO.Email,
+                Phone = AdmDTO.Phone,
+                PasswordHash = AdmDTO.PasswordHash,
+            };
+            _db.Users.Add(ADM);
+            await _db.SaveChangesAsync();
+            AdmDTO.UserId = ADM.UserId;
+            return "成功";
+        }
+        //UserID  Name   Phone    Email   PasswordHash   不能為空
 
         //[HttpPost]
         //public async Task<string> ADDAdmin(AdminDTO AdmDTO)

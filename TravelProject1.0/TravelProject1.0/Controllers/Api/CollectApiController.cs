@@ -51,12 +51,13 @@ namespace TravelProject1._0.Controllers.Api
             }
             [Authorize]
             [HttpPost]
-            public async Task<IActionResult> PostCollect([FromBody] PostCollectViewModel collect)
+            public bool PostCollect([FromBody] PostCollectViewModel collect)
             {
             int userId = _userIdentityService.GetUserId();
             //var user = _context.CollectTables.FirstOrDefaultAsync(c => c.ProductId == collect.ProductId);
             //if (user != null)
             //{
+
             //    return BadRequest("已加入收藏夾");
             //}
             try
@@ -81,9 +82,9 @@ namespace TravelProject1._0.Controllers.Api
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex.Message);
-                    return BadRequest(new { ErrorMessage = "收藏失败" });
+                    return false;
                 }
-                return Ok();
+                return true;
             }
             [Authorize]
             [HttpDelete]

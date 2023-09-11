@@ -1,4 +1,8 @@
-﻿thead tr th {
+﻿table {
+    table-layout: fixed;
+}
+
+thead tr th {
     font-size: 32px;
     text-align: center;
     color: white;
@@ -53,16 +57,6 @@ tbody tr td {
     text-align: center;
     color: red;
 }
-
-.btn-buy {
-    color: white;
-    transition: all 0.3s ease;
-}
-
-    .btn-buy:hover {
-        font-size: 22px;
-        color: white;
-    }
 
 .modal-title {
     color: white;
