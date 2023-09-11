@@ -36,22 +36,22 @@
                 @* 商品方案 *@
                 <div class="card" v-for="(p,index) in plan" :key="index">
                     <div class="row">
-                        <div class="col-md-3">
+                        <div class="col-xl-3">
                             <img class="img-plan" :src="p.planImg" />
                         </div>
-                        <div class="col-md-7">
+                        <div class="col-xl-7">
                             <div class="card-body">
                                 <h3>{{p.name}}</h3>
                                 <p>{{p.describe}}</p>
                             </div>
                         </div>
-                        <div class="col-md-2 card-end">
+                        <div class="col-xl-2 card-end">
                             <button class="btn theme_btn button_hover info btn-choose" data-bs-toggle="collapse" :data-bs-target="'#collapse'+index" aria-expanded="true" :aria-controls="'collapse'+index">選擇</button>
                         </div>
                         <div :id="'collapse'+index" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
                             <div class="accordion-body">
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-xl-6">
                                         <h4>選擇日期</h4>
                                         <template>
                                             <div>
@@ -59,7 +59,7 @@
                                             </div>
                                         </template>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-xl-6">
                                         <h4>選擇項目</h4>
                                         <div>
                                             <h4>單價：</h4>
@@ -97,12 +97,12 @@
                 <div class="container">
                     <h2>商品說明</h2>
                     <div class="row product-descripts">
-                        <div class="col-md-8 offset-2 text-center">
+                        <div class="col-xl-8 offset-2 text-center">
                             <div class="row">
-                                <div class="col-md-4">
+                                <div class="col-xl-4">
                                     <img class="img-caption" src="~/lib/image/mountain.jpeg" />
                                 </div>
-                                <div class="col-md-8">
+                                <div class="col-xl-8">
                                     <p>{{x.productName}}</p>
                                 </div>
                             </div>
