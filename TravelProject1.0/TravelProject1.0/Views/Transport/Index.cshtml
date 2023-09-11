@@ -16,22 +16,22 @@
                         <h4 class="widget_title">商品種類</h4>
                         <ul class="list_style cat-list">
                             <li>
-                                <a href="#" class="d-flex justify-content-between">
+                                <a href="#" class="d-flex justify-content-between" v-on:click="filterByCategory('機場接送')">
                                     <p>機場接送</p>
                                 </a>
                             </li>
                             <li>
-                                <a href="#" class="d-flex justify-content-between">
+                                <a href="#" class="d-flex justify-content-between" v-on:click="filterByCategory('租車')">
                                     <p>租車</p>
                                 </a>
                             </li>
                             <li>
-                                <a href="#" class="d-flex justify-content-between">
+                                <a href="#" class="d-flex justify-content-between" v-on:click="filterByCategory('高鐵')">
                                     <p>高鐵</p>
                                 </a>
                             </li>
                             <li>
-                                <a href="#" class="d-flex justify-content-between">
+                                <a href="#" class="d-flex justify-content-between" v-on:click="filterByCategory('鐵路')">
                                     <p>鐵路</p>
                                 </a>
                             </li>
@@ -155,12 +155,17 @@
                 //分頁
                 changePage: function (num) {
                     this.currentPage = num;
+                },
+
+                //列表關鍵字
+                filterByCategory: function (category) {
+                    this.search = category;
                 }
             },
             computed: {
                 //關鍵字搜尋
                 transportFilter: function () {
-                    return this.transport.filter(f => f.productName.match(this.search));
+                    return this.transport.filter(f => f.productName.includes(this.search));
                 },
 
                 //分頁
