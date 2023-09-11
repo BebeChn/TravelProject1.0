@@ -216,7 +216,8 @@
                                 toastr["success"]("商品已加入收藏夾！");
                                 console.log("成功");
                         }).catch(err => {
-                            alert("錯誤");
+                            toastr["error"]("商品加入收藏夾失敗！");
+                            
                         })
                     }
                     else {
@@ -236,7 +237,7 @@
                                     toastr["success"]("商品已移除收藏夾！");
                                     console.log("刪除成功");
                             }).catch(err => {
-                                console.log("刪除失敗");
+                                toastr["error"]("商品移除收藏夾失敗！");
                             })
                     }
                     pp.heartIcon = !pp.heartIcon;

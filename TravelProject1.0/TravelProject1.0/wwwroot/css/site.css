@@ -779,6 +779,7 @@ button:focus {
     z-index: 1;
     background-image: url('../img/homeindex.jpg');
     overflow: hidden;
+    opacity:0.5;
 }
 
 .facilities_item {
@@ -786,8 +787,9 @@ button:focus {
     border-radius: 10px;
     background-color: rgba(249, 249, 255, 0.102);
     padding: 31px 40px 37px;
-    color: black;
+    color: white;
     margin-bottom: 30px;
+   
 }
 
     .facilities_item .sec_h4 {
