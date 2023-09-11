@@ -5,15 +5,17 @@
 @section Styles{
     <link href="~/css/orderdetails.css" rel="stylesheet" />
 }
-<section id="app" class="accomodation_area">
-    <h1 style="text-align:center">會員歷史訂單</h1>
-    <div class="container">
+<section id="app" class="accomodation_area groundfield"> 
+    <br />
+    <br />
+    <div class="container">      
         <div class="row">
-            <div class="col-md-9">
+            <div class="col-md-8 eachfield">
+                <h1 style="text-align:center;font-size: 36px">會員歷史訂單</h1>
                 <div class="row" v-for="o in orders">
                     <div class="row product-items outer-box" v-for="d in o.detail">
                         <div class="col-md-3" >
-                            <img class="" :src="d.odimg" style="width:100%" />
+                            <img class="" :src="d.odimg" style="width:100%;height:100%;" />
                         </div>
                         <div class="col-md-6  align-items-center">
                             <div class="about_content ">
@@ -30,14 +32,16 @@
                             </div>
                         </div>
                         <div class="col-md-3">
-                            <a class="button_hover theme_btn_two genric-btn info circle">聯絡商家</a>
+                            <a class="btn theme_btn button_hover info mt-3">聯絡商家</a>    
                             <br />
-                            <button asp-controller="Rating" asp-action="Index" class="genric-btn info-border circle arrow">給予評論<i class="fa-solid fa-arrow-right" style="margin-left:10px;"></i></button>
+                            <br />
+                          
+                            <button asp-controller="Rating" asp-action="Index" class="genric-btn info-border">給予評論<i class="fa-solid fa-arrow-right" style="margin-left:10px;"></i></button>
                         </div>         
                 </div>
             </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3 offset-1 eachfield">
                 <div class="blog_right_sidebar">
                     <aside class="single_sidebar_widget post_category_widget">
                         <div style="text-align:center">
@@ -52,7 +56,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a asp-controller="User" asp-action="UserOrderDetails" class="d-flex justify-content-between" >
+                                <a asp-controller="User" asp-action="UserOrderDetails" class="d-flex justify-content-between" style="font-weight: bold; color:#52c5fd ;font-size: 14px;">
                                     <p>商品訂單</p>
                                 </a>
                             </li>
@@ -63,7 +67,7 @@
                             </li>
                             <li>
                                 <a asp-controller="User" asp-action="Index" class="d-flex justify-content-between">
-                                    <p>喜愛</p>
+                                    <p>點數</p>
                                 </a>
                             </li>
                         </ul>

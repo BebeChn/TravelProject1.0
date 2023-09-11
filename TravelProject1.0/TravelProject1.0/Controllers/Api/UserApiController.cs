@@ -48,14 +48,15 @@ namespace TravelProject1._0.Controllers.Api
             _userIdentityService = userIdentityService;
         }
       
-        [HttpGet("{id}")]
-        public async Task<UpdateUserDTO> GetUser(int id)
+        [HttpGet]
+        public async Task<UpdateUserDTO> GetUser()
         {
+            var userId = _userIdentityService.GetUserId();
             if (_context.Users == null)
             {
                 return null;
             }
-            var users = await _context.Users.FindAsync(id);
+            var users = await _context.Users.FindAsync(userId);
 
             if (users == null)
             {
@@ -157,53 +158,33 @@ namespace TravelProject1._0.Controllers.Api
 
 
         
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUser(int id, UpdateUserViewModel UpdateUser)
+        [HttpPut]
+        public async Task<IActionResult> UpdateUser(UpdateUserViewModel UpdateUser)
         {
 
-            if (id != UpdateUser.UserId)
-            {
-                return BadRequest("使用者不存在");
-            }
+                int id = _userIdentityService.GetUserId();
 
-            User user = await _context.Users.FindAsync(id);
+                User user = await _context.Users.FindAsync(id);
 
-            //判斷傳入的密碼是否更改
+                // 修改其他個資
+                user.Email = UpdateUser.Email;
+                user.Birthday = UpdateUser.Birthday;
+                user.Name = UpdateUser.Name;
+                user.Phone = UpdateUser.Phone;
+                user.Gender = UpdateUser.Gender;
 
-            //if (UpdateUser.Password != null)
-            //{
-            //    string hashedPassword = HashPassword(UpdateUser.Password, user.Salt);
-            //    if (UpdateUser.PasswordHash == hashedPassword)
-            //    {
-            //        return BadRequest("密碼不可重複");
-            //    }
-            //    else
-            //    {
-            //        string salt = GenerateSalt();
-            //        user.Salt = salt;
-            //        user.PasswordHash = hashedPassword;
-            //    }
-            //}
+                _context.Entry(user).State = EntityState.Modified;
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch
+                {
+                    return Conflict();
+                }
+                return Ok();
+            
 
-            // 修改其他個資
-            user.Email = UpdateUser.Email;
-            user.Birthday = UpdateUser.Birthday;
-            user.Name = UpdateUser.Name;
-            user.Phone = UpdateUser.Phone;
-            user.Gender = UpdateUser.Gender;
-
-
-
-            _context.Entry(user).State = EntityState.Modified;
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch
-            {
-                return Conflict();
-            }
-            return Ok();
         }
 
         [HttpPost]
