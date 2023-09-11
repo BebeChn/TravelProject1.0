@@ -8,7 +8,19 @@
     text-align: center;
     background: lightskyblue;
 }
+#app {
+    position: relative;
+}
 
+h1 {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10px 20px;
+    font-weight: bold;
+    color:black;
+}
 .xuxian {
     width: 150px;
     height: 50px;
@@ -33,7 +45,7 @@
    
 }
 .element {
-    background-image: url('../images/images.project/plan/korea/istockphoto-835391546-612x612.jpg');
+ 
     background-size: cover;
     background-repeat: no-repeat;
 }
