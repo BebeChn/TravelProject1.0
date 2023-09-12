@@ -64,6 +64,7 @@
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Partials\" />
     <Folder Include="wwwroot\images\Images.Project\planeTK\category\" />
+    <Folder Include="wwwroot\images\Images.Project\planeTK\saleplan\" />
   </ItemGroup>
 
 </Project>

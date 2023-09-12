@@ -70,7 +70,7 @@
                             <td><input class="w-100" v-model="item.name" /></td>
                             <td><input class="w-100" v-model="item.gender" /></td>
                             <td><input class="w-100" v-model="item.email" /></td>
-                            <td><input class="w-100" v-model="item.birthday" /></td>
+                            <td><input type="date"    class="w-100" v-model="item.birthday" /></td>
                             <td>
                                 <div class="d-flex justify-content-around">
                                     <button type="button" class="btn btn-success" @@click="update(item)">
@@ -91,7 +91,7 @@
                             <td>{{item.name}}</td>
                             <td>{{item.gender}}</td>
                             <td>{{item.email}}</td>
-                            <td>{{formatDate(item.birthday)}}</td>
+                            <td>{{item.birthday}}</td>
                             <td>
                                 <div class="d-flex justify-content-around">
                                     <button type="button" class="btn  btn-warning" @@click="edit(item.userId)">
@@ -212,6 +212,7 @@
                             for (var i = 0; i < _this.AdminDTOes.length; i++) {
                                 var item = _this.AdminDTOes[i];
                                 item.Edit = false;
+                                _this.AdminDTOes[i].birthday = new Date(_this.AdminDTOes[i].birthday).toISOString().split('T')[0];
                             }
                         })
                         .catch(err => {

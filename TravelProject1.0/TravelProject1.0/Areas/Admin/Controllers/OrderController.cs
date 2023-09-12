@@ -100,7 +100,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers
             var ORD = await _db.OrderDetails.Where(od=>od.OrderId== orderId && od.PlanId == planId).FirstOrDefaultAsync();
 
             ORD.OrderId = order.OrderId;            //至少要有orderId  跟要改項目
-            //ORD.UserId=order.UserId;
+            //ORD.PlanId=order.PlanId;
             ORD.Quantity = order.Quantity;
             ORD.Discount = order.Discount;
             ORD.UseDate = order.UseDate;
