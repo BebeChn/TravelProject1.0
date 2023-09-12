@@ -15,37 +15,17 @@
     <!--第一段-->
     <div class="container-fluid row   ">
         <div class="col-2"></div>
-        <button type="button" class="btn solid  col-3 " style="font-weight: bold;font-size: 1.2rem;" @@click="Datehigh">時間由大到小排序</button>
+        <button type="button" class="btn solid  col-3 form-group" style="font-weight: bold;font-size: 1.2rem; color: gray; font-style: italic;" @@click="Datehigh">時間由大到小排序</button>
         <br>
-        <button type="button" class="btn solid  col-3" style="font-weight: bold;font-size: 1.2rem;" @@click="Datelower">時間由小到大排序</button>
+        <button type="button" class="btn solid  col-3 form-group" style="font-weight: bold;font-size:  1.2rem; color: gray; font-style: italic;" @@click="Datelower">時間由小到大排序</button>
         <div class="col-4"></div>
     </div>
-    <br>
     <!--第二段-->
-    <div class="container-fluid row    ">
-        <nav class="  navbar bg-body   ">
-            <!--為什麼在nav裡面   因為這樣線才剛好對齊-->
-
-            <div class="col-2"></div>
-            <!--新增會員-->
-            <div class="col-4  form-group  ">
-@*                <button type="button" class="btn btn-success" @@click="showModal">新增會員</button>
-*@            </div>
-            <div class="col-2"></div>
-
-            <div class="col-4 form-group justify-content-end  ">
-                <form class="d-flex" role="search">
-                    <!--輸入關鍵字-->
-                    <input style="width: 300px; height:70px;" class="form-control" type="text" placeholder="Search" aria-label="Search"
-                           v-model="filter" @@keyup="filterUser">
-                    <button class="btn btn-outline-secondary " style="color :#1e2154" type="submit" @*@@click="filterUser"*@>
-                        <Fieldset>搜尋</Fieldset>
-                    </button>
-                </form>
-
-            </div>
-            <!--為什麼在nav裡面   因為這樣線才剛好對齊-->
-        </nav>
+    <div class="container-fluid  row  ">
+        <div class="col-9"></div>
+        <div class="col-3  " style="width:25%; color: gray; ">
+                關鍵字搜尋：<input type="text" v-model="filter" class="form-control" placeholder="請輸入篩選關鍵字" @@keyup="filterUser" />
+        </div>        
     </div>
     <!--第二段底-->
     <div class="container-fluid row    ">

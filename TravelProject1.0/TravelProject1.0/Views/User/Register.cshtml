@@ -15,45 +15,43 @@
     </style>
 
   }
-  <h1 style="text-align:center">註冊會員</h1>
+  
 <div id="app" class="center  element">
-   
-   
-
-    <div>
-            <div class="inputbox ">
+    <h1 style="text-align:center">註冊會員</h1>
+    <div class="mt-4">
+            <div class="inputbox mb-3 ">
                     <input type="text" v-model.trim="name" required />
                     <span>姓名</span>
                     <div v-if="!isValid(name,validType.name)" class="formatError">您輸入的格式錯誤</div>
                  @*    <div v-if="usernameTaken">該用戶名已存在</div> *@
                 </div>
-                <div>
+                <div class="mb-3">
                     <label for="gender" >性別</label>
                     <input type="radio" v-model="gender" value="F" />男
                     <input type="radio" v-model="gender" value="M" />女
                 </div>
-        <div class="inputbox">
+        <div class="inputbox mb-3">
                     <input v-model.trim="birthday" type="datetime" required />
                     <span>生日</span>
                     <div class="formatError" v-if="!isValid(birthday,validType.birthday)">您輸入的格式不正確</div>
                 </div>
-        <div class="inputbox">
+        <div class="inputbox mb-3">
                     <input v-model.trim="email" type="email" name="email" id="emailInput" required />
                     <span>郵件</span>
                     <div class="formatError" v-if="!isValid(email,validType.email)" id="emailError">您輸入的格式不正確</div>
                 </div>
 
-        <div class="inputbox ">
+        <div class="inputbox mb-3">
             <input v-model.trim="phone" type="text" required/>
                     <span>電話</span>
                 <div class="formatError" v-if="!isValid(phone,validType.phone)">您輸入的格式不正確</div>
             </div>
-        <div class="inputbox ">
+        <div class="inputbox mb-3 ">
             <input v-model.trim="password" type="password" required/>
                     <span>密碼</span>
                 <div class="formatError" v-if="!isValid(password,validType.password)">您輸入的格式不正確</div>
             </div>
-        <div class="inputbox">
+        <div class="inputbox mb-3">
             <input type="password" required />
                     <span>重複輸入密碼</span>
                 <div class="invalid-feedback">已被註冊、或您輸入的格式不正確</div>
