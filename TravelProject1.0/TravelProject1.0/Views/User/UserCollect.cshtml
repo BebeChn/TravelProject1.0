@@ -50,10 +50,13 @@
     <div class="container">
         <div class="row">
             <div class="col-8 eachfield">
-                <h2 style="text-align:center;font-size: 36px">收藏的項目</h2>
+                <h2 style="text-align:center;font-size:36px">收藏的項目</h2>
                 <ul class="favorites">
                     <li class="favorite-title">
-                        <span> 商品名稱</span>
+                        <span>商品圖片</span>
+                        <span>商品名稱</span>
+                        <span>商品編號</span>
+                        <span></span>
                     </li>
                     <li v-for="favorite in favorites" class="favorite-item">
                         <img class="img-fluid" :src="favorite.collectImage" style="width:150px;height:150px;" />
@@ -88,7 +91,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="#" class="d-flex justify-content-between">
+                                <a  class="d-flex justify-content-between" asp-Controller="User" asp-action="UserPoint">
                                     <p>點數</p>
                                 </a>
                             </li>
