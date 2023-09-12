@@ -293,5 +293,13 @@ namespace TravelProject1._0.Controllers.Api
                     })
                 });
         }
+        [HttpGet]
+        public async Task<int> GetPoint() 
+        {
+            var userId= _userIdentityService.GetUserId();
+            var point = await _context.Users.FindAsync(userId);            
+            return point.Points.GetValueOrDefault();
+
+        }
     }
 }

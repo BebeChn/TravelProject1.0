@@ -60,7 +60,7 @@
                             <td><input v-model="item.quantity" /></td>
                             <td><input v-model="item.discount" /></td>
                             <td><label>{{item.unitPrice}}</label></td>
-                            <td><input v-model="item.useDate" /></td>
+                            <td><input type="date" v-model="item.useDate" /></td>
                             <td>
                                 <div class="d-flex justify-content-around">
                                     <button type="button" class="btn btn-success" @@click="update(item)">
@@ -82,7 +82,7 @@
                             <td><label>{{item.quantity}}</label> </td>
                             <td><label>{{item.discount}}</label></td>
                             <td><label>{{item.unitPrice}}</label></td>
-                            <td><label>{{formatDate(item.useDate)}}</label></td>
+                            <td><label>{{item.useDate}}</label></td>
                             <td>
                                 <div class="d-flex justify-content-around">
                                     <button type="button" class="btn  btn-warning" @@click="edit(item.orderId,item.planId)">
@@ -150,16 +150,16 @@
                 //alert("mouned");
                 _this.filterorder();
             },
-            computed: {
-                //轉換日期
-                formatDate: function () {
-                    return function (str) {
-                        if (!str) return "";
-                        var d = new Date(str);
-                        return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
-                    }
-                },
-            },
+            //computed: {
+            //    //轉換日期
+            //    formatDate: function () {
+            //        return function (str) {
+            //            if (!str) return "";
+            //            var d = new Date(str);
+            //            return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+            //        }
+            //    },
+            //},
             methods: {
 
 
@@ -167,6 +167,38 @@
                     let _this = this;
                     //alert("篩選");
                     var request = {};
+
+                    //查詢
+                    //request.OrderId  = _this.Filter;
+                    request.OrderId = isNaN(Number(_this.Filter)) ? -1 : Number(_this.Filter);
+                    request.UserId = request.OrderId;
+                    //request.OrderDate = _this.Filter;
+                    axios.post(`${baseAddress}/api/Order/OrderSeachL`, request)
+                        .then(response => {
+                            _this.OrderDTOes = response.data;
+                            for (var i = 0; i < _this.OrderDTOes.length; i++) {
+                                var item = _this.OrderDTOes[i];
+                                item.Edit = false;
+                                if (_this.OrderDTOes[i].useDate) {
+                                    var d = new Date(_this.OrderDTOes[i].useDate);
+                                    var m = (d.getMonth() + 1).toString();
+                                    _this.OrderDTOes[i].useDate = `${d.getFullYear()}-${m.length == 1 ? m.padStart(2, "0") : m}-${d.getDate()}`
+                                } else {
+                                    _this.OrderDTOes[i].useDate = "";
+                                }
+                                
+                            }
+
+                            
+
+
+                        })
+                        .catch(err => {
+                            alert(err);
+                        });
+
+
+ 
 
                     //直接GET
                     //axios.get(`${baseAddress}/api/Order/OrderGET`)
@@ -180,25 +212,6 @@
                     //    .catch(err => {
                     //        alert(err);
                     //    });
-
-
-
-                    //查詢
-                    //request.OrderId  = _this.Filter;
-                    request.OrderId = isNaN(Number(_this.Filter)) ? -1 : Number(_this.Filter);
-                    request.UserId = request.OrderId;
-                    //request.OrderDate = _this.Filter;
-                    axios.post(`${baseAddress}/api/Order/OrderSeachL`, request)
-                        .then(response => {
-                            _this.OrderDTOes = response.data;
-                            for (var i = 0; i < _this.OrderDTOes.length; i++) {
-                                var item = _this.OrderDTOes[i];
-                                item.Edit = false;
-                            }
-                        })
-                        .catch(err => {
-                            alert(err);
-                        });
 
                 },
 

@@ -17,9 +17,9 @@
     color: #333;
 }
 .outer-box {
-    border: 2px solid cornflowerblue;
+    border: 2px solid #dee2e6;
     padding: 3px;
-    margin:1px;
+    margin: 1px;
 }
 .search {
     margin-bottom: 20px;
