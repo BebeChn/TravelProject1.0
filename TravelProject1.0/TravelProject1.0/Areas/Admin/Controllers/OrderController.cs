@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
 using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 using Microsoft.EntityFrameworkCore;
+using System.Numerics;
 using TravelProject1._0.Models;
 using TravelProject1._0.Models.DTO;
 
@@ -30,13 +32,16 @@ namespace TravelProject1._0.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IEnumerable<OrderDTO>> OrderGET()
         {
-            return _db.Orders.Select(x => new OrderDTO
+            return _db.OrderDetails.Select(x => new OrderDTO
             {
-
+                Id=x.Id,
                 OrderId = x.OrderId,
-                UserId = x.UserId,
-                OrderDate = x.OrderDate,
-  
+                PlanId = x.PlanId,
+                Quantity = x.Quantity,
+                Discount = x.Discount,
+                UnitPrice = x.UnitPrice,
+                UseDate = x.UseDate,
+
 
 
             });
@@ -53,65 +58,60 @@ namespace TravelProject1._0.Areas.Admin.Controllers
         {
             if (order.OrderId != 0)
             {
-                return _db.Orders.Where(y =>
+                return _db.OrderDetails.Where(y =>
                     y.OrderId == (order.OrderId)
-                    || y.UserId == (order.UserId)
+                    || y.PlanId == (order.PlanId)
                     //|| y.OrderDate == (order.OrderDate)
                     ).Select(x => new OrderDTO
                     {
-                        OrderId = x.OrderId,
-                        UserId = x.UserId,
-                        OrderDate = x.OrderDate,
+                        Id = x.Id,
+                        OrderId = x.OrderId,                        
+                        PlanId = x.PlanId,
+                        Quantity = x.Quantity,
+                        Discount = x.Discount,
+                        UnitPrice = x.UnitPrice,
+                        UseDate = x.UseDate,
+
                     });
             }
 
-            return _db.Orders.Select(x => new OrderDTO
+            return _db.OrderDetails.Select(x => new OrderDTO
             {
+                Id = x.Id,
                 OrderId = x.OrderId,
-                UserId = x.UserId,
-                OrderDate = x.OrderDate,
+                PlanId = x.PlanId,
+                Quantity = x.Quantity,
+                Discount = x.Discount,
+                UnitPrice = x.UnitPrice,
+                UseDate = x.UseDate,
             });
-
-            //try
-            //{
-            //    _db.Orders.Where(y =>
-            //   y.OrderId == (order.OrderId)
-            //   || y.UserId == (order.UserId)
-            //   || y.OrderDate == (order.OrderDate)
-            //   ).Select(x => new OrderDTO
-            //   {
-            //    OrderId = x.OrderId,
-            //    UserId = x.UserId,
-            //    OrderDate = x.OrderDate,
-            //          });
-            //}catch (Exception ex)
-            //{
-            //    Console.WriteLine(ex.Message);
-            //}
-
-            //return null;
 
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{orderId}/{planId}")]
         //PUT
-        public async Task<string> OrderPUT(int id,OrderDTO order)
+        public async Task<string> OrderPUT(int orderId, int planId, OrderDTO order)
         {
-            if (id != order.OrderId)
+            if (orderId != order.OrderId)
             {
                 return "修改失敗";
             }
 
-            var ORD = await _db.Orders.FindAsync(id);
-            ORD.OrderId=order.OrderId;            //至少要有orderId  跟要改項目
+            var ORD = await _db.OrderDetails.Where(od=>od.OrderId== orderId && od.PlanId == planId).FirstOrDefaultAsync();
+
+            ORD.OrderId = order.OrderId;            //至少要有orderId  跟要改項目
             //ORD.UserId=order.UserId;
-            ORD.OrderDate=order.OrderDate;
+            ORD.Quantity = order.Quantity;
+            ORD.Discount = order.Discount;
+            ORD.UseDate = order.UseDate;
+
             _db.Entry(ORD).State = EntityState.Modified;
 
             try
             {
                 await _db.SaveChangesAsync();
-            }catch(DbUpdateConcurrencyException)
+            }
+            catch (DbUpdateConcurrencyException)
             {
                 throw;
             }
@@ -120,25 +120,24 @@ namespace TravelProject1._0.Areas.Admin.Controllers
         }
 
 
-        //
 
-        [HttpDelete("{id}")]
 
-        public async Task<string> OrderDELETE(int id)
+        [HttpDelete("{orderId}/{planId}")]
+        public async Task<string> OrderDELETE(int orderId,int planId)
         {
 
-            if (_db.Orders == null)
+            if (_db.OrderDetails == null)
             {
                 return "刪除失敗";
             }
-            var ORD = await _db.Orders.FindAsync(id);
+            var ORD = await _db.OrderDetails.Where(od => od.OrderId == orderId && od.PlanId == planId).FirstOrDefaultAsync();
             if (ORD == null)
             {
                 return "刪除失敗";
             }
             try
             {
-                _db.Orders.Remove(ORD);
+                _db.OrderDetails.Remove(ORD);
                 await _db.SaveChangesAsync();
             }
             catch
