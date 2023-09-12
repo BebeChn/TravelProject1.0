@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace TravelProject1._0.Models;
 
@@ -13,7 +12,7 @@ public partial class User
     public string? Gender { get; set; }
 
     public string Phone { get; set; } = null!;
-    [DataType(DataType.Date)]
+
     public DateTime? Birthday { get; set; }
 
     public int? Age { get; set; }
@@ -33,6 +32,8 @@ public partial class User
     public string? ResetToken { get; set; }
 
     public int? RoleId { get; set; }
+
+    public int? NewPoint { get; set; }
 
     public virtual ICollection<Cart> Carts { get; set; } = new List<Cart>();
 

@@ -18,7 +18,7 @@
             align-items: center;
             justify-content: space-between;
             border-bottom: 1px solid #ccc;
-            padding: 10px 0;
+            padding: 5px 0;
         }
 
         .favorite-title {
@@ -53,15 +53,15 @@
                 <h2 style="text-align:center;font-size:36px">收藏的項目</h2>
                 <ul class="favorites">
                     <li class="favorite-title">
-                        <span>商品圖片</span>
+                        <span class="me-3">商品圖片</span>
                         <span>商品名稱</span>
                         <span>商品編號</span>
                         <span></span>
                     </li>
                     <li v-for="favorite in favorites" class="favorite-item">
                         <img class="img-fluid" :src="favorite.collectImage" style="width:150px;height:150px;" />
-                        <span>{{favorite.collectName}}</span>
-                        <span>{{favorite.productId}}</span>
+                        <span class="me-5">{{favorite.collectName}}</span>
+                        <span class="me-3">{{favorite.productId}}</span>
                         <button class="btn btn-delete danger" data-bs-toggle="modal" data-bs-target="#deleteItem" @@click="deleteModal(favorite)"><i class="fa-solid fa-trash-can"></i>删除</button>
                     </li>
                 </ul>
