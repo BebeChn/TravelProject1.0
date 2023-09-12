@@ -41,11 +41,11 @@
             </div>
         </div>
         <div class="col-md-4 planInfo" v-for="p in planInfo">
-            <img class="img-plan" :src="p.planImg" />
-            <h2>{{p.name}}</h2>
-            <h4>使用日期:{{p.orderDetails[0].useDate | formatDate}}</h4>
-            <h4>數量:{{p.orderDetails[0].quantity}}</h4>
-            <h4>總價:{{p.orderDetails[0].unitPrice * p.orderDetails[0].quantity | formatCurrency}}</h4>
+            <img class="img-plan" :src="p.odimg" />
+            <h2>{{p.odname}}</h2>
+            <h4>使用日期:{{p.useDate | formatDate}}</h4>
+            <h4>數量:{{p.quantity}}</h4>
+            <h4>總價:{{p.unitPrice | formatCurrency}}</h4>
         </div>
     </div>
 </div>
@@ -62,7 +62,8 @@
                 date: new Date(),
                 describe: "",
                 stars: [1, 2, 3, 4, 5],
-                selectedStar: -1
+                selectedStar: -1,
+                queries:""
             },
             mounted: function () {
                 let _this = this;
@@ -71,6 +72,7 @@
                         if (response.ok) return response.json();
                     }).then(data => {
                         _this.planInfo = data;
+                        console.log(data);
                     }).catch(error => {
                         console.log(error);
                     })
@@ -79,8 +81,9 @@
                 //商品評價
                 addRating: function () {
                     let _this = this;
+                    _this.queries = window.location.pathname.slice("14");
                     let ratingData = {
-                        productId: 61,
+                        productId: _this.queries,
                         ratingDate: _this.date,
                         ratingScore: _this.selectedStar,
                         describe: _this.describe
@@ -93,6 +96,7 @@
                     }).then(response => {
                         if (response.ok) {
                             alert("商品評價成功");
+                            location.href = "/User/UserOrderDetails";
                         } else {
                             throw new Error("有資料未填寫");
                         }

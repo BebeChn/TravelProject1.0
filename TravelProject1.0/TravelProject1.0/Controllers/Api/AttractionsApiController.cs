@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Drawing.Printing;
 using System.Security.Claims;
 using TravelProject1._0.Models;
@@ -97,8 +98,9 @@ namespace TravelProject1._0.Controllers.Api
         [Route("{id}")]
         public async Task<IQueryable<RatingDTO>> GetRating(int id)
         {
-            return _dbContext.Ratings.Where(r => r.ProductId == id).Select(r => new RatingDTO
+            return _dbContext.Ratings.Include(r => r.User).Where(r => r.ProductId == id).Select(r => new RatingDTO
             {
+                Name = r.User.Name,
                 RatingScore = r.RatingScore,
                 Describe = r.Describe,
                 RatingDate = r.RatingDate

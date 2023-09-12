@@ -133,7 +133,7 @@
                             <div class="single-comment justify-content-between d-flex">
                                 <div class="user justify-content-between d-flex">
                                     <div class="desc">
-                                        <h5><a href="#">使用者名稱</a></h5>
+                                        <h5><a href="#">{{r.name}}</a></h5>
                                         <p class="date">{{r.ratingDate | formatDate}}</p>
                                         <div class="star">
                                             <i class="fa-solid fa-star fa-2xl" v-for="(star,index) in r.ratingScore"></i>

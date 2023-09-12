@@ -3,7 +3,9 @@
     public class OrderInfo
     {
         public DateTime? OrderDate { get; internal set; }
+
         public int OrderId { get; internal set; }
+
         public IEnumerable<OrderDetailDto> Detail { get; set; }
     }
 }

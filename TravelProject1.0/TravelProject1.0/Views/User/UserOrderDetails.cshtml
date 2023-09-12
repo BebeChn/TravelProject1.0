@@ -32,11 +32,10 @@
                             </div>
                         </div>
                         <div class="col-md-3">
-                            <a class="btn theme_btn button_hover info mt-3">聯絡商家</a>    
+                            <a class="btn theme_btn button_hover info mt-3" >再訂購一次</a>    
                             <br />
-                            <br />
-                          
-                            <button asp-controller="Rating" asp-action="Index" class="genric-btn info-border">給予評論<i class="fa-solid fa-arrow-right" style="margin-left:10px;"></i></button>
+                            <br />                
+                            <a :href="'/Rating/Index/'+d.productId" class="genric-btn info-border">給予評論<i class="fa-solid fa-arrow-right" style="margin-left:10px;"></i></a>
                         </div>         
                 </div>
             </div>
@@ -66,7 +65,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a asp-controller="User" asp-action="Index" class="d-flex justify-content-between">
+                                <a  class="d-flex justify-content-between" asp-Controller="User" asp-action="UserPoint">
                                     <p>點數</p>
                                 </a>
                             </li>
