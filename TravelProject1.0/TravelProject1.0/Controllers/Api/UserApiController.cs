@@ -273,33 +273,7 @@ namespace TravelProject1._0.Controllers.Api
             }
         }
 
-        [HttpGet]
-        public IEnumerable<OrderInfo> OrderDetails()
-        {
-            var userId = _userIdentityService.GetUserId();
-            return _context.Orders.Include(o => o.OrderDetails).ThenInclude(o => o.Plan).Where(o => o.UserId == userId)
-                .Select(o => new OrderInfo
-                {
-                    OrderDate = o.OrderDate,
-                    OrderId = o.OrderId,
-                    Detail = o.OrderDetails.Select(z => new OrderDetailDto
-                    {
-                        PlanId = z.PlanId,
-                        Quantity = z.Quantity,
-                        UnitPrice = z.UnitPrice,
-                        Odimg = z.Odimg,
-                        Odname = z.Odname,
-                        ProductId = z.Plan.ProductId
-                    })
-                });
-        }
-        [HttpGet]
-        public async Task<int> GetPoint() 
-        {
-            var userId= _userIdentityService.GetUserId();
-            var point = await _context.Users.FindAsync(userId);            
-            return point.Points.GetValueOrDefault();
-
-        }
+       
+       
     }
 }

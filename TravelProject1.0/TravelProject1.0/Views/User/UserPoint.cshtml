@@ -9,65 +9,36 @@
             background-color: #eeeeee;
         }
 
-        .beauty-label {
-            font-family: Arial, sans-serif;
-            font-size: 16px;
-            color: #333;
-            margin-bottom: 5px;
-            margin-left: 40px;
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            border:none;
         }
 
-        .beauty-input {
-            width: 200px;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-family: Arial, sans-serif;
-            font-size: 14px;
-            outline: none;
+        th, td {
+            border: none;
+            text-align: center;
+            padding: 8px;
         }
 
-            .beauty-input:hover {
-                border-color: #007bff;
-            }
-
-
-            .beauty-input:focus {
-                border-color: #007bff;
-            }
-
-        .beauty-select {
-            width: 100px;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-family: Arial, sans-serif;
-            font-size: 14px;
-            outline: none;
+        th {
+            background-color: #f2f2f2;
         }
 
-            .beauty-select:hover {
-                border-color: #007bff;
-            }
-
-            .beauty-select:focus {
-                border-color: #007bff;
-            }
-
-        .css {
-            border-radius: 10px;
-            margin-left: 2px;
-            width: 100px;
-            height: 40px;
-            border: 2px solid deepskyblue;
-            background-color: white;
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
         }
 
-        .separator {
-            border-top: 1px solid black;
-            margin: 20px 0;
+        tr:hover {
+            background-color: #ddd;
+        }
+
+        td {
+            border-right: none;
+        }
+
+        .custom-progress-bar {
+            background-color: #90e0ef;
         }
     </style>
 }
@@ -82,16 +53,43 @@
                 <div style="font-weight: bold; font-size: 24px; margin-top:50px;margin-bottom:20px;" class="d-flex justify-content-center align-items-center ">會員點數</div>
                 <hr />
                 <div class="row">
-                    <div class="col-3">
-                        <label for="file">點數條:</label>
+                    <div class="col-2">
+                        <label for="file" style="font-weight: bold; font-size: 24px;">點數進度</label>
                         </div>
-                        <div class="col-9">
+                        <div class="col-10">
                             <div class="progress">
-                                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" :aria-valuenow="now" :aria-valuemin="min" :aria-valuemax="max" :style="p"></div>
-                            </div>
+                            <div class="progress-bar progress-bar-striped progress-bar-animated custom-progress-bar" role="progressbar" :aria-valuenow="now" :aria-valuemin="min" :aria-valuemax="max" :style="p"></div>
+                        </div>
+                            <div style="text-align:right"> {{now}} / {{max}}</div>
                         </div>
                     </div>
-               
+                <div class="row">
+                    <div class="row product-items outer-box" v-for="o in Order">
+                        <div class="col-12  align-items-center">    
+                                <br />
+                                <table border="1">
+                                    <thead>
+                                        <tr>
+                                            <th>訂單編號</th>                                          
+                                            <th>獲得點數</th>
+                                            <th>訂購日期</th>
+                                            <th>訂購價格</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>{{o.orderId}}</td>                                        
+                                            <td>{{o.newPoint}}</td>
+                                            <td>{{o.orderDate | formatDate}}</td>
+                                            <td>{{o.totalPrice}}</td>
+                                        </tr>
+                                        
+                                    </tbody>
+                                </table>
+                            </div>                    
+                    </div>
+
+                </div>
             </div>
             <div class="col-3 offset-1 eachfield">
                 <div class="blog_right_sidebar">
@@ -141,7 +139,8 @@
             data: {
               max:1000,
               min:0,
-              now:0
+              now:0,
+              Order: {},
             },
             computed: {
                 p: function () {
@@ -149,14 +148,29 @@
                     return { width: temp.toFixed()+"%" };
                 }
             },
+            filters: {
+                //日期格式
+                formatDate: function (str) {
+                    if (!str) return "";
+                    var d = new Date(str);
+                    return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+                },
+            },
             mounted: function () {
                 let _this=this
-                fetch(`${baseAddress}/api/Userapi/GetPoint`).then(response => {
+                fetch(`${baseAddress}/api/Orderapi/GetPoint`).then(response => {
                     if (response.ok) return response.text();
                 }).then(data => {
                     _this.now = data;
-                }).catch(err => { 
-                   alert("讀取點數錯誤")
+                }).catch(err => {
+                    alert("讀取點數錯誤")
+                });
+                fetch(`${baseAddress}/api/Orderapi/OrderDetailsGetPoint`).then(response => {
+                    if (response.ok) return response.json();
+                }).then(data => {
+                    _this.Order = data;
+                }).catch(err => {
+                    alert("訂單顯示錯誤")
                 })
             },
             methods: {
