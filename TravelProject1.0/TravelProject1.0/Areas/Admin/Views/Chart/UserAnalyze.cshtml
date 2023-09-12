@@ -74,12 +74,11 @@
 		//user柱狀圖分析
 		axios.get("/api/UserChart/GetUsers")
 			.then(response => {
-				data = response.data;
-				const Age = Object.keys(data.payingMemberAgeGroup);
-				const paying = Object.values(data.payingMemberAgeGroup);
-				const nonPaying = Object.values(data.nonPayingMemberAgeGroup);
-				const female = Object.values(data.female);
-				const male = Object.values(data.male);
+				const Age = Object.keys(response.data.payingMemberAgeGroup);
+				const paying = Object.values(response.data.payingMemberAgeGroup);
+				const nonPaying = Object.values(response.data.nonPayingMemberAgeGroup);
+				const female = Object.values(response.data.female);
+				const male = Object.values(response.data.male);
 				let myChart = Highcharts.chart('member', {
 					chart: {
 						type: "column",
@@ -88,7 +87,7 @@
 						text: "會員年齡分佈",
 					},
 					subtitle: {
-						text: "會員總數" + data.totalMember,
+						text: "會員總數" + response.data.totalMember,
 					},
 					credits: {
 						enabled: false

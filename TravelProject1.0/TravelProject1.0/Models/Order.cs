@@ -11,7 +11,9 @@ public partial class Order
 
     public DateTime? OrderDate { get; set; }
 
-    public string? OrderName { get; set; }
+    public int? TotalPrice { get; set; }
+
+    public int? NewPoint { get; set; }
 
     public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
 

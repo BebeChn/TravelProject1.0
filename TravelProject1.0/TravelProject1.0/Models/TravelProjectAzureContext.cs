@@ -118,7 +118,6 @@ public partial class TravelProjectAzureContext : DbContext
             entity.ToTable("CollectTable");
 
             entity.Property(e => e.CollectId).HasColumnName("CollectID");
-            entity.Property(e => e.CollectImage).HasMaxLength(50);
             entity.Property(e => e.CollectName).HasMaxLength(50);
             entity.Property(e => e.ProductId).HasColumnName("ProductID");
             entity.Property(e => e.UserId).HasColumnName("UserID");

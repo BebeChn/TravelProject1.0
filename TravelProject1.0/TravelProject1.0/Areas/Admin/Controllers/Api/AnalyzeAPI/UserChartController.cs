@@ -52,7 +52,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 		{
 			foreach (var ageGroup in ageGroups)
 			{
-				var range = ageGroup.Split('-');
+				var range = ageGroup.Split("-");
 				var minAge = int.Parse(range[0].Replace("歲", ""));
 				var maxAge = int.Parse(range[1].Replace("歲", ""));
 				if (age >= minAge && age <= maxAge)
@@ -108,20 +108,35 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 
 				if (user.Gender == "F")
 				{
-					Female[ageGroup]++;
+					if (!Female.ContainsKey(ageGroup))
+					{
+						Female[ageGroup] = 0;
+					}
+						Female[ageGroup]++;
 				}
 				else
 				{
-					Male[ageGroup]++;
+					if (!Male.ContainsKey(ageGroup))
+					{
+						Male[ageGroup] = 0;
+					}
+						Male[ageGroup]++;
 				}
-
 
 				if (isPayingMember)
 				{
+					if (!payingMemberAgeGroup.ContainsKey(ageGroup))
+					{
+						payingMemberAgeGroup[ageGroup] = 0;
+					}
 					payingMemberAgeGroup[ageGroup]++;
 				}
 				else
 				{
+					if (!nonPayingMemberAgeGroup.ContainsKey(ageGroup))
+					{
+						nonPayingMemberAgeGroup[ageGroup] = 0;
+					}
 					nonPayingMemberAgeGroup[ageGroup]++;
 				}
 			}

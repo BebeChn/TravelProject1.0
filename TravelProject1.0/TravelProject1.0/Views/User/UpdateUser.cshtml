@@ -91,17 +91,19 @@
                         <div class="col-xl-6">
                             <label for="username" class="beauty-label">名稱:</label>
                             <input type="text" id="username" v-model.trim="user.name" class="beauty-input" @@input="isUserModified = true" />
-                            <div class="formatError" v-if="!isValid(name,validType.name)">您輸入的格式不正確</div>
+                            <div class="formatError" v-if="!isValid(user.name,validType.name)">您輸入的格式不正確</div>
                         </div>
                         <div class="col-xl-6">
                             <label for="email" class="beauty-label">郵件:</label>
                             <input type="email" id="email" v-model.trim="user.email" class="beauty-input" @@input="isUserModified = true">
+                            <div class="formatError" v-if="!isValid(user.email,validType.email)">您輸入的格式不正確</div>
                         </div>
                     </div>
                     <div class="mb-3 row">
                         <div class="col-xl-6">
                             <label for="phone" class="beauty-label">電話:</label>
                             <input type="text" id="phone" v-model.trim="user.phone" class="beauty-input" @@input="isUserModified = true">
+                            <div class="formatError" v-if="!isValid(user.phone,validType.phone)">您輸入的格式不正確</div>
                         </div>
                         <div class="col-xl-6">
                             <label class="beauty-label">性別:</label>
