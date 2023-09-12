@@ -56,22 +56,19 @@ namespace TravelProject1._0.Controllers.Api
 
         //取得商品評價資訊
         [HttpGet]
-        public async Task<IQueryable<RatingInfo>> GetPlanInfo(int productId, int planId)
+        [Route("{Id}")]
+        public async Task<IQueryable<RatingInfo>> GetPlanInfo(int Id)
         {
             int userId = _userIdentityService.GetUserId();
 
-            return _dbContext.Plans.Include(p => p.OrderDetails).Where(p => p.ProductId == productId && p.PlanId == planId).Select(p => new RatingInfo
+            return _dbContext.OrderDetails.Where(od =>od.PlanId==Id).Select(od => new RatingInfo
             {
-                PlanId = p.PlanId,
-                ProductId = p.ProductId,
-                Name = p.Name,
-                PlanImg = p.PlanImg,
-                OrderDetails = p.OrderDetails.Select(o => new OrderDetailDto
-                {
-                    Quantity = o.Quantity,
-                    UnitPrice = o.UnitPrice,
-                    UseDate = o.UseDate
-                })
+                PlanId = od.PlanId,
+                Odimg = od.Odimg,
+                Odname = od.Odname,
+                UseDate = od.UseDate,
+                UnitPrice = od.UnitPrice,
+                Quantity = od.Quantity
             });
         }
     }

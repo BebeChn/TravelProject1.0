@@ -6,12 +6,14 @@ namespace TravelProject1._0.Models.ViewModel
     {
         public int PlanId { get; set; }
 
-        public int ProductId { get; set; }
+        public decimal? UnitPrice { get; set; }
 
-        public string Name { get; set; } = null!;
+        public short? Quantity { get; set; }
 
-        public string? PlanImg { get; set; }
+        public DateTime? UseDate { get; set; }
 
-        public IEnumerable<OrderDetailDto> OrderDetails { get; set; }
+        public string? Odimg { get; set; }
+
+        public string? Odname { get; set; }
     }
 }
