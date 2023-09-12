@@ -28,55 +28,6 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api.AnalyzeAPI
 			_db = db;
 		}
 
-		[NonAction]
-		public Dictionary<string, decimal> AddThirteenYear()
-		{
-			var result = new Dictionary<string, decimal>();
-			DateTime endDateTime = DateTime.Now.AddMonths(1);
-			DateTime thirteenMonth = DateTime.Now.AddMonths(-13);
-			for (var startMonth = thirteenMonth; startMonth < endDateTime; startMonth = startMonth.AddMonths(1))
-			{
-				result[startMonth.ToString("yyyy-MM")] = 0;
-			}
-			return result;
-			}
-
-		[NonAction]
-		public Dictionary<string, decimal> GetTicketsSale(Dictionary<string, decimal> dictionary, int categotyId)
-		{
-			DateTime dateTimeNow = DateTime.Now;
-			DateTime thirteenMonth = DateTime.Now.AddMonths(-13);
-			//var orderDetails = _db.Products.AsNoTracking().Where(p => p.Id == categotyId && p.ProductId == p.Plans.)
-			var producrIds = _db.Products.AsNoTracking().Where(p => p.Id == categotyId).Select(p => p.ProductId).ToList();
-			foreach (var productid in producrIds)
-			{
-				var planIds = _db.Plans.Where(p => p.ProductId == productid).Select(p => p.PlanId).ToList();
-				foreach (var planId in planIds)
-				{
-					var orderDetails = _db.OrderDetails.Where(o => o.PlanId == planId &&
-					o.Order.OrderDate > thirteenMonth && o.Order.OrderDate <= dateTimeNow)
-						.Select(o => new
-						{
-							Date = o.Order.OrderDate,
-							Price = o.UnitPrice,
-							Quantity = o.Quantity
-						}).ToList();
-					foreach (var orderDetail in orderDetails)
-					{
-						if (!dictionary.ContainsKey(orderDetail.Date.Value.ToString("yyyy-MM")))
-						{
-							dictionary[orderDetail.Date.Value.ToString("yyyy-MM")] = Convert.ToDecimal((orderDetail.Price * orderDetail.Quantity) / 10000);
-						}
-						else
-						{
-							dictionary[orderDetail.Date.Value.ToString("yyyy-MM")] += Convert.ToDecimal((orderDetail.Price * orderDetail.Quantity) / 10000);
-						}
-					}
-				}
-			}
-			return dictionary;
-		}
-
 		//[NonAction]
 		//public async Task<AllTicktesSaleDTO> GetAllTicktesThirteenMonthSale2()
 		//{
@@ -112,98 +63,116 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api.AnalyzeAPI
 
 		//	return atsDTO;
 		//}
+		//decimal lastYearSale = await _db.OrderDetails.Where(od => EF.Functions.DateDiffYear(od.Order.OrderDate, DateTime.Now) <= 0 &&
+		//	EF.Functions.DateDiffYear(od.Order.OrderDate, DateTime.Now) >= 0).SumAsync(o => (decimal)(o.UnitPrice * o.Quantity) / 10000);
 
 		[HttpGet]
 		public async Task<AllTicktesSaleDTO> GetCurrentYearAllTicktesSales()
 		{
-			decimal oneYearSale = await _db.OrderDetails.SumAsync(o => (decimal)(o.UnitPrice * o.Quantity) / 10000);
+			decimal currentYearSale = await _db.OrderDetails
+				.Where(od => EF.Functions.DateDiffYear(od.Order.OrderDate, DateTime.Now) <= 0 &&
+								EF.Functions.DateDiffYear(od.Order.OrderDate, DateTime.Now) >= 0).
+								SumAsync(od => (decimal)(od.UnitPrice * od.Quantity) / 10000);
 
-			var orderDetailsList = _db.OrderDetails.AsNoTracking().Include(p => p.Plan).ThenInclude(p => p.Product)
-				.Where(x=> EF.Functions.DateDiffYear(x.Order.OrderDate,DateTime.Now) <= 0 && EF.Functions.DateDiffYear(x.Order.OrderDate, DateTime.Now)>=0)
-				.GroupBy(x => x.Plan.Product.Id)
-				.Select(x => new { 
-					Category = x.Key, 
-					Details = x.Select(y => new 
-					{ 
-					OrderDate = y.Order.OrderDate.Value.ToString("yyyy-MM"),
-					y.UnitPrice,
-					y.Quantity 
-				})}).ToList();
-
-			var orderDetailsDicts = orderDetailsList.ToDictionary(x => x.Category, x => {
+			var resultList = await _db.OrderDetails.AsNoTracking().Include(od => od.Plan).ThenInclude(od => od.Product)
+				.Where(od => EF.Functions.DateDiffYear(od.Order.OrderDate, DateTime.Now) <= 0 &&
+							EF.Functions.DateDiffYear(od.Order.OrderDate, DateTime.Now) >= 0)
+				.GroupBy(od => od.Plan.Product.Id)
+				.Select(od => new
+				{
+					CategoryId = od.Key,
+					Details = od.Select(od => new
+					{
+						OrderDate = od.Order.OrderDate.Value.ToString("yyyy-MM"),
+						od.UnitPrice,
+						od.Quantity
+					})
+				})
+				.ToDictionaryAsync(od => od.CategoryId, od =>
+				//				od.Details.ToDictionary(
+				//	od => od.OrderDate,
+				//	od => Convert.ToDecimal(od.UnitPrice * od.Quantity))
+				//.DefaultIfEmpty()
+				//.ToDictionary(
+				//	od => od.Key,
+				//	od => od.Value
+				//	));
+			{
 				int currentYear = Convert.ToInt32(DateTime.Now.ToString("yyyy"));
 				var dic = new Dictionary<string, decimal>();
-                for (var i = 1; i < 13 ; i++)
-                {
-					var currentMonth = new DateTime(currentYear, i, 1).ToString("yyyy-MM"); 
-					dic.Add(currentMonth, x.Details.Where(x=>x.OrderDate == currentMonth).Sum(y => Convert.ToDecimal(y.UnitPrice * y.Quantity) / 10000));
-                }
+				for (var i = 1; i < 13; i++)
+				{
+					var currentYearMonth = new DateTime(currentYear, i, 1).ToString("yyyy-MM");
+					dic.Add(currentYearMonth, od.Details.Where(od => od.OrderDate == currentYearMonth).Sum(od => Convert.ToDecimal(od.UnitPrice * od.Quantity) / 10000));
+				}
 				return dic;
-            });
+			});
 
 			var result = new AllTicktesSaleDTO()
 			{
-				OneyearSale = oneYearSale,
-				Airplane = orderDetailsDicts[1].OrderBy(r => r.Key).Select(r => new HighChart3DGraphDTO { Name = r.Key, y = r.Value }).ToList(),
-				Hotel = orderDetailsDicts[2].OrderBy(r => r.Key).Select(r => new HighChart3DGraphDTO { Name = r.Key, y = r.Value }).ToList(),
-				Transportation = orderDetailsDicts[3].OrderBy(r => r.Key).Select(r => new HighChart3DGraphDTO { Name = r.Key, y = r.Value }).ToList(),
-				Attractions = orderDetailsDicts[4].OrderBy(r => r.Key).Select(r => new HighChart3DGraphDTO { Name = r.Key, y = r.Value }).ToList(),
-				AirplaneOneYearSale = orderDetailsDicts[1],
-				HotelOneYearSale = orderDetailsDicts[2],
-				TransportationOneYearSale = orderDetailsDicts[3],
-				AttractionsOneYearSale = orderDetailsDicts[4]
+				OneyearSale = currentYearSale,
+				Airplane = resultList[1].OrderBy(r => r.Key).Select(r => new HighChart3DGraphDTO { Name = r.Key, y = r.Value }).ToList(),
+				Hotel = resultList[2].OrderBy(r => r.Key).Select(r => new HighChart3DGraphDTO { Name = r.Key, y = r.Value }).ToList(),
+				Transportation = resultList[3].OrderBy(r => r.Key).Select(r => new HighChart3DGraphDTO { Name = r.Key, y = r.Value }).ToList(),
+				Attractions = resultList[4].OrderBy(r => r.Key).Select(r => new HighChart3DGraphDTO { Name = r.Key, y = r.Value }).ToList(),
+				AirplaneOneYearSale = resultList[1],
+				HotelOneYearSale = resultList[2],
+				TransportationOneYearSale = resultList[3],
+				AttractionsOneYearSale = resultList[4]
 			};
 
 			return result;
 		}
 
+		[HttpGet]
+		public async Task<AllTicktesSaleDTO> GetLastYearAllTicktesSales()
+		{
+			decimal lastYearSale = await _db.OrderDetails
+				.Where(od => EF.Functions.DateDiffYear(od.Order.OrderDate, DateTime.Now) <= 1 &&
+								EF.Functions.DateDiffYear(od.Order.OrderDate, DateTime.Now) >= 1).
+								SumAsync(od => (decimal)(od.UnitPrice * od.Quantity) / 10000);
 
-		//[HttpGet]
-		//public async Task<AllTicktesSaleDTO> GetTicktes()
-		//{
-		//	decimal oneYearSale = await _db.OrderDetails.SumAsync(o => (decimal)(o.UnitPrice * o.Quantity) / 10000);
+			var resultList = _db.OrderDetails.AsNoTracking().Include(od => od.Plan).ThenInclude(od => od.Product)
+				.Where(od => EF.Functions.DateDiffYear(od.Order.OrderDate, DateTime.Now) <= 1 &&
+							EF.Functions.DateDiffYear(od.Order.OrderDate, DateTime.Now) >= 1)
+				.GroupBy(od => od.Plan.Product.Id)
+				.Select(od => new
+				{
+					CategoryId = od.Key,
+					Details = od.Select(od => new
+					{
+						OrderDate = od.Order.OrderDate.Value.ToString("yyyy-MM"),
+						od.UnitPrice,
+						od.Quantity
+					})
+				})
+				.ToDictionary(od => od.CategoryId, od =>
+				{
+					int lastYear = Convert.ToInt32(DateTime.Now.AddYears(-1).ToString("yyyy"));
+					var dic = new Dictionary<string, decimal>();
+					for (var i = 1; i < 13; i++)
+					{
+						var lastYearMonth = new DateTime(lastYear, i, 1).ToString("yyyy-MM");
+						dic.Add(lastYearMonth, od.Details.Where(od => od.OrderDate == lastYearMonth).Sum(od => Convert.ToDecimal(od.UnitPrice * od.Quantity) / 10000));
+					}
+					return dic;
+				});
 
-		//	var result = await _db.OrderDetails.AsNoTracking().Include(od => od.Plan).ThenInclude(od => od.Product)
-		//		.Where(od => EF.Functions.DateDiffMonth(od.Order.OrderDate, DateTime.Now) < 13 && EF.Functions.DateDiffMonth(od.Order.OrderDate, DateTime.Now) >= 0)
-		//		.GroupBy(od => od.Plan.Product.Id)
-		//		.Select(g => new
-		//		{
-		//			CategoryId = g.Key,
-		//			Details = g.Select(g => new
-		//			{
-		//				OrderDate = g.Order.OrderDate.Value.ToString("yyyy-MM"),
-		//				g.UnitPrice,
-		//				g.Quantity
-		//			})
-		//		})
-		//		.ToDictionaryAsync(d => d.CategoryId, d =>
-		//		{
-		//			var date = DateTime.Now;
-		//			var dic = new Dictionary<string,decimal>();
-		//			for (int i = 13; i >= 0; --i)
-		//			{
-		//				var currenMonth = date.AddMonths(-i).ToString("yyyy-MM");
-		//				dic.Add(currenMonth, d.Details.Where(d => d.OrderDate == currenMonth).Sum(y => Convert.ToDecimal(y.UnitPrice * y.Quantity) / 10000));
-		//			}
-		//			return dic;
-		//		});
-		//	AllTicktesSaleDTO atsDTO = new AllTicktesSaleDTO()
-		//	{
-		//		OneyearSale = oneYearSale,
-		//		Airplane = result[1],
-		//		Hotel = result[2],
-		//		Transportation = result[3],
-		//		Attractions = result[4],
-		//	};
-		//	var qqq = result[1].Select(r => new HighChart3DGraphDTO
-		//	{
-		//		Name = r.Key,
-		//		y = r.Value
-		//	}).ToList();
+			var result = new AllTicktesSaleDTO()
+			{
+				OneyearSale = lastYearSale,
+				Airplane = resultList[1].OrderBy(r => r.Key).Select(r => new HighChart3DGraphDTO { Name = r.Key, y = r.Value }).ToList(),
+				Hotel = resultList[2].OrderBy(r => r.Key).Select(r => new HighChart3DGraphDTO { Name = r.Key, y = r.Value }).ToList(),
+				Transportation = resultList[3].OrderBy(r => r.Key).Select(r => new HighChart3DGraphDTO { Name = r.Key, y = r.Value }).ToList(),
+				Attractions = resultList[4].OrderBy(r => r.Key).Select(r => new HighChart3DGraphDTO { Name = r.Key, y = r.Value }).ToList(),
+				AirplaneOneYearSale = resultList[1],
+				HotelOneYearSale = resultList[2],
+				TransportationOneYearSale = resultList[3],
+				AttractionsOneYearSale = resultList[4]
+			};
 
-		//	return atsDTO;
-		//}
-
+			return result;
+		}
 		//[HttpGet]
 		//public async Task<IEnumerable<HighChart3DGraphDTO>> GetAirplaneSales()
 		//{
@@ -266,6 +235,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api.AnalyzeAPI
 		//	}
 
 		//	var result = monthSales.OrderBy(kv => kv.Key).Select(kv => new HighChart3DGraphDTO
+		//{
 		//	{
 		//		Name = kv.Key,
 		//		y = kv.Value
@@ -273,5 +243,37 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api.AnalyzeAPI
 
 		//	return result;
 		//}
+		public async Task<object> GetCurrentMonthSale()
+		{
+			var aaa = _db.OrderDetails.AsNoTracking().Include(od => od.Plan).ThenInclude(od => od.Product)
+				.Where(od => EF.Functions.DateDiffMonth(od.Order.OrderDate, DateTime.Now) <= 0 &&
+								EF.Functions.DateDiffMonth(od.Order.OrderDate, DateTime.Now) >= 0)
+				.GroupBy(od => od.Plan.Product.Id)
+				.Select(od => new
+				{
+					CategoryId = od.Key,
+					Details = od.Select(od => new
+					{
+						OrderDate = od.Order.OrderDate.Value.ToString("yyyy-MM"),
+						od.UnitPrice,
+						od.Quantity
+					})
+				})
+				.ToDictionaryAsync(od => od.CategoryId, od =>
+				{
+					int lastYear = Convert.ToInt32(DateTime.Now.ToString("yyyy-MM"));
+					var dic = new Dictionary<string, decimal>();
+					for (var i = 1; i < 13; i++)
+					{
+						var lastYearMonth = new DateTime(lastYear, i, 1).ToString("yyyy-MM");
+						dic.Add(lastYearMonth, od.Details.Where(od => od.OrderDate == lastYearMonth).Sum(od => Convert.ToDecimal(od.UnitPrice * od.Quantity) / 10000));
+					}
+					return dic;
+				});
+			
+			
+
+			return null;
+		}
 	}
 }
