@@ -11,5 +11,7 @@
         public string? Describe { get; set; }
 
         public DateTime RatingDate { get; set; }
+
+        public string Name { get; set; } = null!;
     }
 }
