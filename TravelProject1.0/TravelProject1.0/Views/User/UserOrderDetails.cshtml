@@ -113,7 +113,7 @@
             },
             mounted: function () {
                 let _this = this;
-                fetch(`${baseAddress}/api/UserApi/OrderDetails`, {
+                fetch(`${baseAddress}/api/OrderApi/OrderDetails`, {
                     method: "GET",
                     headers: {
                         "Authorization": "Bearer " + authenticationCookie
