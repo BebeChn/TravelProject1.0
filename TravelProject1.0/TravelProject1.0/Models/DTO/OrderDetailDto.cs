@@ -15,5 +15,7 @@ namespace TravelProject1._0.Models.DTO
         public string? Odname { get; set; }
 
         public string? Odimg { get; set; }
+
+        public int ProductId { get; set; }
     }
 }

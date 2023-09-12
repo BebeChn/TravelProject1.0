@@ -62,7 +62,8 @@
                 date: new Date(),
                 describe: "",
                 stars: [1, 2, 3, 4, 5],
-                selectedStar: -1
+                selectedStar: -1,
+                queries:""
             },
             mounted: function () {
                 let _this = this;
@@ -80,8 +81,9 @@
                 //商品評價
                 addRating: function () {
                     let _this = this;
+                    _this.queries = window.location.pathname.slice("14");
                     let ratingData = {
-                        productId: 41,
+                        productId: _this.queries,
                         ratingDate: _this.date,
                         ratingScore: _this.selectedStar,
                         describe: _this.describe
@@ -94,6 +96,7 @@
                     }).then(response => {
                         if (response.ok) {
                             alert("商品評價成功");
+                            location.href = "/User/UserOrderDetails";
                         } else {
                             throw new Error("有資料未填寫");
                         }
