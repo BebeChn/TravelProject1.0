@@ -66,7 +66,7 @@ namespace TravelProject1._0.Controllers.Api
             {
                 Name = users.Name,
                 Email = users.Email,
-                Birthday = users.Birthday,
+                Birthday = users.Birthday.Value.ToString("yyyy-MM-dd"),
                 Gender = users.Gender,
                 Phone = users.Phone,
             };

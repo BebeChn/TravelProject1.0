@@ -69,6 +69,11 @@
             border-top: 1px solid black;
             margin: 20px 0;
         }
+
+        .formatError {
+            color: red;
+            font-size: .875em;
+        }
     </style>
 }
 
@@ -91,8 +96,13 @@
                     <div class="mb-3">
                         <label for="phone" class="beauty-label">電話:</label>
                         <input type="text" id="phone" v-model.trim="user.phone" class="beauty-input" @@input="isUserModified = true">
+                        <span class="formatError" v-if="!isValid(phone,validType.phone)">您輸入的格式不正確</span>
                         <label class="beauty-label">性別:</label>
-                        <input type="text" v-model.trim="user.gender" class="beauty-input" @@input="isUserModified = true">
+                        <select v-model="user.gender" class="beauty-input" @@change="isUserModified = true">
+                            <option value="M">男</option>
+                            <option value="F">女</option>
+                            <option value="N">不指定</option>
+                        </select>
                     </div>
                     <div class="mb-3">
                         <label for="birthday" class="beauty-label">生日:</label>
@@ -155,6 +165,7 @@
             data: {
                 user: {},
                 isUserModified: false,
+                validType: validType,
             },
             computed: {
 
@@ -174,6 +185,9 @@
                 });
             },
             methods: {
+                isValid: function (str, type) {
+                    return window.validation(str, type);
+                },
                 UpdateUser: function () {
                     let _this = this;
                     let request = {
