@@ -66,7 +66,7 @@ namespace TravelProject1._0.Controllers.Api
             {
                 Name = users.Name,
                 Email = users.Email,
-                Birthday = users.Birthday.GetValueOrDefault().ToString("u"),
+                Birthday = users.Birthday,
                 Gender = users.Gender,
                 Phone = users.Phone,
             };
