@@ -67,7 +67,7 @@
             },
             mounted: function () {
                 let _this = this;
-                fetch(`${baseAddress}/api/RatingApi/GetPlanInfo/7`, { method: "GET" })
+                fetch(`${baseAddress}/api/RatingApi/GetPlanInfo`, { method: "GET" })
                     .then(response => {
                         if (response.ok) return response.json();
                     }).then(data => {
