@@ -41,11 +41,11 @@
             </div>
         </div>
         <div class="col-md-4 planInfo" v-for="p in planInfo">
-            <img class="img-plan" :src="p.planImg" />
-            <h2>{{p.name}}</h2>
-            <h4>使用日期:{{p.orderDetails[0].useDate | formatDate}}</h4>
-            <h4>數量:{{p.orderDetails[0].quantity}}</h4>
-            <h4>總價:{{p.orderDetails[0].unitPrice * p.orderDetails[0].quantity | formatCurrency}}</h4>
+            <img class="img-plan" :src="p.odimg" />
+            <h2>{{p.odname}}</h2>
+            <h4>使用日期:{{p.useDate | formatDate}}</h4>
+            <h4>數量:{{p.quantity}}</h4>
+            <h4>總價:{{p.unitPrice | formatCurrency}}</h4>
         </div>
     </div>
 </div>
@@ -66,11 +66,12 @@
             },
             mounted: function () {
                 let _this = this;
-                fetch(`${baseAddress}/api/RatingApi/GetPlanInfo`, { method: "GET" })
+                fetch(`${baseAddress}/api/RatingApi/GetPlanInfo/7`, { method: "GET" })
                     .then(response => {
                         if (response.ok) return response.json();
                     }).then(data => {
                         _this.planInfo = data;
+                        console.log(data);
                     }).catch(error => {
                         console.log(error);
                     })
@@ -80,7 +81,7 @@
                 addRating: function () {
                     let _this = this;
                     let ratingData = {
-                        productId: 61,
+                        productId: 41,
                         ratingDate: _this.date,
                         ratingScore: _this.selectedStar,
                         describe: _this.describe
