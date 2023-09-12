@@ -96,7 +96,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="birthday" class="beauty-label">生日:</label>
-                        <input type="text" id="birthday" v-model="user.birthday" placeholder="YYYY-MM-DD"class="beauty-input" @@input="isUserModified = true" >
+                        <input type="date" id="birthday" v-model="user.birthday" placeholder="YYYY-MM-DD"class="beauty-input" @@input="isUserModified = true" >
                     </div>
                     <button class="genric-btn"
                             @@click="UpdateUser"
