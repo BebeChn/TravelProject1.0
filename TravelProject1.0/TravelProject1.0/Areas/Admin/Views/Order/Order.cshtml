@@ -82,7 +82,7 @@
                             <td><label>{{item.quantity}}</label> </td>
                             <td><label>{{item.discount}}</label></td>
                             <td><label>{{item.unitPrice}}</label></td>
-                            <td><label>{{item.useDate}}</label></td>
+                            <td><label>{{formatDate(item.useDate)}}</label></td>
                             <td>
                                 <div class="d-flex justify-content-around">
                                     <button type="button" class="btn  btn-warning" @@click="edit(item.orderId,item.planId)">
@@ -149,6 +149,16 @@
                 let _this = this;
                 //alert("mouned");
                 _this.filterorder();
+            },
+            computed: {
+                //轉換日期
+                formatDate: function () {
+                    return function (str) {
+                        if (!str) return "";
+                        var d = new Date(str);
+                        return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+                    }
+                },
             },
             methods: {
 
