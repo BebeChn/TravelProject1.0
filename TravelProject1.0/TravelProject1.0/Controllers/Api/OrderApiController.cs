@@ -63,6 +63,13 @@ namespace TravelProject1._0.Controllers.Api
             return point.Points.GetValueOrDefault();
 
         }
+        [HttpGet]
+        public async Task<int> GetPoint1()
+        {
+            var userId = _userIdentityService.GetUserId();
+            var point = await _context.Users.FindAsync(userId);
+            return point.Points.GetValueOrDefault();
 
+        }
     }
 }
