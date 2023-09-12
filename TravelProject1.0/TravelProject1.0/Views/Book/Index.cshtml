@@ -123,7 +123,8 @@
 				books: [],
 				search: '',
 				priceOrderby: [],
-				count: 0
+				count: 0,
+				kind:''
 			},
 
 			//取得住宿類別
@@ -167,10 +168,12 @@
 					}
 				}
 			},
+
+			//搜尋
 			computed: {
 				booksfilter: function () {
 					return this.books.filter(b => b.productName.match(this.search))
-				}
+				},
 			}
 		})
 	</script>

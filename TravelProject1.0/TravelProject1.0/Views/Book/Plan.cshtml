@@ -69,7 +69,7 @@
 											</div>
 										</template>
 									</div>
-									<div class="col-md-6">
+									<div class="col-md-6"> 
 										<h2>選擇項目</h2>
 										<div>
 											<h4>單價：</h4>
@@ -90,7 +90,7 @@
 											</div>
 										</div>
 										<div class="buy">
-											<a class="btn theme_btn button_hover info" v-on:click="sendDateToDatabase">加入購物車</a>
+											<a class="btn theme_btn button_hover info" v-on:click="sendDateToDatabase(c)">加入購物車</a>
 											<a class="btn theme_btn button_hover info">立即訂購</a>
 										</div>
 									</div>
@@ -109,15 +109,16 @@
 							<div class="col-md-8 offset-2 text-center">
 								<h2 class="title">商品說明</h2>
 								<div class="">
-									<div class="col-md-">
+									<div class="col-md">
 										<p class="sub-descripts">{{b.subDescribe}}</p>	
 									</div>
-									<div class="col-md-">
+									<div class="col" style="width: 800px; height: 600px;">
 										<iframe src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3614.7262750585273!2d121.57517497515694!3d25.043361737914925!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMjXCsDAyJzM2LjEiTiAxMjHCsDM0JzM5LjkiRQ!5e0!3m2!1szh-TW!2stw!4v1693712893717!5m2!1szh-TW!2stw" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
 									</div>
 								</div>
 							</div>
 						</div>
+						<hr />
 						<div>
 							<h4 class="sub-title">兌換方式</h4>
 							<p class="sub-descripts">現場請出示電子憑證</p>
@@ -211,7 +212,8 @@
 @section Scripts{
 	<script src="https://unpkg.com/vue2-datepicker/index.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js" integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-	<script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCBjQh1OoQjm4aPIV41r8e3UJ03rMhyUs0&callback=initMap"></script>
+	
+
 	<script>
 		var baseAddress = "https://localhost:7025";
 		Vue.component('datePicker', DatePicker);
