@@ -26,16 +26,27 @@
 @* 當月度銷售額柱狀圖分析頁簽內容 *@
 
 
+<!--當週機票以及住宿Top10Sales-->
+<div class="row my-3">
+	<div class="col-6">
+		<div id="currentWeekTop10Airplane"></div>
+	</div>
+	<div class="col-6">
+		<div id="currentWeekTop10Hotel"></div>
+	</div>
+</div>
+<!--當週機票以及住宿Top10Sales-->
 
-
-
-
-
-
-
-
-
-
+<!--當週交通以及景點Top10Sales-->
+<div class="row my-3">
+	<div class="col-6">
+		<div id="currentWeekTop10Transportation"></div>
+	</div>
+	<div class="col-6">
+		<div id="currentWeekTop10Attractions"></div>
+	</div>
+</div>
+<!--當週交通以及景點Top10Sales-->
 @section Scripts
 	{
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
@@ -164,13 +175,293 @@
 						data: currentMonthAttractionsSale,
 					}]
 				});
-				//當月各票券銷售柱狀圖
 			})
 			.catch(err => {
 				alert(err);
 			});
 		//當月各票券銷售柱狀圖
 
+		//當週各票券銷售Top10
+		axios.get("/api/SaleChart/CurrentWeekTop10AllTicktes")
+			.then(response => {
+				//API得來的數據做分類，放到個圖表的series
+				const currentWeekTop10AirplaneSaleName = Object.keys(response.data.airplaneSale)
+				const currentWeekTop10HotelSaleName = Object.keys(response.data.hotelSale)
+				const currentWeekTop10TransportationSaleName = Object.keys(response.data.transportationSale)
+				const currentWeekTop10AttractionsSaleName = Object.keys(response.data.attractionsSale)
+				const currentWeekTop10AirplaneSaleData = Object.values(response.data.airplaneSale)
+				const currentWeekTop10HotelSaleData = Object.values(response.data.hotelSale)
+				const currentWeekTop10TransportationSaleData = Object.values(response.data.transportationSale)
+				const currentWeekTop10AttractionsSaleData = Object.values(response.data.attractionsSale)
+				//API得來的數據做分類，放到個圖表的series
 
+				//當周飛機票券橫條圖
+				Highcharts.chart('currentWeekTop10Airplane', {
+					chart: {
+						type: 'bar'
+					},
+					title: {
+						text: '機票當周Top10',
+						align: 'left'
+					},
+					subtitle: {
+						text: '',
+						align: 'left'
+					},
+					xAxis: {
+						categories: '',
+						title: {
+							text: null
+						},
+						gridLineWidth: 1,
+						lineWidth: 0
+					},
+					yAxis: {
+						min: 0,
+						title: {
+							text: '銷售數量',
+							align: 'high'
+						},
+						labels: {
+							overflow: 'justify'
+						},
+						gridLineWidth: 0
+					},
+					tooltip: {
+						valueSuffix: '張'
+					},
+					plotOptions: {
+						bar: {
+							borderRadius: '50%',
+							dataLabels: {
+								enabled: true
+							},
+							groupPadding: 0.1
+						}
+					},
+					legend: {
+						layout: 'vertical',
+						align: 'right',
+						verticalAlign: 'top',
+						x: -40,
+						y: 80,
+						floating: true,
+						borderWidth: 1,
+						backgroundColor:
+							Highcharts.defaultOptions.legend.backgroundColor || '#d6ccc2',
+						shadow: true
+					},
+					credits: {
+						enabled: false
+					},
+					series: [{
+						name: currentWeekTop10AirplaneSaleName,
+						data: currentWeekTop10AirplaneSaleData
+					}]
+				});
+				//當周飛機票券橫條圖
+
+				//當周住宿票券橫條圖
+				Highcharts.chart('currentWeekTop10Hotel', {
+					chart: {
+						type: 'bar'
+					},
+					title: {
+						text: '住宿當週Top10',
+						align: 'left'
+					},
+					subtitle: {
+						text: '',
+						align: 'left'
+					},
+					xAxis: {
+						categories: '',
+						title: {
+							text: null
+						},
+						gridLineWidth: 1,
+						lineWidth: 0
+					},
+					yAxis: {
+						min: 0,
+						title: {
+							text: '銷售數量',
+							align: 'high'
+						},
+						labels: {
+							overflow: 'justify'
+						},
+						gridLineWidth: 0
+					},
+					tooltip: {
+						valueSuffix: '張'
+					},
+					plotOptions: {
+						bar: {
+							borderRadius: '50%',
+							dataLabels: {
+								enabled: true
+							},
+							groupPadding: 0.1
+						}
+					},
+					legend: {
+						layout: 'vertical',
+						align: 'right',
+						verticalAlign: 'top',
+						x: -40,
+						y: 80,
+						floating: true,
+						borderWidth: 1,
+						backgroundColor:
+							Highcharts.defaultOptions.legend.backgroundColor || '#FFFFFF',
+						shadow: true
+					},
+					credits: {
+						enabled: false
+					},
+					series: [{
+						name: currentWeekTop10HotelSaleName,
+						data: currentWeekTop10HotelSaleData
+					}]
+				});
+				//當周住宿票券橫條圖
+
+				//當周交通票券橫條圖
+				Highcharts.chart('currentWeekTop10Transportation', {
+					chart: {
+						type: 'bar'
+					},
+					title: {
+						text: '交通當週Top10',
+						align: 'left'
+					},
+					subtitle: {
+						text: '',
+						align: 'left'
+					},
+					xAxis: {
+						categories: '',
+						title: {
+							text: null
+						},
+						gridLineWidth: 1,
+						lineWidth: 0
+					},
+					yAxis: {
+						min: 0,
+						title: {
+							text: '銷售數量',
+							align: 'high'
+						},
+						labels: {
+							overflow: 'justify'
+						},
+						gridLineWidth: 0
+					},
+					tooltip: {
+						valueSuffix: '張'
+					},
+					plotOptions: {
+						bar: {
+							borderRadius: '50%',
+							dataLabels: {
+								enabled: true
+							},
+							groupPadding: 0.1
+						}
+					},
+					legend: {
+						layout: 'vertical',
+						align: 'right',
+						verticalAlign: 'top',
+						x: -40,
+						y: 80,
+						floating: true,
+						borderWidth: 1,
+						backgroundColor:
+							Highcharts.defaultOptions.legend.backgroundColor || '#FFFFFF',
+						shadow: true
+					},
+					credits: {
+						enabled: false
+					},
+					series: [{
+						name: currentWeekTop10TransportationSaleName,
+						data: currentWeekTop10TransportationSaleData
+					}]
+				});
+				//當周交通票券橫條圖
+
+				//當周景點票券橫條圖
+				Highcharts.chart('currentWeekTop10Attractions', {
+					chart: {
+						type: 'bar'
+					},
+					title: {
+						text: '景點當週Top10',
+						align: 'left'
+					},
+					subtitle: {
+						text: '',
+						align: 'left'
+					},
+					xAxis: {
+						categories: '',
+						title: {
+							text: null
+						},
+						gridLineWidth: 1,
+						lineWidth: 0
+					},
+					yAxis: {
+						min: 0,
+						title: {
+							text: '銷售數量',
+							align: 'high'
+						},
+						labels: {
+							overflow: 'justify'
+						},
+						gridLineWidth: 0
+					},
+					tooltip: {
+						valueSuffix: '張'
+					},
+					plotOptions: {
+						bar: {
+							borderRadius: '50%',
+							dataLabels: {
+								enabled: true
+							},
+							groupPadding: 0.1
+						}
+					},
+					legend: {
+						layout: 'vertical',
+						align: 'right',
+						verticalAlign: 'top',
+						x: -40,
+						y: 80,
+						floating: true,
+						borderWidth: 1,
+						backgroundColor:
+							Highcharts.defaultOptions.legend.backgroundColor || '#FFFFFF',
+						shadow: true
+					},
+					credits: {
+						enabled: false
+					},
+					series: [{
+						name: currentWeekTop10AttractionsSaleName,
+						data: currentWeekTop10AttractionsSaleData
+					}]
+				});
+				//當周景點票券橫條圖
+			})
+			.catch(err => {
+				alert(err);
+			});
+							//當週各票券銷售Top10
 	</script>
 }
