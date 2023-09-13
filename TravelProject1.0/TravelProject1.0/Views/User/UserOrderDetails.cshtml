@@ -28,12 +28,26 @@
                                     </div>     
                                 <div class="my-text"> <labe>數量:</labe>{{d.quantity}}</div>
                                 <div class="my-text"> <labe>訂購價格:</labe>{{d.unitPrice}}</div>
-
                             </div>
                         </div>
                         <div class="col-md-3">
-                            <a class="btn theme_btn button_hover info mt-3" >再訂購一次</a>    
-                            <br />
+                            <a :href="'/Book/Plan/'+d.productId" class="btn theme_btn button_hover info mt-3">
+                                詳細訂單</a>
+                           @*  <div class="accordion" id="accordionPanelsStayOpenExample">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="panelsStayOpen-headingOne">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                                            Accordion Item #1
+                                        </button>
+                                    </h2>
+                                    <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingOne">
+                                        <div class="accordion-body">
+                                            <strong>This is the first item's accordion body.</strong> It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                                        </div>
+                                    </div>
+                                </div>
+ *@
+                                <br />
                             <br />                
                             <a :href="'/Rating/Index/'+d.productId" class="genric-btn info-border">給予評論<i class="fa-solid fa-arrow-right" style="margin-left:10px;"></i></a>
                         </div>         
