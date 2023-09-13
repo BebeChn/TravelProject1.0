@@ -42,7 +42,7 @@
                         <input class="money" v-bind:value="resultPrice | formatCurrency" readonly />
                     </div>
                     <div class="buy">
-                        <button class="btn theme_btn button_hover info">結帳</button>
+                        <button class="btn theme_btn button_hover info" v-on:click="addOrder">結帳</button>
                     </div>
                 </div>
             </div>
@@ -113,7 +113,6 @@
                 //合計
                 calculate: function (model) {
                     let _this = this;
-                    console.log(model);
                     let totalAmount = 0;
                     for (var i = 0; i < model.length; i++) {
                         totalAmount += model[i].unitPrice;
@@ -152,6 +151,38 @@
                 totalPrice: function () {
                     let _this = this;
                     return _this.resultPrice = _this.total - (_this.pointNum / 300);
+                },
+
+                //金流資訊
+                addOrder: function () {
+                    let _this = this;
+                    let orderData = {
+                        points: _this.user[0].points,
+                        totalPrice: _this.resultPrice,
+                        detailDTOs: []
+                    };
+                    for (var i = 0; i < _this.orders.length; i++) {
+                        var d = {
+                            planId: _this.orders[i].planId,
+                            quantity: _this.orders[i].quantity,
+                            unitPrice: _this.orders[i].unitPrice,
+                            planName: _this.orders[i].odname
+                        }
+                        orderData.detailDTOs.push(d)
+                    }
+
+                    fetch(`${baseAddress}/Payment/Pay`,{
+                        method:"POST",
+                        headers: {"Content-Type":"application/json"},
+                        body: JSON.stringify(orderData)
+                    }).then(response => {
+                        if (response.ok) return response.text();
+                    }).then(data => {
+                        document.body.insertAdjacentHTML("beforeend",data);
+                        document.body.getElementsByTagName('form')[0].submit()
+                    }).catch(error => {
+                        alert(error);
+                    })
                 }
             },
             filters: {
