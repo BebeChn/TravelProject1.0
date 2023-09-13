@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Net.Mime;
 using System.Text;
 using TravelProject1._0.Models;
 using TravelProject1._0.Models.DTO;
@@ -20,7 +21,8 @@ namespace TravelProject1._0.Controllers
             _configuration = configuration;
         }
 
-        public IActionResult Index(PaymentDTO payment)
+        [HttpPost]
+        public IActionResult Pay([FromBody]PaymentDTO payment)
         {
             int userId = _userIdentityService.GetUserId();
 
@@ -51,7 +53,7 @@ namespace TravelProject1._0.Controllers
             _db.SaveChanges();
 
             //金流
-            string version = "1.5";
+            string version = "2.0";
 
             // 目前時間轉換 +08:00, 防止傳入時間或Server時間時區不同造成錯誤
             DateTimeOffset taipeiStandardTimeOffset = DateTimeOffset.Now.ToOffset(new TimeSpan(8, 0, 0));
@@ -101,38 +103,6 @@ namespace TravelProject1._0.Controllers
                 BARCODE = 0
             };
 
-            if (string.Equals(1, "CREDIT"))
-            {
-                tradeInfo.CREDIT = 1;
-            }
-            else if (string.Equals(0, "WEBATM"))
-            {
-                tradeInfo.WEBATM = 0;
-            }
-            else if (string.Equals(0, "VACC"))
-            {
-                // 設定繳費截止日期
-                tradeInfo.ExpireDate = taipeiStandardTimeOffset.AddDays(1).ToString("yyyyMMdd");
-                tradeInfo.VACC = 0;
-            }
-            else if (string.Equals(0, "CVS"))
-            {
-                // 設定繳費截止日期
-                tradeInfo.ExpireDate = taipeiStandardTimeOffset.AddDays(1).ToString("yyyyMMdd");
-                tradeInfo.CVS = 0;
-            }
-            else if (string.Equals(0, "BARCODE"))
-            {
-                // 設定繳費截止日期
-                tradeInfo.ExpireDate = taipeiStandardTimeOffset.AddDays(1).ToString("yyyyMMdd");
-                tradeInfo.BARCODE = 0;
-            }
-
-            Atom<string> result = new Atom<string>()
-            {
-                IsSuccess = true
-            };
-
             var inputModel = new SpgatewayInputModel
             {
                 MerchantID = _configuration.GetValue<string>("Payment:MerchantID"),
@@ -151,24 +121,15 @@ namespace TravelProject1._0.Controllers
             // 將model 轉換為List<KeyValuePair<string, string>>, null值不轉
             List<KeyValuePair<string, string>> postData = LambdaUtil.ModelToKeyValuePairList<SpgatewayInputModel>(inputModel);
 
-            Response.Clear();
-
             StringBuilder s = new StringBuilder();
-            s.Append("<html>");
-            s.AppendFormat("<body onload='document.forms[\"form\"].submit()'>");
-            s.AppendFormat("<form name='form' action='{0}' method='post'>", _configuration.GetValue<string>("Paymeny:AuthUrl"));
+            s.AppendFormat("<form name='form' action='{0}' method='post'>", _configuration.GetValue<string>("Payment:AuthUrl"));
             foreach (KeyValuePair<string, string> item in postData)
             {
                 s.AppendFormat("<input type='hidden' name='{0}' value='{1}' />", item.Key, item.Value);
             }
 
-            s.Append("</form></body></html>");
-            //Response.Write(s.ToString());
-            //Response.End();
-
-            return Content(string.Empty);
-
-            return View();
+            s.Append("</form>");            
+            return Content(s.ToString(),MediaTypeNames.Text.Html);
         }
     }
 }
