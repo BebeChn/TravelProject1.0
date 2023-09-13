@@ -1,8 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace TravelProject1._0.Models.DTO
+﻿namespace TravelProject1._0.Models.DTO
 {
-    public class RatingDTO
+    public class RatingAddDTO
     {
         public int ProductId { get; set; }
 
@@ -11,7 +9,5 @@ namespace TravelProject1._0.Models.DTO
         public string? Describe { get; set; }
 
         public DateTime RatingDate { get; set; }
-
-        public string Name { get; set; } = null!;
     }
 }
