@@ -97,7 +97,6 @@ namespace TravelProject1._0.Controllers.Api
                     Email = register.Email,
                     Birthday = register.Birthday,
                     Phone = register.Phone,
-                    //Password = register.Password,
                     PasswordHash = hashedPassword,
                     Salt = salt,
                     CreateDate = DateTime.Now
