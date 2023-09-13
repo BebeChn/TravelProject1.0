@@ -29,17 +29,46 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
         {
             return _context.Users.Select(x => new AdminGetUserViewModel
 
-			{
+            {
                 Id = x.UserId,
                 Email = x.Email,
                 Gender = x.Gender,
                 Name = x.Name,
                 Phone = x.Phone,
-                Birthday=x.Birthday.Value.ToString("yyyy-MM-dd"),
+                Birthday = x.Birthday.Value.ToString("yyyy-MM-dd"),
             });
 
         }
+        [HttpGet("{id}")]
+        public async Task<ActionResult<GetUserDetailDTO>> GetUserDetail(int id)
+        {
+            try
+            {
+                var user = await _context.Users.FindAsync(id);
 
+                if (user == null)
+                {
+                    return NotFound(); 
+                }
+
+                GetUserDetailDTO advm = new GetUserDetailDTO
+                {
+                    UserId = user.UserId,
+                    Email = user.Email,
+                    Gender = user.Gender,
+                    Name = user.Name,
+                    Phone = user.Phone,
+                    Birthday = user.Birthday?.ToString("yyyy-MM-dd HH:mm:ss")
+                };
+
+                return Ok(advm); 
+            }
+            catch (Exception ex)
+            {
+                
+                return null;
+            }
+        }
 
         [HttpPost]
         public bool AdminManageUser(AdmminManageUserDTO amuDTO)
@@ -55,7 +84,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
                 PasswordHash = passwordhash,
                 Gender = amuDTO.Gender,
                 Phone = amuDTO.Phone,
-                Birthday= amuDTO.Birthday,
+                Birthday = amuDTO.Birthday,
             };
             try
             {
@@ -95,8 +124,9 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
                 return Convert.ToBase64String(psaswordhash);
             }
         }
-        [HttpPut]
-        public async Task<string> AdminPutUser(int id, AdminPutUserDTO apuDTO) {
+        [HttpPut("{id}")]
+        public async Task<string> AdminPutUser(int id, AdminPutUserDTO apuDTO) 
+        {
 
             var admin = await _context.Users.FindAsync(id);
             admin.Name = apuDTO.Name;
@@ -105,7 +135,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
             admin.Birthday = apuDTO.Birthday;
             admin.Phone = apuDTO.Phone;
 
-            _context.Entry(User).State = EntityState.Modified;
+            _context.Entry(admin).State = EntityState.Modified;
             try
             {
                 await _context.SaveChangesAsync();
