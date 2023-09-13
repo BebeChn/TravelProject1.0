@@ -2,12 +2,12 @@
 {
 	public class AllTicktesTop10Sales
 	{
-			public Dictionary<string,int> AirplaneSale { get; set; }
+			public List<HighChartBarGraphDTO> AirplaneSale { get; set; }
 
-			public Dictionary<string,int> HotelSale { get; set; }
+			public List<HighChartBarGraphDTO> HotelSale { get; set; }
 
-			public Dictionary<string,int> TransportationSale { get; set; }
+			public List<HighChartBarGraphDTO> TransportationSale { get; set; }
 
-			public Dictionary<string,int> AttractionsSale { get; set; }
+			public List<HighChartBarGraphDTO> AttractionsSale { get; set; }
 	}
 }
