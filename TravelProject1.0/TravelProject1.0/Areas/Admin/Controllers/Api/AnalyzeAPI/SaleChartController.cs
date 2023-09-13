@@ -270,7 +270,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api.AnalyzeAPI
 					int currentYear = Convert.ToInt32(DateTime.Now.ToString("yyyy"));
 					int currenMonth = Convert.ToInt32(DateTime.Now.ToString("MM"));
 					var dic = new Dictionary<string, decimal>();
-					for (var i = 1; i < DateTime.DaysInMonth(DateTime.Now.Year,DateTime.Now.Month)+1; i++)
+					for (var i = 1; i < DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month) + 1; i++)
 					{
 						var currentMonthAndDay = new DateTime(currentYear, currenMonth, i).ToString("MM-dd");
 						dic.Add(currentMonthAndDay, od.Details.Where(od => od.OrderDate == currentMonthAndDay).Sum(od => Convert.ToDecimal(od.UnitPrice * od.Quantity) / 10000));
@@ -297,7 +297,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api.AnalyzeAPI
 								EF.Functions.DateDiffWeek(od.Order.OrderDate, DateTime.Now) >= 0).
 								SumAsync(od => (decimal)(od.UnitPrice * od.Quantity) / 10000);
 
-			var resultList = _db.OrderDetails.AsNoTracking().Include(od => od.Plan).ThenInclude(od => od.Product)
+			var resultList = await _db.OrderDetails.AsNoTracking().Include(od => od.Plan).ThenInclude(od => od.Product)
 				.Where(od => EF.Functions.DateDiffWeek(od.Order.OrderDate, DateTime.Now) <= 0 &&
 								EF.Functions.DateDiffWeek(od.Order.OrderDate, DateTime.Now) >= 0)
 				.GroupBy(od => od.Plan.Product.Id)
@@ -314,7 +314,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api.AnalyzeAPI
 				.ToDictionaryAsync(od => od.CategoryId, od =>
 				{
 					var currentDate = DateTime.Now;
-					var currentWeek = (DayOfWeek.Monday - currentDate.DayOfWeek ) % 7;
+					var currentWeek = (DayOfWeek.Monday - currentDate.DayOfWeek) % 7;
 
 					var dic = new Dictionary<string, decimal>();
 					for (var i = 0; i < 7; i++)
@@ -329,13 +329,55 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api.AnalyzeAPI
 			var result = new AllTicktesSale()
 			{
 				SaleTotal = weekSale,
-				AirplaneSale = resultList.Result[1],
-				HotelSale = resultList.Result[2],
-				TransportationSale = resultList.Result[3],
-				AttractionsSale = resultList.Result[4],
+				AirplaneSale = resultList[1],
+				HotelSale = resultList[2],
+				TransportationSale = resultList[3],
+				AttractionsSale = resultList[4],
 			};
 
 			return result;
 		}
+
+		[HttpGet]
+		public async Task<AllTicktesTop10Sales> CurrentWeekTop10AllTicktes()
+		{
+			var resultList = await _db.OrderDetails.AsNoTracking()
+				.Where(od => EF.Functions.DateDiffWeek(od.Order.OrderDate, DateTime.Now) <= 0 &&
+								EF.Functions.DateDiffWeek(od.Order.OrderDate, DateTime.Now) >= 0)
+				.GroupBy(od => od.Plan.Product.Id)
+				.Select(od => new
+				{
+					CategoryId = od.Key,
+					Details = od.Select(od => new
+					{
+						Name = od.Plan.Name,
+						Data = od.Quantity.Value
+					})
+				}).ToDictionaryAsync(od => od.CategoryId, od =>
+				{
+					var dic = new Dictionary<string, int>();
+					foreach (var orderDetail in od.Details)
+					{
+						if (!dic.ContainsKey(orderDetail.Name))
+						{
+							dic[orderDetail.Name] = (int)orderDetail.Data;
+						}
+						else
+						{
+							dic[orderDetail.Name] += (int)orderDetail.Data;
+						}
+					}
+					return dic;
+				});
+			var result = new AllTicktesTop10Sales
+			{
+				AirplaneSale = resultList[1].OrderByDescending(r => r.Value).Take(10).ToDictionary(r => r.Key,r => r.Value),
+				HotelSale = resultList[2].OrderByDescending(r => r.Value).Take(10).ToDictionary(r => r.Key,r => r.Value),
+				TransportationSale = resultList[3].OrderByDescending(r => r.Value).Take(10).ToDictionary(r => r.Key,r => r.Value),
+				AttractionsSale = resultList[4].OrderByDescending(r => r.Value).Take(10).ToDictionary(r => r.Key,r => r.Value)
+			};
+			return result;
+		}
 	}
 }
+//.Select(od => new HighChartBarGraphDTO { Name = od.Key, Data = od.Value }).ToList(),
