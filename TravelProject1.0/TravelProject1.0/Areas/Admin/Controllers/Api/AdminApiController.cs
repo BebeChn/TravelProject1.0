@@ -70,41 +70,41 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
             }
         }
 
-        [HttpPost]
-        public bool AdminManageUser(AdmminManageUserDTO amuDTO)
-        {
-            var salt = GenerateSalt();
-
-            var passwordhash = HashPassword(amuDTO.Password, salt);
-
-            User insertuser = new User
+            [HttpPost]
+            public bool AdminManageUser(AdmminManageUserDTO amuDTO)
             {
-                Name = amuDTO.Name,
-                Email = amuDTO.Email,
-                PasswordHash = passwordhash,
-                Gender = amuDTO.Gender,
-                Phone = amuDTO.Phone,
-                Birthday = amuDTO.Birthday,
-            };
-            try
-            {
-                _context.Users.AddAsync(insertuser);
-                _context.SaveChanges();
+                var salt = GenerateSalt();
+
+                var passwordhash = HashPassword(amuDTO.Password, salt);
+
+                User insertuser = new User
+                {
+                    Name = amuDTO.Name,
+                    Email = amuDTO.Email,
+                    PasswordHash = passwordhash,
+                    Gender = amuDTO.Gender,
+                    Phone = amuDTO.Phone,
+                    Birthday = amuDTO.Birthday,
+                };
+                try
+                {
+                    _context.Users.AddAsync(insertuser);
+                    _context.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    return false;
+                }
+
+                List<Claim> claims = new List<Claim>();
+                claims.Add(new Claim(ClaimTypes.NameIdentifier, amuDTO.Id.ToString()));
+                claims.Add(new Claim(ClaimTypes.Name, $"{amuDTO.Name}"));
+                claims.Add(new Claim("Email", amuDTO.Email));
+                claims.Add(new Claim(ClaimTypes.Role, "user"));
+                ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                ClaimsPrincipal principal = new ClaimsPrincipal(identity);
+                return true;
             }
-            catch (Exception ex)
-            {
-                return false;
-            }
-
-            List<Claim> claims = new List<Claim>();
-            claims.Add(new Claim(ClaimTypes.NameIdentifier, amuDTO.Id.ToString()));
-            claims.Add(new Claim(ClaimTypes.Name, $"{amuDTO.Name}"));
-            claims.Add(new Claim("Email", amuDTO.Email));
-            claims.Add(new Claim(ClaimTypes.Role, "user"));
-            ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            ClaimsPrincipal principal = new ClaimsPrincipal(identity);
-            return true;
-        }
         private string GenerateSalt()
         {
             Byte[] bytes = new Byte[16];
@@ -153,14 +153,14 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
             {
                 return "刪除失敗";
             }
-            var Users = await _context.Users.FindAsync(id);
-            if (Users == null)
+            var users = await _context.Users.FindAsync(id);
+            if (users == null)
             {
                 return "刪除失敗";
             }
             try
             {
-                _context.Users.Remove(Users);
+                _context.Users.Remove(users);
                 await _context.SaveChangesAsync();
             }
             catch
