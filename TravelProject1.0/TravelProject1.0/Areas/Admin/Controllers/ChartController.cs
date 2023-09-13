@@ -16,7 +16,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers
 			return View();
 		}
 
-		public IActionResult TransportAnalyze()
+		public IActionResult CurrentMonthSale()
 		{
 			return View();
 		}

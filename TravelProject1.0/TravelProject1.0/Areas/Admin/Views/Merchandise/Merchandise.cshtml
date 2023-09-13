@@ -21,11 +21,11 @@
     <div class="container-fluid row  justify-content-between">
         <div class="col-2"></div>
         <br>
-        <button type="button" class="btn solid  col-3" style="font-weight: bold;font-size: 1.2rem;" @@click="pricehigh">
+        <button type="button" class="btn solid  col-3" style="font-weight: bold;font-size: 1.2rem;color: gray; font-style: italic;" @@click="pricehigh">
             按金額大到小排序
         </button>
         <br>
-        <button type="button" class="btn solid  col-3" style="font-weight: bold;font-size: 1.2rem;" @@click="pricelower">按金額小到大排序</button>
+        <button type="button" class="btn solid  col-3" style="font-weight: bold;font-size: 1.2rem;color: gray; font-style: italic;" @@click="pricelower">按金額小到大排序</button>
         <br>
         <div class="col-4"></div>
     </div>
@@ -56,22 +56,10 @@
                 <option value="香港">香港</option>
             </select>
         </div>
-        <div class="col-3">
-        </div>
         <div class="col-5">
-            <nav class="navbar bg-body">
-                <div class="container-fluid  justify-content-end  ">
-                    <form class="d-flex" role="search">
-                        @*<img src="./pic/search.png" width="100" height="60">*@
-                        <!--輸入關鍵字-->
-                        <input style="width: 300px; height:70px;" class="form-control " type="search" placeholder="Search" aria-label="Search"
-                               v-model="Filter" @@keyup="filterMerchandise">
-                        <button class="btn btn-outline-secondary btninline " style="color :#1e2154" @*type="submit"*@>
-                            <Fieldset>搜尋</Fieldset>
-                        </button>
-                    </form>
-                </div>
-            </nav>
+        </div>
+        <div class="col-3  " style="width:25%;height:70px; color: gray; ">
+            關鍵字搜尋：<input type="text" v-model="filter" class="form-control" placeholder="請輸入篩選關鍵字" @@keyup="filterMerchandise" />
         </div>
     </div>
     <br>
@@ -97,85 +85,87 @@
         <span class="container-fluid   row">
             <div class="col-1"></div>
             @*新增員工紀錄案鍵*@
-            <div class="col-2 ">
-                <button type="button" class="btn   btn-success" @@click="showModal" id="btn">新增</button>
+            <div class="form-group col-2 ">
+                <button type="button" class="btn   btn-success" @@click="showModal" id="btn">新增商品</button>
             </div>
             <div class="col-3"></div>
             <div class="col-3"></div>
         </span>
-        <br>
         <!--這段吃完-->
         <!--換下一行-->
         <!------------------------------------------顯示管理內容--------------------------------------->
-        <table class="table table-bordered table-responsive">
-            <thead>
-                <tr>
-                    <td>產品ID</td>
-                    <td>商品種類ID</td>
-                    <td>商品名稱</td>
-                    <td>金額</td>
-                    <td>主要敘述</td>
-                    <td>次要敘述</td>
-                    <td>簡短敘述</td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            </thead>
-            <tbody>
-                <!--迴圈-->
-                <tr v-for="item in MerchandiseDTOes">
-                    <!--修改-->
-                    <template v-if="item.Edit==true">
-                        <td>{{item.productId}}</td>
-                        <td><input v-model="item.id" /></td>
-                        <td><input v-model="item.productName" /></td>
-                        <td><input v-model="item.price" /></td>
-                        <td><textarea v-model="item.mainDescribe" style="height:100px;width: 500px;"></textarea>
-                        <td><textarea v-model="item.subDescribe" style="height:100px;width: 500px;"></textarea>
-                        <td><input v-model="item.shortDescribe" /></td>
-                        <td>
-                            <button id="btninline" type="button" class="btn btn-success" @@click="update(item)">
-                                <div class="horizontal-text">
-                                    <span>儲存</span>
-                                </div>
-                            </button>
-                        </td>
-                        <td>
-                            <button id="btninline" type="button" class="btn btn-info" @@click="cancel">
-                                <div class="horizontal-text">
-                                    <span>取消</span>
-                                </div>
-                            </button>
-                        </td>
-                    </template>
-                    <!--正常-->
-                    <template v-else>
-                        <td>{{item.productId}}</td>
-                        <td>{{item.id}}</td>
-                        <td>{{item.productName}}</td>
-                        <td>{{item.price}}</td>
-                        <td>{{item.mainDescribe}}</td>
-                        <td>{{item.subDescribe}}</td>
-                        <td>{{item.shortDescribe}}</td>
-                        <td>
-                            <button id="btninline" type="button" class="btn btn-warning" id="btn" @@click="edit(item.productId)">
-                                <div class="horizontal-text">
-                                    <span>修改</span>
-                                </div>
-                            </button>
-                        </td>
-                        <td>
-                            <button id="btninline" type="button" class="btn btn-danger" id="btn" @@click="deleteMch(item.productId)">
-                                <div class="horizontal-text">
-                                    <span>刪除</span>
-                                </div>
-                            </button>
-                        </td>
-                    </template>
-                </tr>
-            </tbody>
-        </table>
+        <div class="table-responsive">
 
+            <table class="table table-bordered  ">
+                <thead>
+                    <tr>
+                        <th>產品ID</th>
+                        <th>商品種類ID</th>
+                        <th>商品名稱</th>
+                        <th>金額</th>
+                        <th>主要敘述</th>
+                        <th>次要敘述</th>
+                        <th>簡短敘述</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!--迴圈-->
+                    <tr v-for="item in MerchandiseDTOes">
+                        <!--修改-->
+                        <template v-if="item.Edit==true">
+                            <td>{{item.productId}}</td>
+                            <td><input v-model="item.id" /></td>
+                            <td><input v-model="item.productName" /></td>
+                            <td><input v-model="item.price" /></td>
+                            <td><textarea v-model="item.mainDescribe" style="height:100px;width: 500px;"></textarea>
+                            <td><textarea v-model="item.subDescribe" style="height:100px;width: 500px;"></textarea>
+                            <td><input v-model="item.shortDescribe" /></td>
+                            <td>
+                                <div class="d-flex justify-content-around">
+                                    <button id="btninline" type="button" class="btn btn-success" @@click="update(item)">
+                                        <div class="horizontal-text">
+                                            <span>儲存</span>
+                                        </div>
+                                    </button>
+                                    <div></div>
+                                    <button id="btninline" type="button" class="btn btn-info" @@click="cancel">
+                                        <div class="horizontal-text">
+                                            <span>取消</span>
+                                        </div>
+                                    </button>
+                                </div>
+                            </td>
+                        </template>
+                        <!--正常-->
+                        <template v-else>
+                            <td>{{item.productId}}</td>
+                            <td>{{item.id}}</td>
+                            <td>{{item.productName}}</td>
+                            <td>{{item.price}}</td>
+                            <td>{{item.mainDescribe}}</td>
+                            <td>{{item.subDescribe}}</td>
+                            <td>{{item.shortDescribe}}</td>
+                            <td>
+                                <div class="d-flex justify-content-around">
+                                    <button id="btninline" type="button" class="btn btn-warning"   @@click="edit(item.productId)">
+                                        <div class="horizontal-text">
+                                            <span>修改</span>
+                                        </div>
+                                    </button>
+                                    
+                                    <button id="btninline" type="button" class="btn btn-danger"   @@click="deleteMch(item.productId)">
+                                        <div class="horizontal-text">
+                                            <span>刪除</span>
+                                        </div>
+                                    </button>
+                                </div>
+                            </td>
+                        </template>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
         <br />
         <br />
         <!------------------------------------------新增紀錄的畫面--------------------------------------->
@@ -218,7 +208,7 @@
                         ____
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @@click="close">關閉</button>
                         <button type="button" class="btn btn-primary" @@click="insert">新增</button>
                     </div>
                 </div>
@@ -484,8 +474,18 @@
                         });
                 },
 
+                
+                close: function () {
+                    let _this = this;
 
+                    _this.id = '';
+                    _this.productName = '';
+                    _this.price = '';
+                    _this.mainDescribe = '';
+                    _this.subDescribe = '';
+                    _this.shortDescribe = '';
 
+                },
 
 
 

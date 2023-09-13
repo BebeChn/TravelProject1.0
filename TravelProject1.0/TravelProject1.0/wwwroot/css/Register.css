@@ -1,30 +1,38 @@
-.circle {
+
+.beauty-select {
     width: 100px;
-    height: 100px;
-    line-height: 100px;
-    border-radius: 50%;
-    font-size: 15px;
-    color: black;
-    text-align: center;
-    background: lightskyblue;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    outline: none;
 }
 
-.xuxian {
-    width: 150px;
-    height: 50px;
-    border-bottom: black 1px dashed;
+    .beauty-select:hover {
+        border-color: #007bff;
+    }
+
+    .beauty-select:focus {
+        border-color: #007bff;
+    }
+
+
+#app {
+    position: relative;
 }
 
-.circlegray {
-    width: 100px;
-    height: 100px;
-    line-height: 100px;
-    border-radius: 50%;
-    font-size: 15px;
-    color: black;
-    text-align: center;
-    background: lightgray;
+h1 {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10px 20px;
+    font-weight: bold;
+    color:black;
 }
+
 .center {
     display: flex;
     align-items: center;
@@ -33,7 +41,7 @@
    
 }
 .element {
-    background-image: url('../images/images.project/plan/korea/istockphoto-835391546-612x612.jpg');
+ 
     background-size: cover;
     background-repeat: no-repeat;
 }
@@ -83,6 +91,12 @@
     .inputbox input:valid, .inputbox input:focus {
         border: 1px solid deepskyblue;
     }
+.center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
 
 .dup {
     display: block;

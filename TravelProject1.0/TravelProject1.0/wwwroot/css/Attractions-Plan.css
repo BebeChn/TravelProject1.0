@@ -77,6 +77,10 @@
     text-align: center;
 }
 
-.star i {
-    color: gold;
+.star {
+    margin-bottom: 10px;
 }
+
+    .star i {
+        color: gold;
+    }

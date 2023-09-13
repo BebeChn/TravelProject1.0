@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://unpkg.com/vue2-datepicker/index.css">
 }
 
-<section id="app" class="about_history_area ">
+<section id="app" class="about_history_area">
     <div class="container" v-for="x in product">
         <div>
             <img class="img-product" :src="x.img" />
@@ -37,22 +37,22 @@
                 @* 商品方案 *@
                 <div class="card" v-for="(p,index) in plan" :key="p.planId">
                     <div class="row">
-                        <div class="col-md-3">
+                        <div class="col-xl-3">
                             <img class="img-plan" :src="p.planImg" />
                         </div>
-                        <div class="col-md-7">
+                        <div class="col-xl-7">
                             <div class="card-body">
                                 <h3>{{p.name}}</h3>
                                 <p>{{p.describe}}</p>
                             </div>
                         </div>
-                        <div class="col-md-2 card-end">
+                        <div class="col-xl-2 card-end">
                             <button class="btn theme_btn button_hover info btn-choose" data-bs-toggle="collapse" :data-bs-target="'#collapse'+index" aria-expanded="true" :aria-controls="'collapse'+index">選擇</button>
                         </div>
                         <div :id="'collapse'+index" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
                             <div class="accordion-body">
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-xl-6">
                                         <h3>選擇日期</h3>
                                         <template>
                                             <div>
@@ -60,7 +60,7 @@
                                             </div>
                                         </template>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-xl-6">
                                         <h3>選擇項目</h3>
                                         <div>
                                             <h4>單價：</h4>
@@ -83,7 +83,7 @@
                                     </div>
                                     <div class="buy">
                                         <a class="btn theme_btn button_hover info" v-on:click="addCart(p)">加入購物車</a>
-                                        <a class="btn theme_btn button_hover info">立即訂購</a>
+                                        <a class="btn theme_btn button_hover info" v-on:click="addOrder(p)">立即訂購</a>
                                     </div>
                                 </div>
                             </div>
@@ -97,20 +97,16 @@
                 <div class="container">
                     <div class="row">
                         <h2>商品說明</h2>
-                        <div class="col-md-8 offset-2 text-center">
+                        <div class="col-xl-8 offset-2 text-center">
                             <div class="row">
-                                <div class="col-md-4">
+                                <div class="col-xl-4">
                                     <img class="img-caption" src="~/lib/image/mountain.jpeg" />
                                 </div>
-                                <div class="col-md-8">
+                                <div class="col-xl-8">
                                     <p>{{x.subDescribe}}</p>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div>
-                        <h4>兌換方式</h4>
-                        <p>QRCode</p>
                     </div>
                 </div>
             </div>
@@ -137,7 +133,7 @@
                             <div class="single-comment justify-content-between d-flex">
                                 <div class="user justify-content-between d-flex">
                                     <div class="desc">
-                                        <h5><a href="#">使用者名稱</a></h5>
+                                        <h5><a href="#">{{r.name}}</a></h5>
                                         <p class="date">{{r.ratingDate | formatDate}}</p>
                                         <div class="star">
                                             <i class="fa-solid fa-star fa-2xl" v-for="(star,index) in r.ratingScore"></i>
@@ -157,6 +153,7 @@
 @section Scripts{
     <script src="https://unpkg.com/vue2-datepicker/index.min.js"></script>
     <script>
+        var isLogin = ('@User.Identity.IsAuthenticated' == "True");
         let baseAddress = "https://localhost:7025";
         Vue.component(DatePicker);
         var app = new Vue({
@@ -165,7 +162,8 @@
                 plan: [],
                 product: [],
                 rating: [],
-                queries: ''
+                queries: '',
+                orderDetail: []
             },
             mounted: function () {
                 let _this = this;
@@ -255,6 +253,29 @@
                         alert("未登入，無法加入購物車");
                     })
                 },
+
+                //加入訂單
+                addOrder: function (model) {
+                    if (!isLogin) return alert("未登入，無法購買!");
+                    let _this = this;
+                    let orderData = {
+                        odname: model.name,
+                        planId: model.planId,
+                        quantity: model.selected.num,
+                        unitPrice: model.selected.num * model.planPrice
+                    };
+                    _this.orderDetail.push(orderData);
+                    var form = document.createElement("form");
+                    form.method = "post";
+                    form.action = "/ConfirmTheOrder/Index";
+                    var inp = document.createElement("input");
+                    inp.type = "hidden";
+                    inp.value = JSON.stringify(_this.orderDetail);
+                    inp.name = "key";
+                    form.append(inp);
+                    document.getElementsByTagName("body")[0].append(form);
+                    form.submit();
+                }
             },
             filters: {
                 //貨幣格式

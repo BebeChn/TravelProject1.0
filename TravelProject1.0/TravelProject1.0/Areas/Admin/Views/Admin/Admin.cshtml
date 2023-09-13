@@ -3,47 +3,39 @@
     <link href="~/css/admindashboard.css" rel="stylesheet" />
 }
 <div id="app">
-        <div class="container">
-    <br>
+    <div class="container">
+        <br>
     </div>
     <!--頁首-->
-        <header class="container-fluid row">
-    <!--區塊-->
-    <!--區塊-->
+    <header class="container-fluid row">
+        <!--區塊-->
+        <!--區塊-->
     </header>
     <!--頁首底-->
     <!--第一段-->
     <div class="container-fluid row   ">
         <div class="col-2"></div>
-        <button type="button" class="btn solid  col-3 " style="font-weight: bold;font-size: 1.2rem;" @@click="Datehigh">時間由大到小排序</button>
+        <button type="button" class="btn solid  col-3 form-group" style="font-weight: bold;font-size: 1.2rem; color: gray; font-style: italic;" @@click="Datehigh">時間由大到小排序</button>
         <br>
-        <button type="button" class="btn solid  col-3" style="font-weight: bold;font-size: 1.2rem;" @@click="Datelower">時間由小到大排序</button>
+        <button type="button" class="btn solid  col-3 form-group" style="font-weight: bold;font-size:  1.2rem; color: gray; font-style: italic;" @@click="Datelower">時間由小到大排序</button>
         <div class="col-4"></div>
     </div>
-    <br>
     <!--第二段-->
-    <div class="container-fluid    ">
-
-        <!--為什麼在nav裡面   因為這樣線才剛好對齊-->
-        <nav class="navbar bg-body   justify-content-end ">
-            @*            <div class="col-2">
-            <button type="button" class="btn btn-success" @@click="showModal">新增會員紀錄</button>
-            </div>*@
-            <div class="form-group ">
-                <form class="d-flex" role="search">
-                    <!--輸入關鍵字-->
-                    <input style="width: 300px; height:70px;" class="form-control" type="text" placeholder="Search" aria-label="Search"
-                           v-model="filter" @@keyup="filterUser">
-                    <button class="btn btn-outline-secondary " style="color :#1e2154" type="submit" @*@@click="filterUser"*@>
-                        <Fieldset>搜尋</Fieldset>
-                    </button>
-                </form>
-                <!--為什麼在nav裡面   因為這樣線才剛好對齊-->
-            </div>
-        </nav>
+    <div class="container-fluid  row  ">
+        <div class="col-9"></div>
+        <div class="col-3  " style="width:25%; color: gray; ">
+            關鍵字搜尋：<input type="text" v-model="filter" class="form-control" placeholder="請輸入篩選關鍵字" @@keyup="filterUser" />
+        </div>
     </div>
     <!--第二段底-->
-    <br>
+    <div class="container-fluid row    ">
+        <div class="col-1"></div>
+        <!--新增會員-->
+        <div class="form-group col-4  ">
+            <button type="button" class="btn btn-success" @@click="showModal">新增會員</button>
+        </div>
+        <div class="col-7"></div>
+    </div>
     <!--第三段-->
     <div class="container-fluid  ">
         <!--管理選單-->
@@ -78,7 +70,7 @@
                             <td><input class="w-100" v-model="item.name" /></td>
                             <td><input class="w-100" v-model="item.gender" /></td>
                             <td><input class="w-100" v-model="item.email" /></td>
-                            <td><input class="w-100" v-model="item.birthday" /></td>
+                            <td><input type="date" class="w-100" v-model="item.birthday" /></td>
                             <td>
                                 <div class="d-flex justify-content-around">
                                     <button type="button" class="btn btn-success" @@click="update(item)">
@@ -99,7 +91,7 @@
                             <td>{{item.name}}</td>
                             <td>{{item.gender}}</td>
                             <td>{{item.email}}</td>
-                            <td>{{formatDate(item.birthday)}}</td>
+                            <td>{{item.birthday}}</td>
                             <td>
                                 <div class="d-flex justify-content-around">
                                     <button type="button" class="btn  btn-warning" @@click="edit(item.userId)">
@@ -119,10 +111,44 @@
                 </tbody>
             </table>
         </div>
-        
-
         <!--col9-->
-
+        <!------------------------------------------新增紀錄的畫面--------------------------------------->
+        <!-- Modal Body -->
+        <!-- if you want to close by clicking outside the modal, delete the last endpoint:data-bs-backdrop and data-bs-keyboard -->
+        <div class="modal fade" id="insertModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered " role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalTitleId">新增商品紀錄</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="form-label">名稱</label>
+                            <input v-model="addname" type="text" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">信箱</label>
+                            <input v-model="addemail" type="text" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">電話</label>
+                            <input v-model="addphone" type="text" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">密碼</label>
+                            <input v-model="addpasswordHash" type="text" class="form-control" />
+                        </div>
+                        ____
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @@click="close">關閉</button>
+                        <button type="button" class="btn btn-primary" @@click="insert">新增</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!------------------------------------------新增紀錄的畫面底--------------------------------------->
         <!--最後一句-->
     </div>
 </div>
@@ -150,11 +176,10 @@
                     originalemail: '',
                     originalbirthday: '',
                     //新增
-                    Addname: '',
-                    Addgender: '',
-                    Addemail: '',
-                    Addbirthday: '',
-
+                    addname: '',
+                    addemail: '',
+                    addphone: '',
+                    addpasswordHash: '',
 
                 };
             },
@@ -163,9 +188,9 @@
                 //alert("mount");
                 _this.filterUser();
             },
-            computed:{
+            computed: {
                 //轉換日期
-                formatDate: function(){
+                formatDate: function () {
                     return function (str) {
                         if (!str) return "";
                         var d = new Date(str);
@@ -173,7 +198,7 @@
                     }
                 },
             },
-            methods: {                
+            methods: {
                 filterUser: function () {
                     //alert("篩選");
                     let _this = this;
@@ -187,6 +212,14 @@
                             for (var i = 0; i < _this.AdminDTOes.length; i++) {
                                 var item = _this.AdminDTOes[i];
                                 item.Edit = false;
+                                if (_this.AdminDTOes[i].birthday) {
+                                    var d = new Date(_this.AdminDTOes[i].birthday);
+                                    var m = (d.getMonth() + 1).toString();
+                                    var dy = (d.getDate()).toString();
+                                    _this.AdminDTOes[i].birthday = `${d.getFullYear()}-${m.length == 1 ? m.padStart(2, "0") : m}-${dy.length == 1 ? dy.padStart(2, "0") : dy}`
+                                } else {
+                                    _this.AdminDTOes[i].birthday = "";
+                                }
                             }
                         })
                         .catch(err => {
@@ -229,7 +262,7 @@
                     });
                 },
 
-
+                //取消
                 cancel: function () {
                     //alert("cancel")
                     let _this = this;
@@ -264,8 +297,8 @@
 
                 Datelower: function () {
                     let _this = this;
-                    _this.AdminDTOes.sort(function(x,y){
-                        return  new Date(x.birthday) - new Date(y.birthday)
+                    _this.AdminDTOes.sort(function (x, y) {
+                        return new Date(x.birthday) - new Date(y.birthday)
                     });
                 },
 
@@ -273,7 +306,7 @@
                 Datehigh: function () {
                     let _this = this;
                     _this.AdminDTOes.sort(function (x, y) {
-                        return  new Date(y.birthday) - new Date(x.birthday)
+                        return new Date(y.birthday) - new Date(x.birthday)
                     });
                 },
 
@@ -284,8 +317,42 @@
                     $("#insertModal").modal("show");
                 },
 
+                //新增
+                insert: function () {
+                    let _this = this;
+                    //alert("insert");
+
+                    var request = {
+
+                        UserId: 0,
+                        Name: _this.addname,
+                        Email: _this.addemail,
+                        Gender: 'F',
+                        Phone: _this.addphone,
+                        PasswordHash: _this.addpasswordHash,
+                        Birthday: '1980-09-21T00:00:00',
+                    };
+                    axios.post(`${baseAddress}/api/Admin/ADDAdmin`, request).then(response => {
+                        alert(response.data);
+                        //$('#insertModal').modal("hide");
+                        _this.filterUser();
+                    }).catch(err => {
+                        alert(err);
+                    });
+
+                },
+
+                close: function () {
+                    let _this = this;
+
+                        _this.addname = '';
+                        _this.addemail = '';
+                        _this.addphone = '';
+                        _this.addpasswordHash = '';
 
 
+
+                },
 
 
 

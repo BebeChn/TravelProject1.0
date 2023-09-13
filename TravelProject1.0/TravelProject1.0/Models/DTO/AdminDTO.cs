@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace TravelProject1._0.Models.DTO
 {
@@ -15,13 +16,16 @@ namespace TravelProject1._0.Models.DTO
         [DisplayName("信箱")]
         public string Email { get; set; }
 
-        
-       
-
+        //[DataType(DataType.Date)]
         public DateTime? Birthday { get; set; }
+ 
+
+        public string PasswordHash { get; set; } = "";
+
+        public string Phone { get; set; } = "";
 
 
+        //UserID  Name   Phone    Email   PasswordHash   不能為空
 
-         
     }
 }

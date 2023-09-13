@@ -1,4 +1,11 @@
-﻿.my-title {
+﻿.eachfield {
+    background-color: #faf9f9;
+}
+
+.groundfield {
+    background-color: #eeeeee;
+}
+.my-title {
     font-family: "Arial", sans-serif; 
     font-size: 24px;
     font-weight: bold; 
@@ -10,8 +17,9 @@
     color: #333;
 }
 .outer-box {
-    border: 2px solid cornflowerblue;
-    padding: 10px;
+    border: 2px solid #dee2e6;
+    padding: 3px;
+    margin: 1px;
 }
 .search {
     margin-bottom: 20px;
@@ -53,4 +61,12 @@
 .product-price {
     font-size: 24px;
     font-weight: bold;
+}
+.css {
+    border-radius: 10px;
+    margin-left: 2px;
+    width: 100px;
+    height: 40px;
+    border: 2px solid deepskyblue;
+    background-color: white;
 }

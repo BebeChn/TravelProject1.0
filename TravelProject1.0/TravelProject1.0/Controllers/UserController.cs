@@ -161,6 +161,10 @@ namespace TravelProject1._0.Controllers
         {
             return View();
         }
+        public IActionResult UserPoint()
+        {
+            return View();
+        }
     }
 
 
