@@ -66,8 +66,9 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api.AnalyzeAPI
 		//decimal lastYearSale = await _db.OrderDetails.Where(od => EF.Functions.DateDiffYear(od.Order.OrderDate, DateTime.Now) <= 0 &&
 		//	EF.Functions.DateDiffYear(od.Order.OrderDate, DateTime.Now) >= 0).SumAsync(o => (decimal)(o.UnitPrice * o.Quantity) / 10000);
 
+		//今年度銷售數據
 		[HttpGet]
-		public async Task<AllTicktesSaleDTO> GetCurrentYearAllTicktesSales()
+		public async Task<AllTicktesSaleDTO> AllTicktesCurrentYearSale()
 		{
 			decimal currentYearSale = await _db.OrderDetails
 				.Where(od => EF.Functions.DateDiffYear(od.Order.OrderDate, DateTime.Now) <= 0 &&
@@ -123,9 +124,11 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api.AnalyzeAPI
 
 			return result;
 		}
+		//今年度銷售數據
 
+		//前年度銷售數據
 		[HttpGet]
-		public async Task<AllTicktesSaleDTO> GetLastYearAllTicktesSales()
+		public async Task<AllTicktesSaleDTO> AllTicktesLastYearSale()
 		{
 			decimal lastYearSale = await _db.OrderDetails
 				.Where(od => EF.Functions.DateDiffYear(od.Order.OrderDate, DateTime.Now) <= 1 &&
@@ -173,6 +176,8 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api.AnalyzeAPI
 
 			return result;
 		}
+		//前年度銷售數據
+
 		//[HttpGet]
 		//public async Task<IEnumerable<HighChart3DGraphDTO>> GetAirplaneSales()
 		//{
@@ -243,54 +248,10 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api.AnalyzeAPI
 
 		//	return result;
 		//}
+
+		//當週銷售數據
 		[HttpGet]
-		public async Task<AllTicktesSale> CurrentMonthSale()
-		{
-			decimal monthSale = await _db.OrderDetails
-				.Where(od => EF.Functions.DateDiffMonth(od.Order.OrderDate, DateTime.Now) <= 0 &&
-								EF.Functions.DateDiffMonth(od.Order.OrderDate, DateTime.Now) >= 0).
-								SumAsync(od => (decimal)(od.UnitPrice * od.Quantity) / 10000);
-
-			var resultList = _db.OrderDetails.AsNoTracking().Include(od => od.Plan).ThenInclude(od => od.Product)
-				.Where(od => EF.Functions.DateDiffMonth(od.Order.OrderDate, DateTime.Now) <= 0 &&
-								EF.Functions.DateDiffMonth(od.Order.OrderDate, DateTime.Now) >= 0)
-				.GroupBy(od => od.Plan.Product.Id)
-				.Select(od => new
-				{
-					CategoryId = od.Key,
-					Details = od.Select(od => new
-					{
-						OrderDate = od.Order.OrderDate.Value.ToString("MM-dd"),
-						od.UnitPrice,
-						od.Quantity
-					})
-				})
-				.ToDictionaryAsync(od => od.CategoryId, od =>
-				{
-					int currentYear = Convert.ToInt32(DateTime.Now.ToString("yyyy"));
-					int currenMonth = Convert.ToInt32(DateTime.Now.ToString("MM"));
-					var dic = new Dictionary<string, decimal>();
-					for (var i = 1; i < DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month) + 1; i++)
-					{
-						var currentMonthAndDay = new DateTime(currentYear, currenMonth, i).ToString("MM-dd");
-						dic.Add(currentMonthAndDay, od.Details.Where(od => od.OrderDate == currentMonthAndDay).Sum(od => Convert.ToDecimal(od.UnitPrice * od.Quantity) / 10000));
-					}
-					return dic;
-				});
-
-			var result = new AllTicktesSale()
-			{
-				SaleTotal = monthSale,
-				AirplaneSale = resultList.Result[1],
-				HotelSale = resultList.Result[2],
-				TransportationSale = resultList.Result[3],
-				AttractionsSale = resultList.Result[4],
-			};
-			return result;
-		}
-
-		[HttpGet]
-		public async Task<AllTicktesSale> CurrentWeekSale()
+		public async Task<AllTicktesSale> AllTicktesCurrentWeekSale()
 		{
 			decimal weekSale = await _db.OrderDetails
 				.Where(od => EF.Functions.DateDiffWeek(od.Order.OrderDate, DateTime.Now) <= 0 &&
@@ -337,9 +298,59 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api.AnalyzeAPI
 
 			return result;
 		}
+		//當週銷售數據
 
+		//當月銷售數據
 		[HttpGet]
-		public async Task<AllTicktesTop10Sales> CurrentWeekTop10AllTicktes()
+		public async Task<AllTicktesSale> AllTicktesCurrentMonthSale()
+		{
+			decimal monthSale = await _db.OrderDetails
+				.Where(od => EF.Functions.DateDiffMonth(od.Order.OrderDate, DateTime.Now) <= 0 &&
+								EF.Functions.DateDiffMonth(od.Order.OrderDate, DateTime.Now) >= 0).
+								SumAsync(od => (decimal)(od.UnitPrice * od.Quantity) / 10000);
+
+			var resultList = _db.OrderDetails.AsNoTracking().Include(od => od.Plan).ThenInclude(od => od.Product)
+				.Where(od => EF.Functions.DateDiffMonth(od.Order.OrderDate, DateTime.Now) <= 0 &&
+								EF.Functions.DateDiffMonth(od.Order.OrderDate, DateTime.Now) >= 0)
+				.GroupBy(od => od.Plan.Product.Id)
+				.Select(od => new
+				{
+					CategoryId = od.Key,
+					Details = od.Select(od => new
+					{
+						OrderDate = od.Order.OrderDate.Value.ToString("MM-dd"),
+						od.UnitPrice,
+						od.Quantity
+					})
+				})
+				.ToDictionaryAsync(od => od.CategoryId, od =>
+				{
+					int currentYear = Convert.ToInt32(DateTime.Now.ToString("yyyy"));
+					int currenMonth = Convert.ToInt32(DateTime.Now.ToString("MM"));
+					var dic = new Dictionary<string, decimal>();
+					for (var i = 1; i < DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month) + 1; i++)
+					{
+						var currentMonthAndDay = new DateTime(currentYear, currenMonth, i).ToString("MM-dd");
+						dic.Add(currentMonthAndDay, od.Details.Where(od => od.OrderDate == currentMonthAndDay).Sum(od => Convert.ToDecimal(od.UnitPrice * od.Quantity) / 10000));
+					}
+					return dic;
+				});
+
+			var result = new AllTicktesSale()
+			{
+				SaleTotal = monthSale,
+				AirplaneSale = resultList.Result[1],
+				HotelSale = resultList.Result[2],
+				TransportationSale = resultList.Result[3],
+				AttractionsSale = resultList.Result[4],
+			};
+			return result;
+		}
+		//當月銷售數據
+
+		//當週銷售Top10
+		[HttpGet]
+		public async Task<AllTicktesTop10Sales> AllTicktesCurrentWeekTop10()
 		{
 			var resultList = await _db.OrderDetails.AsNoTracking()
 				.Where(od => EF.Functions.DateDiffWeek(od.Order.OrderDate, DateTime.Now) <= 0 &&
@@ -371,13 +382,56 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api.AnalyzeAPI
 				});
 			var result = new AllTicktesTop10Sales
 			{
-				AirplaneSale = resultList[1].OrderByDescending(r => r.Value).Take(10).ToDictionary(r => r.Key,r => r.Value),
-				HotelSale = resultList[2].OrderByDescending(r => r.Value).Take(10).ToDictionary(r => r.Key,r => r.Value),
-				TransportationSale = resultList[3].OrderByDescending(r => r.Value).Take(10).ToDictionary(r => r.Key,r => r.Value),
-				AttractionsSale = resultList[4].OrderByDescending(r => r.Value).Take(10).ToDictionary(r => r.Key,r => r.Value)
+				AirplaneSale = resultList[1].OrderByDescending(r => r.Value).Take(10).Select(r => new HighChartBarGraphDTO { Name = r.Key, y = r.Value }).ToList(),
+				HotelSale = resultList[2].OrderByDescending(r => r.Value).Take(10).Select(r => new HighChartBarGraphDTO { Name = r.Key, y = r.Value }).ToList(),
+				TransportationSale = resultList[3].OrderByDescending(r => r.Value).Take(10).Select(r => new HighChartBarGraphDTO { Name = r.Key, y = r.Value }).ToList(),
+				AttractionsSale = resultList[4].OrderByDescending(r => r.Value).Take(10).Select(r => new HighChartBarGraphDTO { Name = r.Key, y = r.Value }).ToList()
 			};
 			return result;
 		}
+		//當週銷售Top10
+
+		//當月銷售Top10
+		[HttpGet]
+		public async Task<AllTicktesTop10Sales> AllTicktesCurrentMonthTop10()
+		{
+			var resultList = await _db.OrderDetails.AsNoTracking()
+				.Where(od => EF.Functions.DateDiffMonth(od.Order.OrderDate, DateTime.Now) <= 0 &&
+								EF.Functions.DateDiffMonth(od.Order.OrderDate, DateTime.Now) >= 0)
+				.GroupBy(od => od.Plan.Product.Id)
+				.Select(od => new
+				{
+					CategoryId = od.Key,
+					Details = od.Select(od => new
+					{
+						Name = od.Plan.Name,
+						Data = od.Quantity.Value
+					})
+				}).ToDictionaryAsync(od => od.CategoryId, od =>
+				{
+					var dic = new Dictionary<string, int>();
+					foreach (var orderDetail in od.Details)
+					{
+						if (!dic.ContainsKey(orderDetail.Name))
+						{
+							dic[orderDetail.Name] = (int)orderDetail.Data;
+						}
+						else
+						{
+							dic[orderDetail.Name] += (int)orderDetail.Data;
+						}
+					}
+					return dic;
+				});
+			var result = new AllTicktesTop10Sales
+			{
+				AirplaneSale = resultList[1].OrderByDescending(r => r.Value).Take(10).Select(r => new HighChartBarGraphDTO { Name = r.Key, y = r.Value }).ToList(),
+				HotelSale = resultList[2].OrderByDescending(r => r.Value).Take(10).Select(r => new HighChartBarGraphDTO { Name = r.Key, y = r.Value }).ToList(),
+				TransportationSale = resultList[3].OrderByDescending(r => r.Value).Take(10).Select(r => new HighChartBarGraphDTO { Name = r.Key, y = r.Value }).ToList(),
+				AttractionsSale = resultList[4].OrderByDescending(r => r.Value).Take(10).Select(r => new HighChartBarGraphDTO { Name = r.Key, y = r.Value }).ToList()
+			};
+			return result;
+		}
+		//當月銷售Top10
 	}
 }
-//.Select(od => new HighChartBarGraphDTO { Name = od.Key, Data = od.Value }).ToList(),

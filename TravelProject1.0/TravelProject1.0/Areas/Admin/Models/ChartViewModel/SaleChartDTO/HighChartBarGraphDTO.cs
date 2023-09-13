@@ -3,6 +3,6 @@
 	public class HighChartBarGraphDTO
 	{
 		public string Name { get; set; }
-		public decimal Data { get; set; }
+		public decimal y { get; set; }
 	}
 }
