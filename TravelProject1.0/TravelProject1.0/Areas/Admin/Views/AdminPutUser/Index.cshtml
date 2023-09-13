@@ -54,8 +54,8 @@
     <div>
         <div class="row">
             <div class="col-4">
-                <input type="text" placeholder="Search...">
-                <button class="btn btn-primary">Search</button>
+                <input type="text" placeholder="Search..." v-model="searchQuery">
+                <button class="btn btn-primary" @@click="search">Search</button>
             </div>
             <div class="col-6 ">
                 <div class="sort d-flex align-items-center">
@@ -64,11 +64,11 @@
                     </div>
                     <h4>
                         <span>
-                            <a href="#"><i class="fas fa-fire"></i>金額高到低</a>
+                            <a href="#" v-on:click="sortAscendingAge"><i class="fas fa-funnel-dollar"></i>年齡高到低</a>
                         </span>
                         <span>|</span>
                         <span>
-                            <a href="#"><i class="fas fa-funnel-dollar"></i>金額低到高</a>
+                            <a href="#" v-on:click="sortDescendingAge"><i class="fas fa-funnel-dollar"></i>年齡低到高</a>
                         </span>
                     </h4>
                 </div>
@@ -250,8 +250,9 @@
                     gender: '',
                     birthday: '',
                     phone: '',
-                    password:'',
+                    password:'',            
                 },
+                searchQuery: '',
             },
             mounted: function () {
                 let _this = this;
@@ -264,6 +265,30 @@
                 })
             },
             methods: {
+                sortAscendingAge: function () {
+                    let _this = this;
+                    fetch(`${baseAddress}/api/adminApi/OrderByAge`, {
+                        method: "GET" 
+                        }).then(response => {
+                            if (response.ok) return response.json();
+                        }).then(data => {
+                            _this.putUser = data;
+                        }).catch(error => {
+                            alert(error);
+                        });
+                },
+                sortDescendingAge: function () {
+                    let _this = this;
+                    fetch(`${baseAddress}/api/adminApi/OrderByDescendingAge`, { 
+                        method: "GET" 
+                        }).then(response => {
+                            if (response.ok) return response.json();
+                        }).then(data => {
+                            _this.putUser = data;
+                        }).catch(error => {
+                            alert(error);
+                        });
+                },
                 openCreateUserModal() {
                     let _this = this
                     _this.newUser = {
@@ -305,7 +330,8 @@
                     let _this = this;
                     _this.editOpen = false;
                     $('#exampleModal').modal('show');
-                    fetch(`${baseAddress}/api/adminApi/GetUserDetail/${userId}`).then(response => response.json())
+                    fetch(`${baseAddress}/api/adminApi/GetUserDetail/${userId}`)
+                    .then(response => response.json())
                         .then(data => {
                             $('#UserDetail').modal('show');
                             _this.UpdateUser = data;
@@ -363,6 +389,18 @@
                                 alert("刪除失敗");
                             });
                     }
+                },
+                search: function () {
+                    let _this = this;
+                    fetch(`${baseAddress}/api/adminApi/AdminSearchUser?query=${_this.searchQuery}`, {
+                        method: "GET"
+                        }).then(response => {
+                            if (response.ok) return response.json();
+                        }).then(data => {
+                            _this.putUser = data;
+                        }).catch(error => {
+                            alert(error);
+                        });
                 }
             }
         });

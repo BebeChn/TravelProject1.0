@@ -1,4 +1,8 @@
-﻿using System.Security.Claims;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Security.Claims;
+using TravelProject1._0.Models;
 
 namespace TravelProject1._0.Services
 {
@@ -6,9 +10,11 @@ namespace TravelProject1._0.Services
     {
         int GetUserId();
     }
+   
     public class UserIdentityService : IUserIdentityService
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
+    
 
         public UserIdentityService(IHttpContextAccessor httpContextAccessor)
         {
@@ -24,5 +30,7 @@ namespace TravelProject1._0.Services
             }
             throw new InvalidOperationException("找不到 User ID");
         }
+      
     }
+   
 }

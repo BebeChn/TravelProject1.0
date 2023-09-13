@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Win32;
+using NToastNotify.Helpers;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -10,6 +11,7 @@ using TravelProject1._0.Areas.Admin.Models.DTO;
 using TravelProject1._0.Areas.Admin.Models.ViewModel;
 using TravelProject1._0.Models;
 using TravelProject1._0.Models.DTO;
+using TravelProject1._0.Services;
 
 namespace TravelProject1._0.Areas.Admin.Controllers.Api
 {
@@ -19,9 +21,11 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
     public class AdminApiController : ControllerBase
     {
         private readonly TravelProjectAzureContext _context;
-        public AdminApiController(TravelProjectAzureContext context)
+        private readonly IUserSearchService _userSearchService;
+        public AdminApiController(TravelProjectAzureContext context, IUserSearchService userSearchService)
         {
             _context = context;
+            _userSearchService = userSearchService;
         }
 
         [HttpGet]
@@ -168,6 +172,40 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
                 return "刪除關聯失敗";
             }
             return "刪除成功";
+        }
+        [HttpGet]
+        public async Task<IQueryable<AdminGetUserViewModel>> OrderByAge()
+        {
+            return _context.Users.OrderBy(u => u.Age).Select(u => new AdminGetUserViewModel
+            {
+                Id = u.UserId,
+                Email = u.Email,
+                Gender = u.Gender,
+                Name = u.Name,
+                Phone = u.Phone,
+                Birthday = u.Birthday.Value.ToString("yyyy-MM-dd"),
+
+            });
+        }
+        //價格高到低
+        [HttpGet]
+        public async Task<IQueryable<AdminGetUserViewModel>> OrderByDescendingAge()
+        {
+            return _context.Users.OrderByDescending(u => u.Age).Select(u => new AdminGetUserViewModel
+            {
+                Id = u.UserId,
+                Email = u.Email,
+                Gender = u.Gender,
+                Name = u.Name,
+                Phone = u.Phone,
+                Birthday = u.Birthday.Value.ToString("yyyy-MM-dd"),
+            });
+        }
+        [HttpGet]
+        public IActionResult AdminSearchUser(string query)
+        {
+            var searchResults = _userSearchService.SearchUsers(query);
+            return Ok(searchResults);
         }
 
     }
