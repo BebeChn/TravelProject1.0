@@ -24,8 +24,8 @@
     <div class="container-fluid  row  ">
         <div class="col-9"></div>
         <div class="col-3  " style="width:25%; color: gray; ">
-                關鍵字搜尋：<input type="text" v-model="filter" class="form-control" placeholder="請輸入篩選關鍵字" @@keyup="filterUser" />
-        </div>        
+            關鍵字搜尋：<input type="text" v-model="filter" class="form-control" placeholder="請輸入篩選關鍵字" @@keyup="filterUser" />
+        </div>
     </div>
     <!--第二段底-->
     <div class="container-fluid row    ">
@@ -70,7 +70,7 @@
                             <td><input class="w-100" v-model="item.name" /></td>
                             <td><input class="w-100" v-model="item.gender" /></td>
                             <td><input class="w-100" v-model="item.email" /></td>
-                            <td><input type="date"    class="w-100" v-model="item.birthday" /></td>
+                            <td><input type="date" class="w-100" v-model="item.birthday" /></td>
                             <td>
                                 <div class="d-flex justify-content-around">
                                     <button type="button" class="btn btn-success" @@click="update(item)">
@@ -142,7 +142,7 @@
                         ____
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @@click="close">關閉</button>
                         <button type="button" class="btn btn-primary" @@click="insert">新增</button>
                     </div>
                 </div>
@@ -212,7 +212,14 @@
                             for (var i = 0; i < _this.AdminDTOes.length; i++) {
                                 var item = _this.AdminDTOes[i];
                                 item.Edit = false;
-                                _this.AdminDTOes[i].birthday = new Date(_this.AdminDTOes[i].birthday).toISOString().split('T')[0];
+                                if (_this.AdminDTOes[i].birthday) {
+                                    var d = new Date(_this.AdminDTOes[i].birthday);
+                                    var m = (d.getMonth() + 1).toString();
+                                    var dy = (d.getDate()).toString();
+                                    _this.AdminDTOes[i].birthday = `${d.getFullYear()}-${m.length == 1 ? m.padStart(2, "0") : m}-${dy.length == 1 ? dy.padStart(2, "0") : dy}`
+                                } else {
+                                    _this.AdminDTOes[i].birthday = "";
+                                }
                             }
                         })
                         .catch(err => {
@@ -255,7 +262,7 @@
                     });
                 },
 
-
+                //取消
                 cancel: function () {
                     //alert("cancel")
                     let _this = this;
@@ -332,6 +339,18 @@
                     }).catch(err => {
                         alert(err);
                     });
+
+                },
+
+                close: function () {
+                    let _this = this;
+
+                        _this.addname = '';
+                        _this.addemail = '';
+                        _this.addphone = '';
+                        _this.addpasswordHash = '';
+
+
 
                 },
 

@@ -208,7 +208,7 @@
                         ____
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @@click="close">關閉</button>
                         <button type="button" class="btn btn-primary" @@click="insert">新增</button>
                     </div>
                 </div>
@@ -474,8 +474,18 @@
                         });
                 },
 
+                
+                close: function () {
+                    let _this = this;
 
+                    _this.id = '';
+                    _this.productName = '';
+                    _this.price = '';
+                    _this.mainDescribe = '';
+                    _this.subDescribe = '';
+                    _this.shortDescribe = '';
 
+                },
 
 
 

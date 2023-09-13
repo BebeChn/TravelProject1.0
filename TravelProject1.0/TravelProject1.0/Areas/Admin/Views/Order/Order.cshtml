@@ -85,13 +85,13 @@
                             <td><label>{{item.useDate}}</label></td>
                             <td>
                                 <div class="d-flex justify-content-around">
-                                    <button type="button" class="btn  btn-warning" @@click="edit(item.orderId,item.planId)">
+                                    <button :disabled="notchange" type="button" class="btn  btn-warning" @@click="edit(item.orderId,item.planId)">
                                         <div class="horizontal-text">
                                             <span>修改</span>
                                         </div>
                                     </button>
 
-                                    <button type="button" class="btn btn-danger" @@click="deleteOrder(item.orderId,item.planId)">
+                                    <button :disabled="notchange" type="button" class="btn btn-danger" @@click="deleteOrder(item.orderId,item.planId)">
                                         <div class="horizontal-text">
                                             <span>刪除</span>
                                         </div>
@@ -150,16 +150,11 @@
                 //alert("mouned");
                 _this.filterorder();
             },
-            //computed: {
-            //    //轉換日期
-            //    formatDate: function () {
-            //        return function (str) {
-            //            if (!str) return "";
-            //            var d = new Date(str);
-            //            return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
-            //        }
-            //    },
-            //},
+            computed: {               
+                notchange: function () {
+                    return this.OrderDTOes.some(x => x.Edit);
+                },
+            },
             methods: {
 
 
@@ -182,14 +177,15 @@
                                 if (_this.OrderDTOes[i].useDate) {
                                     var d = new Date(_this.OrderDTOes[i].useDate);
                                     var m = (d.getMonth() + 1).toString();
-                                    _this.OrderDTOes[i].useDate = `${d.getFullYear()}-${m.length == 1 ? m.padStart(2, "0") : m}-${d.getDate()}`
+                                    var dy = (d.getDate()).toString();      
+                                    _this.OrderDTOes[i].useDate = `${d.getFullYear()}-${m.length == 1 ? m.padStart(2, "0") : m}-${dy.length == 1 ? dy.padStart(2, "0") : dy}`
                                 } else {
                                     _this.OrderDTOes[i].useDate = "";
                                 }
                                 
                             }
 
-                            
+
 
 
                         })
