@@ -1,46 +1,64 @@
-﻿@section Styles{
+﻿@* @{
+    Layout = "~/Views/User/UserCenter.cshtml";
+} *@
+
+@section Styles{
     <link href="~/css/orderdetails.css" rel="stylesheet" />
 }
-
-<section id="app" class="accomodation_area groundfield">
+<section id="app" class="accomodation_area groundfield"> 
     <br />
     <br />
-    <div class="container">
+    <div class="container">      
         <div class="row">
             <div class="col-md-8 eachfield">
                 <h1 style="text-align:center;font-size: 36px">會員歷史訂單</h1>
-                <div class="row" v-for="(o,index) in orders" :key="o.orderId">
+                <div class="row" v-for="o in orders">
                     <div class="row product-items outer-box" v-for="d in o.detail">
-                        <div class="col-md-3">
+                        <div class="col-md-3" >
                             <img class="" :src="d.odimg" style="width:100%;height:100%;" />
                         </div>
                         <div class="col-md-6  align-items-center">
                             <div class="about_content ">
                                 <div class="my-title">
-                                    <labe>訂購名稱:</labe>{{d.odname}}
+                                    <labe >訂購名稱:</labe>{{d.odname}}
                                 </div>
                                 <br />
                                 <div class="my-text">
                                     <labe>訂購日期:</labe>{{o.orderDate | formatDate}}
-                                </div>
+                                    </div>     
                                 <div class="my-text"> <labe>數量:</labe>{{d.quantity}}</div>
                                 <div class="my-text"> <labe>訂購價格:</labe>{{d.unitPrice}}</div>
                             </div>
                         </div>
                         <div class="col-md-3">
-                            <a class="btn theme_btn button_hover info mt-3">再訂購一次</a>
-                            <br />
-                            <br />
-                            <a :href="'/rating/index/'+d.productId" class="genric-btn info-border">給予評論<i class="fa-solid fa-arrow-right" style="margin-left:10px;"></i></a>
-                        </div>
-                    </div>
+                            <a :href="'/Book/Plan/'+d.productId" class="btn theme_btn button_hover info mt-3">
+                                詳細訂單</a>
+                           @*  <div class="accordion" id="accordionPanelsStayOpenExample">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="panelsStayOpen-headingOne">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                                            Accordion Item #1
+                                        </button>
+                                    </h2>
+                                    <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingOne">
+                                        <div class="accordion-body">
+                                            <strong>This is the first item's accordion body.</strong> It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                                        </div>
+                                    </div>
+                                </div>
+ *@
+                                <br />
+                            <br />                
+                            <a :href="'/Rating/Index/'+d.productId" class="genric-btn info-border">給予評論<i class="fa-solid fa-arrow-right" style="margin-left:10px;"></i></a>
+                        </div>         
                 </div>
+            </div>
             </div>
             <div class="col-md-3 offset-1 eachfield">
                 <div class="blog_right_sidebar">
                     <aside class="single_sidebar_widget post_category_widget">
                         <div style="text-align:center">
-                            <img class="" src="~/img/dog.jpg" style="border-radius:50%;width:150px;height:150px" />
+                        <img class="" src="~/img/dog.jpg" style="border-radius:50%;width:150px;height:150px"/>
                         </div>
                         <br />
                         <h4 class="widget_title">會員資料</h4>
@@ -61,7 +79,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a class="d-flex justify-content-between" asp-Controller="User" asp-action="UserPoint">
+                                <a  class="d-flex justify-content-between" asp-Controller="User" asp-action="UserPoint">
                                     <p>點數</p>
                                 </a>
                             </li>
@@ -70,10 +88,14 @@
                 </div>
             </div>
         </div>
+        
     </div>
-</section>
+    </section>
+
 
 @section Scripts{
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js" integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
         var baseAddress = "https://localhost:7025";
 
@@ -89,7 +111,7 @@
                         orderId: "",
                         detail: [
                             {
-                                planId: "", quantity: "", unitPrice: "", odimg: "", odname: "",
+                                planId: "", quantity: "", unitPrice: "", odimg: "", odname:"",
                             }
                         ]
                     }
@@ -125,6 +147,7 @@
             }
         });
 
+
         // 定義一個函數用於獲取指定名稱的 Cookie
         function getCookie(name) {
             // 定義 Cookie 名稱的前綴，搜尋匹配的 Cookie
@@ -146,8 +169,12 @@
                     return cookie.substring(namePre.length, cookie.length);
                 }
             }
+
             // 如果未找到匹配的 Cookie，返回 null
             return null;
         }
+
+
+
     </script>
-}
+    }

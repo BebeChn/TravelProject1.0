@@ -30,6 +30,8 @@
                     <td>{{pu.gender}}</td>
                     <td>{{pu.birthday}}</td> 
                     <td>{{pu.phone}}</td>
+                    <td> <button class="btn-btn-primary" @@click="showUserInf">編輯</button></td>
+                    <td> <button class="btn-btn-primary" @@click="delete">刪除</button></td>
                 </tr>
             </tbody>
         </table>
@@ -58,6 +60,10 @@
                 })
             },
             methods: {
+                create: function () { },
+                showUserInf: function() { },
+                edit: function () { },
+                delete: function () { },
             },
         });
     </script>

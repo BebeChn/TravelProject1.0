@@ -5,65 +5,71 @@
     {
     <link href="~/css/register.min.css" rel="stylesheet" />
     <style>
-        .formatError
-        {
+        .formatError {
             color: red;
             font-size: .875em;
         }
-    
-   
     </style>
 
   }
-  
-<div id="app" class="center  element">
-    <h1 style="text-align:center">註冊會員</h1>
-    <div class="mt-4">
-            <div class="inputbox mb-3 ">
-                    <input type="text" v-model.trim="name" required />
-                    <span>姓名</span>
-                    <div v-if="!isValid(name,validType.name)" class="formatError">您輸入的格式錯誤</div>
-                 @*    <div v-if="usernameTaken">該用戶名已存在</div> *@
-                </div>
-                <div class="mb-3">
-                    <label for="gender" >性別</label>
-                    <input type="radio" v-model="gender" value="F" />男
-                    <input type="radio" v-model="gender" value="M" />女
-                </div>
-        <div class="inputbox mb-3">
-                    <input v-model.trim="birthday" type="datetime" required />
-                    <span>生日</span>
-                    <div class="formatError" v-if="!isValid(birthday,validType.birthday)">您輸入的格式不正確</div>
-                </div>
-        <div class="inputbox mb-3">
-                    <input v-model.trim="email" type="email" name="email" id="emailInput" required />
-                    <span>郵件</span>
-                    <div class="formatError" v-if="!isValid(email,validType.email)" id="emailError">您輸入的格式不正確</div>
-                </div>
 
-        <div class="inputbox mb-3">
-            <input v-model.trim="phone" type="text" required/>
-                    <span>電話</span>
-                <div class="formatError" v-if="!isValid(phone,validType.phone)">您輸入的格式不正確</div>
-            </div>
-        <div class="inputbox mb-3 ">
-            <input v-model.trim="password" type="password" required/>
-                    <span>密碼</span>
-                <div class="formatError" v-if="!isValid(password,validType.password)">您輸入的格式不正確</div>
-            </div>
-        <div class="inputbox mb-3">
-            <input type="password" required />
-                    <span>重複輸入密碼</span>
-                <div class="invalid-feedback">已被註冊、或您輸入的格式不正確</div>
-            </div>
-            @* <div v-if="passwordmatch()" class="invalid-feedback ">兩次所輸入密碼不一致</div> *@
-       
-        <div>
-                <button type="button" class="dup" id="submitButton" @@click="Register">註冊</button>
+<div id="app" class="element center">
+    <h1 style="text-align:center">註冊會員</h1>
+    <div class ="container">
+    <div class="mt-4 row">
+        <div class="inputbox mb-3 col-5">
+            <input type="text" v-model.trim="name" required />
+            <span>姓名</span>
+            <div v-if="!isValid(name,validType.name)" class="formatError">您輸入的格式錯誤</div>
+            @*    <div v-if="usernameTaken">該用戶名已存在</div> *@
+        </div>
+         <div class="inputbox mb-3 col-5">
+                <input v-model.trim="birthday" type="datetime" required />
+                <span>生日</span>
+                <div class="formatError" v-if="!isValid(birthday,validType.birthday)">您輸入的格式不正確</div>
+         </div>
+         <div class="mb-3 col-1">
+                <label for="gender" style="display: flex; align-items: center;">性別</label>
+                <select class="beauty-select" style="width: 75px; margin-right:10px;">
+                    <option v-model="gender" value="F">男</option>
+                    <option v-model="gender" value="M">女</option>
+                </select>
+         </div>
+    </div>
+    <div class="row">
+         <div class="inputbox mb-3 col-6">
+                <input v-model.trim="email" type="email" name="email" id="emailInput" required />
+                <span>郵件</span>
+                <div class="formatError" v-if="!isValid(email,validType.email)" id="emailError">您輸入的格式不正確</div>
+            </div>   
+        <div class="inputbox mb-3 col-6">
+            <input v-model.trim="phone" type="text" required />
+            <span>電話</span>
+            <div class="formatError" v-if="!isValid(phone,validType.phone)">您輸入的格式不正確</div>
         </div>
     </div>
-  
-</div>
+    <div class="row">
+        <div class="inputbox mb-3 col-6 ">
+            <input v-model.trim="password" type="password" required />
+            <span>密碼</span>
+            <div class="formatError" v-if="!isValid(password,validType.password)">您輸入的格式不正確</div>
+        </div>
+        <div class="inputbox mb-3 col-6">
+            <input type="password" required />
+            <span>重複輸入密碼</span>
+            <div class="invalid-feedback">已被註冊、或您輸入的格式不正確</div>
+        </div>
+    </div>
+    </div>
+        @* <div v-if="passwordmatch()" class="invalid-feedback ">兩次所輸入密碼不一致</div> *@
+    <div class="row">
+        <div>
+            <button type="button" class="dup" id="submitButton" @@click="Register">註冊</button>
+        </div>
+        </div>
+ </div>
+
+
 
 @* <div class="modal fade" id="ErrorAlert" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
@@ -97,7 +103,7 @@
                 birthday: "",
                 phone: "",
                 email: "",
-                password: "",       
+                password: "",
                 bool: "",
                 validType: validType,
             },
@@ -105,8 +111,7 @@
 
             },
             methods: {
-                isValid: function(str,type)
-                {
+                isValid: function (str, type) {
                     return window.validation(str, type);
                 },
                 Register: function () {
@@ -119,7 +124,7 @@
                         Phone: _this.phone,
                         Email: _this.email,
                         Password: _this.password
-                    };    
+                    };
                     axios.post(`${baseAddress}/api/UserApi/PostUser`, form)
                         .then(response => {
                             if (response.data) {
