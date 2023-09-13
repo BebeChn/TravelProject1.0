@@ -4,48 +4,37 @@
 
 @section Styles{
     <link rel="stylesheet" href="https://unpkg.com/vue2-datepicker/index.css">
-    <link href="~/css/rating.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/rating.css" rel="stylesheet" />
 }
 
 <div id="app" class="container">
-    <div class="row">
-        <div class="col-md-7">
-            <div>
-                <h1>商品評價</h1>
-                <div class="rating-date">
-                    <h4>評價日期:</h4>
-                    <template>
-                        <div>
-                            <date-picker v-model="date" valueType="format" @@input="todayDate"></date-picker>
-                        </div>
-                    </template>
-                </div>
-                <div class="rating-star">
-                    <h4>評分:</h4>
-                    <div class="star">
-                        <i class="fa-solid fa-star fa-2xl"
-                           v-for="(star, index) in stars"
-                           :key="index"
-                           v-on:click="rate(index+1)"
-                           :class="{ 'active': index < selectedStar }">
-                        </i>
-                    </div>
-                </div>
+    <div>
+        <h1>商品評價</h1>
+        <div class="rating-date">
+            <h4>評價日期:</h4>
+            <template>
                 <div>
-                    <h4>評論內容:</h4>
-                    <textarea class="txt-describe" v-model="describe"></textarea>
+                    <date-picker v-model="date" valueType="format" @@input="todayDate"></date-picker>
                 </div>
-                <div class="form-btn">
-                    <button class="btn btn-submit info" v-on:click="addRating">送出</button>
-                </div>
+            </template>
+        </div>
+        <div class="rating-star">
+            <h4>評分:</h4>
+            <div class="star">
+                <i class="fa-solid fa-star fa-2xl"
+                   v-for="(star, index) in stars"
+                   :key="index"
+                   v-on:click="rate(index+1)"
+                   :class="{ 'active': index < selectedStar }">
+                </i>
             </div>
         </div>
-        <div class="col-md-4 planInfo" v-for="p in planInfo">
-            <img class="img-plan" :src="p.odimg" />
-            <h2>{{p.odname}}</h2>
-            <h4>使用日期:{{p.useDate | formatDate}}</h4>
-            <h4>數量:{{p.quantity}}</h4>
-            <h4>總價:{{p.unitPrice | formatCurrency}}</h4>
+        <div>
+            <h4>評論內容:</h4>
+            <textarea class="txt-describe" v-model="describe"></textarea>
+        </div>
+        <div class="form-btn">
+            <button class="btn btn-submit info" v-on:click="addRating">送出</button>
         </div>
     </div>
 </div>
@@ -58,24 +47,11 @@
         var app = new Vue({
             el: '#app',
             data: {
-                planInfo: [],
                 date: new Date(),
                 describe: "",
                 stars: [1, 2, 3, 4, 5],
                 selectedStar: -1,
-                queries:""
-            },
-            mounted: function () {
-                let _this = this;
-                fetch(`${baseAddress}/api/RatingApi/GetPlanInfo`, { method: "GET" })
-                    .then(response => {
-                        if (response.ok) return response.json();
-                    }).then(data => {
-                        _this.planInfo = data;
-                        console.log(data);
-                    }).catch(error => {
-                        console.log(error);
-                    })
+                queries: ""
             },
             methods: {
                 //商品評價
@@ -88,8 +64,7 @@
                         ratingScore: _this.selectedStar,
                         describe: _this.describe
                     };
-
-                    fetch(`${baseAddress}/api/RatingApi/PostRating`, {
+                    fetch(`${baseAddress}/api/RatingApi/PostRating/${_this.queries}`, {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify(ratingData)
@@ -101,7 +76,7 @@
                             throw new Error("有資料未填寫");
                         }
                     }).catch(error => {
-                        console.log(error);
+                        alert(error);
                     })
                 },
 
@@ -118,20 +93,6 @@
                     if (d !== today) {
                         this.date = today;
                     }
-                }
-            },
-            filters: {
-                //日期格式
-                formatDate: function (str) {
-                    if (!str) return "";
-                    var d = new Date(str);
-                    return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
-                },
-
-                //貨幣格式
-                formatCurrency: function (val) {
-                    if (typeof val !== "number") return val;
-                    return val.toLocaleString('zh-TW', { style: 'currency', currency: 'TWD', minimumFractionDigits: 0 });
                 }
             }
         })

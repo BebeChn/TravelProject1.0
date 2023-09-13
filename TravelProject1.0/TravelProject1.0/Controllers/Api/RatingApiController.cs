@@ -26,7 +26,8 @@ namespace TravelProject1._0.Controllers.Api
 
         //商品評價
         [HttpPost]
-        public async Task<IActionResult> PostRating([FromBody] RatingDTO model)
+        [Route("{id}")]
+        public async Task<IActionResult> PostRating([FromBody] RatingAddDTO model)
         {
             if (model == null) return BadRequest();
 
@@ -38,7 +39,7 @@ namespace TravelProject1._0.Controllers.Api
                 ProductId = model.ProductId,
                 RatingScore = model.RatingScore,
                 Describe = model.Describe,
-                RatingDate = model.RatingDate
+                RatingDate = model.RatingDate,
             };
 
             await _dbContext.AddAsync(rating);
@@ -52,23 +53,6 @@ namespace TravelProject1._0.Controllers.Api
                 return BadRequest(ex);
             }
             return Ok();
-        }
-
-        //取得商品評價資訊
-        [HttpGet]
-        public async Task<IQueryable<RatingInfo>> GetPlanInfo()
-        {
-            int userId = _userIdentityService.GetUserId();
-
-            return _dbContext.OrderDetails.Select(od => new RatingInfo
-            {
-                PlanId = od.PlanId,
-                Odimg = od.Odimg,
-                Odname = od.Odname,
-                UseDate = od.UseDate,
-                UnitPrice = od.UnitPrice,
-                Quantity = od.Quantity
-            });
         }
     }
 }
