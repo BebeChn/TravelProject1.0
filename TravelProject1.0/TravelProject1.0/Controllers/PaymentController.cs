@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Specialized;
 using System.Net.Mime;
 using System.Text;
@@ -15,7 +16,6 @@ namespace TravelProject1._0.Controllers
         private readonly TravelProjectAzureContext _db;
         private readonly IUserIdentityService _userIdentityService;
         private readonly IConfiguration _configuration;
-
         public PaymentController(TravelProjectAzureContext db, IUserIdentityService userIdentity, IConfiguration configuration)
         {
             _db = db;
@@ -54,6 +54,12 @@ namespace TravelProject1._0.Controllers
             _db.Orders.Add(data);
             _db.SaveChanges();
 
+            var oId = _db.Orders.Where(x => x.UserId == userId).Max(x => x.OrderId);
+
+            var itemName = _db.OrderDetails.Include(x => x.Order).Where(x => x.Order.UserId == userId && x.OrderId == oId).Select(x => x.Odname);
+
+            string productName = string.Join(Environment.NewLine, itemName);
+
             //金流
             string version = "2.0";
 
@@ -76,7 +82,7 @@ namespace TravelProject1._0.Controllers
                 // * 訂單金額
                 Amt = total.Value,
                 // * 商品資訊
-                ItemDesc = "商品資訊(自行修改)",
+                ItemDesc = productName,
                 // 繳費有效期限(適用於非即時交易)
                 ExpireDate = null,
                 // 支付完成 返回商店網址
@@ -153,6 +159,16 @@ namespace TravelProject1._0.Controllers
 
                 od.Status = "success";
                 _db.SaveChanges();
+
+                ViewBag.Info = new
+                {
+                    merchantID = convertModel.MerchantID,
+                    merchantOrderNo = convertModel.MerchantOrderNo,
+                    tradeNo = convertModel.TradeNo,
+                    amt = convertModel.Amt,
+                    status = convertModel.Status,
+                    payTime = convertModel.PayTime
+                };
 
                 return View("Success");
             }
