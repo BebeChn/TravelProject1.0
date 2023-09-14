@@ -31,7 +31,7 @@ namespace TravelProject1._0
             builder.Services.AddTransient<IEmailSender, EmailSender>();
             builder.Services.AddTransient<IUserIdentityService, UserIdentityService>();
             builder.Services.AddTransient<IUserSearchService, UserSearchService>();
-
+            builder.Services.AddTransient<IProductSearchService, ProductSearchService>();
 
             builder.Services.AddControllersWithViews();
 

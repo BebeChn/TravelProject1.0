@@ -29,9 +29,9 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
         }
 
         [HttpGet]
-        public IEnumerable<AdminGetUserViewModel> AdminGetUser()
+        public IEnumerable<AdminGetUserDTO> AdminGetUser()
         {
-            return _context.Users.Select(x => new AdminGetUserViewModel
+            return _context.Users.Select(x => new AdminGetUserDTO
 
             {
                 UserId = x.UserId,

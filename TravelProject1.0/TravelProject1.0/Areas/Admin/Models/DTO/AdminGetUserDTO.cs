@@ -13,5 +13,5 @@ namespace TravelProject1._0.Areas.Admin.Models.DTO
         public string? Gender { get; set; }
 
         public string Phone { get; set; }
-    }
 }
+    }

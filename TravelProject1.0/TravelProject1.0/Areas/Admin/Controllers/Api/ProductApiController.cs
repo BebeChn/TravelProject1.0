@@ -10,28 +10,28 @@ using TravelProject1._0.Services;
 
 namespace TravelProject1._0.Areas.Admin.Controllers.Api
 {
-
-    [Route("api/ OrderApi/[action]")]
+    [Area("Admin")]
+    [Route("api/ProductApi/[action]")]
     [ApiController]
     public class ProductApiController : ControllerBase
     {
         private readonly TravelProjectAzureContext _context;
-        private readonly IUserSearchService _userSearchService;
-        public ProductApiController(TravelProjectAzureContext context, IUserSearchService userSearchService)
+        private readonly IProductSearchService _searchService;
+        public ProductApiController(TravelProjectAzureContext context, IProductSearchService searchService)
         {
             _context = context;
-            _userSearchService = userSearchService;
+            _searchService = searchService;
         }
         [HttpGet]
-        public IEnumerable<GetProductDTO> GetProduct()
+        public IEnumerable<GetProductDTO> AdminGetProduct()
         {
             return _context.Products.Select(p => new GetProductDTO
             {
+              ProductId = p.ProductId,
               Id = p.Id,
               ProductName = p.ProductName,
               MainDescribe = p.MainDescribe,
               Price = p.Price,
-              ProductId = p.ProductId,
             });
 
         }
@@ -165,7 +165,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
         [HttpGet]
         public IActionResult AdminSearchProducut(string query)
         {
-            var searchResults = _userSearchService.SearchUsers(query);
+            var searchResults = _searchService.SearchUsers(query);
             return Ok(searchResults);
         }
 
