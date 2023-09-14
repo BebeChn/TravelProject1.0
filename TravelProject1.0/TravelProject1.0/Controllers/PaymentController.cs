@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Collections.Specialized;
 using System.Net.Mime;
 using System.Text;
+using System.Web;
 using TravelProject1._0.Models;
 using TravelProject1._0.Models.DTO;
 using TravelProject1._0.Models.Payment;
@@ -22,7 +24,7 @@ namespace TravelProject1._0.Controllers
         }
 
         [HttpPost]
-        public IActionResult Pay([FromBody]PaymentDTO payment)
+        public IActionResult Pay([FromBody] PaymentDTO payment)
         {
             int userId = _userIdentityService.GetUserId();
 
@@ -128,8 +130,36 @@ namespace TravelProject1._0.Controllers
                 s.AppendFormat("<input type='hidden' name='{0}' value='{1}' />", item.Key, item.Value);
             }
 
-            s.Append("</form>");            
-            return Content(s.ToString(),MediaTypeNames.Text.Html);
+            s.Append("</form>");
+            return Content(s.ToString(), MediaTypeNames.Text.Html);
+        }
+
+        [HttpPost]
+        public IActionResult PayReturn([FromForm] PayreturnDTO dto)
+        {
+            if (dto.Status == "SUCCESS")
+            {
+                var decryptTradeInfo = CryptoUtil.DecryptAESHex(dto.TradeInfo, _configuration.GetValue<string>("Payment:HashKey"),
+                    _configuration.GetValue<string>("Payment:HashIV"));
+
+                // 取得回傳參數(ex:key1=value1&key2=value2),儲存為NameValueCollection
+                NameValueCollection decryptTradeCollection = HttpUtility.ParseQueryString(decryptTradeInfo);
+                SpgatewayOutputDataModel convertModel = LambdaUtil.DictionaryToObject<SpgatewayOutputDataModel>(decryptTradeCollection.AllKeys.ToDictionary(k => k, k => decryptTradeCollection[k]));
+
+                var no = Convert.ToInt32(convertModel.MerchantOrderNo);
+                var od = _db.Orders.FirstOrDefault(x => x.OrderId == no);
+
+                if (od == null) return View("Fail");
+
+                od.Status = "success";
+                _db.SaveChanges();
+
+                return View("Success");
+            }
+            else
+            {
+                return View("Fail");
+            }
         }
     }
 }
