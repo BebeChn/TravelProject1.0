@@ -50,21 +50,38 @@
     <div class="container">
         <div class="row">
             <div class="col-8 eachfield">
-                <h2 style="text-align:center;font-size:36px">收藏的項目</h2>
+                <h2 style="text-align:center;font-size:36px">訂單項目</h2>
                 <ul class="favorites">
                     <li class="favorite-title">
-                        <span class="me-3">訂購日期</span>
+                        <span>訂購日期</span>
                         <span>訂單編號</span>
                         <span>付款狀態</span>
-                        <span></span>
+                        <sapn>查看</sapn>
                     </li>
-                    <li v-for="favorite in favorites" class="favorite-item">
-                        <img class="img-fluid" :src="favorite.collectImage" style="width:150px;height:150px;" />
-                        <span class="me-5">{{favorite.collectName}}</span>
-                        <span class="me-3">{{favorite.productId}}</span>
-                        <button class="btn btn-delete danger" data-bs-toggle="modal" data-bs-target="#deleteItem" @@click="deleteModal(favorite)"><i class="fa-solid fa-trash-can"></i>删除</button>
+                    <li v-for="o in orders" class="favorite-title">
+                        <sapn>{{o.orderDate}}</sapn>
+                        <sapn class="me-3">{{o.orderId}}</sapn>
+                        <span class="me-3">{{o.status}}</span>
+                        <a :href="'/User/UserOrderDetail/'+o.orderId" class="btn theme_btn button_hover info mt-3">
+                            詳細訂單
+                        </a>
                     </li>
                 </ul>
+                @* 分頁 *@
+                <nav class="blog-pagination justify-content-center d-flex">
+                    <ul class="pagination">
+                        <paginate :page-count="total"
+                                  :click-handler="changePage"
+                                  :page-class="'page-item'"
+                                  :page-link-class="'page-link'"
+                                  :prev-class="'page-link'"
+                                  :prev-link-class="'lnr lnr-chevron-left'"
+                                  :next-class="'page-link'"
+                                  :next-link-class="'lnr lnr-chevron-right'"
+                                  :container-class="'pagination'">
+                        </paginate>
+                    </ul>
+                </nav>
             </div>
             <div class="col-md-3 offset-1 eachfield">
                 <div class="blog_right_sidebar">
@@ -91,7 +108,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a  class="d-flex justify-content-between" asp-Controller="User" asp-action="UserPoint">
+                                <a class="d-flex justify-content-between" asp-Controller="User" asp-action="UserPoint">
                                     <p>點數</p>
                                 </a>
                             </li>
@@ -101,24 +118,8 @@
             </div>
         </div>
     </div>
+   
 
-    <div class="modal fade" id="deleteItem" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header info">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">刪除商品</h1>
-                </div>
-                <div class="modal-body">
-                    <h4>您確定要刪除所選收藏嗎?</h4>
-                    <div>商品名稱:{{remove.collectName}}</div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-delete danger" @@click="removeFavorite">刪除</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 
 
@@ -131,39 +132,35 @@
         var vueApp = new Vue({
             el: '#app',
             data: {
-                favorites: [],
-                fr: [],
-                remove: [],
+                orders: {},
+                currentPage: 1,
+                itemPage: 10,
+            },
+            computed: {
+                showOrder: function () {
+                    let _this = this;
+                    var start = (_this.currentPage - 1) * _this.itemPage;
+                    var end = start + _this.itemPage;
+                    return this.attractionsFilter.slice(start, end);
+                },
             },
             mounted: function () {
                 let _this = this;
-                axios.get('/api/CollectApi/GetCollect')
-                    .then((response) => {
-                        _this.favorites = response.data;
+                axios.get('/api/OrderApi/UserOrder')
+                    .then(response => {
+                         _this.orders = response.data;
                     })
                     .catch((error) => {
                         console.log('取得後端失敗', error);
                     });
+
             },
             methods: {
-                //刪除modal
-                deleteModal: function (model) {
+                changePage: function (num) {
                     let _this = this;
-                    _this.remove = Object.assign({}, model);
+                    _this.currentPage = num;
                 },
-                removeFavorite() {
-                    let _this = this;
-                    fetch(`${baseAddress}/api/CollectApi/DeleteCollect`, {
-                        method: "DELETE",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify(_this.remove)
-                    }).then(response => {
-                        if (response.ok) console.log("刪除成功");
-                     location.href= "/User/UserCollect";
-                    }).catch(err => {
-                        console.log("刪除失敗");
-                    })
-                },
+               
             },
         });
     </script>

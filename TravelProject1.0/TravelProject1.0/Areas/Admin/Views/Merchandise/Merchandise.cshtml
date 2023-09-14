@@ -148,13 +148,13 @@
                             <td>{{item.shortDescribe}}</td>
                             <td>
                                 <div class="d-flex justify-content-around">
-                                    <button id="btninline" type="button" class="btn btn-warning"   @@click="edit(item.productId)">
+                                    <button :disabled="notchange" id="btninline" type="button" class="btn btn-warning" @@click="edit(item.productId)">
                                         <div class="horizontal-text">
                                             <span>修改</span>
                                         </div>
                                     </button>
                                     
-                                    <button id="btninline" type="button" class="btn btn-danger"   @@click="deleteMch(item.productId)">
+                                    <button :disabled="notchange" id="btninline" type="button" class="btn btn-danger" @@click="deleteMch(item.productId)">
                                         <div class="horizontal-text">
                                             <span>刪除</span>
                                         </div>
@@ -205,10 +205,10 @@
                             <label class="form-label">簡短描述</label>
                             <input v-model="shortDescribe" type="text" class="form-control" />
                         </div>
-                        ____
+                         
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @@click="close">關閉</button>
                         <button type="button" class="btn btn-primary" @@click="insert">新增</button>
                     </div>
                 </div>
@@ -267,6 +267,11 @@
                 let _this = this;
                 _this.filterMerchandise();
 
+            },
+            computed: {
+                notchange: function () {
+                    return this.MerchandiseDTOes.some(x => x.Edit);
+                },
             },
             methods: {
                 //
@@ -474,8 +479,18 @@
                         });
                 },
 
+                
+                close: function () {
+                    let _this = this;
 
+                    _this.id = '';
+                    _this.productName = '';
+                    _this.price = '';
+                    _this.mainDescribe = '';
+                    _this.subDescribe = '';
+                    _this.shortDescribe = '';
 
+                },
 
 
 

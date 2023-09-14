@@ -50,6 +50,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 
 		private string GetAgeGroup(int? age)
 		{
+			string str = "未分類群組";
 			foreach (var ageGroup in ageGroups)
 			{
 				var range = ageGroup.Split("-");
@@ -60,7 +61,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 					return ageGroup;
 				}
 			}
-			return string.Empty;
+			return str;
 		}
 
 		[HttpGet]
@@ -112,7 +113,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 					{
 						Female[ageGroup] = 0;
 					}
-						Female[ageGroup]++;
+					Female[ageGroup]++;
 				}
 				else
 				{
@@ -120,7 +121,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 					{
 						Male[ageGroup] = 0;
 					}
-						Male[ageGroup]++;
+					Male[ageGroup]++;
 				}
 
 				if (isPayingMember)
@@ -193,7 +194,6 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 			//GetUserGenderDTO guDTO = new GetUserGenderDTO();
 			//guDTO.Female = female;
 			//guDTO.Male = male;
-
 			//return guDTO;
 		}
 
@@ -234,7 +234,6 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 		[HttpGet]
 		public async Task<IEnumerable<HighChart3DGraph>> GetIsPayAndNoPaying()
 		{
-			var asd = new Dictionary<string, int>();
 			var userIds = await _db.Users.AsNoTracking().Include(u => u.Orders).Select(u => u.UserId).ToListAsync();
 			var orderUserIds = await _db.Orders.AsNoTracking().Select(o => o.UserId).ToListAsync();
 			var paying = userIds.Intersect(orderUserIds);
