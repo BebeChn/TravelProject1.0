@@ -2,8 +2,6 @@
 {
     public class PlaneTK_salePlanDTO
     {
-
-
         public int PlanId { get; set; }
 
         public int ProductId { get; set; }
