@@ -37,5 +37,18 @@ namespace TravelProject1._0.Controllers.Api
                 Img = x.Img
             }).Take(3);
         }
+        [HttpGet]
+        public IQueryable<AttractionDTO> GetAttractionPlan()
+        {
+            return  _db.Products.Where(x => x.Id == 3).Select(x => new AttractionDTO
+            {
+                ProductId = x.ProductId,
+                ProductName = x.ProductName,
+                Img = x.Img,
+                MainDescribe = x.MainDescribe,
+
+            }).Take(1);
+        }
     }
 }
+

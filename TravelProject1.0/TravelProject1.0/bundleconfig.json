@@ -52,5 +52,11 @@
     "inputFiles": [
       "wwwroot/css/Cart.css"
     ]
+  },
+  {
+    "outputFileName": "wwwroot/css/Chart.min.css",
+    "inputFiles": [
+      "wwwroot/css/Chart.css"
+    ]
   }
 ]

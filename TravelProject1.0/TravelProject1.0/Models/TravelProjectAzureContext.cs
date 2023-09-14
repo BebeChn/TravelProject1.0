@@ -51,6 +51,7 @@ public partial class TravelProjectAzureContext : DbContext
             optionsBuilder.UseSqlServer(Config.GetConnectionString("TravelProject"));
         }
     }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.UseCollation("Chinese_Taiwan_Stroke_CI_AS");
@@ -118,7 +119,6 @@ public partial class TravelProjectAzureContext : DbContext
             entity.ToTable("CollectTable");
 
             entity.Property(e => e.CollectId).HasColumnName("CollectID");
-            entity.Property(e => e.CollectImage).HasMaxLength(50);
             entity.Property(e => e.CollectName).HasMaxLength(50);
             entity.Property(e => e.ProductId).HasColumnName("ProductID");
             entity.Property(e => e.UserId).HasColumnName("UserID");
@@ -135,6 +135,7 @@ public partial class TravelProjectAzureContext : DbContext
 
             entity.Property(e => e.OrderId).HasColumnName("OrderID");
             entity.Property(e => e.OrderDate).HasColumnType("date");
+            entity.Property(e => e.Status).HasMaxLength(10);
             entity.Property(e => e.UserId).HasColumnName("UserID");
 
             entity.HasOne(d => d.User).WithMany(p => p.Orders)

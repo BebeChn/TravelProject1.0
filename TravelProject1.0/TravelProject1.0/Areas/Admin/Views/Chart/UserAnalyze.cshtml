@@ -49,9 +49,12 @@
 		</figure>
 	</div>
 	@* 各年齡層佔比 *@
+
+	@* 各年齡層佔比 *@
 	<div class="tab-pane fade" id="nav-getIsPayAndNoPaying" role="tabpanel" aria-labelledby="nav-getIsPayAndNoPaying-tab">
 		<div id="getIsPayAndNoPaying" style="height: 400px"></div>
 	</div>
+	@* 各年齡層佔比 *@
 </div>
 
 
@@ -69,14 +72,13 @@
 	<script src="https://code.highcharts.com/highcharts-3d.js"></script>
 	<script>
 		//user柱狀圖分析
-		axios.get("/api/UserChartApi/GetUsers")
+		axios.get("/api/UserChart/GetUsers")
 			.then(response => {
-				data = response.data;
-				const Age = Object.keys(data.payingMemberAgeGroup);
-				const paying = Object.values(data.payingMemberAgeGroup);
-				const nonPaying = Object.values(data.nonPayingMemberAgeGroup);
-				const female = Object.values(data.female);
-				const male = Object.values(data.male);
+				const Age = Object.keys(response.data.payingMemberAgeGroup);
+				const paying = Object.values(response.data.payingMemberAgeGroup);
+				const nonPaying = Object.values(response.data.nonPayingMemberAgeGroup);
+				const female = Object.values(response.data.female);
+				const male = Object.values(response.data.male);
 				let myChart = Highcharts.chart('member', {
 					chart: {
 						type: "column",
@@ -85,7 +87,7 @@
 						text: "會員年齡分佈",
 					},
 					subtitle: {
-						text: "會員總數" + data.totalMember,
+						text: "會員總數" + response.data.totalMember,
 					},
 					credits: {
 						enabled: false
@@ -127,7 +129,7 @@
 		//user柱狀圖分析
 
 		//UserPie圓餅圖
-		axios.get("/api/UserChartApi/GetUserGender")
+		axios.get("/api/UserChart/GetUserGender")
 			.then(response => {
 				let femaleCount = 0;
 				let maleCount = 0;
@@ -183,7 +185,7 @@
 		//UserPie圓餅圖
 
 		//會員年齡層佔比
-		axios.get("/api/UserChartApi/GetUserAgeGroup")
+		axios.get("/api/UserChart/GetUserAgeGroup")
 			.then(response => {
 				Highcharts.chart('ageGroup', {
 					chart: {
@@ -233,7 +235,7 @@
 		//會員年齡層佔比
 
 		//已消費/未消費會員佔比
-		axios.get("/api/UserChartApi/GetIsPayAndNoPaying")
+		axios.get("/api/UserChart/GetIsPayAndNoPaying")
 			.then(response => {
 				Highcharts.chart('getIsPayAndNoPaying', {
 					chart: {

@@ -23,6 +23,7 @@ using TravelProject1._0.Models.ProductDTO;
 using NuGet.Protocol;
 using AspNetCoreHero.ToastNotification.Helpers;
 using Microsoft.AspNetCore.SignalR;
+using TravelProject1._0.Services;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -36,30 +37,26 @@ namespace TravelProject1._0.Controllers.Api
         private readonly TravelProjectAzureContext _context;
         private readonly ConcurrentDictionary<string, VerificationCode> _verificationCodes = new ConcurrentDictionary<string, VerificationCode>();
         private readonly IEmailSender _emailSender;
-        public UserApiController(ILogger<HomeController> logger, TravelProjectAzureContext context, IEmailSender emailSender)
+        private readonly IUserIdentityService _userIdentityService;
+        public UserApiController(ILogger<HomeController> logger, TravelProjectAzureContext context, IEmailSender emailSender, IUserIdentityService userIdentityService)
 
         {
             _logger = logger;
             _context = context;
             _verificationCodes = new ConcurrentDictionary<string, VerificationCode>();
             _emailSender = emailSender;
-
+            _userIdentityService = userIdentityService;
         }
-        // GET: api/<UserApiController>
-        //[HttpGet]
-        //public IEnumerable<string> Get()
-        //{
-        //    return new string[] { "value1", "value2" };
-        //}
-        // GET: api/Employees/5
-        [HttpGet("{id}")]
-        public async Task<UpdateUserDTO> GetUser(int id)
+
+        [HttpGet]
+        public async Task<UpdateUserDTO> GetUser()
         {
+            var userId = _userIdentityService.GetUserId();
             if (_context.Users == null)
             {
                 return null;
             }
-            var users = await _context.Users.FindAsync(id);
+            var users = await _context.Users.FindAsync(userId);
 
             if (users == null)
             {
@@ -69,7 +66,7 @@ namespace TravelProject1._0.Controllers.Api
             {
                 Name = users.Name,
                 Email = users.Email,
-                Birthday = users.Birthday,
+                Birthday = users.Birthday.Value.ToString("yyyy-MM-dd"),
                 Gender = users.Gender,
                 Phone = users.Phone,
             };
@@ -84,8 +81,8 @@ namespace TravelProject1._0.Controllers.Api
             {
                 return false;
             }
-            // 對密碼進行加鹽
 
+            // 對密碼進行加鹽
             try
             {
                 string salt = GenerateSalt();
@@ -100,7 +97,6 @@ namespace TravelProject1._0.Controllers.Api
                     Email = register.Email,
                     Birthday = register.Birthday,
                     Phone = register.Phone,
-                    //Password = register.Password,
                     PasswordHash = hashedPassword,
                     Salt = salt,
                     CreateDate = DateTime.Now
@@ -109,7 +105,6 @@ namespace TravelProject1._0.Controllers.Api
                 };
 
                 // 添加用戶到資料庫
-
                 _context.Users.Add(newUser);
 
                 _context.SaveChanges();
@@ -123,7 +118,6 @@ namespace TravelProject1._0.Controllers.Api
                 ClaimsPrincipal principal = new ClaimsPrincipal(identity);
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
             }
-
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
@@ -131,6 +125,7 @@ namespace TravelProject1._0.Controllers.Api
             }
             return true;
         }
+
         // 生成隨機鹽
         private string GenerateSalt()
         {
@@ -139,7 +134,6 @@ namespace TravelProject1._0.Controllers.Api
             {
                 ran.GetBytes(saltBytes);
             }
-
             return Convert.ToBase64String(saltBytes);
         }
 
@@ -157,48 +151,14 @@ namespace TravelProject1._0.Controllers.Api
                 return Convert.ToBase64String(hashBytes);
             }
         }
-        //[HttpGet("check-username")]
-        //public async Task<ActionResult<bool>> CheckUsernameExists(string username)
-        //{
-        //    if (string.IsNullOrEmpty(username))
-        //    {
-        //        return BadRequest("使用者不能為空.");
-        //    }
 
-        //    bool usernameExists = await _context.Users.AnyAsync(user => user.Name == username);
-        //    return Ok(new { Exists = usernameExists });
-        //}
-
-
-
-        // PUT api/<UserApiController>/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUser(int id, UpdateUserViewModel UpdateUser)
+        [HttpPut]
+        public async Task<IActionResult> UpdateUser(UpdateUserViewModel UpdateUser)
         {
 
-            if (id != UpdateUser.UserId)
-            {
-                return BadRequest("使用者不存在");
-            }
+            int id = _userIdentityService.GetUserId();
 
             User user = await _context.Users.FindAsync(id);
-
-            //判斷傳入的密碼是否更改
-
-            //if (UpdateUser.Password != null)
-            //{
-            //    string hashedPassword = HashPassword(UpdateUser.Password, user.Salt);
-            //    if (UpdateUser.PasswordHash == hashedPassword)
-            //    {
-            //        return BadRequest("密碼不可重複");
-            //    }
-            //    else
-            //    {
-            //        string salt = GenerateSalt();
-            //        user.Salt = salt;
-            //        user.PasswordHash = hashedPassword;
-            //    }
-            //}
 
             // 修改其他個資
             user.Email = UpdateUser.Email;
@@ -206,8 +166,6 @@ namespace TravelProject1._0.Controllers.Api
             user.Name = UpdateUser.Name;
             user.Phone = UpdateUser.Phone;
             user.Gender = UpdateUser.Gender;
-
-
 
             _context.Entry(user).State = EntityState.Modified;
             try
@@ -254,6 +212,7 @@ namespace TravelProject1._0.Controllers.Api
                 return StatusCode(500, $"錯誤: {ex.Message}");
             }
         }
+
         [HttpPost]
         public async Task<IActionResult> VerifyCode([FromBody] VerificationCodeViewModel request)
         {
@@ -266,7 +225,6 @@ namespace TravelProject1._0.Controllers.Api
                 {
                     return BadRequest("錯誤的驗證碼或是驗證碼時效過期.");
                 }
-
                 //if (verificationCodeData.ExpiryTime < DateTime.UtcNow)
                 //{
                 //    _verificationCodes.TryRemove("request.CodeId", out _);
@@ -281,7 +239,6 @@ namespace TravelProject1._0.Controllers.Api
                 return StatusCode(500, $"錯誤: {ex.Message}");
             }
         }
-
 
         private string GenerateVerificationCode()
         {
@@ -308,46 +265,14 @@ namespace TravelProject1._0.Controllers.Api
                 await _context.SaveChangesAsync();
 
                 return Ok(new { Message = "密碼成功重設" });
-
-
             }
             else
             {
                 return BadRequest(new { Message = "重設密碼" });
             }
         }
-        [HttpGet]
-        public IEnumerable<OrderInfo> OrderDetails()
-        {
-            Claim user = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
-            string? idu = user.Value;
-            int id = Convert.ToInt32(idu);
-            return _context.Orders.Include(o => o.OrderDetails).Where(o => o.UserId == id)
-                .Select(o => new OrderInfo
-                {
-                    OrderDate = o.OrderDate,
-                    OrderId = o.OrderId,
-                    Detail = o.OrderDetails.Select(z => new OrderDetailDto
-                    {
-                        PlanId = z.PlanId,
-                        Quantity = z.Quantity,
-                        UnitPrice = z.UnitPrice,
-                        Odimg = z.Odimg,
-                        Odname = z.Odname,
-                    })
-                });
-        }
+
+       
+       
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
