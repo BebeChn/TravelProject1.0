@@ -34,7 +34,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
             return _context.Users.Select(x => new AdminGetUserViewModel
 
             {
-                Id = x.UserId,
+                UserId = x.UserId,
                 Email = x.Email,
                 Gender = x.Gender,
                 Name = x.Name,
@@ -73,9 +73,9 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
                 return null;
             }
         }
-
+            
         [HttpPost]
-        public bool AdminManageUser(AdmminManageUserDTO amuDTO)
+        public IActionResult AdminManageUser(AdmminManageUserDTO amuDTO)
         {
             var salt = GenerateSalt();
 
@@ -94,20 +94,20 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
             {
                 _context.Users.AddAsync(insertuser);
                 _context.SaveChanges();
-            }
+             }
             catch (Exception ex)
             {
-                return false;
+                return BadRequest();
             }
 
-            List<Claim> claims = new List<Claim>();
-            claims.Add(new Claim(ClaimTypes.NameIdentifier, amuDTO.Id.ToString()));
-            claims.Add(new Claim(ClaimTypes.Name, $"{amuDTO.Name}"));
-            claims.Add(new Claim("Email", amuDTO.Email));
-            claims.Add(new Claim(ClaimTypes.Role, "user"));
-            ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            ClaimsPrincipal principal = new ClaimsPrincipal(identity);
-            return true;
+            //List<Claim> claims = new List<Claim>();
+            //claims.Add(new Claim(ClaimTypes.NameIdentifier, amuDTO.Id.ToString()));
+            //claims.Add(new Claim(ClaimTypes.Name, $"{amuDTO.Name}"));
+            //claims.Add(new Claim("Email", amuDTO.Email));
+            //claims.Add(new Claim(ClaimTypes.Role, "user"));
+            //ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            //ClaimsPrincipal principal = new ClaimsPrincipal(identity);
+            return Ok();
         }
         private string GenerateSalt()
         {
@@ -174,7 +174,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
         {
             return _context.Users.OrderBy(u => u.Age).Select(u => new AdminGetUserViewModel
             {
-                Id = u.UserId,
+                UserId = u.UserId,
                 Email = u.Email,
                 Gender = u.Gender,
                 Name = u.Name,
@@ -189,7 +189,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
         {
             return _context.Users.OrderByDescending(u => u.Age).Select(u => new AdminGetUserViewModel
             {
-                Id = u.UserId,
+                UserId = u.UserId,
                 Email = u.Email,
                 Gender = u.Gender,
                 Name = u.Name,
