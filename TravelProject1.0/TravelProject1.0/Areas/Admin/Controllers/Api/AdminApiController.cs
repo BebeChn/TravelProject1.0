@@ -52,7 +52,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 
                 if (user == null)
                 {
-                    return NotFound(); 
+                    return NotFound();
                 }
 
                 GetUserDetailDTO advm = new GetUserDetailDTO
@@ -65,50 +65,50 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
                     Birthday = user.Birthday?.ToString("yyyy-MM-dd HH:mm:ss")
                 };
 
-                return Ok(advm); 
+                return Ok(advm);
             }
             catch (Exception ex)
             {
-                
+
                 return null;
             }
         }
 
-            [HttpPost]
-            public bool AdminManageUser(AdmminManageUserDTO amuDTO)
+        [HttpPost]
+        public bool AdminManageUser(AdmminManageUserDTO amuDTO)
+        {
+            var salt = GenerateSalt();
+
+            var passwordhash = HashPassword(amuDTO.Password, salt);
+
+            User insertuser = new User
             {
-                var salt = GenerateSalt();
-
-                var passwordhash = HashPassword(amuDTO.Password, salt);
-
-                User insertuser = new User
-                {
-                    Name = amuDTO.Name,
-                    Email = amuDTO.Email,
-                    PasswordHash = passwordhash,
-                    Gender = amuDTO.Gender,
-                    Phone = amuDTO.Phone,
-                    Birthday = amuDTO.Birthday,
-                };
-                try
-                {
-                    _context.Users.AddAsync(insertuser);
-                    _context.SaveChanges();
-                }
-                catch (Exception ex)
-                {
-                    return false;
-                }
-
-                List<Claim> claims = new List<Claim>();
-                claims.Add(new Claim(ClaimTypes.NameIdentifier, amuDTO.Id.ToString()));
-                claims.Add(new Claim(ClaimTypes.Name, $"{amuDTO.Name}"));
-                claims.Add(new Claim("Email", amuDTO.Email));
-                claims.Add(new Claim(ClaimTypes.Role, "user"));
-                ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                ClaimsPrincipal principal = new ClaimsPrincipal(identity);
-                return true;
+                Name = amuDTO.Name,
+                Email = amuDTO.Email,
+                PasswordHash = passwordhash,
+                Gender = amuDTO.Gender,
+                Phone = amuDTO.Phone,
+                Birthday = amuDTO.Birthday,
+            };
+            try
+            {
+                _context.Users.AddAsync(insertuser);
+                _context.SaveChanges();
             }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
+            List<Claim> claims = new List<Claim>();
+            claims.Add(new Claim(ClaimTypes.NameIdentifier, amuDTO.Id.ToString()));
+            claims.Add(new Claim(ClaimTypes.Name, $"{amuDTO.Name}"));
+            claims.Add(new Claim("Email", amuDTO.Email));
+            claims.Add(new Claim(ClaimTypes.Role, "user"));
+            ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            ClaimsPrincipal principal = new ClaimsPrincipal(identity);
+            return true;
+        }
         private string GenerateSalt()
         {
             Byte[] bytes = new Byte[16];
@@ -129,7 +129,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
             }
         }
         [HttpPut("{id}")]
-        public async Task<string> AdminPutUser(int id, AdminPutUserDTO apuDTO) 
+        public async Task<string> AdminPutUser(int id, AdminPutUserDTO apuDTO)
         {
 
             var admin = await _context.Users.FindAsync(id);
@@ -150,28 +150,24 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
             }
             return "成功";
         }
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<string> AdminDeleteUser(int id)
         {
-            if (_context.Users == null)
-            {
-                return "刪除失敗";
-            }
             var users = await _context.Users.FindAsync(id);
             if (users == null)
             {
-                return "刪除失敗";
+                return "找不到該用戶";
             }
             try
             {
                 _context.Users.Remove(users);
                 await _context.SaveChangesAsync();
+                return "刪除成功";
             }
             catch
             {
                 return "刪除關聯失敗";
             }
-            return "刪除成功";
         }
         [HttpGet]
         public async Task<IQueryable<AdminGetUserViewModel>> OrderByAge()
