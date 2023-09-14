@@ -7,6 +7,7 @@ namespace TravelProject1._0.Models.ViewModel
         public string Name { get; set; }
 
         public string Email { get; set; }
+
         [DataType(DataType.Date)]
         public DateTime? Birthday { get; set; }
 
