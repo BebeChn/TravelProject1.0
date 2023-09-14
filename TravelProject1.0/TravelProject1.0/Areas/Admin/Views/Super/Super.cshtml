@@ -1,12 +1,13 @@
 ﻿@section Styles{
 	<link href="~/css/planetk.css" rel="stylesheet" />
-	<link href="~/css/Super.css" rel="stylesheet" />	
+	<link href="~/css/Super.css" rel="stylesheet" />
 	<style>
 		td {
 			height: 50px;
 			border: 1px solid silver;
-			text-align:center;
+			text-align: center;
 		}
+
 		.formatError {
 			color: #dc3545;
 			font-size: .875em;
@@ -21,10 +22,10 @@
 	<div>
 		<div style="color:black;font-size:36px;">管理員管理</div>
 		<div class="row" style="width:25%;margin-left:800px;">
-			關鍵字搜尋：<input type="text" v-model="Filter" class="form-control" placeholder="請輸入篩選關鍵字"  @@keyup="filterEmployees"  />
-		</div>		
-	</div>	
-	
+			關鍵字搜尋：<input type="text" v-model="Filter" class="form-control" placeholder="請輸入篩選關鍵字" @@keyup="filterEmployees" />
+		</div>
+	</div>
+
 	<br />
 	<br />
 
@@ -44,16 +45,16 @@
 				<td></td>
 			</tr>
 			<tr v-for="item in SuperDTOes">
-					<td>{{item.id}}</td>
-					<td>{{item.describe}}</td>
-					<td>{{item.name}}</td>
-					<td>{{item.account}}</td>
-					<td>{{item.createDate | formatDate}}</td>
-					<td>{{item.loginDate | formatDate}}</td>
-					<td>
-					<button type="button" class="btn btn-warning" @@click="updateModal">編輯</button>
-						<button type="button" class="btn btn-danger" @@click="deleteSuper(item.id)">刪除</button>
-					</td>
+				<td>{{item.id}}</td>
+				<td>{{item.describe}}</td>
+				<td>{{item.name}}</td>
+				<td>{{item.account}}</td>
+				<td>{{item.createDate | formatDate}}</td>
+				<td>{{item.loginDate | formatDate}}</td>
+				<td>
+@* 					<button type="button" class="btn btn-warning" @@click="updateModal">編輯</button> *@
+					<button type="button" class="btn btn-danger" @@click="deleteSuper(item.id)">刪除</button>
+				</td>
 			</tr>
 		</table>
 	</div>
@@ -69,18 +70,13 @@
 				<div class="modal-body">
 					<div class="form-group">
 						<label class="form-label">管理人：</label>
-						<input v-model.trim="name" type="text" class="form-control" required />
+						<input v-model.trim="name" type="text" class="form-control"  required />
 						<div v-if="!isValid(name,validType.name)" class="formatError">您輸入的格式錯誤</div>
 					</div>
 					<div class="form-group">
 						<label class="form-label">帳號：</label>
 						<input v-model.trim="account" type="email" class="form-control" required />
-						<div class="formatError" v-if="!isValid(account,validType.email)" >您輸入的格式不正確</div>
-					</div>
-					<div class="form-group">
-						<label class="form-label">密碼：</label>
-						<input v-model.trim="password" type="password" class="form-control" required />
-						<div class="formatError" v-if="!isValid(password,validType.password)">您輸入的格式不正確</div>
+						<div class="formatError" v-if="!isValid(account,validType.email)">您輸入的格式不正確</div>
 					</div>
 					<div class="form-group">
 						<label class="form-label">管理權限描述：</label>
@@ -116,11 +112,6 @@
 						<div class="formatError" v-if="!isValid(account,validType.email)">您輸入的格式不正確</div>
 					</div>
 					<div class="form-group">
-						<label class="form-label">密碼：</label>
-						<input v-model.trim="password" type="password" class="form-control" required />
-						<div class="formatError" v-if="!isValid(password,validType.password)">您輸入的格式不正確</div>
-					</div>
-					<div class="form-group">
 						<label class="form-label">管理權限描述：</label>
 						<input v-model.trim="describe" type="text" class="form-control" required />
 						<div class="formatError" v-if="!isValid(describe,validType.name)">請輸入管理權限描述</div>
@@ -132,7 +123,6 @@
 			</div>
 		</div>
 	</div>
-
 
 </div>
 
@@ -155,13 +145,14 @@
 				describe: '',
 				createDate: '',
 				validType: validType,
-				originalDescribe:'',
-				originalName:'',
-				originalAccount:'',
-				originalPassword:'',
-				originalCreateDate:'',
-				originalLoginDate:'',
-				originalRole: ''
+				originalDescribe: '',
+				originalName: '',
+				originalAccount: '',
+				originalPassword: '',
+				originalCreateDate: '',
+				originalLoginDate: '',
+				originalRole: '',
+				request: {},
 			},
 			mounted: function () {
 				let _this = this;
@@ -193,8 +184,7 @@
 					var request = {};
 					request.Id = isNaN(Number(_this.Filter)) ? -1 : Number(_this.Filter);
 					request.RoleId = request.Id;
-					request.Name = request.Account = request.Password = request.Role = request.Describe =  _this.Filter;
-					// request.CreateDate = request.LoginDate = new Date();
+					request.Name = request.Account = request.Password = request.Role = request.Describe = _this.Filter;
 					axios.post(`${baseAddress}/api/SuperApi/SuperSearch`, request)
 						.then(response => {
 							_this.SuperDTOes = response.data;
@@ -211,16 +201,20 @@
 					$("#updateModal").modal('show');
 				},
 				insert: function () {
-					//alert('aa');
 					let _this = this;
 					_this.isValid();
+
+					if (_this.name == "") return;
+					if (_this.account == "") return;
+					if (_this.describe == "") return;
+
 					var request = {
 						Id: 0,		//不能缺
 						Name: _this.name,
 						Account: _this.account,
 						Password: _this.password,
 						Role: _this.role,
-						Describe:_this.describe,
+						Describe: _this.describe,
 						CreateDate: /* _this.createDate */ new Date(),
 						LoginDate: new Date()
 					};
@@ -249,7 +243,7 @@
 				update: function (item) {
 					//alert("update");
 					let _this = this;
-					var request = {}
+					var request = {};
 					request.Id = item.Id;
 					request.Name = item.Name;
 					request.Account = item.Account;
@@ -264,7 +258,6 @@
 						alert(err);
 					});
 				},
-
 			}
 		})
 
