@@ -1,71 +1,64 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Win32;
-using NToastNotify.Helpers;
-using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using TravelProject1._0.Areas.Admin.Models.DTO;
 using TravelProject1._0.Areas.Admin.Models.ViewModel;
 using TravelProject1._0.Models;
-using TravelProject1._0.Models.DTO;
 using TravelProject1._0.Services;
 
 namespace TravelProject1._0.Areas.Admin.Controllers.Api
 {
-    [Area("Admin")]
-    [Route("api/AdminApi/[action]")]
+
+    [Route("api/ OrderApi/[action]")]
     [ApiController]
-    public class AdminApiController : ControllerBase
+    public class ProductApiController : ControllerBase
     {
         private readonly TravelProjectAzureContext _context;
         private readonly IUserSearchService _userSearchService;
-        public AdminApiController(TravelProjectAzureContext context, IUserSearchService userSearchService)
+        public ProductApiController(TravelProjectAzureContext context, IUserSearchService userSearchService)
         {
             _context = context;
             _userSearchService = userSearchService;
         }
-
         [HttpGet]
-        public IEnumerable<AdminGetUserViewModel> AdminGetUser()
+        public IEnumerable<GetProductDTO> GetProduct()
         {
-            return _context.Users.Select(x => new AdminGetUserViewModel
-
+            return _context.Products.Select(x => new GetProductDTO
             {
-                UserId = x.UserId,
-                Email = x.Email,
-                Gender = x.Gender,
-                Name = x.Name,
-                Phone = x.Phone,
-                Birthday = x.Birthday.Value.ToString("yyyy-MM-dd"),
+              Id = x.Id,
+              ProductName = x.ProductName,
+              MainDescribe = x.MainDescribe,
+              Price = x.Price,
+              ProductId = x.ProductId,
             });
 
         }
         [HttpGet("{id}")]
-        public async Task<ActionResult<GetUserDetailDTO>> GetUserDetail(int id)
+        public async Task<ActionResult<GetProdcutDetailDTO>> GetProductDetails(int id)
         {
             try
             {
-                var user = await _context.Users.FindAsync(id);
+                var product = await _context.Products.FindAsync(id);
 
-                if (user == null)
+                if (product == null)
                 {
                     return NotFound();
                 }
 
-                GetUserDetailDTO gud = new GetUserDetailDTO
+                GetProdcutDetailDTO gpd = new GetProdcutDetailDTO
                 {
-                    UserId = user.UserId,
-                    Email = user.Email,
-                    Gender = user.Gender,
-                    Name = user.Name,
-                    Phone = user.Phone,
-                    Birthday = user.Birthday?.ToString("yyyy-MM-dd HH:mm:ss")
+                    ProductId = product.ProductId,
+                    Id = product.Id,
+                    ProductName = product.ProductName,
+                    MainDescribe = product.MainDescribe,
+                    Price = product.Price,
+                    SubDescribe = product.SubDescribe,
+                    ShortDescribe = product.ShortDescribe,
                 };
 
-                return Ok(gud);
+                return Ok(gpd);
             }
             catch (Exception ex)
             {
@@ -73,61 +66,33 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
                 return NotFound();
             }
         }
-            
         [HttpPost]
-        public IActionResult AdminManageUser(AdmminManageUserDTO amuDTO)
+        public IActionResult PostProduct(PostProductViewModel pp)
         {
-            var salt = GenerateSalt();
+           
 
-            var passwordhash = HashPassword(amuDTO.Password, salt);
-
-            User insertuser = new User
+            Product insertproduct = new Product
             {
-                Name = amuDTO.Name,
-                Email = amuDTO.Email,
-                PasswordHash = passwordhash,
-                Gender = amuDTO.Gender,
-                Phone = amuDTO.Phone,
-                Birthday = amuDTO.Birthday,
+              ProductId=pp.ProductId,
+              Id=pp.Id,
+              ProductName=pp.ProductName,
+              Price = pp.Price,
+              MainDescribe = pp.MainDescribe,
+              SubDescribe=pp.SubDescribe,
+              ShortDescribe=pp.ShortDescribe,
             };
             try
             {
-                _context.Users.AddAsync(insertuser);
+                _context.Products.AddAsync(insertproduct);
                 _context.SaveChanges();
-             }
+            }
             catch (Exception ex)
             {
                 return BadRequest();
             }
-
-            List<Claim> claims = new List<Claim>();
-            claims.Add(new Claim(ClaimTypes.NameIdentifier, amuDTO.Id.ToString()));
-            claims.Add(new Claim(ClaimTypes.Name, $"{amuDTO.Name}"));
-            claims.Add(new Claim("Email", amuDTO.Email));
-            claims.Add(new Claim(ClaimTypes.Role, "user"));
-            ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            ClaimsPrincipal principal = new ClaimsPrincipal(identity);
             return Ok();
         }
-        private string GenerateSalt()
-        {
-            Byte[] bytes = new Byte[16];
-            using (var ran = RandomNumberGenerator.Create())
-            {
-                ran.GetBytes(bytes);
-            }
-            return Convert.ToBase64String(bytes);
-        }
-        private string HashPassword(string paswword, string salt)
-        {
-            using (var sha256 = SHA256.Create())
-            {
-                string paswwordsalt = paswword + salt;
-                byte[] passwordhash = Encoding.UTF8.GetBytes(paswwordsalt);
-                byte[] psaswordhash = sha256.ComputeHash(passwordhash);
-                return Convert.ToBase64String(psaswordhash);
-            }
-        }
+ 
         [HttpPut("{id}")]
         public async Task<string> AdminPutUser(int id, AdminPutUserDTO apuDTO)
         {
@@ -183,7 +148,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 
             });
         }
-        //排序年紀
+        //價格高到低
         [HttpGet]
         public async Task<IQueryable<AdminGetUserViewModel>> OrderByDescendingAge()
         {
