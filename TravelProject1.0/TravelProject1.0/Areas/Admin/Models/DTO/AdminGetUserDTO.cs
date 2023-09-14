@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace TravelProject1._0.Areas.Admin.Models.ViewModel
+namespace TravelProject1._0.Areas.Admin.Models.DTO
 {
-    public class AdminGetUserViewModel
+    public class AdminGetUserDTO
     {
         public string? Birthday { get; set; }
         public int UserId { get; set; }

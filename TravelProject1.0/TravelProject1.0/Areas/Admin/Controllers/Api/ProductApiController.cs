@@ -25,13 +25,13 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
         [HttpGet]
         public IEnumerable<GetProductDTO> GetProduct()
         {
-            return _context.Products.Select(x => new GetProductDTO
+            return _context.Products.Select(p => new GetProductDTO
             {
-              Id = x.Id,
-              ProductName = x.ProductName,
-              MainDescribe = x.MainDescribe,
-              Price = x.Price,
-              ProductId = x.ProductId,
+              Id = p.Id,
+              ProductName = p.ProductName,
+              MainDescribe = p.MainDescribe,
+              Price = p.Price,
+              ProductId = p.ProductId,
             });
 
         }
@@ -94,17 +94,19 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
         }
  
         [HttpPut("{id}")]
-        public async Task<string> AdminPutUser(int id, AdminPutUserDTO apuDTO)
+        public async Task<string> PutProduct(int id, PutProductVIewModel ppvm)
         {
 
-            var admin = await _context.Users.FindAsync(id);
-            admin.Name = apuDTO.Name;
-            admin.Gender = apuDTO.Gender;
-            admin.Email = apuDTO.Email;
-            admin.Birthday = apuDTO.Birthday;
-            admin.Phone = apuDTO.Phone;
+            var product = await _context.Products.FindAsync(id);
+            product.ProductId = ppvm.ProductId;
+            product.Id = ppvm.Id;
+            product.ProductName = ppvm.ProductName;
+            product.Price = ppvm.Price;
+            product.MainDescribe = ppvm.MainDescribe;
+            product.SubDescribe = ppvm.SubDescribe;
+            product.ShortDescribe = ppvm.ShortDescribe;
 
-            _context.Entry(admin).State = EntityState.Modified;
+            _context.Entry(product).State = EntityState.Modified;
             try
             {
                 await _context.SaveChangesAsync();
@@ -116,16 +118,16 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
             return "成功";
         }
         [HttpDelete("{id}")]
-        public async Task<string> AdminDeleteUser(int id)
+        public async Task<string> DeleteProduct(int id)
         {
-            var users = await _context.Users.FindAsync(id);
-            if (users == null)
+            var product = await _context.Products.FindAsync(id);
+            if (product == null)
             {
-                return "找不到該用戶";
+                return "找不到該商品";
             }
             try
             {
-                _context.Users.Remove(users);
+                _context.Products.Remove(product);
                 await _context.SaveChangesAsync();
                 return "刪除成功";
             }
@@ -135,35 +137,33 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
             }
         }
         [HttpGet]
-        public async Task<IQueryable<AdminGetUserViewModel>> OrderByAge()
+        public async Task<IQueryable<ProductOrderDTO>> OrderByPrice()
         {
-            return _context.Users.OrderBy(u => u.Age).Select(u => new AdminGetUserViewModel
+            return _context.Products.OrderBy(p => p.Price).Select(p => new ProductOrderDTO
             {
-                UserId = u.UserId,
-                Email = u.Email,
-                Gender = u.Gender,
-                Name = u.Name,
-                Phone = u.Phone,
-                Birthday = u.Birthday.Value.ToString("yyyy-MM-dd"),
+                Id = p.Id,
+                ProductName = p.ProductName,
+                MainDescribe = p.MainDescribe,
+                Price = p.Price,
+                ProductId = p.ProductId,
 
             });
         }
         //價格高到低
         [HttpGet]
-        public async Task<IQueryable<AdminGetUserViewModel>> OrderByDescendingAge()
+        public async Task<IQueryable<ProductOrderDTO>> OrderByDescendingPrice()
         {
-            return _context.Users.OrderByDescending(u => u.Age).Select(u => new AdminGetUserViewModel
+            return _context.Products.OrderByDescending(p => p.Price).Select(p => new ProductOrderDTO
             {
-                UserId = u.UserId,
-                Email = u.Email,
-                Gender = u.Gender,
-                Name = u.Name,
-                Phone = u.Phone,
-                Birthday = u.Birthday.Value.ToString("yyyy-MM-dd"),
+                Id = p.Id,
+                ProductName = p.ProductName,
+                MainDescribe = p.MainDescribe,
+                Price = p.Price,
+                ProductId = p.ProductId,
             });
         }
         [HttpGet]
-        public IActionResult AdminSearchUser(string query)
+        public IActionResult AdminSearchProducut(string query)
         {
             var searchResults = _userSearchService.SearchUsers(query);
             return Ok(searchResults);

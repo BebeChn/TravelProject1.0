@@ -170,9 +170,9 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
             }
         }
         [HttpGet]
-        public async Task<IQueryable<AdminGetUserViewModel>> OrderByAge()
+        public async Task<IQueryable<AdminGetUserDTO>> OrderByAge()
         {
-            return _context.Users.OrderBy(u => u.Age).Select(u => new AdminGetUserViewModel
+            return _context.Users.OrderBy(u => u.Age).Select(u => new AdminGetUserDTO
             {
                 UserId = u.UserId,
                 Email = u.Email,
@@ -185,9 +185,9 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
         }
         //排序年紀
         [HttpGet]
-        public async Task<IQueryable<AdminGetUserViewModel>> OrderByDescendingAge()
+        public async Task<IQueryable<AdminGetUserDTO>> OrderByDescendingAge()
         {
-            return _context.Users.OrderByDescending(u => u.Age).Select(u => new AdminGetUserViewModel
+            return _context.Users.OrderByDescending(u => u.Age).Select(u => new AdminGetUserDTO
             {
                 UserId = u.UserId,
                 Email = u.Email,
