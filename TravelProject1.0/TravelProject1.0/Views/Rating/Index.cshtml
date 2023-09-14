@@ -64,7 +64,7 @@
                         ratingScore: _this.selectedStar,
                         describe: _this.describe
                     };
-                    fetch(`${baseAddress}/api/RatingApi/PostRating/${_this.queries}`, {
+                    fetch(`/api/RatingApi/PostRating/${_this.queries}`, {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify(ratingData)

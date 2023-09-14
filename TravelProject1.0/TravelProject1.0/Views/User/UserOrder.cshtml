@@ -1,5 +1,167 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@section Styles{
+    <style>
+        .eachfield {
+            background-color: #faf9f9;
+        }
+
+        .groundfield {
+            background-color: #eeeeee;
+        }
+
+        .favorites {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .favorite-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #ccc;
+            padding: 5px 0;
+        }
+
+        .favorite-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            border-bottom: 1px solid #ccc;
+            padding: 10px 0;
+        }
+
+        .favorite-name {
+            flex: 1;
+        }
+
+        .delete-button {
+            background-color: #f00;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+    </style>
+}
+
+
+<div id="app" class="groundfield">
+    <br />
+    <br />
+    <div class="container">
+        <div class="row">
+            <div class="col-8 eachfield">
+                <h2 style="text-align:center;font-size:36px">訂單項目</h2>
+                <ul class="favorites">
+                    <li class="favorite-title">
+                        <span>訂購日期</span>
+                        <span>訂單編號</span>
+                        <span>付款狀態</span>
+                        <sapn>查看</sapn>
+                    </li>
+                    <li v-for="o in orders" class="favorite-title">
+                        <sapn>{{o.orderDate}}</sapn>
+                        <sapn class="me-3">{{o.orderId}}</sapn>
+                        <span class="me-3">{{o.status}}</span>
+                        <a :href="'/User/UserOrderDetail/'+o.orderId" class="btn theme_btn button_hover info mt-3">
+                            詳細訂單
+                        </a>
+                    </li>
+                </ul>
+                @* 分頁 *@
+                <nav class="blog-pagination justify-content-center d-flex">
+                    <ul class="pagination">
+                        <paginate :page-count="total"
+                                  :click-handler="changePage"
+                                  :page-class="'page-item'"
+                                  :page-link-class="'page-link'"
+                                  :prev-class="'page-link'"
+                                  :prev-link-class="'lnr lnr-chevron-left'"
+                                  :next-class="'page-link'"
+                                  :next-link-class="'lnr lnr-chevron-right'"
+                                  :container-class="'pagination'">
+                        </paginate>
+                    </ul>
+                </nav>
+            </div>
+            <div class="col-md-3 offset-1 eachfield">
+                <div class="blog_right_sidebar">
+                    <aside class="single_sidebar_widget post_category_widget">
+                        <div style="text-align:center">
+                            <img class="" src="~/img/dog.jpg" style="border-radius:50%;width:150px;height:150px" />
+                        </div>
+                        <br />
+                        <h4 class="widget_title">會員資料</h4>
+                        <ul class="list_style cat-list">
+                            <li>
+                                <a class="d-flex justify-content-between" asp-Controller="User" asp-action="UpdateUser">
+                                    <p>個人資訊</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="d-flex justify-content-between" asp-Controller="User" asp-action="UserOrderDetails">
+                                    <p>商品訂單</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="d-flex justify-content-between" asp-Controller="User" asp-action="UserCollect" style="font-weight: bold; color:#52c5fd ;font-size: 14px;">
+                                    <p>收藏夾</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="d-flex justify-content-between" asp-Controller="User" asp-action="UserPoint">
+                                    <p>點數</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </aside>
+                </div>
+            </div>
+        </div>
+    </div>
+   
+
+</div>
+
+
+@section Scripts{
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js" integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script>
+        var baseAddress = "https://localhost:7025";
+        var vueApp = new Vue({
+            el: '#app',
+            data: {
+                orders: {},
+                currentPage: 1,
+                itemPage: 10,
+            },
+            computed: {
+                showOrder: function () {
+                    let _this = this;
+                    var start = (_this.currentPage - 1) * _this.itemPage;
+                    var end = start + _this.itemPage;
+                    return this.attractionsFilter.slice(start, end);
+                },
+            },
+            mounted: function () {
+                let _this = this;
+                axios.get('/api/OrderApi/UserOrder')
+                    .then(response => {
+                         _this.orders = response.data;
+                    })
+                    .catch((error) => {
+                        console.log('取得後端失敗', error);
+                    });
+
+            },
+            methods: {
+                changePage: function (num) {
+                    let _this = this;
+                    _this.currentPage = num;
+                },
+               
+            },
+        });
+    </script>
 }

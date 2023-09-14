@@ -1,16 +1,16 @@
-﻿namespace TravelProject1._0.Models.DTO
+﻿namespace TravelProject1._0.Areas.Admin.Models.DTO
 {
-    public class MerchandiseDTO
+    public class GetProdcutDetailDTO
     {
         public int ProductId { get; set; }
 
-        public int Id { get; set; }
-
-        public string ProductName { get; set; } = null!;
+        public string ProductName { get; set; }
 
         public decimal Price { get; set; }
 
         public string? MainDescribe { get; set; }
+
+        public int Id { get; set; }
 
         public string? SubDescribe { get; set; }
 

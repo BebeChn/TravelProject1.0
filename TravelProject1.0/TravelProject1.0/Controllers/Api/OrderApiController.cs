@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -41,6 +42,21 @@ namespace TravelProject1._0.Controllers.Api
                         ProductId = z.Plan.ProductId
                     })
                 });
+        }
+        [Authorize]
+        [HttpGet]
+        public IEnumerable<UserOrderDTO> UserOrder()
+        {
+            var userId = _userIdentityService.GetUserId();
+            return _context.Orders.Where(o => o.UserId == userId).Select(o => new UserOrderDTO
+            {
+                OrderDate=o.OrderDate.Value.ToString("yyyy-MM-dd"),
+                OrderId = o.OrderId,
+                Status = o.Status,
+                UserId = userId
+            });
+              
+               
         }
         [HttpGet]
         public IEnumerable<OrderGetPointDTO> OrderDetailsGetPoint()
