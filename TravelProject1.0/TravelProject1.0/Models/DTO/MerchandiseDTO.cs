@@ -15,8 +15,5 @@
         public string? SubDescribe { get; set; }
 
         public string? ShortDescribe { get; set; }
-
-         
-
     }
 }

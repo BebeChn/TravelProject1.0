@@ -8,7 +8,6 @@
 
         public string ProductName { get; set; } = null!;
 
-
         public string? Img { get; set; }
     }
 }

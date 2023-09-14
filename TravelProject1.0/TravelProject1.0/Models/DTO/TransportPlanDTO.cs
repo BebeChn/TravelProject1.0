@@ -6,7 +6,7 @@ namespace TravelProject1._0.Models.DTO
     {
         public int ProductId { get; set; }
 
-        public string ProductName { get; set; } = null!;
+        public string ProductName { get; set; }
 
         public string? MainDescribe { get; set; }
 
