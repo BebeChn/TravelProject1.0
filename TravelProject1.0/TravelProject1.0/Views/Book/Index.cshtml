@@ -1,182 +1,124 @@
 ﻿@{
-    ViewData["Title"] = "住宿";
+	ViewData["Title"] = "住宿";
 }
 
 @section Styles{
-    <link href="~/css/book.css" rel="stylesheet" />
+	<link href="~/css/book.css" rel="stylesheet" />
 }
 
 <section id="app" class="accomodation_area">
-    <div class="container">
-        <div class="row">
-            <div class="col-xl-2">
-                @* 列表 *@
-                <div class="blog_right_sidebar">
-                    <aside class="single_sidebar_widget post_category_widget">
-                        <h4 class="widget_title">商品種類</h4>
-                        <ul class="list_style cat-list">
-                            <li>
-                                <a href="#" class="d-flex justify-content-between" v-on:click="filterByCategory('飯店')">
-                                    <p :class="{'text-change':search==='飯店'}">飯店</p>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" class="d-flex justify-content-between" v-on:click="filterByCategory('民宿')">
-                                    <p :class="{'text-change':search==='民宿'}">民宿</p>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" class="d-flex justify-content-between" v-on:click="filterByCategory('露營區')">
-                                    <p :class="{'text-change':search==='露營區'}">露營區</p>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" class="d-flex justify-content-between" v-on:click="filterByCategory('渡假村')">
-                                    <p :class="{'text-change':search==='渡假村'}">渡假村</p>
-                                </a>
-                            </li>
-                        </ul>
-                    </aside>
-                </div>
-            </div>
+	<div class="container">
+		<div class="row">
+			<div class="col-xl-2">
+				@* 列表 *@
+				<div class="blog_right_sidebar">
+					<aside class="single_sidebar_widget post_category_widget">
+						<h4 class="widget_title">商品種類</h4>
+						<ul class="list_style cat-list">
+							<li>
+								<a href="#" class="d-flex justify-content-between" v-on:click="filterByCategory('飯店')">
+									<p :class="{'text-change':search==='飯店'}">飯店</p>
+								</a>
+							</li>
+							<li>
+								<a href="#" class="d-flex justify-content-between" v-on:click="filterByCategory('民宿')">
+									<p :class="{'text-change':search==='民宿'}">民宿</p>
+								</a>
+							</li>
+							<li>
+								<a href="#" class="d-flex justify-content-between" v-on:click="filterByCategory('露營區')">
+									<p :class="{'text-change':search==='露營區'}">露營區</p>
+								</a>
+							</li>
+							<li>
+								<a href="#" class="d-flex justify-content-between" v-on:click="filterByCategory('渡假村')">
+									<p :class="{'text-change':search==='渡假村'}">渡假村</p>
+								</a>
+							</li>
+						</ul>
+					</aside>
+				</div>
+			</div>
 
-            <div class="col-xl-10">
-                <div class="filter-panel d-flex justify-content-between">
-                    @* 商品名稱搜尋 *@
-                    <div class="search">
-                        <span class="title_color search-title">搜尋：</span>
-                        <input class="inp-search" v-model="search" type="text" placeholder="請輸入商品名稱" />
-                    </div>
-                    @* 排序 *@
-                    <div class="sort d-flex align-items-center">
-                        <div>
-                            <h4 class="title_color sort-title">排序：</h4>
-                        </div>
-                        <h4>
-                            <span>
-                                <a href="#"><i class="fas fa-fire"></i>熱門程度</a>
-                            </span>
-                            <span>|</span>
-                            <span>
-                                <a href="#" v-on:click="priceSort"><i class="fas fa-funnel-dollar"></i>金額高低</a>
-                            </span>
-                        </h4>
-                    </div>
-                </div>
-                @* 商品 *@
-                <div class="row product-items" v-for="b in showProduct">
-                    <div class="col-xl-3">
-                        <img class="img-product" :src="b.img" />
-                    </div>
-                    <div class="col-xl-7 d_flex align-items-center">
-                        <div class="about_content ">
-                            <h2 class="title title_color">{{b.productName}}</h2>
-                            <span>{{b.mainDescribe}}</span>
-                        </div>
-                    </div>
-                    <div class="col-xl-2">
-                        <span class="product-price">{{b.price | formatCurrency}}起</span>
-                        <a :href="'/Book/Plan/'+b.productId" class="button_hover theme_btn_two info">選擇方案</a>
-                    </div>
-                </div>
-            </div>
-        </div>
+			<div class="col-xl-10">
+				<div class="filter-panel d-flex justify-content-between">
+					@* 商品名稱搜尋 *@
+					<div class="search">
+						<span class="title_color search-title">搜尋：</span>
+						<input class="inp-search" v-model="search" type="text" placeholder="請輸入商品名稱" />
+					</div>
+					@* 排序 *@
+					<div class="sort d-flex align-items-center">
+						<div>
+							<h4 class="title_color sort-title">排序：</h4>
+						</div>
+						<h4>
+							<span>
+								<a href="#"><i class="fas fa-fire"></i>熱門程度</a>
+							</span>
+							<span>|</span>
+							<span>
+								<a href="#" v-on:click="priceSort"><i class="fas fa-funnel-dollar"></i>金額高低</a>
+							</span>
+						</h4>
+					</div>
+				</div>
+				@* 商品 *@
+				<div class="row product-items" v-for="b in showProduct">
+					<div class="col-xl-3">
+						<img class="img-product" :src="b.img" />
+					</div>
+					<div class="col-xl-7 d_flex align-items-center">
+						<div class="about_content ">
+							<h2 class="title title_color">{{b.productName}}</h2>
+							<span>{{b.mainDescribe}}</span>
+						</div>
+					</div>
+					<div class="col-xl-2">
+						<span class="product-price">{{b.price | formatCurrency}}起</span>
+						<a :href="'/Book/Plan/'+b.productId" class="button_hover theme_btn_two info">選擇方案</a>
+					</div>
+				</div>
+			</div>
+		</div>
 
-        @* 分頁 *@
-        <nav class="blog-pagination justify-content-center d-flex">
-            <ul class="pagination">
-                <paginate :page-count="total"
-                          :click-handler="changePage"
-                          :page-class="'page-item'"
-                          :page-link-class="'page-link'"
-                          :prev-class="'page-link'"
-                          :prev-link-class="'lnr lnr-chevron-left'"
-                          :next-class="'page-link'"
-                          :next-link-class="'lnr lnr-chevron-right'"
-                          :container-class="'pagination'">
-                </paginate>
-            </ul>
-        </nav>
-    </div>
+		@* 分頁 *@
+		<nav class="blog-pagination justify-content-center d-flex">
+			<ul class="pagination">
+				<paginate :page-count="total"
+						  :click-handler="changePage"
+						  :page-class="'page-item'"
+						  :page-link-class="'page-link'"
+						  :prev-class="'page-link'"
+						  :prev-link-class="'lnr lnr-chevron-left'"
+						  :next-class="'page-link'"
+						  :next-link-class="'lnr lnr-chevron-right'"
+						  :container-class="'pagination'">
+				</paginate>
+			</ul>
+		</nav>
+	</div>
 </section>
 
 @section Scripts{
-    <script src="https://unpkg.com/vuejs-paginate@0.9.0"></script>
-    <script>
-        Vue.component('paginate', VuejsPaginate)
-        var baseAddress = "https://localhost:7025";
-        var app = new Vue({
-            el: '#app',
-            data: {
-                books: [],
-                search: '',
-                count: 0,
-                currentPage: 1,
-                itemPage: 10
-            },
-            mounted: function () {
-                let _this = this;
-                fetch(`${baseAddress}/api/BookApi/GetBooks`, { method: 'GET' })
-                    .then(response => {
-                        if (response.ok) return response.json();
-                    }).then(data => {
-                        _this.books = data;
-                    }).catch(error => {
-                        alert(error);
-                    })
-            },
-            methods: {
-                //金額排序
-                priceSort: function () {
-                    let _this = this;
-                    _this.count++;
-                    if (_this.count % 2 != 0) {
-                        fetch(`${baseAddress}/api/BookApi/BookOrderbyPrice`, { method: "GET" })
-                            .then(response => {
-                                if (response.ok) return response.json();
-                            }).then(data => {
-                                _this.books = data;
-                            }).catch(error => {
-                                alert(error);
-                            });
-                    }
-                    else {
-                        fetch(`${baseAddress}/api/BookApi/BookOrderByDescendingPrice`, { method: "GET" })
-                            .then(response => {
-                                if (response.ok) return response.json();
-                            }).then(data => {
-                                _this.books = data;
-                            }).catch(error => {
-                                alert(error);
-                            })
-                    }
-                },
-
-                //分頁
-                changePage: function (num) {
-                    let _this = this;
-                    _this.currentPage = num;
-                },
-
-<<<<<<< HEAD
-		new Vue({
+	<script src="https://unpkg.com/vuejs-paginate@0.9.0"></script>
+	<script>
+		Vue.component('paginate', VuejsPaginate)
+		var baseAddress = "https://localhost:7025";
+		var app = new Vue({
 			el: '#app',
 			data: {
 				books: [],
 				search: '',
-				priceOrderby: [],
 				count: 0,
-				kind:''
+				currentPage: 1,
+				itemPage: 10
 			},
-
-			//取得住宿類別
 			mounted: function () {
-				var _this = this;
+				let _this = this;
 				fetch(`${baseAddress}/api/BookApi/GetBooks`, { method: 'GET' })
 					.then(response => {
-						if (response.ok) {
-							return response.json();
-						}
+						if (response.ok) return response.json();
 					}).then(data => {
 						_this.books = data;
 					}).catch(error => {
@@ -184,9 +126,9 @@
 					})
 			},
 			methods: {
-				//價格排序
+				//金額排序
 				priceSort: function () {
-					var _this = this;
+					let _this = this;
 					_this.count++;
 					if (_this.count % 2 != 0) {
 						fetch(`${baseAddress}/api/BookApi/BookOrderbyPrice`, { method: "GET" })
@@ -201,62 +143,57 @@
 					else {
 						fetch(`${baseAddress}/api/BookApi/BookOrderByDescendingPrice`, { method: "GET" })
 							.then(response => {
-								if (response.ok) return response.json()
+								if (response.ok) return response.json();
 							}).then(data => {
-								_this.books = data
+								_this.books = data;
 							}).catch(error => {
-								alert(error)
+								alert(error);
 							})
+					}
+				},
+
+				//分頁
+				changePage: function (num) {
+					let _this = this;
+					_this.currentPage = num;
+				},
+			},
+			computed: {
+				//關鍵字搜尋
+				booksFilter: function () {
+					let _this = this;
+					_this.currentPage = 1;
+					return _this.books.filter(b => b.productName.includes(_this.search));
+				},
+
+				//分頁
+				showProduct: function () {
+					let _this = this;
+					var start = (_this.currentPage - 1) * _this.itemPage;
+					var end = start + _this.itemPage;
+					return this.booksFilter.slice(start, end);
+				},
+				total: function () {
+					let _this = this;
+					return Math.ceil(_this.books.length / _this.itemPage)
+				},
+
+				//列表關鍵字
+				filterByCategory: function (category) {
+					if (this.search === category) {
+						this.search === "";
+					} else {
+						this.search = category;
 					}
 				}
 			},
-
-			//搜尋
-			computed: {
-				booksfilter: function () {
-					return this.books.filter(b => b.productName.match(this.search))
-				},
+			filters: {
+				//貨幣格式
+				formatCurrency: function (val) {
+					if (typeof val !== "number") return val;
+					return val.toLocaleString('zh-TW', { style: 'currency', currency: 'TWD', minimumFractionDigits: 0 });
+				}
 			}
 		})
 	</script>
-=======
-                //列表關鍵字
-                filterByCategory: function (category) {
-                    if (this.search === category) {
-                        this.search === "";
-                    } else {
-                        this.search = category;
-                    }
-                }
-            },
-            computed: {
-                //關鍵字搜尋
-                booksFilter: function () {
-                    let _this = this;
-                    _this.currentPage = 1;
-                    return _this.books.filter(b => b.productName.includes(_this.search));
-                },
-
-                //分頁
-                showProduct: function () {
-                    let _this = this;
-                    var start = (_this.currentPage - 1) * _this.itemPage;
-                    var end = start + _this.itemPage;
-                    return this.booksFilter.slice(start, end);
-                },
-                total: function () {
-                    let _this = this;
-                    return Math.ceil(_this.books.length / _this.itemPage)
-                }
-            },
-            filters: {
-                //貨幣格式
-                formatCurrency: function (val) {
-                    if (typeof val !== "number") return val;
-                    return val.toLocaleString('zh-TW', { style: 'currency', currency: 'TWD', minimumFractionDigits: 0 });
-                }
-            }
-        })
-    </script>
->>>>>>> main
 }
