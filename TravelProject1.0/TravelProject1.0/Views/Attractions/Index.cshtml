@@ -156,14 +156,7 @@
                     _this.currentPage = num;
                 },
 
-                //列表關鍵字
-                filterByCategory: function (category) {
-                    if (this.search === category) {
-                        this.search = "";
-                    } else {
-                        this.search = category;
-                    }
-                }
+                
             },
             computed: {
                 //關鍵字搜尋
@@ -183,6 +176,15 @@
                 total: function () {
                     let _this = this;
                     return Math.ceil(_this.attractions.length / _this.itemPage);
+                },
+
+                //列表關鍵字
+                filterByCategory: function (category) {
+                    if (this.search === category) {
+                        this.search = "";
+                    } else {
+                        this.search = category;
+                    }
                 }
             },
             filters: {

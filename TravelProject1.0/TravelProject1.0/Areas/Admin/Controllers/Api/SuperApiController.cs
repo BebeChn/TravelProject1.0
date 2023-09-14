@@ -88,7 +88,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 
 			return "新增員工記錄成功";
 		}
-				
+
 		// DELETE: api/Employees/5				//刪除資料
 		[HttpDelete("{id}")]
 		public async Task<string?> SuperDel(int id)
@@ -125,13 +125,14 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 			}
 
 			TravelProject1._0.Models.Admin Sup = await _db.Admins.FindAsync(id);
+
 			Sup.Describe = SuperDTO.Describe;
 			Sup.Name = SuperDTO.Name;
 			Sup.Account = SuperDTO.Account;
-			Sup.Password = SuperDTO.Password;
-			Sup.CreateDate = SuperDTO.CreateDate;
-			Sup.LoginDate = SuperDTO.LoginDate;
-			Sup.Role = SuperDTO.Role;
+			//Sup.Password = SuperDTO.Password;
+			//Sup.CreateDate = SuperDTO.CreateDate;
+			//Sup.LoginDate = SuperDTO.LoginDate;
+			//Sup.Role = SuperDTO.Role;
 
 			_db.Entry(Sup).State = EntityState.Modified; //存回DTO
 
@@ -152,7 +153,6 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 			}
 			return "更新員工記錄成功";
 		}
-
 
 		private bool AdminExists(int id)
 		{
