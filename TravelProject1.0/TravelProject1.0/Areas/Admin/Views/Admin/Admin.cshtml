@@ -94,12 +94,12 @@
                             <td>{{item.birthday}}</td>
                             <td>
                                 <div class="d-flex justify-content-around">
-                                    <button type="button" class="btn  btn-warning" @@click="edit(item.userId)">
+                                    <button :disabled="notchange" type="button" class="btn  btn-warning" @@click="edit(item.userId)">
                                         <div class="horizontal-text">
                                             <span>修改</span>
                                         </div>
                                     </button>
-                                    <button type="button" class="btn btn-danger" @@click="deleteUsr(item.userId)">
+                                    <button :disabled="notchange" type="button" class="btn btn-danger" @@click="deleteUsr(item.userId)">
                                         <div class="horizontal-text">
                                             <span>刪除</span>
                                         </div>
@@ -139,7 +139,7 @@
                             <label class="form-label">密碼</label>
                             <input v-model="addpasswordHash" type="text" class="form-control" />
                         </div>
-                        ____
+                         
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @@click="close">關閉</button>
@@ -196,6 +196,11 @@
                         var d = new Date(str);
                         return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
                     }
+                },
+
+                //
+                notchange: function () {
+                    return this.AdminDTOes.some(x => x.Edit);
                 },
             },
             methods: {
