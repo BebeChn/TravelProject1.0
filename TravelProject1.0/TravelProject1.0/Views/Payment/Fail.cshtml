@@ -1,11 +1,12 @@
 ﻿@{
     Layout = null;
+    var info = ViewBag.Info;
 }
 
 <style>
     .container {
         z-index: -1;
-        background-image: url('../img/homeindex.jpg');
+        background-image: linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.6)),url('../img/homeindex.jpg');
     }
 
     .form {
@@ -14,7 +15,7 @@
         text-align: center;
         width: 500px;
         margin-left: 30%;
-        height: 600px;
+        height: 550px;
         z-index: 1;
         backdrop-filter: blur(30px);
     }
@@ -41,10 +42,11 @@
         }
 
         .form div input {
+            text-align: center;
             color: white;
             border: none;
             outline: none;
-            font-size: 22px;
+            font-size: 28px;
             background: transparent;
             border-bottom: 1px solid white;
         }
@@ -67,6 +69,7 @@
         border: 0px;
         display: inline-block;
         text-align: center;
+        text-decoration: none;
     }
 
         .button_hover:before {
@@ -130,19 +133,19 @@
             <span>旅遊電商</span>
         </div>
         <div>
-            <label>訂單金額:</label>
-            <input readonly />
+            <label>應付金額:</label>
+            <input readonly value="@info.amt" />
         </div>
         <div>
             <label>交易結果:</label>
-            <input readonly />
+            <input readonly value="@info.status" />
         </div>
         <div>
             <label>交易時間:</label>
-            <input readonly />
+            <input readonly value="@info.payTime" />
         </div>
         <div class="home">
-            <button class="button_hover theme_btn_two info">返回首頁</button>
+            <a href="/Home" class="button_hover theme_btn_two info">返回首頁</a>
         </div>
     </div>
 </div>
