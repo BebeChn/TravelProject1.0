@@ -22,10 +22,12 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
     {
         private readonly TravelProjectAzureContext _context;
         private readonly IUserSearchService _userSearchService;
-        public AdminApiController(TravelProjectAzureContext context, IUserSearchService userSearchService)
+        private readonly IUserIdentityService _userIdentityService;
+        public AdminApiController(TravelProjectAzureContext context, IUserSearchService userSearchService, IUserIdentityService userIdentityService)
         {
             _context = context;
             _userSearchService = userSearchService;
+            _userIdentityService = userIdentityService;
         }
 
         [HttpGet]
@@ -77,12 +79,14 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
         [HttpPost]
         public IActionResult AdminManageUser(AdmminManageUserDTO amuDTO)
         {
+           
             var salt = GenerateSalt();
 
             var passwordhash = HashPassword(amuDTO.Password, salt);
 
             User insertuser = new User
             {
+
                 Name = amuDTO.Name,
                 Email = amuDTO.Email,
                 PasswordHash = passwordhash,
@@ -94,20 +98,19 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
             {
                 _context.Users.AddAsync(insertuser);
                 _context.SaveChanges();
-             }
-            catch (Exception ex)
+                List<Claim> claims = new List<Claim>();
+                claims.Add(new Claim(ClaimTypes.NameIdentifier, amuDTO.Id.ToString()));
+                claims.Add(new Claim(ClaimTypes.Name, $"{amuDTO.Name}"));
+                claims.Add(new Claim("Email", amuDTO.Email));
+                claims.Add(new Claim(ClaimTypes.Role, "user"));
+                ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                ClaimsPrincipal principal = new ClaimsPrincipal(identity);
+                return Ok(insertuser);
+            }
+            catch 
             {
                 return BadRequest();
             }
-
-            List<Claim> claims = new List<Claim>();
-            claims.Add(new Claim(ClaimTypes.NameIdentifier, amuDTO.Id.ToString()));
-            claims.Add(new Claim(ClaimTypes.Name, $"{amuDTO.Name}"));
-            claims.Add(new Claim("Email", amuDTO.Email));
-            claims.Add(new Claim(ClaimTypes.Role, "user"));
-            ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            ClaimsPrincipal principal = new ClaimsPrincipal(identity);
-            return Ok();
         }
         private string GenerateSalt()
         {

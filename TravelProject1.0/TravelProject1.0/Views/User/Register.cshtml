@@ -19,7 +19,8 @@
 		<div class="row">
 			<div class="inputbox mb-3 col">
 				<input type="text" v-model.trim="name" required />
-				<span>姓名</span>
+				
+				<span><label style="font-size:14px; color:#c1121f">*</label>姓名</span>
 				<div v-if="name && !isValid(name,validType.name)" class="fs-6 text-danger">您輸入的格式錯誤</div>
 				@*    <div v-if="usernameTaken">該用戶名已存在</div> *@
 			</div>
@@ -40,24 +41,24 @@
 		<div class="row">
 			<div class="inputbox mb-3">
 				<input v-model.trim="email" type="email" name="email" id="emailInput" required />
-				<span>郵件</span>
+				<span><label style="font-size:14px; color:#c1121f">*</label>郵件</span>
 				<div class="fs-6 text-danger" v-if="email && !isValid(email,validType.email)" id="emailError">您輸入的格式不正確</div>
 			</div>
 			<div class="inputbox mb-3">
 				<input v-model.trim="phone" type="text" required />
-				<span>電話</span>
+				<span><label style="font-size:14px; color:#c1121f">*</label>電話</span>
 				<div class="fs-6 text-danger" v-if="phone && !isValid(phone,validType.phone)">您輸入的格式不正確</div>
 			</div>
 		</div>
 		<div class="row">
 			<div class="inputbox mb-3 ">
 				<input v-model.trim="password" type="password" required id="password" />
-				<span>密碼</span>
+				<span><label style="font-size:14px; color:#c1121f">*</label>密碼</span>
 				<div class="fs-6 text-danger" v-if="password && !isValid(password,validType.password)">您輸入的格式不正確</div>
 			</div>
 			<div class="inputbox mb-3">
 				<input v-model.trim="confirmPassword" type="password" required id="confirmPassword" />
-                <span>重複輸入密碼</span>		
+				<span><label style="font-size:14px; color:#c1121f">*</label>重複輸入密碼</span>
 				<div class="fs-6 text-danger" v-if="confirmPassword && !passwordmatch">兩次輸入的密碼不一致</div>
             </div>
 		</div>

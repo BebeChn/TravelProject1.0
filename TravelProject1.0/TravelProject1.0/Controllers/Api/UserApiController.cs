@@ -246,24 +246,26 @@ namespace TravelProject1._0.Controllers.Api
             return random.Next(1000, 9999).ToString();
         }
 
-        [HttpPost]
-        public async Task<IActionResult> ResetPassword(int id, [FromBody] ResetPasswordViewModel request)
+        [HttpPut]
+        public async Task <IActionResult> ResetPassword([FromBody] ResetPasswordViewModel request)
         {
             var user = _context.Users.FirstOrDefault(u => u.Email == request.Email);
             if (user != null)
             {
                 string password = request.NewPassword;
                 string salt = GenerateSalt();
-
                 string hashedPassword = HashPassword(password, salt);
+                try {
+                    user.PasswordHash = hashedPassword;
+                    user.Salt = salt;
 
-                User userId = await _context.Users.FindAsync(id);
-
-                user.PasswordHash = hashedPassword;
-                user.Salt = salt;
-
-                await _context.SaveChangesAsync();
-
+                    _context.Entry(user).State = EntityState.Modified;
+                    await _context.SaveChangesAsync();
+                }
+                catch 
+                { 
+                    return BadRequest(new { Message = "重設密碼" });
+                }
                 return Ok(new { Message = "密碼成功重設" });
             }
             else
