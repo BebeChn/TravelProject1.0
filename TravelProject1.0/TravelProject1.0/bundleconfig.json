@@ -58,5 +58,11 @@
     "inputFiles": [
       "wwwroot/css/Chart.css"
     ]
+  },
+  {
+    "outputFileName": "wwwroot/css/Rating.min.css",
+    "inputFiles": [
+      "wwwroot/css/Rating.css"
+    ]
   }
 ]
