@@ -31,8 +31,6 @@ public partial class TravelProjectAzureContext : DbContext
 
     public virtual DbSet<Product> Products { get; set; }
 
-    public virtual DbSet<QuestionReport> QuestionReports { get; set; }
-
     public virtual DbSet<Rating> Ratings { get; set; }
 
     public virtual DbSet<ResetPasswordToken> ResetPasswordTokens { get; set; }
@@ -51,7 +49,6 @@ public partial class TravelProjectAzureContext : DbContext
             optionsBuilder.UseSqlServer(Config.GetConnectionString("TravelProject"));
         }
     }
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.UseCollation("Chinese_Taiwan_Stroke_CI_AS");
@@ -203,23 +200,6 @@ public partial class TravelProjectAzureContext : DbContext
                 .HasConstraintName("FK__Products__ID__787EE5A0");
         });
 
-        modelBuilder.Entity<QuestionReport>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Question__3214EC27FEDEB8D2");
-
-            entity.ToTable("Question Report");
-
-            entity.Property(e => e.Id).HasColumnName("ID");
-            entity.Property(e => e.Describe).HasMaxLength(200);
-            entity.Property(e => e.ReportDate).HasColumnType("datetime");
-            entity.Property(e => e.UserId).HasColumnName("UserID");
-
-            entity.HasOne(d => d.User).WithMany(p => p.QuestionReports)
-                .HasForeignKey(d => d.UserId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Question __UserI__5441852A");
-        });
-
         modelBuilder.Entity<Rating>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Rating__3214EC277B4AEC0F");
@@ -227,6 +207,7 @@ public partial class TravelProjectAzureContext : DbContext
             entity.ToTable("Rating");
 
             entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.Commented).HasMaxLength(10);
             entity.Property(e => e.Describe).HasMaxLength(200);
             entity.Property(e => e.ProductId).HasColumnName("ProductID");
             entity.Property(e => e.RatingDate).HasColumnType("date");
