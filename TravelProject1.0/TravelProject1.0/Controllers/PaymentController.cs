@@ -28,7 +28,7 @@ namespace TravelProject1._0.Controllers
         {
             int userId = _userIdentityService.GetUserId();
 
-            var subTotal = (int?)payment.detailDTOs.Sum(x => x.Quantity * x.UnitPrice);
+            var subTotal = (int?)payment.detailDTOs.Sum(x => x.UnitPrice);
             var discount = payment.Points / 300;
             var total = subTotal - discount;
 
@@ -154,9 +154,11 @@ namespace TravelProject1._0.Controllers
 
                 var no = Convert.ToInt32(convertModel.MerchantOrderNo);
                 var od = _db.Orders.FirstOrDefault(x => x.OrderId == no);
-
+                var user = _db.Users.FirstOrDefault(u => u.UserId == od.UserId);
                 if (od == null) return View("Fail");
-
+                if (user == null) return null;
+                
+                user.Points += od.NewPoint;
                 od.Status = "success";
                 _db.SaveChanges();
 
