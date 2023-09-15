@@ -111,49 +111,5 @@ namespace TravelProject1._0.Controllers.Api
             return Ok(new { Message = "商品已從購物車移除" });
         }
 
-        //購物車項目移至訂單
-        [HttpPost]
-        public async Task<IActionResult> AddOrder([FromBody] List<AddOrderViewModel> models)
-        {
-            if (models == null || models.Count == 0) return BadRequest();
-
-            int userId = _userIdentityService.GetUserId();
-
-            try
-            {
-                Order order = new Order
-                {
-                    UserId = userId,
-
-                    OrderDate = DateTime.Now
-                };
-
-                _context.Add(order);
-                await _context.SaveChangesAsync();
-
-                foreach (var model in models)
-                {
-                    OrderDetail orderDetail = new OrderDetail
-                    {
-                        OrderId = order.OrderId,
-                        PlanId = model.PlanId,
-                        Odname = model.Odname,
-                        Quantity = model.Quantity,
-                        UnitPrice = model.UnitPrice
-                    };
-
-                    _context.Add(orderDetail);
-                    await _context.SaveChangesAsync();
-                }
-
-                Response.Headers.Add("OrderID", order.OrderId.ToString());
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex);
-            }
-
-            return Ok();
-        }
     }
 }

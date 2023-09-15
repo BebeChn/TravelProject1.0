@@ -45,6 +45,7 @@ namespace TravelProject1._0.Controllers
                     Odname = x.PlanName,
                     Quantity = (short?)x.Quantity,
                     UnitPrice = x.UnitPrice,
+                    UseDate = DateTime.Now,
                 }).ToList(),
             };
 
@@ -155,11 +156,14 @@ namespace TravelProject1._0.Controllers
                 var no = Convert.ToInt32(convertModel.MerchantOrderNo);
                 var od = _db.Orders.FirstOrDefault(x => x.OrderId == no);
                 var user = _db.Users.FirstOrDefault(u => u.UserId == od.UserId);
+                var orderDetail = _db.OrderDetails.FirstOrDefault(o => o.OrderId == no);
+                var cartItem = _db.Carts.FirstOrDefault(c => c.PlanId == orderDetail.PlanId && c.CartName == orderDetail.Odname && c.CartPrice == orderDetail.UnitPrice && c.CartQuantity == orderDetail.Quantity);
+
                 if (od == null) return View("Fail");
-                if (user == null) return null;
-                
+
                 user.Points += od.NewPoint;
                 od.Status = "success";
+                _db.Carts.Remove(cartItem);
                 _db.SaveChanges();
 
                 ViewBag.Info = new
