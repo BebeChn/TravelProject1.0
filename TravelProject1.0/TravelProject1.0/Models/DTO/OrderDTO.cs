@@ -17,5 +17,7 @@ namespace TravelProject1._0.Models.DTO
         public DateTime? UseDate { get; set; }
 
         public float? Discount { get; set; }
+
+        public string Name { get; set; } = "";
     }
 }

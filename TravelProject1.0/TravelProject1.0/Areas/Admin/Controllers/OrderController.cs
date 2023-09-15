@@ -58,11 +58,14 @@ namespace TravelProject1._0.Areas.Admin.Controllers
         {
             if (order.OrderId != 0)
             {
-                return _db.OrderDetails.Where(y =>
+                return _db.OrderDetails.Include(t => t.Plan)                   
+                    .Where(y =>
                     y.OrderId == (order.OrderId)
                     || y.PlanId == (order.PlanId)
                     //|| y.OrderDate == (order.OrderDate)
-                    ).Select(x => new OrderDTO
+                    )
+                    .OrderBy(o => o.Id)
+                    .Select(x => new OrderDTO
                     {
                         Id = x.Id,
                         OrderId = x.OrderId,                        
@@ -71,11 +74,12 @@ namespace TravelProject1._0.Areas.Admin.Controllers
                         Discount = x.Discount,
                         UnitPrice = x.UnitPrice,
                         UseDate = x.UseDate,
-
-                    });
+                        Name= x.Plan.Name,
+                    }
+                    );
             }
 
-            return _db.OrderDetails.Select(x => new OrderDTO
+            return _db.OrderDetails.Include(t => t.Plan).OrderBy(o=>o.Id).Select(x => new OrderDTO
             {
                 Id = x.Id,
                 OrderId = x.OrderId,
@@ -84,6 +88,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers
                 Discount = x.Discount,
                 UnitPrice = x.UnitPrice,
                 UseDate = x.UseDate,
+                Name = x.Plan.Name,
             });
 
         }
