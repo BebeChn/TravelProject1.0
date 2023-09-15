@@ -1,154 +1,157 @@
 ﻿@{
-    ViewData["Title"] = "註冊會員";
+	ViewData["Title"] = "註冊會員";
 }
 @section Styles
-    {
-    <link href="~/css/register.min.css" rel="stylesheet" />
-    <style>
-        .formatError {
-            color: red;
-            font-size: .875em;
-        }
-    </style>
+	{
+	<link href="~/css/register.min.css" rel="stylesheet" />
+@* 	<style>
+		.formatError {
+			color: red;
+			font-size: .875em;
+		}
+	</style> *@
 
   }
 
-<div id="app" class="element center">
-    <h1 style="text-align:center">註冊會員</h1>
-    <div class ="container">
-    <div class="mt-4 row">
-        <div class="inputbox mb-3 col-5">
-            <input type="text" v-model.trim="name" required />
-            <span>姓名</span>
-            <div v-if="!isValid(name,validType.name)" class="formatError">您輸入的格式錯誤</div>
-            @*    <div v-if="usernameTaken">該用戶名已存在</div> *@
-        </div>
-         <div class="inputbox mb-3 col-5">
-                <input v-model.trim="birthday" type="datetime" required />
-                <span>生日</span>
-                <div class="formatError" v-if="!isValid(birthday,validType.birthday)">您輸入的格式不正確</div>
-         </div>
-         <div class="mb-3 col-1">
-                <label for="gender" style="display: flex; align-items: center;">性別</label>
-                <select class="beauty-select" style="width: 75px; margin-right:10px;">
-                    <option v-model="gender" value="F">男</option>
-                    <option v-model="gender" value="M">女</option>
-                </select>
-         </div>
-    </div>
-    <div class="row">
-         <div class="inputbox mb-3 col-6">
-                <input v-model.trim="email" type="email" name="email" id="emailInput" required />
-                <span>郵件</span>
-                <div class="formatError" v-if="!isValid(email,validType.email)" id="emailError">您輸入的格式不正確</div>
-            </div>   
-        <div class="inputbox mb-3 col-6">
-            <input v-model.trim="phone" type="text" required />
-            <span>電話</span>
-            <div class="formatError" v-if="!isValid(phone,validType.phone)">您輸入的格式不正確</div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="inputbox mb-3 col-6 ">
-            <input v-model.trim="password" type="password" required />
-            <span>密碼</span>
-            <div class="formatError" v-if="!isValid(password,validType.password)">您輸入的格式不正確</div>
-        </div>
-        <div class="inputbox mb-3 col-6">
-            <input type="password" required />
-            <span>重複輸入密碼</span>
-            <div class="invalid-feedback">已被註冊、或您輸入的格式不正確</div>
-        </div>
-    </div>
-    </div>
-        @* <div v-if="passwordmatch()" class="invalid-feedback ">兩次所輸入密碼不一致</div> *@
-    <div class="row">
-        <div>
-            <button type="button" class="dup" id="submitButton" @@click="Register">註冊</button>
-        </div>
-        </div>
- </div>
+<div id="app" class="element d-flex justify-content-center align-items-center">
+	<div class="">
+		<h1 class="text-center">註冊會員</h1>
+		<div class="row">
+			<div class="inputbox mb-3 col">
+				<input type="text" v-model.trim="name" required />
+				<span>姓名</span>
+				<div v-if="name && !isValid(name,validType.name)" class="fs-6 text-danger">您輸入的格式錯誤</div>
+				@*    <div v-if="usernameTaken">該用戶名已存在</div> *@
+			</div>
+			<div class="mb-3 col">
+				<select class="form-select" aria-label="Default select example">
+					<option selected disabled>性別</option>
+					<option value="M" >男</option>
+					<option value="F">女</option>
+					<option value="N" >不指定</option>
+				</select>
+			</div>
+		</div>
+		<div class="inputbox mb-3">
+			<input v-model.trim="birthday" type="datetime" required />
+			<span>生日</span>
+			<div class="fs-6 text-danger" v-if="birthday && !isValid(birthday,validType.birthday)">您輸入的格式不正確</div>
+		</div>
+		<div class="row">
+			<div class="inputbox mb-3">
+				<input v-model.trim="email" type="email" name="email" id="emailInput" required />
+				<span>郵件</span>
+				<div class="fs-6 text-danger" v-if="email && !isValid(email,validType.email)" id="emailError">您輸入的格式不正確</div>
+			</div>
+			<div class="inputbox mb-3">
+				<input v-model.trim="phone" type="text" required />
+				<span>電話</span>
+				<div class="fs-6 text-danger" v-if="phone && !isValid(phone,validType.phone)">您輸入的格式不正確</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="inputbox mb-3 ">
+				<input v-model.trim="password" type="password" required />
+				<span>密碼</span>
+				<div class="fs-6 text-danger" v-if="password && !isValid(password,validType.password)">您輸入的格式不正確</div>
+			</div>
+			<div class="inputbox mb-3">
+				<input type="password" required />
+				<span>重複輸入密碼</span>
+				<div class="invalid-feedback">已被註冊、或您輸入的格式不正確</div>
+			</div>
+		</div>
+		<div class="d-flex justify-content-center">
+			<button type="button" class="dup" id="submitButton" @@click="Register">註冊</button>
+		</div>
+	</div>
+</div>
 
-
+<div v-if="passwordmatch()" class="invalid-feedback ">兩次所輸入密碼不一致</div>
 
 @* <div class="modal fade" id="ErrorAlert" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">錯誤訊息</h4>
-            </div>
-            <div class="modal-body" id="ErrorMsg" style="overflow-x:auto;width:100%;">
-            </div>
-        </div>
-    </div>
-</div>  *@
-
-
+	<div class="modal-dialog modal-lg" role="document">
+	<div class="modal-content">
+	<div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	<h4 class="modal-title">錯誤訊息</h4>
+	</div>
+	<div class="modal-body" id="ErrorMsg" style="overflow-x:auto;width:100%;">
+	</div>
+	</div>
+	</div>
+	</div>  *@
+@* 
+<label for="gender" style="display: flex; align-items: center;">性別</label>
+<select class="beauty-select" style="width: 75px;">
+	<option v-model="gender" value="F">男</option>
+	<option v-model="gender" value="M">女</option>
+</select>
+ *@
 @section Scripts{
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js" integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="~/js/validation.min.js"></script>
-    <script>
-        var baseAddress = "https://localhost:7025";
-        var vueApp = new Vue({
-            el: '#app',
-            data: {
-                confirmPassword: "",
-                username: '',
-                usernameTaken: false,
-                form: [],
-                name: "",
-                gender: "",
-                birthday: "",
-                phone: "",
-                email: "",
-                password: "",
-                bool: "",
-                validType: validType,
-            },
-            computed: {
+	<script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js" integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script src="~/js/validation.min.js"></script>
+	<script>
+		var baseAddress = "https://localhost:7025";
+		var vueApp = new Vue({
+			el: '#app',
+			data: {
+				confirmPassword: "",
+				username: '',
+				usernameTaken: false,
+				form: [],
+				name: "",
+				gender: "",
+				birthday: "",
+				phone: "",
+				email: "",
+				password: "",
+				bool: "",
+				validType: validType,
+			},
+			computed: {
 
-            },
-            methods: {
-                isValid: function (str, type) {
-                    return window.validation(str, type);
-                },
-                Register: function () {
-                    let _this = this;
-                    var form = {
-                        UserId: "",
-                        Name: _this.name,
-                        Gender: _this.gender,
-                        Birthday: _this.birthday,
-                        Phone: _this.phone,
-                        Email: _this.email,
-                        Password: _this.password
-                    };
-                    axios.post(`${baseAddress}/api/UserApi/PostUser`, form)
-                        .then(response => {
-                            if (response.data) {
-                                window.location.href = "/Home/Index";
-                            }
-                        }).catch(err => {
-                            alert("輸入的格式有錯");
-                        });
-                },
-                passwordmatch() {
-                    return this.password == this.confirmPassword
-                },
-                // checkUsername: function () {
-                //     axios.get(`/api/check-username?username=${this.username}`)
-                //         .then(response => {
-                //             this.usernameTaken = response.data.exists;
-                //         })
-                //         .catch(error => {
-                //             console.error('使用者已經存在啦', error);
-                //         });
-                // }
-            },
-        });
+			},
+			methods: {
+				isValid: function (str, type) {
+					return window.validation(str, type);
+				},
+				Register: function () {
+					let _this = this;
+					var form = {
+						UserId: "",
+						Name: _this.name,
+						Gender: _this.gender,
+						Birthday: _this.birthday,
+						Phone: _this.phone,
+						Email: _this.email,
+						Password: _this.password
+					};
+					axios.post(`${baseAddress}/api/UserApi/PostUser`, form)
+						.then(response => {
+							if (response.data) {
+								window.location.href = "/Home/Index";
+							}
+						}).catch(err => {
+							alert("輸入的格式有錯");
+						});
+				},
+				passwordmatch() {
+					return this.password == this.confirmPassword
+				},
+				// checkUsername: function () {
+				//     axios.get(`/api/check-username?username=${this.username}`)
+				//         .then(response => {
+				//             this.usernameTaken = response.data.exists;
+				//         })
+				//         .catch(error => {
+				//             console.error('使用者已經存在啦', error);
+				//         });
+				// }
+			},
+		});
 
-    </script>
-}
+	</script>
+	}
 
