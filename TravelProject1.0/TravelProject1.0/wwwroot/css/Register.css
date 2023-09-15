@@ -41,7 +41,7 @@
    
 }*/
 .element {
-    background-image: url('../img/footericon/register.jpg');
+    /*background-image: url('../img/footericon/register.jpg');*/
     background-size: cover;
     background-repeat: no-repeat;
 }

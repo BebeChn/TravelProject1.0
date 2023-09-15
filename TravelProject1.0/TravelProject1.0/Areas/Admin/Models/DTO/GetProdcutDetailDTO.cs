@@ -15,5 +15,7 @@
         public string? SubDescribe { get; set; }
 
         public string? ShortDescribe { get; set; }
+
+        public string ImagePath { get; set; }
     }
 }

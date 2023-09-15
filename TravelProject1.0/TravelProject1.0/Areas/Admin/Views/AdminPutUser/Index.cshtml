@@ -34,6 +34,7 @@
         .table tbody tr:nth-child(odd) {
             background-color: #ffffff;
         }
+
         .table tbody tr:nth-child(even) {
             background-color: #caf0f8;
         }
@@ -65,7 +66,7 @@
             max-width: 400px;
             width: 100%;
             margin: 0 auto;
-            height:475px;
+            height: 475px;
         }
     </style>
 }
@@ -96,7 +97,7 @@
                     </h4>
                 </div>
             </div>
-            
+
         </div>
         <div class="modal fade" id="createUserModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog beauty-width text-center">
@@ -106,13 +107,18 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">X</button>
                     </div>
                     <div class="modal-body">
+                        <label style="font-size:14px; color:#c1121f">*必填</label>
                         <div class="form-group">
-                            <label for="name">名稱</label>
+                            <label style="font-size:14px; color:#c1121f">*</label><label for="name">名稱</label>
                             <input type="text" class="beauty-input" id="name" v-model="newUser.name">
+                            <div class="fs-6 text-danger" v-if="newUser.name && !isValid(newUser.name,validType.name)" id="emailError">您輸入的格式不正確</div>
+
                         </div>
+                        
                         <div class="form-group">
-                            <label for="email">信箱</label>
+                            <label style="font-size:14px; color:#c1121f">*</label><label for="email">信箱</label>
                             <input type="email" class="beauty-input" id="email" v-model="newUser.email">
+                            <div class="fs-6 text-danger" v-if="newUser.email && !isValid(newUser.email,validType.email)" id="emailError">您輸入的格式不正確</div>
                         </div>
                         <div class="form-group">
                             <label for="gender">性別</label>
@@ -123,16 +129,19 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="password">密碼</label>
+                            <label style="font-size:14px; color:#c1121f">*</label><label for="password">密碼</label>
                             <input type="password" class="beauty-input" id="password" v-model="newUser.password">
+                            <div class="fs-6 text-danger" v-if="newUser.password && !isValid(newUser.password,validType.password)" id="emailError">您輸入的格式不正確</div>
+
                         </div>
                         <div class="form-group">
                             <label for="birthday">生日</label>
                             <input type="date" class="beauty-input" id="birthday" v-model="newUser.birthday">
                         </div>
                         <div class="form-group">
-                            <label for="phone">電話</label>
+                            <label style="font-size:14px; color:#c1121f">*</label> <label for="phone">電話</label>
                             <input type="text" class="beauty-input" id="phone" v-model="newUser.phone">
+                            <div class="fs-6 text-danger" v-if="newUser.phone && !isValid(newUser.phone,validType.phone)" id="emailError">您輸入的格式不正確</div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -167,7 +176,7 @@
                     <td>{{pu.phone}}</td>
                     <td>
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
-                                    @@click="display(pu.userId)">
+                                @@click="display(pu.userId)">
                             編輯
                         </button>
                     </td>
@@ -198,13 +207,13 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                            <label>性別:</label><select v-model="UpdateUser.gender" class="beauty-input">
+                                        <label>性別:</label><select v-model="UpdateUser.gender" class="beauty-input">
                                             <option value="M">男</option>
                                             <option value="F">女</option>
                                             <option value="N">不指定</option>
                                         </select>
                                     </td>
-                                    
+
                                 </tr>
                                 <tr>
                                     <td><label>生日:</label><input class="beauty-input" type="date" v-model="UpdateUser.birthday" /></td>
@@ -264,6 +273,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.min.js" integrity="sha384-lpyLfhYuitXl2zRZ5Bn2fqnhNAKOAaM/0Kr9laMspuaMiZfGmfwRNFh8HlMy49eQ" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js" integrity="sha512-uKQ39gEGiyUJl4AI6L+ekBdGKpGw4xJ55+xyJG7YFlJokPNYegn9KwQ3P8A7aFQAUtUsAQHep+d/lrGqrbPIDQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="~/js/validation.min.js"></script>
     <script>
         var baseAddress = "https://localhost:7025";
         var app = new Vue({
@@ -279,11 +289,13 @@
                     birthday: '',
                     phone: '',
                     password: '',
+                 
                 },
                 searchQuery: '',
-                form:[],
+                form: [],
+                validType: validType,
             }, computed: {
-              
+
             },
             mounted: function () {
                 let _this = this;
@@ -296,6 +308,9 @@
                 })
             },
             methods: {
+                isValid: function (str, type) {
+                    return window.validation(str, type);
+                },
                 sortAscendingAge: function () {
                     let _this = this;
                     fetch(`${baseAddress}/api/adminApi/OrderByAge`, {
@@ -343,8 +358,7 @@
                         Email: _this.newUser.email,
                         Password: _this.newUser.password
                     };
-
-                    fetch(`/api/adminApi/AdminManageUser`, {
+                    fetch(`/api/AdminApi/AdminManageUser`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -352,32 +366,39 @@
                         body: JSON.stringify(form),
                     })
                         .then((response) => {
-                            if (response.ok)  return response.text();
+                            if (response.ok) {
+                                return response.json();
+                            } else {
+                                throw new Error("Network response was not ok");
+                            }
                         })
                         .then((data) => {
-                            alert("使用者成功新增");
-                            window.location.href = "/Admin/AdminPutUser/Index";
-                            _this.putUser = data;
-                            $('#createUserModal').modal('hide');
+                            if (data) {
+                                alert("使用者成功新增");
+                                window.location.href = "/Admin/AdminPutUser/Index";
+                                _this.putUser = data;
+                                $('#createUserModal').modal('hide');
+                            } else {
+                                alert("新增失敗：");
+                            }
                         })
                         .catch((err) => {
-                            alert("新增失敗：" + err.message);
+                            alert("新增失敗：有必填未填寫");
                         });
                 },
-
-                    display: function (userId) {
-                        let _this = this;
-                        _this.editOpen = false;
-                        $('#exampleModal').modal('show');
-                        fetch(`${baseAddress}/api/adminApi/GetUserDetail/${userId}`)
-                            .then(response => response.json())
-                            .then(data => {
-                                $('#UserDetail').modal('show');
-                                _this.UpdateUser = data;
-                            }).catch(err => {
-                                alert("資料讀取失敗");
-                            });
-                    },
+                display: function (userId) {
+                    let _this = this;
+                    _this.editOpen = false;
+                    $('#exampleModal').modal('show');
+                    fetch(`${baseAddress}/api/adminApi/GetUserDetail/${userId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            $('#UserDetail').modal('show');
+                            _this.UpdateUser = data;
+                        }).catch(err => {
+                            alert("資料讀取失敗");
+                        });
+                },
                 edit: function () {
                     let _this = this;
                     _this.editOpen = true;
@@ -419,7 +440,7 @@
                     if (result == true) {
                         fetch(`${baseAddress}/api/adminApi/AdminDeleteUser/${userId}`, {
                             method: "DELETE"
-                        }).then((response)=> {
+                        }).then((response) => {
                             if (response.ok) return response.text();
                         }).then(data => {
                             alert("刪除成功");

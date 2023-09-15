@@ -56,6 +56,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
                     Price = product.Price,
                     SubDescribe = product.SubDescribe,
                     ShortDescribe = product.ShortDescribe,
+                    ImagePath= Path.Combine("//", product.Img)
                 };
 
                 return Ok(gpd);

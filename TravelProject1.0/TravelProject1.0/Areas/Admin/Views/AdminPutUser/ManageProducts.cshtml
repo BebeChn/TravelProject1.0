@@ -37,7 +37,17 @@
             border-collapse: collapse;
         }
 
+        .table tbody tr:nth-child(odd) {
+            background-color: #ffffff;
+        }
 
+        .table tbody tr:nth-child(even) {
+            background-color: #caf0f8;
+        }
+
+        .table tbody tr:hover {
+            background-color: #edf2fb;
+        }
         .morewidth {
             width: 200px;
         }
@@ -118,7 +128,7 @@
                             <input type="text" class="beauty-input" id="productName" v-model="newProduct.productName">
                         </div>
                         <div class="form-group">
-                            <label for="price">價格</label>
+                            <label for="price">商品價格</label>
                             <input type="text" class="beauty-input" id="price" v-model="newProduct.price">
                         </div>
                         <div class="form-group">
@@ -133,6 +143,7 @@
                             <label for="shortDescribe">補充說明</label>
                             <input type="text" class="beauty-input" id="shortDescribe" v-model="newProduct.shortDescribe">
                         </div>
+                        
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
@@ -225,6 +236,12 @@
                                 <tr>
                                     <td><label>補充說明:</label>{{UpdateProduct.shortDescribe}}</td>
                                 </tr>
+                                <tr>
+                                    <td>
+                                        <label>商品照片:</label>
+                                        <img :src="UpdateProduct.imagePath" style="width:200px;"/>
+                                    </td>
+                                </tr>
                             </template>
                             @* 顯示產品資訊視窗 *@
                         </tbody>
@@ -269,6 +286,7 @@
                     price: '',
                     subDescribe: '',
                     shortDescribe:'',
+                    
                 },
                 searchQuery: '',
                 form: [],
