@@ -2,71 +2,46 @@
     background-color: #faf9f9;
 }
 
+    .eachfield h1 {
+        text-align: center;
+        font-size: 36px
+    }
+
 .groundfield {
     background-color: #eeeeee;
 }
+
 .my-title {
-    font-family: "Arial", sans-serif; 
+    font-family: "Arial", sans-serif;
     font-size: 24px;
-    font-weight: bold; 
-    color: #333; 
+    font-weight: bold;
+    color: #333;
 }
+
 .my-text {
     font-family: "Arial", sans-serif;
     font-size: 20px;
     color: #333;
 }
-.outer-box {
+
+.product-items {
     border: 2px solid #dee2e6;
     padding: 3px;
     margin: 1px;
-}
-.search {
-    margin-bottom: 20px;
-}
-
-.search-title {
-    font-size: 24px;
-    font-weight: bold;
-}
-
-.inp-search {
-    width: 50%;
-    transition: width 0.4s ease-in-out;
-}
-
-    .inp-search:focus {
-        width: 70%;
-    }
-
-.sort {
-    margin-bottom: 30px;
-}
-
-.sort-title {
-    font-size: 24px;
-    font-weight: bold;
-}
-
-.product-items {
     margin-bottom: 18px;
 }
 
-.img-product {
-    width: 220px;
-    height: 160px;
-    border-radius: 10px;
+    .product-items div img {
+        width: 100%;
+        height: 100%;
+    }
+
+.single_sidebar_widget div {
+    text-align: center;
 }
 
-.product-price {
-    font-size: 24px;
-    font-weight: bold;
-}
-.css {
-    border-radius: 10px;
-    margin-left: 2px;
-    width: 100px;
-    height: 40px;
-    border: 2px solid deepskyblue;
-    background-color: white;
-}
+    .single_sidebar_widget div img {
+        border-radius: 50%;
+        width: 150px;
+        height: 150px;
+    }

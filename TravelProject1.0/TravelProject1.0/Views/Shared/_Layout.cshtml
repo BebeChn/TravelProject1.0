@@ -1,155 +1,153 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<title>@ViewData["Title"] - TravelProject1.0</title>
-	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-	<link rel="icon" type="image/x-icon" href="favicon.ico">
-	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-	<link rel="stylesheet" href="~/TravelProject1.0.styles.css" asp-append-version="true" />
-	@* <link rel="stylesheet" href="~/lib/font-awesome/css/all.min.css" asp-append-version="true" /> *@
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-	@await RenderSectionAsync("Styles", required: false)
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - TravelProject1.0</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/TravelProject1.0.styles.css" asp-append-version="true" />
+    <link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet" asp-append-version="true" />
+    @* <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" /> *@
+    @await RenderSectionAsync("Styles", required: false)
 </head>
 <body>
-	<header>
-		<div class="container">
-			<nav class="navbar navbar-expand-lg navbar-light">
-				<a class="navbar-brand logo_h" asp-controller="Home" asp-action="Index">
-					<img src="~/img/2023-08-31_143701.png" style="width:50px;height:50px;" />
-				</a>
-				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-						aria-expanded="false" aria-label="Toggle navigation">
-					<span class="navbar-toggler-icon"></span>
-				</button>
-				<div class="collapse navbar-collapse offset d-sm-inline-flex justify-content-between" id="navbarSupportedContent">
-					<ul class="nav navbar-nav menu_nav ml-auto">
-						<li class="nav-item active">
-							<a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">首頁</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" asp-area="" asp-controller="PlaneTK" asp-action="PlaneTK_catgory">機票</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" asp-area="" asp-controller="Book" asp-action="Index">住宿</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" asp-controller="Attractions" asp-action="Index">景點</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" asp-controller="Transport" asp-action="Index">交通</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" asp-area="Admin" asp-controller="Admin" asp-action="Admin">管理員</a>
-						</li>
-					</ul>
-					<partial name="_LoginPartial" />
-				</div>
-			</nav>
-		</div>
-	</header>
+    <header>
+        <div class="container">
+            <nav class="navbar navbar-expand-lg navbar-light">
+                <a class="navbar-brand logo_h" asp-controller="Home" asp-action="Index">
+                    <img src="~/img/2023-08-31_143701.png" style="width:50px;height:50px;" />
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse offset d-sm-inline-flex justify-content-between" id="navbarSupportedContent">
+                    <ul class="nav navbar-nav menu_nav ml-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">首頁</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="PlaneTK" asp-action="PlaneTK_catgory">機票</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Book" asp-action="Index">住宿</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Attractions" asp-action="Index">景點</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Transport" asp-action="Index">交通</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="Admin" asp-controller="Admin" asp-action="Admin">管理員</a>
+                        </li>
+                    </ul>
+                    <partial name="_LoginPartial" />
+                </div>
+            </nav>
+        </div>
+    </header>
 
-	<div>
-		<main role="main" class="">
-			@RenderBody()
-		</main>
-	</div>
-	<!--客服按鈕-->
-	<div class="position-relative" style="z-index:100">
-		<div class="position-fixed bottom-0 end-0">
-			<button class="btn box" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">
-				<img src="~/img/footericon/customer-support.png" />
-			</button>
-		</div>
-	</div>
-	<!--客服按鈕-->
-	
-	<!--返回最上面-->
-	<div class="position-relative" style="z-index:100">
-		<div class="position-absolute bottom-0 end-0" style="margin-right:30px;margin-bottom:30px">
-			<a href="#" class="box"><img src="~/img/footericon/chevron.png" /></a>
-		</div>
-	</div>
-	<!--返回最上面-->
-
-	<!--智能客服彈出視窗-->
-	<div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
-		<div class="offcanvas-header">
-			<h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">智能客服</h5>
-			<button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close" ></button>
-		</div>
-		<div class="offcanvas-body">
-			<iframe src='https://webchat.botframework.com/embed/robot-bot?s=86bLOhtgvdU.Qid-f9cS3YTBZUYNCAwybL8KP5ix1bc7QkSP1z8DPMM' style='min-width: 360px; width: 100%;height:100%'></iframe>
-		</div>
-	</div>
-	<!--智能客服彈出視窗-->
-	<!--頁尾-->
-	<footer class="footer-area section_gap">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-3 col-md-6 col-sm-6">
-					<div class="single-footer-widget">
-						<h6 class="footer_title">C#微軟就業養成班</h6>
-						<div>THM-102</div>
-						<div>服務時間:周一至周五 9:00~18:00</div>
-						<div>
-							連絡電話:0912345678
-						</div>
-						<div>
-							聯絡信箱:thm102@tibame.com
-						</div>
-						<div>
-							聯絡地址:台北市中山區南京東路三段219號
-						</div>
-					</div>
-				</div>
-				<div class="col-lg-3 col-md-6 col-sm-6">
-					<div class="single-footer-widget">
-						<h6 class="footer_title">付款方式</h6>
-						<div>
-							<a><img src="~/img/footericon/visa.png" class="mx-1" /></a>
-							<a><img src="~/img/footericon/card.png" class="mx-1" /></a>
-							<a><img src="~/img/footericon/jcb.png" class="mx-1" /></a>
-						</div>
-					</div>
-				</div>
-				<div class="col-lg-3 col-md-6 col-sm-6">
-					<div class="single-footer-widget">
-						<h6 class="footer_title">網頁導覽</h6>
-						<div class="row">
-							<div class="col-4 w-auto">
-								<ul class="list_style">
-									<li><a href="/User/UpdateUser" class="fs-5">會員中心</a></li>
-									<li><a href="/api/PlaneTK/PlaneTK_catgory" class="fs-5">機票</a></li>
-									<li><a href="/Book" class="fs-5">住宿</a></li>
-									<li><a href="/Attractions" class="fs-5">交通</a></li>
-									<li><a href="/Transport" class="fs-5">景點</a></li>
-								</ul>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="col-lg-3  col-md-6 col-sm-6">
-					<div class="single-footer-widget">
-						<h6 class="footer_title">關於我們</h6>
-						<div>
-							<a href="https://page.line.me/750htowt" class="box"><img class="mx-1 " src="~/img/footerIcon/line.png" /></a>
-							<a href="https://www.facebook.com/TibaMe/?locale=zh_TW" class="box"><img class="mx-1 " src="~/img/footerIcon/facebook.png" /></a>
-							<a href="https://www.instagram.com/tibame_wiedu/" class="box"><img class="mx-1" src="~/img/footerIcon/instagram.png" /></a>
-							<a href="https://www.youtube.com/@@TibaMe" class="box"><img class="mx-1 " src="~/img/footerIcon/youtube.png" /></a>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</footer>
-	<!--頁尾-->
-	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-	<script src="~/lib/jquery/dist/jquery.min.js"></script>
-	<script src="~/js/site.js" asp-append-version="true"></script>
-	<script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js" integrity="sha512-uKQ39gEGiyUJl4AI6L+ekBdGKpGw4xJ55+xyJG7YFlJokPNYegn9KwQ3P8A7aFQAUtUsAQHep+d/lrGqrbPIDQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-	@await RenderSectionAsync("Scripts", required: false)
+    <div>
+        <main role="main" class="">
+            @RenderBody()
+        </main>
+    </div>
+    <!--客服按鈕-->
+    <div class="position-relative" style="z-index:100">
+        <div class="position-fixed bottom-0 end-0">
+            <button class="btn box" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">
+                <img src="~/img/footericon/customer-support.png" />
+            </button>
+        </div>
+    </div>
+    <!--客服按鈕-->
+    <!--返回最上面-->
+    <div class="position-relative" style="z-index:100">
+        <div class="position-absolute bottom-0 end-0" style="margin-right:30px;margin-bottom:30px">
+            <a href="#" class="box"><img src="~/img/footericon/chevron.png" /></a>
+        </div>
+    </div>
+    <!--返回最上面-->
+    <!--智能客服彈出視窗-->
+    <div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">智能客服</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <iframe src='https://webchat.botframework.com/embed/robot-bot?s=86bLOhtgvdU.Qid-f9cS3YTBZUYNCAwybL8KP5ix1bc7QkSP1z8DPMM' style='min-width: 360px; width: 100%;height:100%'></iframe>
+        </div>
+    </div>
+    <!--智能客服彈出視窗-->
+    <!--頁尾-->
+    <footer class="footer-area section_gap">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <div class="single-footer-widget">
+                        <h6 class="footer_title">C#微軟就業養成班</h6>
+                        <div>THM-102</div>
+                        <div>服務時間:周一至周五 9:00~18:00</div>
+                        <div>
+                            連絡電話:0912345678
+                        </div>
+                        <div>
+                            聯絡信箱:thm102@tibame.com
+                        </div>
+                        <div>
+                            聯絡地址:台北市中山區南京東路三段219號
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <div class="single-footer-widget">
+                        <h6 class="footer_title">付款方式</h6>
+                        <div>
+                            <a><img src="~/img/footericon/visa.png" class="mx-1" /></a>
+                            <a><img src="~/img/footericon/card.png" class="mx-1" /></a>
+                            <a><img src="~/img/footericon/jcb.png" class="mx-1" /></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <div class="single-footer-widget">
+                        <h6 class="footer_title">網頁導覽</h6>
+                        <div class="row">
+                            <div class="col-4 w-auto">
+                                <ul class="list_style">
+                                    <li><a href="/User/UpdateUser" class="fs-5">會員中心</a></li>
+                                    <li><a href="/api/PlaneTK/PlaneTK_catgory" class="fs-5">機票</a></li>
+                                    <li><a href="/Book" class="fs-5">住宿</a></li>
+                                    <li><a href="/Attractions" class="fs-5">交通</a></li>
+                                    <li><a href="/Transport" class="fs-5">景點</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3  col-md-6 col-sm-6">
+                    <div class="single-footer-widget">
+                        <h6 class="footer_title">關於我們</h6>
+                        <div>
+                            <a href="https://page.line.me/750htowt" class="box"><img class="mx-1 " src="~/img/footerIcon/line.png" /></a>
+                            <a href="https://www.facebook.com/TibaMe/?locale=zh_TW" class="box"><img class="mx-1 " src="~/img/footerIcon/facebook.png" /></a>
+                            <a href="https://www.instagram.com/tibame_wiedu/" class="box"><img class="mx-1" src="~/img/footerIcon/instagram.png" /></a>
+                            <a href="https://www.youtube.com/@@TibaMe" class="box"><img class="mx-1 " src="~/img/footerIcon/youtube.png" /></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!--頁尾-->
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+    @* <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js" integrity="sha512-uKQ39gEGiyUJl4AI6L+ekBdGKpGw4xJ55+xyJG7YFlJokPNYegn9KwQ3P8A7aFQAUtUsAQHep+d/lrGqrbPIDQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> *@
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
