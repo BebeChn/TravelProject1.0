@@ -38,7 +38,6 @@ namespace TravelProject1._0.Areas.Admin.Controllers
                 OrderId = x.OrderId,
                 PlanId = x.PlanId,
                 Quantity = x.Quantity,
-                Discount = x.Discount,
                 UnitPrice = x.UnitPrice,
                 UseDate = x.UseDate,
 
@@ -71,7 +70,6 @@ namespace TravelProject1._0.Areas.Admin.Controllers
                         OrderId = x.OrderId,                        
                         PlanId = x.PlanId,
                         Quantity = x.Quantity,
-                        Discount = x.Discount,
                         UnitPrice = x.UnitPrice,
                         UseDate = x.UseDate,
                         Name= x.Plan.Name,
@@ -85,7 +83,6 @@ namespace TravelProject1._0.Areas.Admin.Controllers
                 OrderId = x.OrderId,
                 PlanId = x.PlanId,
                 Quantity = x.Quantity,
-                Discount = x.Discount,
                 UnitPrice = x.UnitPrice,
                 UseDate = x.UseDate,
                 Name = x.Plan.Name,
@@ -107,7 +104,6 @@ namespace TravelProject1._0.Areas.Admin.Controllers
             ORD.OrderId = order.OrderId;            //至少要有orderId  跟要改項目
             //ORD.PlanId=order.PlanId;
             ORD.Quantity = order.Quantity;
-            ORD.Discount = order.Discount;
             ORD.UseDate = order.UseDate;
 
             _db.Entry(ORD).State = EntityState.Modified;
