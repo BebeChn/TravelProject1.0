@@ -33,7 +33,7 @@
 			</div>
 		</div>
 		<div class="inputbox mb-3">
-			<input v-model.trim="birthday" type="datetime" required />
+			<input v-model.trim="birthday" type="date" required />
 			<span>生日</span>
 			<div class="fs-6 text-danger" v-if="birthday && !isValid(birthday,validType.birthday)">您輸入的格式不正確</div>
 		</div>
@@ -67,7 +67,7 @@
 	</div>
 </div>
 
-<div v-if="passwordmatch()" class="invalid-feedback ">兩次所輸入密碼不一致</div>
+
 
 @* <div class="modal fade" id="ErrorAlert" tabindex="-1" role="dialog">
 	<div class="modal-dialog modal-lg" role="document">
