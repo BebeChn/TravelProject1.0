@@ -51,15 +51,15 @@
 		</div>
 		<div class="row">
 			<div class="inputbox mb-3 ">
-				<input v-model.trim="password" type="password" required />
+				<input v-model.trim="password" type="password" required id="password" />
 				<span>密碼</span>
 				<div class="fs-6 text-danger" v-if="password && !isValid(password,validType.password)">您輸入的格式不正確</div>
 			</div>
 			<div class="inputbox mb-3">
-				<input type="password" required />
-				<span>重複輸入密碼</span>
-				<div class="invalid-feedback">已被註冊、或您輸入的格式不正確</div>
-			</div>
+				<input v-model.trim="confirmPassword" type="password" required id="confirmPassword" />
+                <span>重複輸入密碼</span>		
+				<div class="fs-6 text-danger" v-if="confirmPassword && !passwordmatch">兩次輸入的密碼不一致</div>
+            </div>
 		</div>
 		<div class="d-flex justify-content-center">
 			<button type="button" class="dup" id="submitButton" @@click="Register">註冊</button>
@@ -69,25 +69,7 @@
 
 
 
-@* <div class="modal fade" id="ErrorAlert" tabindex="-1" role="dialog">
-	<div class="modal-dialog modal-lg" role="document">
-	<div class="modal-content">
-	<div class="modal-header">
-	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-	<h4 class="modal-title">錯誤訊息</h4>
-	</div>
-	<div class="modal-body" id="ErrorMsg" style="overflow-x:auto;width:100%;">
-	</div>
-	</div>
-	</div>
-	</div>  *@
-@* 
-<label for="gender" style="display: flex; align-items: center;">性別</label>
-<select class="beauty-select" style="width: 75px;">
-	<option v-model="gender" value="F">男</option>
-	<option v-model="gender" value="M">女</option>
-</select>
- *@
+
 @section Scripts{
 	<script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js" integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -109,10 +91,7 @@
 				password: "",
 				bool: "",
 				validType: validType,
-			},
-			computed: {
-
-			},
+			},	
 			methods: {
 				isValid: function (str, type) {
 					return window.validation(str, type);
@@ -137,18 +116,18 @@
 							alert("輸入的格式有錯");
 						});
 				},
-				passwordmatch() {
-					return this.password == this.confirmPassword
+				
+			},
+			computed: {
+				passwordmatch: function () {
+					let _this = this;
+					var password = _this.password;
+					var confirmPassword = _this.confirmPassword;
+					if (password === confirmPassword) {
+						return true;
+					}
+					return false;
 				},
-				// checkUsername: function () {
-				//     axios.get(`/api/check-username?username=${this.username}`)
-				//         .then(response => {
-				//             this.usernameTaken = response.data.exists;
-				//         })
-				//         .catch(error => {
-				//             console.error('使用者已經存在啦', error);
-				//         });
-				// }
 			},
 		});
 
