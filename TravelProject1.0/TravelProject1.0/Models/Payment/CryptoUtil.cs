@@ -55,7 +55,10 @@ namespace TravelProject1._0.Models.Payment
 
                 using (var decryptor = aes.CreateDecryptor())
                 {
-                    return RemovePKCS7Padding(decryptor.TransformFinalBlock(source, 0, source.Length));
+                    var d = decryptor.TransformFinalBlock(source, 0, source.Length);
+                    var opt = new byte[d.Length -(d[d.Length - 1])];
+                    Buffer.BlockCopy(d, 0, opt, 0, opt.Length);
+                    return opt;
                 }
             }
         }
@@ -97,7 +100,14 @@ namespace TravelProject1._0.Models.Payment
             if (!string.IsNullOrEmpty(source))
             {
                 // 將 16 進制字串 轉為 byte[] 後
-                byte[] sourceBytes = Encoding.UTF8.GetBytes(source);
+                var ol = source.Length / 2;
+                var opt = new byte[ol];
+                for (int i = 0; i < ol; i++)
+                {
+                    opt[i] = Convert.ToByte(source.Substring(i * 2, 2), 16);
+                }
+
+                byte[] sourceBytes = opt;
 
                 if (sourceBytes != null)
                 {

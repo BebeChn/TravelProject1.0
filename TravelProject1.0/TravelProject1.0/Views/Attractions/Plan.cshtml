@@ -154,7 +154,6 @@
     <script src="https://unpkg.com/vue2-datepicker/index.min.js"></script>
     <script>
         var isLogin = ('@User.Identity.IsAuthenticated' == "True");
-        let baseAddress = "https://localhost:7025";
         Vue.component(DatePicker);
         var app = new Vue({
             el: '#app',
@@ -171,7 +170,7 @@
                 _this.queries = window.location.pathname.slice("18");
 
                 //方案
-                fetch(`${baseAddress}/api/AttractionsApi/GetPlan/${_this.queries}`, { method: "GET" })
+                fetch(`/api/AttractionsApi/GetPlan/${_this.queries}`, { method: "GET" })
                     .then(response => {
                         if (response.ok) return response.json();
                     }).then(data => {
@@ -180,7 +179,7 @@
                         alert(error);
                     });
                 //商品
-                fetch(`${baseAddress}/api/AttractionsApi/GetProduct/${_this.queries}`, { method: "GET" })
+                fetch(`/api/AttractionsApi/GetProduct/${_this.queries}`, { method: "GET" })
                     .then(response => {
                         if (response.ok) return response.json();
                     }).then(data => {
@@ -189,7 +188,7 @@
                         alert(error);
                     })
                 //評價
-                fetch(`${baseAddress}/api/AttractionsApi/GetRating/${_this.queries}`, { method: "GET" })
+                fetch(`/api/AttractionsApi/GetRating/${_this.queries}`, { method: "GET" })
                     .then(response => {
                         if (response.ok) return response.json();
                     }).then(data => {
@@ -239,7 +238,7 @@
                         cartQuantity: model.selected.num,
                         cartDate: model.selected.date
                     };
-                    fetch(`${baseAddress}/api/CartApi/AddToCart`, {
+                    fetch(`/api/CartApi/AddToCart`, {
                         method: 'POST',
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify(cartData)

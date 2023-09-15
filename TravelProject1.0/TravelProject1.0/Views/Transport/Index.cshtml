@@ -104,7 +104,6 @@
     <script src="https://unpkg.com/vuejs-paginate@0.9.0"></script>
     <script>
         Vue.component('paginate', VuejsPaginate)
-        var baseAddress = "https://localhost:7025";
         var app = new Vue({
             el: '#app',
             data: {
@@ -117,7 +116,7 @@
             mounted: function () {
                 //取得交通種類的商品
                 var _this = this;
-                fetch(`${baseAddress}/api/TransportApi/GetCategoryByTransport`, { method: "GET" })
+                fetch(`/api/TransportApi/GetCategoryByTransport`, { method: "GET" })
                     .then(response => {
                         if (response.ok) return response.json();
                     }).then(data => {
@@ -132,7 +131,7 @@
                     var _this = this;
                     _this.count++;
                     if (_this.count % 2 != 0) {
-                        fetch(`${baseAddress}/api/TransportApi/TransportOrderbyPrice`, { method: "GET" })
+                        fetch(`/api/TransportApi/TransportOrderbyPrice`, { method: "GET" })
                             .then(response => {
                                 if (response.ok) return response.json();
                             }).then(data => {
@@ -141,7 +140,7 @@
                                 alert(error);
                             })
                     } else {
-                        fetch(`${baseAddress}/api/TransportApi/TransportOrderByDescendingPrice`, { method: "GET" })
+                        fetch(`/api/TransportApi/TransportOrderByDescendingPrice`, { method: "GET" })
                             .then(response => {
                                 if (response.ok) return response.json();
                             }).then(data => {
