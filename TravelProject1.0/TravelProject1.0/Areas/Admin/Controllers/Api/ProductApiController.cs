@@ -11,7 +11,7 @@ using TravelProject1._0.Services;
 namespace TravelProject1._0.Areas.Admin.Controllers.Api
 {
     [Area("Admin")]
-    [Route("api/ProductApi/[action]")]
+    [Route("api/ManageProductApi/[action]")]
     [ApiController]
     public class ProductApiController : ControllerBase
     {
@@ -68,7 +68,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
             }
         }
         [HttpPost]
-        public IActionResult PostProduct(PostProductViewModel pp)
+        public IActionResult AdminPostProduct([FromBody] PostProductViewModel pp)
         {
            
 

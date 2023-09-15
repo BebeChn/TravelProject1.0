@@ -48,6 +48,7 @@
         table {
             table-layout: auto;
             border-collapse: collapse;
+            text-align:center;
         }
 
 
@@ -78,9 +79,6 @@
             <div class="col-4">
                 <input class="beauty-input" type="text" placeholder="Search..." v-model="searchQuery" @@keyup="search">
             </div>
-            <div class="col-2 ">
-                <button type="button" class="btn btn-success" @@click="openCreateUserModal">新增會員</button>
-            </div>
             <div class="col-6 ">
                 <div class="sort d-flex align-items-center">
                     <div>
@@ -97,7 +95,9 @@
                     </h4>
                 </div>
             </div>
-
+            <div class="col-2 ">
+                <button type="button" class="btn btn-success" @@click="openCreateUserModal">新增會員</button>
+            </div>
         </div>
         <div class="modal fade" id="createUserModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog beauty-width text-center">
@@ -111,14 +111,14 @@
                         <div class="form-group">
                             <label style="font-size:14px; color:#c1121f">*</label><label for="name">名稱</label>
                             <input type="text" class="beauty-input" id="name" v-model="newUser.name">
-                            <div class="fs-6 text-danger" v-if="newUser.name && !isValid(newUser.name,validType.name)" id="emailError">您輸入的格式不正確</div>
+                            <div style="font-size:14px;" class=" text-danger" v-if="newUser.name && !isValid(newUser.name,validType.name)" id="emailError">您輸入的格式不正確</div>
 
                         </div>
                         
                         <div class="form-group">
                             <label style="font-size:14px; color:#c1121f">*</label><label for="email">信箱</label>
                             <input type="email" class="beauty-input" id="email" v-model="newUser.email">
-                            <div class="fs-6 text-danger" v-if="newUser.email && !isValid(newUser.email,validType.email)" id="emailError">您輸入的格式不正確</div>
+                            <div style ="font-size:14px;" class="text-danger" v-if="newUser.email && !isValid(newUser.email,validType.email)" id="emailError">您輸入的格式不正確</divstyle>
                         </div>
                         <div class="form-group">
                             <label for="gender">性別</label>
@@ -131,22 +131,22 @@
                         <div class="form-group">
                             <label style="font-size:14px; color:#c1121f">*</label><label for="password">密碼</label>
                             <input type="password" class="beauty-input" id="password" v-model="newUser.password">
-                            <div class="fs-6 text-danger" v-if="newUser.password && !isValid(newUser.password,validType.password)" id="emailError">您輸入的格式不正確</div>
+                                <div style="font-size:14px;" class="text-danger" v-if="newUser.password && !isValid(newUser.password,validType.password)" id="emailError">您輸入的格式不正確</div>
 
                         </div>
                         <div class="form-group">
                             <label for="birthday">生日</label>
-                            <input type="date" class="beauty-input" id="birthday" v-model="newUser.birthday">
+                            <input type="date" class="beauty-input" id="birthday" v-model="newUser.birthday | formatDate">
                         </div>
                         <div class="form-group">
                             <label style="font-size:14px; color:#c1121f">*</label> <label for="phone">電話</label>
                             <input type="text" class="beauty-input" id="phone" v-model="newUser.phone">
-                            <div class="fs-6 text-danger" v-if="newUser.phone && !isValid(newUser.phone,validType.phone)" id="emailError">您輸入的格式不正確</div>
+                                <div style ="font-size:14px;" class="text-danger" v-if="newUser.phone && !isValid(newUser.phone,validType.phone)" id="emailError">您輸入的格式不正確</div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
                         <button type="button" class="btn btn-primary" @@click="createUser">新增</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>                      
                     </div>
                 </div>
             </div>
@@ -172,7 +172,7 @@
                     <td>{{pu.name}}</td>
                     <td>{{pu.email}}</td>
                     <td>{{pu.gender}}</td>
-                    <td>{{pu.birthday}}</td>
+                    <td>{{pu.birthday  | formatDate}}</td>
                     <td>{{pu.phone}}</td>
                     <td>
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
@@ -216,7 +216,7 @@
 
                                 </tr>
                                 <tr>
-                                    <td><label>生日:</label><input class="beauty-input" type="date" v-model="UpdateUser.birthday" /></td>
+                                    <td><label>生日:</label><input class="beauty-input" type="date" v-model="UpdateUser.birthday | formatDate" /></td>
                                 </tr>
                                 <tr>
                                     <td><label>電話:</label><input class="beauty-input" v-model="UpdateUser.phone" disabled /></td>
@@ -240,7 +240,7 @@
                                     <td><label>性別:</label>{{UpdateUser.gender}}</td>
                                 </tr>
                                 <tr>
-                                    <td><label>生日:</label>{{UpdateUser.birthday}}</td>
+                                    <td><label>生日:</label>{{UpdateUser.birthday | formatDate}}</td>
                                 </tr>
                                 <tr>
                                     <td><label>電話:</label>{{UpdateUser.phone}}</td>
@@ -306,6 +306,14 @@
                 }).catch(err => {
                     alert("資料讀取失敗");
                 })
+            },
+            filters: {
+                //日期格式
+                formatDate: function (str) {
+                    if (!str) return "";
+                    var d = new Date(str);
+                    return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+                },
             },
             methods: {
                 isValid: function (str, type) {
@@ -405,7 +413,7 @@
                 },
                 updateUser: function (userId) {
                     let _this = this;
-                    let result = confirm(`確定要更新產品名稱為${_this.UpdateUser.name}的產品資訊？`)
+                    let result = confirm(`確定要更新使用者名稱為${_this.UpdateUser.name}的產品資訊？`)
                     let formData = new FormData();
                     if (result == true) {
                         let request = {
