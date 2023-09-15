@@ -68,7 +68,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a asp-controller="User" asp-action="UserOrderDetails" class="d-flex justify-content-between" style="font-weight: bold; color:#52c5fd ;font-size: 14px;">
+                                <a asp-controller="User" asp-action="UserOrder" class="d-flex justify-content-between" style="font-weight: bold; color:#52c5fd ;font-size: 14px;">
                                     <p>商品訂單</p>
                                 </a>
                             </li>
@@ -114,7 +114,8 @@
                             }
                         ]
                     }
-                ]
+                ],
+                queries:""
             },
             filters: {
                 //日期格式
@@ -126,11 +127,10 @@
             },
             mounted: function () {
                 let _this = this;
-                fetch(`${baseAddress}/api/OrderApi/OrderDetails`, {
+                _this.queries = window.location.pathname.slice("23");
+                console.log(_this.queries);
+                fetch(`${baseAddress}/api/OrderApi/OrderDetails/${_this.queries}`, {
                     method: "GET",
-                    headers: {
-                        "Authorization": "Bearer " + authenticationCookie
-                    }
                 }).then(response => {
                     if (response.ok) {
                         return response.json();

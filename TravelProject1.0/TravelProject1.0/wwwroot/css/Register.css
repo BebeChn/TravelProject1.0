@@ -2,7 +2,7 @@
 .beauty-select {
     width: 100px;
     padding: 10px;
-    margin-bottom: 10px;
+    /*margin-bottom: 10px;*/
     border: 1px solid #ccc;
     border-radius: 4px;
     font-family: Arial, sans-serif;
@@ -19,11 +19,11 @@
     }
 
 
-#app {
+/*#app {
     position: relative;
-}
+}*/
 
-h1 {
+/*h1 {
     position: absolute;
     top: 0;
     left: 50%;
@@ -31,24 +31,24 @@ h1 {
     padding: 10px 20px;
     font-weight: bold;
     color:black;
-}
+}*/
 
-.center {
+/*.center {
     display: flex;
     align-items: center;
     justify-content: center;
     height: 100vh;
    
-}
+}*/
 .element {
- 
+    background-image: url('../img/footericon/register.jpg');
     background-size: cover;
     background-repeat: no-repeat;
 }
 
 .inputbox {
     position: relative;
-    width: 270px;
+    width: auto;
 }
 
     .inputbox input {
@@ -64,7 +64,7 @@ h1 {
 
     .inputbox span {
         position: absolute;
-        left: 0;
+        left: 10px;
         padding: 10px;
         pointer-events: none;
         font-size: 1em;
@@ -91,12 +91,13 @@ h1 {
     .inputbox input:valid, .inputbox input:focus {
         border: 1px solid deepskyblue;
     }
-.center {
+
+/*.center {
     display: flex;
     align-items: center;
     justify-content: center;
     height: 100vh;
-}
+}*/
 
 .dup {
     display: block;
@@ -118,8 +119,8 @@ h1 {
         border: 1.5px solid black;
     }
 
-.labelstyle {
+/*.labelstyle {
     text-align: center;
-    width:750px;
+    width: 750px;
     justify-content: center;
-}
+}*/

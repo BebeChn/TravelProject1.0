@@ -1,7 +1,8 @@
 ﻿@section Styles{
     @*     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">*@
-    <link href="~/css/transport.css" rel="stylesheet" />
+
+    <link href="~/css/planetk_category.css" rel="stylesheet" />
 
 
 }
@@ -69,7 +70,7 @@
                 @* 商品 *@
                 <div class="row product-items" v-for="item in showProduct">
                     <div class="col-md-3">
-                        <img class="w-100 , h-30" :src="item.img" />
+                        <img class="w-100 , h-30" :src="item.img" id="i"/>
                     </div>
                     <div class="col-md-7 d_flex align-items-center">
                         <div class="about_content ">

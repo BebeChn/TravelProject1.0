@@ -23,11 +23,11 @@ namespace TravelProject1._0.Controllers.Api
             _userIdentityService = userIdentityService;
             _context = context;
         }
-        [HttpGet]
-        public IEnumerable<OrderInfo> OrderDetails()
+        [HttpGet("{id}")]
+        public IEnumerable<OrderInfo> OrderDetails(int id)
         {
             var userId = _userIdentityService.GetUserId();
-            return _context.Orders.Include(o => o.OrderDetails).ThenInclude(o => o.Plan).Where(o => o.UserId == userId)
+            return _context.Orders.Include(o => o.OrderDetails).ThenInclude(o => o.Plan).Where(o => o.UserId == userId && o.OrderId==id)
                 .Select(o => new OrderInfo
                 {
                     OrderDate = o.OrderDate,
@@ -43,6 +43,7 @@ namespace TravelProject1._0.Controllers.Api
                     })
                 });
         }
+
         [Authorize]
         [HttpGet]
         public IEnumerable<UserOrderDTO> UserOrder()
