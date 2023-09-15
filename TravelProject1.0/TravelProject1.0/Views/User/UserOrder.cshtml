@@ -1,48 +1,10 @@
-﻿@section Styles{
-    <style>
-        .eachfield {
-            background-color: #faf9f9;
-        }
-
-        .groundfield {
-            background-color: #eeeeee;
-        }
-
-        .favorites {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        .favorite-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 1px solid #ccc;
-            padding: 5px 0;
-        }
-
-        .favorite-title {
-            display: flex;
-            align-items: center;
-            justify-content: space-around;
-            border-bottom: 1px solid #ccc;
-            padding: 10px 0;
-        }
-
-        .favorite-name {
-            flex: 1;
-        }
-
-        .delete-button {
-            background-color: #f00;
-            color: #fff;
-            border: none;
-            padding: 5px 10px;
-            cursor: pointer;
-        }
-    </style>
+﻿@{
+    ViewData["Title"] = "歷史訂單";
 }
 
+@section Styles{
+    <link href="~/css/userorder.css" rel="stylesheet" />
+}
 
 <div id="app" class="groundfield">
     <br />
@@ -50,23 +12,21 @@
     <div class="container">
         <div class="row">
             <div class="col-8 eachfield">
-                <h2 style="text-align:center;font-size:36px">訂單項目</h2>
-                <ul class="favorites">
-                    <li class="favorite-title">
-                        <span>訂購日期</span>
-                        <span>訂單編號</span>
-                        <span>付款狀態</span>
-                        <sapn>查看</sapn>
-                    </li>
-                    <li v-for="o in orders" class="favorite-title">
-                        <sapn>{{o.orderDate}}</sapn>
-                        <sapn class="me-3">{{o.orderId}}</sapn>
-                        <span class="me-3">{{o.status}}</span>
-                        <a :href="'/User/UserOrderDetails/'+o.orderId" class="btn theme_btn button_hover info mt-3">
-                            詳細訂單
-                        </a>
-                    </li>
-                </ul>
+                <h2>訂單項目</h2>
+                <div class="favorites">
+                    <div class="favorite-title">
+                        <label>訂購日期</label>
+                        <label>訂單編號</label>
+                        <label>付款狀態</label>
+                        <label>查看</label>
+                    </div>
+                    <div v-for="o in showOrder" class="favorite-item">
+                        <p>{{o.orderDate}}</p>
+                        <p>{{o.orderId}}</p>
+                        <p>{{o.status}}</p>
+                        <a :href="'/User/UserOrderDetails/'+o.orderId" class="theme_btn button_hover info">詳細訂單</a>
+                    </div>
+                </div>
                 @* 分頁 *@
                 <nav class="blog-pagination justify-content-center d-flex">
                     <ul class="pagination">
@@ -86,8 +46,8 @@
             <div class="col-md-3 offset-1 eachfield">
                 <div class="blog_right_sidebar">
                     <aside class="single_sidebar_widget post_category_widget">
-                        <div style="text-align:center">
-                            <img class="" src="~/img/dog.jpg" style="border-radius:50%;width:150px;height:150px" />
+                        <div>
+                            <img src="~/img/dog.jpg" />
                         </div>
                         <br />
                         <h4 class="widget_title">會員資料</h4>
@@ -98,12 +58,12 @@
                                 </a>
                             </li>
                             <li>
-                                <a class="d-flex justify-content-between" asp-Controller="User" asp-action="UserOrder">
+                                <a class="d-flex justify-content-between" asp-Controller="User" asp-action="UserOrder" style="font-weight: bold; color:#52c5fd ;font-size: 14px;">
                                     <p>商品訂單</p>
                                 </a>
                             </li>
                             <li>
-                                <a class="d-flex justify-content-between" asp-Controller="User" asp-action="UserCollect" style="font-weight: bold; color:#52c5fd ;font-size: 14px;">
+                                <a class="d-flex justify-content-between" asp-Controller="User" asp-action="UserCollect">
                                     <p>收藏夾</p>
                                 </a>
                             </li>
@@ -118,50 +78,50 @@
             </div>
         </div>
     </div>
-   
-
 </div>
 
-
 @section Scripts{
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+    <script src="https://unpkg.com/vuejs-paginate@0.9.0"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js" integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
     <script>
-        var baseAddress = "https://localhost:7025";
+        Vue.component('paginate', VuejsPaginate)
         var vueApp = new Vue({
             el: '#app',
             data: {
-                orders: {},
+                orders: [],
                 currentPage: 1,
-                itemPage: 10,
-            },
-            computed: {
-                showOrder: function () {
-                    let _this = this;
-                    var start = (_this.currentPage - 1) * _this.itemPage;
-                    var end = start + _this.itemPage;
-                    return this.attractionsFilter.slice(start, end);
-                },
+                itemPage: 5,
             },
             mounted: function () {
                 let _this = this;
                 axios.get('/api/OrderApi/UserOrder')
                     .then(response => {
-                         _this.orders = response.data;
+                        _this.orders = response.data;
                     })
                     .catch((error) => {
-                        console.log('取得後端失敗', error);
+                        alert('取得後端失敗', error);
                     });
-
             },
             methods: {
+                //分頁
                 changePage: function (num) {
                     let _this = this;
                     _this.currentPage = num;
                 },
-               
             },
+            computed: {
+                //分頁
+                showOrder: function () {
+                    let _this = this;
+                    var start = (_this.currentPage - 1) * _this.itemPage;
+                    var end = start + _this.itemPage;
+                    return this.orders.slice(start, end);
+                },
+                total: function () {
+                    let _this = this;
+                    return Math.ceil(_this.orders.length / _this.itemPage);
+                }
+            }
         });
     </script>
 }
