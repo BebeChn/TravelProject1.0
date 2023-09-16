@@ -14,7 +14,6 @@
                 connection.on("ReviceCartCount", function (num) {
                     document.getElementById("cartCountNumber").innerText = num;
                 });
-
                 connection.start().then(function () {
                     console.log("connection scuess");
                     connection.invoke("UserCartCount").catch(function (err) {
