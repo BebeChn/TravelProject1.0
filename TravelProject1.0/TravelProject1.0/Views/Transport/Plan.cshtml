@@ -246,6 +246,14 @@
                     }).then(response => {
                         if (response.ok) {
                             alert("商品已加入購物車!");
+                        @{
+                            if (User.Identity.IsAuthenticated)
+                            {
+                                <text>
+                                      connection.invoke("UserCartCount");
+                                </text>
+                            }
+                        }
                         } else {
                             throw new Error("未確實選擇，無法將商品加入購物車!");
                         }

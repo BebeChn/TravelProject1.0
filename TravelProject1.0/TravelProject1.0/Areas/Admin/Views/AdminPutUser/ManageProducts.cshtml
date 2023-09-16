@@ -31,6 +31,26 @@
                 border-color: #007bff;
             }
 
+        .fatbeauty-input {
+            width: 300px;
+            height: 200px;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+        }
+
+            .fatbeauty-input:hover {
+                border-color: #007bff;
+            }
+
+
+            .fatbeauty-input:focus {
+                border-color: #007bff;
+            }
+
 
         table {
             table-layout: auto;
@@ -48,6 +68,7 @@
         .table tbody tr:hover {
             background-color: #edf2fb;
         }
+
         .morewidth {
             width: 200px;
         }
@@ -67,14 +88,15 @@
         }
 
         .scrollable-container {
-            max-height: 400px; 
+            max-height: 400px;
             overflow-y: auto;
         }
+
         .ellipsis {
             white-space: nowrap;
             overflow: hidden;
-            text-overflow: ellipsis; 
-            max-width: 200px; 
+            text-overflow: ellipsis;
+            max-width: 200px;
         }
     </style>
 }
@@ -85,9 +107,6 @@
         <div class="row">
             <div class="col-4">
                 <input class="beauty-input" type="text" placeholder="Search..." v-model="searchQuery" @@keyup="search">
-            </div>
-            <div class="col-2 ">
-                <button type="button" class="btn btn-success" @@click="createProductModal">新增商品</button>
             </div>
             <div class="col-6 ">
                 <div class="sort d-flex align-items-center">
@@ -105,7 +124,9 @@
                     </h4>
                 </div>
             </div>
-
+            <div class="col-2 ">
+                <button type="button" class="btn btn-success" @@click="createProductModal">新增商品</button>
+            </div>
         </div>
         <div class="modal fade" id="createProductModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog beauty-width text-center">
@@ -116,38 +137,34 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="ProductId">商品編號</label>
-                            <input type="text" class="beauty-input" id="ProductId" v-model="newProduct.productId" disabled>
-                        </div>
-                        <div class="form-group">
-                            <label for="email">種類編號</label>
+                            <label for="email">種類編號:</label>
                             <input type="text" class="beauty-input" id="email" v-model="newProduct.id">
                         </div>
                         <div class="form-group">
-                            <label for="productName">商品名稱</label>
+                            <label for="productName">商品名稱:</label>
                             <input type="text" class="beauty-input" id="productName" v-model="newProduct.productName">
                         </div>
                         <div class="form-group">
-                            <label for="price">商品價格</label>
+                            <label for="price">商品價格:</label>
                             <input type="text" class="beauty-input" id="price" v-model="newProduct.price">
                         </div>
                         <div class="form-group">
-                            <label for="mainDescribe">主要敘述</label>
-                            <input type="text" class="beauty-input" id="mainDescribe" v-model="newProduct.mainDescribe">
+                            <label for="mainDescribe">主要敘述:</label>
+                            <input type="text" class="fatbeauty-input" id="mainDescribe" v-model="newProduct.mainDescribe">
                         </div>
                         <div class="form-group">
-                            <label for="subDescribe">更多敘述</label>
-                            <input type="text" class="beauty-input" id="subDescribe" v-model="newProduct.subDescribe">
+                            <label for="subDescribe">更多敘述:</label>
+                            <input type="text" class="fatbeauty-input" id="subDescribe" v-model="newProduct.subDescribe">
                         </div>
                         <div class="form-group">
-                            <label for="shortDescribe">補充說明</label>
-                            <input type="text" class="beauty-input" id="shortDescribe" v-model="newProduct.shortDescribe">
+                            <label for="shortDescribe">補充說明:</label>
+                            <input type="text" class="fatbeauty-input" id="shortDescribe" v-model="newProduct.shortDescribe">
                         </div>
-                        
+
                     </div>
                     <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" @@click="createProduct">新增</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                        <button type="button" class="btn btn-primary" @@click="createProductModal">新增</button>
                     </div>
                 </div>
             </div>
@@ -207,10 +224,10 @@
                                     <td><label>主要敘述:</label><input class="beauty-input" v-model="UpdateProduct.mainDescribe" /> </td>
                                 </tr>
                                 <tr>
-                                    <td><label>更多敘述:</label><input class="beauty-input"  v-model="UpdateProduct.subDescribe" /></td>
+                                    <td><label>更多敘述:</label><input class="beauty-input" v-model="UpdateProduct.subDescribe" /></td>
                                 </tr>
                                 <tr>
-                                    <td><label>補充說明:</label><input class="beauty-input" v-model="UpdateProduct.shortDescribe"/></td>
+                                    <td><label>補充說明:</label><input class="beauty-input" v-model="UpdateProduct.shortDescribe" /></td>
                                 </tr>
 
 
@@ -239,7 +256,7 @@
                                 <tr>
                                     <td>
                                         <label>商品照片:</label>
-                                        <img :src="UpdateProduct.imagePath" style="width:200px;"/>
+                                        <img :src="UpdateProduct.imagePath" style="width:200px;" />
                                     </td>
                                 </tr>
                             </template>
@@ -279,18 +296,17 @@
                 editOpen: null,
                 UpdateProduct: {},
                 newProduct: {
-                    productId: '',
                     id: '',
                     productName: '',
                     mainDescribe: '',
                     price: '',
                     subDescribe: '',
-                    shortDescribe:'',
-                    
+                    shortDescribe: '',
                 },
                 searchQuery: '',
                 form: [],
-            }, computed: {
+            },
+            computed: {
 
             },
             mounted: function () {
@@ -330,30 +346,27 @@
                 },
                 createProductModal() {
                     let _this = this
-                    _this.newProduct = {
-                        productId: '',
-                        id: '',
-                        productName: '',
-                        mainDescribe: '',
-                        price: '',
-                        subDescribe: '',
-                        shortDescribe: '',
-                    };
+                    _this.newProduct= {
+                        Id: 4,
+                        ProductName: '',
+                        MainDescribe: '',
+                        Price: 0,
+                        SubDescribe: '',
+                        ShortDescribe: '',
+                    }
                     $('#createProductModal').modal('show');
                 },
                 createProduct: function () {
                     let _this = this;
                     var form = {
-                        PordictId: 0,
-                        Id: _this.newProduct.Id,
-                        Gender: _this.newProduct.productName,
-                        Birthday: _this.newProduct.mainDescribe,
-                        Phone: _this.newProduct.price,
-                        Email: _this.newProduct.subDescribe,
-                        Password: _this.newProduct.shortDescribe,
+                        Id: _this.newProduct.id,
+                        ProductName: _this.newProduct.productName,
+                        MainDescribe: _this.newProduct.mainDescribe,
+                        Price: _this.newProduct.price,
+                        SubDescribe: _this.newProduct.subDescribe,
+                        ShortDescribe: _this.newProduct.shortDescribe,
                     };
-
-                    fetch(`/api/ProductApi/PostProduct`, {
+                    fetch(`/api/ProductApi/AdminPostProduct`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -361,18 +374,17 @@
                         body: JSON.stringify(form),
                     })
                         .then((response) => {
-                            if (response.ok) return response.text();
+                            if (response.ok) return response.json();
                         })
                         .then((data) => {
-                            alert("使用者成功新增");
-                            window.location.href = "/api/ProductApi/ManageProducts";
-                            $('#createPoModal').modal('hide');
+                            alert("商品成功新增");
+                            window.location.href = "/Admin/AdminPutUser/ManageProducts";
+                            $('#createProductModal').modal('hide');
                         })
                         .catch((err) => {
                             alert("新增失敗：" + err.message);
                         });
                 },
-
                 display: function (productId) {
                     let _this = this;
                     _this.editOpen = false;
@@ -393,17 +405,14 @@
                 UpdateProductInfo: function (productId) {
                     let _this = this;
                     let result = confirm(`確定要更新產品名稱為${_this.UpdateProduct.productId}的產品資訊？`)
-                    let formData = new FormData();
                     if (result == true) {
                         let request = {
-                           ProductId: "",
                             Id: _this.UpdateProduct.id,
                             ProductName: _this.UpdateProduct.productName,
                             MainDescribe: _this.UpdateProduct.mainDescribe,
                             Price: _this.UpdateProduct.price,
                             SubDescribe: _this.UpdateProduct.subDescribe,
-                            ShortDescribe: _this.UpdateProduct.ShortDescribe,
-
+                            ShortDescribe: _this.UpdateProduct.shortDescribe,
                         };
                         fetch(`/api/ProductApi/PutProduct/${productId}`, {
                             method: "PUT",

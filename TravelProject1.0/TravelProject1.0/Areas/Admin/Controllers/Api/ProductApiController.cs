@@ -68,13 +68,11 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
             }
         }
         [HttpPost]
-        public IActionResult PostProduct(PostProductViewModel pp)
+        public async Task <IActionResult> AdminPostProduct([FromBody] PostProductViewModel pp)
         {
-           
 
             Product insertproduct = new Product
             {
-              ProductId=pp.ProductId,
               Id=pp.Id,
               ProductName=pp.ProductName,
               Price = pp.Price,
@@ -84,22 +82,20 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
             };
             try
             {
-                _context.Products.AddAsync(insertproduct);
-                _context.SaveChanges();
+               await _context.Products.AddAsync(insertproduct);
+               await _context.SaveChangesAsync();
             }
             catch (Exception ex)
             {
                 return BadRequest();
             }
-            return Ok();
+            return Ok(insertproduct);
         }
  
         [HttpPut("{id}")]
         public async Task<string> PutProduct(int id, PutProductVIewModel ppvm)
         {
-
             var product = await _context.Products.FindAsync(id);
-            product.ProductId = ppvm.ProductId;
             product.Id = ppvm.Id;
             product.ProductName = ppvm.ProductName;
             product.Price = ppvm.Price;
