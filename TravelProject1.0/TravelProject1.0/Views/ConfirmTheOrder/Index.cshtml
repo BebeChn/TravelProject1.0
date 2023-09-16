@@ -88,7 +88,6 @@
 
 @section Scripts{
     <script>
-        var baseAddress = "https://localhost:7025";
         var app = new Vue({
             el: "#app",
             data: {
@@ -100,7 +99,7 @@
             },
             mounted: function () {
                 let _this = this;
-                fetch(`${baseAddress}/api/ConfirmTheOrderApi/GetUser`, { method: "GET" })
+                fetch(`/api/ConfirmTheOrderApi/GetUser`, { method: "GET" })
                     .then(response => {
                         if (response.ok) return response.json();
                     }).then(data => {
@@ -157,7 +156,7 @@
                 addOrder: function () {
                     let _this = this;
                     let orderData = {
-                        points: _this.user[0].points,
+                        points: _this.pointNum,
                         totalPrice: _this.resultPrice,
                         detailDTOs: []
                     };
@@ -171,7 +170,7 @@
                         orderData.detailDTOs.push(d)
                     }
 
-                    fetch(`${baseAddress}/Payment/Pay`,{
+                    fetch(`/Payment/Pay`,{
                         method:"POST",
                         headers: {"Content-Type":"application/json"},
                         body: JSON.stringify(orderData)

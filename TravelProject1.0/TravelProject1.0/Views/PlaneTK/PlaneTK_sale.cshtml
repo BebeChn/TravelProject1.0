@@ -3,14 +3,17 @@
 }
 
 @section Styles{
-    <link href="~/css/attractions-plan.min.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/planetk_sale.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://unpkg.com/vue2-datepicker/index.css">
+     
+
+
 }
 
 <section id="app" class="about_history_area ">
     <div class="container" v-for="x in product">
         <div>
-            <img class="img-product" :src="x.img" />
+            <img class="img-product " :src="x.img"   />
         </div>
         <div class="product-describe">
             <div class="d_flex align-items-center">
@@ -38,7 +41,7 @@
                 <div class="card" v-for="(p,index) in plan" :key="p.planId">
                     <div class="row">
                         <div class="col-xl-3">
-                            <img class="img-plan" :src="p.planImg" />
+                            <img class="img-plan i" :src="p.planImg" />
                         </div>
                         <div class="col-xl-7">
                             <div class="card-body">

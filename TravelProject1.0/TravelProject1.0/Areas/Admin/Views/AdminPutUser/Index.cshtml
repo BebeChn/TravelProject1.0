@@ -1,57 +1,305 @@
 ﻿@section Styles
-{
-    <link href="~/css/super.css" rel="stylesheet" />
+    {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    @*  <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"> *@
     <style>
-    .custom-th {
-     text-align: center; 
-      width: 200px
-    }
+        .beauty-label {
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 5px;
+            margin-left: 40px;
+        }
+
+        .beauty-input {
+            width: 200px;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            outline: none;
+        }
+
+            .beauty-input:hover {
+                border-color: #007bff;
+            }
+
+
+            .beauty-input:focus {
+                border-color: #007bff;
+            }
+
+        .table tbody tr:nth-child(odd) {
+            background-color: #ffffff;
+        }
+
+        .table tbody tr:nth-child(even) {
+            background-color: #caf0f8;
+        }
+
+        .table tbody tr:hover {
+            background-color: #edf2fb;
+        }
+
+
+
+        table {
+            table-layout: auto;
+            border-collapse: collapse;
+            text-align:center;
+        }
+
+
+        .morewidth {
+            width: 200px;
+        }
+
+        .beauty-width {
+            max-width: 400px;
+            width: 100%;
+            margin: 0 auto;
+            height: 400px;
+        }
+
+        .second-beauty-width {
+            max-width: 400px;
+            width: 100%;
+            margin: 0 auto;
+            height: 475px;
+        }
     </style>
 }
 <div id="app">
+    <br>
+    <br>
     <div>
+        <div class="row">
+            <div class="col-4">
+                <input class="beauty-input" type="text" placeholder="Search..." v-model="searchQuery" @@keyup="search">
+            </div>
+            <div class="col-6 ">
+                <div class="sort d-flex align-items-center">
+                    <div>
+                        <h4 class="title_color sort-title">排序：</h4>
+                    </div>
+                    <h4>
+                        <span>
+                            <a href="#" v-on:click="sortAscendingAge"><i class="fa-solid fa-caret-down fa-beat"></i>年齡高到低</a>
+                        </span>
+                        <span>|</span>
+                        <span>
+                            <a href="#" v-on:click="sortDescendingAge"><i class="fa-solid fa-caret-up fa-beat"></i>年齡低到高</a>
+                        </span>
+                    </h4>
+                </div>
+            </div>
+            <div class="col-2 ">
+                <button type="button" class="btn btn-success" @@click="openCreateUserModal">新增會員</button>
+            </div>
+        </div>
+        <div class="modal fade" id="createUserModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog beauty-width text-center">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">新增會員</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">X</button>
+                    </div>
+                    <div class="modal-body">
+                        <label style="font-size:14px; color:#c1121f">*必填</label>
+                        <div class="form-group">
+                            <label style="font-size:14px; color:#c1121f">*</label><label for="name">名稱</label>
+                            <input type="text" class="beauty-input" id="name" v-model="newUser.name">
+                            <div style="font-size:14px;" class=" text-danger" v-if="newUser.name && !isValid(newUser.name,validType.name)" id="emailError">您輸入的格式不正確</div>
+
+                        </div>
+                        
+                        <div class="form-group">
+                            <label style="font-size:14px; color:#c1121f">*</label><label for="email">信箱</label>
+                            <input type="email" class="beauty-input" id="email" v-model="newUser.email">
+                            <div style ="font-size:14px;" class="text-danger" v-if="newUser.email && !isValid(newUser.email,validType.email)" id="emailError">您輸入的格式不正確</divstyle>
+                        </div>
+                        <div class="form-group">
+                            <label for="gender">性別</label>
+                            <select v-model="newUser.gender" class="beauty-input">
+                                <option value="M">男</option>
+                                <option value="F">女</option>
+                                <option value="N">不指定</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label style="font-size:14px; color:#c1121f">*</label><label for="password">密碼</label>
+                            <input type="password" class="beauty-input" id="password" v-model="newUser.password">
+                                <div style="font-size:14px;" class="text-danger" v-if="newUser.password && !isValid(newUser.password,validType.password)" id="emailError">您輸入的格式不正確</div>
+
+                        </div>
+                        <div class="form-group">
+                            <label for="birthday">生日</label>
+                            <input type="date" class="beauty-input" id="birthday" v-model="newUser.birthday | formatDate">
+                        </div>
+                        <div class="form-group">
+                            <label style="font-size:14px; color:#c1121f">*</label> <label for="phone">電話</label>
+                            <input type="text" class="beauty-input" id="phone" v-model="newUser.phone">
+                                <div style ="font-size:14px;" class="text-danger" v-if="newUser.phone && !isValid(newUser.phone,validType.phone)" id="emailError">您輸入的格式不正確</div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" @@click="createUser">新增</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>                      
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-responsive">
         <table class="table table-striped table-hover">
             <thead>
                 <tr>
-                    <th scope="col" class="custom-th">編號</th>
-                    <th scope="col">帳號</th>
-                    <th scope="col">信箱</th>
-                    <th scope="col">性別</th>
-                    <th scope="col">生日</th>
-                    <th scope="col">電話</th>
-                    <th scope="col" class="col-lg-3">編輯</th>
+                    <th style="width:75px;">編號</th>
+                    <th>會員名稱</th>
+                    <th>信箱</th>
+                    <th style="width:100px;">性別</th>
+                    <th>生日</th>
+                    <th>電話</th>
+                    <th>編輯</th>
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="pu in putUser" >
-                    <th class="custom-th">{{pu.Id}}</th>
+                <tr v-for="pu in putUser">
+                    <td>{{pu.userId}}</td>
                     <td>{{pu.name}}</td>
                     <td>{{pu.email}}</td>
                     <td>{{pu.gender}}</td>
-                    <td>{{pu.birthday}}</td> 
+                    <td>{{pu.birthday  | formatDate}}</td>
                     <td>{{pu.phone}}</td>
-                    <td> <button class="btn-btn-primary" @@click="showUserInf">編輯</button></td>
-                    <td> <button class="btn-btn-primary" @@click="delete">刪除</button></td>
+                    <td>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                                @@click="display(pu.userId)">
+                            編輯
+                        </button>
+                    </td>
                 </tr>
             </tbody>
         </table>
     </div>
+    <div id="UserDetail" class="modal" tabindex="-1">
+        <div class="modal-dialog beauty-width text-center">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title d-flex justify-content-center">使用者詳細資料</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">X</button>
+                </div>
+                <div class="modal-body second-beauty-width">
+                    <table class="table table-striped table-hover">
+                        <tbody>
+                            @* 修改使用者資訊視窗 *@
+                            <template v-if="editOpen">
+                                <tr>
+                                    <td><label>會員編號:</label><input class="beauty-input" v-model="UpdateUser.userId" disabled /></td>
+                                </tr>
+                                <tr>
+                                    <td><label>會員名稱:</label><input class="beauty-input" v-model="UpdateUser.name" /></td>
+                                </tr>
+                                <tr>
+                                    <td><label>信箱:</label><input class="beauty-input" v-model="UpdateUser.email" /> </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>性別:</label><select v-model="UpdateUser.gender" class="beauty-input">
+                                            <option value="M">男</option>
+                                            <option value="F">女</option>
+                                            <option value="N">不指定</option>
+                                        </select>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td><label>生日:</label><input class="beauty-input" type="date" v-model="UpdateUser.birthday | formatDate" /></td>
+                                </tr>
+                                <tr>
+                                    <td><label>電話:</label><input class="beauty-input" v-model="UpdateUser.phone" disabled /></td>
+                                </tr>
+
+
+                            </template>
+                            @* 修改使用者資訊視窗 *@
+                            @* 顯示使用者資訊視窗 *@
+                            <template v-else>
+                                <tr>
+                                    <td><label>會員編號:</label>{{UpdateUser.userId}}</td>
+                                </tr>
+                                <tr>
+                                    <td><label>會員名稱:</label>{{UpdateUser.name}}</td>
+                                </tr>
+                                <tr>
+                                    <td><label>信箱:</label>{{UpdateUser.email}}</td>
+                                </tr>
+                                <tr>
+                                    <td><label>性別:</label>{{UpdateUser.gender}}</td>
+                                </tr>
+                                <tr>
+                                    <td><label>生日:</label>{{UpdateUser.birthday | formatDate}}</td>
+                                </tr>
+                                <tr>
+                                    <td><label>電話:</label>{{UpdateUser.phone}}</td>
+                                </tr>
+                            </template>
+                            @* 顯示產品資訊視窗 *@
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-warning" @@click="updateUser(UpdateUser.userId)" v-if="editOpen">更新</button>
+                    <button type="button" class="btn btn-danger" @@click="deleteUser(UpdateUser.userId)" v-if="editOpen">刪除</button>
+                    <button type="button" class="btn btn-warning" @@click="edit" v-else>修改</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+
+
+
+
+
 
 @section Scripts
     {
     <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.min.js" integrity="sha384-lpyLfhYuitXl2zRZ5Bn2fqnhNAKOAaM/0Kr9laMspuaMiZfGmfwRNFh8HlMy49eQ" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js" integrity="sha512-uKQ39gEGiyUJl4AI6L+ekBdGKpGw4xJ55+xyJG7YFlJokPNYegn9KwQ3P8A7aFQAUtUsAQHep+d/lrGqrbPIDQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="~/js/validation.min.js"></script>
     <script>
         var baseAddress = "https://localhost:7025";
         var app = new Vue({
             el: '#app',
             data: {
                 putUser: [],
+                editOpen: null,
+                UpdateUser: {},
+                newUser: {
+                    name: '',
+                    email: '',
+                    gender: '',
+                    birthday: '',
+                    phone: '',
+                    password: '',
+                 
+                },
+                searchQuery: '',
+                form: [],
+                validType: validType,
+            }, computed: {
+
             },
             mounted: function () {
                 let _this = this;
-                fetch(`${baseAddress}/api/adminApi/AdminGetUser`).then(response => { 
+                fetch(`${baseAddress}/api/adminApi/AdminGetUser`).then(response => {
                     if (response.ok) return response.json();
                 }).then(data => {
                     _this.putUser = data;
@@ -59,12 +307,193 @@
                     alert("資料讀取失敗");
                 })
             },
-            methods: {
-                create: function () { },
-                showUserInf: function() { },
-                edit: function () { },
-                delete: function () { },
+            filters: {
+                //日期格式
+                formatDate: function (str) {
+                    if (!str) return "";
+                    var d = new Date(str);
+                    return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+                },
             },
+            methods: {
+                isValid: function (str, type) {
+                    return window.validation(str, type);
+                },
+                sortAscendingAge: function () {
+                    let _this = this;
+                    fetch(`${baseAddress}/api/adminApi/OrderByAge`, {
+                        method: "GET"
+                    }).then(response => {
+                        if (response.ok) return response.json();
+                    }).then(data => {
+                        _this.putUser = data;
+                    }).catch(error => {
+                        alert(error);
+                    });
+                },
+                sortDescendingAge: function () {
+                    let _this = this;
+                    fetch(`${baseAddress}/api/adminApi/OrderByDescendingAge`, {
+                        method: "GET"
+                    }).then(response => {
+                        if (response.ok) return response.json();
+                    }).then(data => {
+                        _this.putUser = data;
+                    }).catch(error => {
+                        alert(error);
+                    });
+                },
+                openCreateUserModal() {
+                    let _this = this
+                    _this.newUser = {
+                        name: '',
+                        email: '',
+                        gender: '',
+                        birthday: '',
+                        phone: '',
+                        password: '',
+                    };
+                    $('#createUserModal').modal('show');
+                },
+                createUser: function () {
+                    let _this = this;
+                    var form = {
+                        UserId: 0,
+                        Name: _this.newUser.name,
+                        Gender: _this.newUser.gender,
+                        Birthday: _this.newUser.birthday,
+                        Phone: _this.newUser.phone,
+                        Email: _this.newUser.email,
+                        Password: _this.newUser.password
+                    };
+                    fetch(`/api/AdminApi/AdminManageUser`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(form),
+                    })
+                        .then((response) => {
+                            if (response.ok) {
+                                return response.json();
+                            } else {
+                                throw new Error("Network response was not ok");
+                            }
+                        })
+                        .then((data) => {
+                            if (data) {
+                                alert("使用者成功新增");
+                                window.location.href = "/Admin/AdminPutUser/Index";
+                                _this.putUser = data;
+                                $('#createUserModal').modal('hide');
+                            } else {
+                                alert("新增失敗：");
+                            }
+                        })
+                        .catch((err) => {
+                            alert("新增失敗：有必填未填寫");
+                        });
+                },
+                display: function (userId) {
+                    let _this = this;
+                    _this.editOpen = false;
+                    $('#exampleModal').modal('show');
+                    fetch(`${baseAddress}/api/adminApi/GetUserDetail/${userId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            $('#UserDetail').modal('show');
+                            _this.UpdateUser = data;
+                        }).catch(err => {
+                            alert("資料讀取失敗");
+                        });
+                },
+                edit: function () {
+                    let _this = this;
+                    _this.editOpen = true;
+                },
+                updateUser: function (userId) {
+                    let _this = this;
+                    let result = confirm(`確定要更新使用者名稱為${_this.UpdateUser.name}的產品資訊？`)
+                    let formData = new FormData();
+                    if (result == true) {
+                        let request = {
+                            UserId: "",
+                            Name: _this.UpdateUser.name,
+                            Email: _this.UpdateUser.email,
+                            Gender: _this.UpdateUser.gender,
+                            Birthday: _this.UpdateUser.birthday,
+                            Phone: _this.UpdateUser.phone,
+                        };
+                        fetch(`${baseAddress}/api/adminApi/AdminPutUser/${userId}`, {
+                            method: "PUT",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify(request)
+                        })
+                            .then((response) => { response.json() })
+                            .then(data => {
+                                _this.editOpen = false;
+                                // _this.newUser = data;
+                                console.log(data);
+                            })
+                            .catch(err => {
+                                alert("修改失敗,請檢查必填有無填寫")
+                            });
+                    }
+                },
+                deleteUser: function (userId) {
+                    let _this = this;
+                    let result = confirm(`確定要刪除產品編號為${userId}的商品嗎？`);
+                    if (result == true) {
+                        fetch(`${baseAddress}/api/adminApi/AdminDeleteUser/${userId}`, {
+                            method: "DELETE"
+                        }).then((response) => {
+                            if (response.ok) return response.text();
+                        }).then(data => {
+                            alert("刪除成功");
+                            window.location.href = "/Admin/AdminPutUser/Index";
+                        }).catch(err => {
+                            alert("刪除失敗");
+                        });
+                    }
+                },
+                search: function () {
+                    let _this = this;
+                    if (_this.searchQuery.trim() == '') {
+                        _this.searchQuery = '';
+                        // 不執行篩選，直接獲取所有用戶
+                        fetch(`/api/adminApi/AdminGetUser`)
+                            .then(response => {
+                                if (response.ok) return response.json();
+                            })
+                            .then(data => {
+                                _this.putUser = data;
+                            })
+                            .catch(err => {
+                                alert("資料讀取失敗");
+                            });
+                    } else {
+                        // 執行根據搜尋條件篩選用戶
+                        fetch(`/api/adminApi/AdminSearchUser?query=${_this.searchQuery}`, {
+                            method: "GET"
+                        }).then(response => {
+                            if (response.ok) return response.json();
+                        }).then(data => {
+                            _this.putUser = data;
+                        }).catch(error => {
+                            alert(error);
+                        });
+                    }
+                },
+
+                clear() {
+                    let _this = this
+                    _this.searchQuery = '';
+                    _this.search();
+                },
+            }
         });
+
     </script>
 }

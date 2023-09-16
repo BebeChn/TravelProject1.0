@@ -1,5 +1,6 @@
 ﻿@{
     ViewData["Title"] = "商品評價";
+    var result = string.IsNullOrEmpty(ViewBag.key) ? "[]" : Html.Raw(ViewBag.key);
 }
 
 @section Styles{
@@ -8,33 +9,56 @@
 }
 
 <div id="app" class="container">
-    <div>
-        <h1>商品評價</h1>
-        <div class="rating-date">
-            <h4>評價日期:</h4>
-            <template>
-                <div>
-                    <date-picker v-model="date" valueType="format" @@input="todayDate"></date-picker>
+    <div class="row">
+        <div class="col-xl-8">
+            <h1>商品評價</h1>
+            <div class="rating-date">
+                <h4>評價日期:</h4>
+                <template>
+                    <div>
+                        <date-picker v-model="date" valueType="format" @@input="todayDate"></date-picker>
+                    </div>
+                </template>
+            </div>
+            <div class="rating-star">
+                <h4>評分:</h4>
+                <div class="star">
+                    <i class="fa-solid fa-star fa-2xl"
+                       v-for="(star, index) in stars"
+                       :key="index"
+                       v-on:click="rate(index+1)"
+                       :class="{ 'active': index < selectedStar }">
+                    </i>
                 </div>
-            </template>
-        </div>
-        <div class="rating-star">
-            <h4>評分:</h4>
-            <div class="star">
-                <i class="fa-solid fa-star fa-2xl"
-                   v-for="(star, index) in stars"
-                   :key="index"
-                   v-on:click="rate(index+1)"
-                   :class="{ 'active': index < selectedStar }">
-                </i>
+            </div>
+            <div>
+                <h4>評論內容:</h4>
+                <textarea class="txt-describe" v-model="describe"></textarea>
+            </div>
+            <div class="form-btn">
+                <button class="btn btn-submit info" v-on:click="addRating">送出</button>
             </div>
         </div>
-        <div>
-            <h4>評論內容:</h4>
-            <textarea class="txt-describe" v-model="describe"></textarea>
-        </div>
-        <div class="form-btn">
-            <button class="btn btn-submit info" v-on:click="addRating">送出</button>
+        <div class="col-xl-3 productInfo" offset-1>
+            <div>
+                <img :src="od[0].odimg" />
+            </div>
+            <div class="product-text">
+                <h3>商品名稱:</h3>
+                <div>{{od[0].odname}}</div>
+                <div>
+                    <span class="product-title">使用日期:</span>
+                    {{od[0].useDate | formatDate}}
+                </div>
+                <div>
+                    <span class="product-title">數量:</span>
+                    {{od[0].quantity}}
+                </div>
+                <div>
+                    <spna class="product-title">金額:</spna>
+                    {{od[0].unitPrice}}
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -42,7 +66,6 @@
 @section Scripts{
     <script src="https://unpkg.com/vue2-datepicker/index.min.js"></script>
     <script>
-        var baseAddress = "https://localhost:7025";
         Vue.component(DatePicker);
         var app = new Vue({
             el: '#app',
@@ -51,27 +74,28 @@
                 describe: "",
                 stars: [1, 2, 3, 4, 5],
                 selectedStar: -1,
-                queries: ""
+                queries: "",
+                od: @result,
             },
             methods: {
                 //商品評價
                 addRating: function () {
                     let _this = this;
-                    _this.queries = window.location.pathname.slice("14");
+                    _this.queries = _this.od[0].productId;
                     let ratingData = {
                         productId: _this.queries,
                         ratingDate: _this.date,
                         ratingScore: _this.selectedStar,
                         describe: _this.describe
                     };
-                    fetch(`${baseAddress}/api/RatingApi/PostRating/${_this.queries}`, {
+                    fetch(`/api/RatingApi/PostRating/${_this.queries}`, {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify(ratingData)
                     }).then(response => {
                         if (response.ok) {
                             alert("商品評價成功");
-                            location.href = "/User/UserOrderDetails";
+                            location.href = "/User/UserOrder";
                         } else {
                             throw new Error("有資料未填寫");
                         }
@@ -93,6 +117,14 @@
                     if (d !== today) {
                         this.date = today;
                     }
+                }
+            },
+            filters: {
+                //日期格式
+                formatDate: function (str) {
+                    if (!str) return "";
+                    var d = new Date(str);
+                    return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
                 }
             }
         })

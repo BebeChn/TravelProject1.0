@@ -58,7 +58,7 @@
                         </div>
                         <div class="col-10">
                             <div class="progress">
-                            <div class="progress-bar progress-bar-striped progress-bar-animated custom-progress-bar" role="progressbar" :aria-valuenow="now" :aria-valuemin="min" :aria-valuemax="max" :style="p"></div>
+                            <div class="progress-bar progress-bar-striped progress-bar-animated custom-progress-bar" role="progressbar" :aria-valuenow="now" :aria-valuemin="min" :aria-valuemax="max" :style="point"></div>
                         </div>
                             <div style="text-align:right"> {{now}} / {{max}}</div>
                         </div>
@@ -77,7 +77,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    <tr v-for="o in Order">
+                                    <tr v-for="o in showOrder">
                                             <td>{{o.orderId}}</td>                                        
                                             <td>{{o.newPoint}}</td>
                                             <td>{{o.orderDate | formatDate}}</td>
@@ -85,6 +85,20 @@
                                         </tr>         
                                     </tbody>
                                 </table>
+                            <nav class="blog-pagination justify-content-center d-flex">
+                                <ul class="pagination">
+                                    <paginate :page-count="total"
+                                              :click-handler="changePage"
+                                              :page-class="'page-item'"
+                                              :page-link-class="'page-link'"
+                                              :prev-class="'page-link'"
+                                              :prev-link-class="'lnr lnr-chevron-left'"
+                                              :next-class="'page-link'"
+                                              :next-link-class="'lnr lnr-chevron-right'"
+                                              :container-class="'pagination'">
+                                    </paginate>
+                                </ul>
+                            </nav>
                             </div>                    
                     </div>
 
@@ -105,7 +119,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a class="d-flex justify-content-between" asp-Controller="User" asp-action="UserOrderDetails">
+                                <a class="d-flex justify-content-between" asp-Controller="User" asp-action="UserOrder">
                                     <p>商品訂單</p>
                                 </a>
                             </li>
@@ -131,22 +145,21 @@
 @section Scripts{
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js" integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="~/js/validation.min.js"></script>
+    <script src="https://unpkg.com/vuejs-paginate@0.9.0"></script>
     <script>
+        Vue.component('paginate', VuejsPaginate)
         var baseAddress = "https://localhost:7025";
         var vueApp = new Vue({
             el: '#app',
             data: {
-              max:1000,
+              max:10000,
               min:0,
               now:0,
-              Order: {},
+              Order: [],
+              currentPage: 1,
+              itemPage: 5,
             },
-            computed: {
-                p: function () {
-                    let temp = (this.now / this.max) * 100;
-                    return { width: temp.toFixed()+"%" };
-                }
-            },
+          
             filters: {
                 //日期格式
                 formatDate: function (str) {
@@ -173,9 +186,28 @@
                 })
             },
             methods: {
-
+                changePage: function (num) {
+                    let _this = this;
+                    _this.currentPage = num;
+                },
             },
-
+            computed: {
+                //分頁
+                showOrder: function () {
+                    let _this = this;
+                    var start = (_this.currentPage - 1) * _this.itemPage;
+                    var end = start + _this.itemPage;
+                    return this.Order.slice(start, end);
+                },
+                total: function () {
+                    let _this = this;
+                    return Math.ceil(_this.Order.length / _this.itemPage);
+                },
+                point: function () {
+                    let temp = (this.now / this.max) * 100;
+                    return { width: temp.toFixed() + "%" };
+                }
+            }
         });
 
     </script>

@@ -78,24 +78,23 @@
     </ul>
     </div>*@
     <!--管理內容-->
-    <div class="col-12">
-        <!--這段吃完-->
-        <!----------------------------------------------------按鍵----------------------------------->
-        <!--新增刪除修改-->
-        <span class="container-fluid   row">
-            <div class="col-1"></div>
-            @*新增員工紀錄案鍵*@
-            <div class="form-group col-2 ">
-                <button type="button" class="btn   btn-success" @@click="showModal" id="btn">新增商品</button>
-            </div>
-            <div class="col-3"></div>
-            <div class="col-3"></div>
-        </span>
-        <!--這段吃完-->
-        <!--換下一行-->
-        <!------------------------------------------顯示管理內容--------------------------------------->
+    <!--這段吃完-->
+    <!----------------------------------------------------按鍵----------------------------------->
+    <!--新增刪除修改-->
+    <div class="container-fluid   row">
+        <div class="col-1"></div>
+        @*新增員工紀錄案鍵*@
+        <div class="form-group col-2 ">
+            <button type="button" class="btn   btn-success" @@click="showModal" id="btn">新增商品</button>
+        </div>
+        <div class="col-3"></div>
+        <div class="col-3"></div>
+    </div>
+    <!--這段吃完-->
+    <!--換下一行-->
+    <!------------------------------------------顯示管理內容--------------------------------------->
+    <div class="container-fluid   row">
         <div class="table-responsive">
-
             <table class="table table-bordered  ">
                 <thead>
                     <tr>
@@ -111,7 +110,7 @@
                 </thead>
                 <tbody>
                     <!--迴圈-->
-                    <tr v-for="item in MerchandiseDTOes">
+                    <tr v-for="item in MerchandiseDTOes" class="text-center">
                         <!--修改-->
                         <template v-if="item.Edit==true">
                             <td>{{item.productId}}</td>
@@ -148,13 +147,13 @@
                             <td>{{item.shortDescribe}}</td>
                             <td>
                                 <div class="d-flex justify-content-around">
-                                    <button id="btninline" type="button" class="btn btn-warning"   @@click="edit(item.productId)">
+                                    <button :disabled="notchange" id="btninline" type="button" class="btn btn-warning" @@click="edit(item.productId)">
                                         <div class="horizontal-text">
                                             <span>修改</span>
                                         </div>
                                     </button>
-                                    
-                                    <button id="btninline" type="button" class="btn btn-danger"   @@click="deleteMch(item.productId)">
+
+                                    <button :disabled="notchange" id="btninline" type="button" class="btn btn-danger" @@click="deleteMch(item.productId)">
                                         <div class="horizontal-text">
                                             <span>刪除</span>
                                         </div>
@@ -166,63 +165,55 @@
                 </tbody>
             </table>
         </div>
-        <br />
-        <br />
-        <!------------------------------------------新增紀錄的畫面--------------------------------------->
-        <!-- Modal Body -->
-        <!-- if you want to close by clicking outside the modal, delete the last endpoint:data-bs-backdrop and data-bs-keyboard -->
-        <div class="modal fade" id="insertModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered " role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="modalTitleId">新增商品紀錄</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+
+    <!------------------------------------------新增紀錄的畫面--------------------------------------->
+    <!-- Modal Body -->
+    <!-- if you want to close by clicking outside the modal, delete the last endpoint:data-bs-backdrop and data-bs-keyboard -->
+    <div class="modal fade" id="insertModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered " role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitleId">新增商品紀錄</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label">商品種類Id</label>
+                        <input v-model="id" type="text" class="form-control" />
                     </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label class="form-label">商品種類Id</label>
-                            <input v-model="id" type="text" class="form-control" />
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">商品名稱</label>
-                            <input v-model="productName" type="text" class="form-control" />
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">金額</label>
-                            <input v-model="price" type="text" class="form-control" />
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">主要內文</label>
-                            <textarea v-model="mainDescribe" type="text" class="form-control"
-                                      style="height:100px;width: 500px;"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">副內容</label>
-                            <textarea v-model="subDescribe" type="text" class="form-control"
-                                      style="height:100px;width: 500px;"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">簡短描述</label>
-                            <input v-model="shortDescribe" type="text" class="form-control" />
-                        </div>
-                        ____
+                    <div class="form-group">
+                        <label class="form-label">商品名稱</label>
+                        <input v-model="productName" type="text" class="form-control" />
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @@click="close">關閉</button>
-                        <button type="button" class="btn btn-primary" @@click="insert">新增</button>
+                    <div class="form-group">
+                        <label class="form-label">金額</label>
+                        <input v-model="price" type="text" class="form-control" />
                     </div>
+                    <div class="form-group">
+                        <label class="form-label">主要內文</label>
+                        <textarea v-model="mainDescribe" type="text" class="form-control"
+                                  style="height:100px;width: 500px;"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">副內容</label>
+                        <textarea v-model="subDescribe" type="text" class="form-control"
+                                  style="height:100px;width: 500px;"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">簡短描述</label>
+                        <input v-model="shortDescribe" type="text" class="form-control" />
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @@click="close">關閉</button>
+                    <button type="button" class="btn btn-primary" @@click="insert">新增</button>
                 </div>
             </div>
         </div>
-        <!------------------------------------------新增紀錄的畫面底--------------------------------------->
-
-
-
-
-
-
-
     </div>
+    <!------------------------------------------新增紀錄的畫面底--------------------------------------->
     @*</div>*@
     <!--app-->
 </div>
@@ -267,6 +258,11 @@
                 let _this = this;
                 _this.filterMerchandise();
 
+            },
+            computed: {
+                notchange: function () {
+                    return this.MerchandiseDTOes.some(x => x.Edit);
+                },
             },
             methods: {
                 //
@@ -474,7 +470,7 @@
                         });
                 },
 
-                
+
                 close: function () {
                     let _this = this;
 

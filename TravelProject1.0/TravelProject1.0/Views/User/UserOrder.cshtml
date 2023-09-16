@@ -1,5 +1,127 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
+    ViewData["Title"] = "歷史訂單";
+}
+
+@section Styles{
+    <link href="~/css/userorder.css" rel="stylesheet" />
+}
+
+<div id="app" class="groundfield">
+    <br />
+    <br />
+    <div class="container">
+        <div class="row">
+            <div class="col-8 eachfield">
+                <h2>訂單項目</h2>
+                <div class="favorites">
+                    <div class="favorite-title">
+                        <label>訂購日期</label>
+                        <label>訂單編號</label>
+                        <label>付款狀態</label>
+                        <label>查看</label>
+                    </div>
+                    <div v-for="o in showOrder" class="favorite-item">
+                        <p>{{o.orderDate}}</p>
+                        <p>{{o.orderId}}</p>
+                        <p>{{o.status}}</p>
+                        <a :href="'/User/UserOrderDetails/'+o.orderId" class="theme_btn button_hover info">詳細訂單</a>
+                    </div>
+                </div>
+                @* 分頁 *@
+                <nav class="blog-pagination justify-content-center d-flex">
+                    <ul class="pagination">
+                        <paginate :page-count="total"
+                                  :click-handler="changePage"
+                                  :page-class="'page-item'"
+                                  :page-link-class="'page-link'"
+                                  :prev-class="'page-link'"
+                                  :prev-link-class="'lnr lnr-chevron-left'"
+                                  :next-class="'page-link'"
+                                  :next-link-class="'lnr lnr-chevron-right'"
+                                  :container-class="'pagination'">
+                        </paginate>
+                    </ul>
+                </nav>
+            </div>
+            <div class="col-md-3 offset-1 eachfield">
+                <div class="blog_right_sidebar">
+                    <aside class="single_sidebar_widget post_category_widget">
+                        <div>
+                            <img src="~/img/dog.jpg" />
+                        </div>
+                        <br />
+                        <h4 class="widget_title">會員資料</h4>
+                        <ul class="list_style cat-list">
+                            <li>
+                                <a class="d-flex justify-content-between" asp-Controller="User" asp-action="UpdateUser">
+                                    <p>個人資訊</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="d-flex justify-content-between" asp-Controller="User" asp-action="UserOrder" style="font-weight: bold; color:#52c5fd ;font-size: 14px;">
+                                    <p>商品訂單</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="d-flex justify-content-between" asp-Controller="User" asp-action="UserCollect" >
+                                    <p>收藏夾</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="d-flex justify-content-between" asp-Controller="User" asp-action="UserPoint">
+                                    <p>點數</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </aside>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="https://unpkg.com/vuejs-paginate@0.9.0"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js" integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        Vue.component('paginate', VuejsPaginate)
+        var vueApp = new Vue({
+            el: '#app',
+            data: {
+                orders: [],
+                currentPage: 1,
+                itemPage: 5,
+            },
+            mounted: function () {
+                let _this = this;
+                axios.get('/api/OrderApi/UserOrder')
+                    .then(response => {
+                        _this.orders = response.data;
+                    })
+                    .catch((error) => {
+                        alert('取得後端失敗', error);
+                    });
+            },
+            methods: {
+                //分頁
+                changePage: function (num) {
+                    let _this = this;
+                    _this.currentPage = num;
+                },
+            },
+            computed: {
+                //分頁
+                showOrder: function () {
+                    let _this = this;
+                    var start = (_this.currentPage - 1) * _this.itemPage;
+                    var end = start + _this.itemPage;
+                    return this.orders.slice(start, end);
+                },
+                total: function () {
+                    let _this = this;
+                    return Math.ceil(_this.orders.length / _this.itemPage);
+                }
+            }
+        });
+    </script>
 }

@@ -44,43 +44,38 @@ namespace TravelProject1._0.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(string email, string password)
         {
-
-           var userselect = await _context.Users.Where(u => u.Email == email).FirstOrDefaultAsync();
+            var userselect = await _context.Users.SingleOrDefaultAsync(u => u.Email == email);
 
             if (userselect == null)
             {
                 return View("Login");
-
             }
-            UserDTO userDTO = new UserDTO();
-            string hashedPassword = HashPassword(password, userDTO.Salt);
-            var user = _context.Users.Select(u => u.PasswordHash == hashedPassword).FirstOrDefaultAsync();
-          
-            if (user !=null )
+
+            string hashedPassword = HashPassword(password, userselect.Salt);
+
+            if (userselect.PasswordHash == hashedPassword)
             {
-                
-                var claims = new List<Claim>();//身份驗證訊息
+                var claims = new List<Claim>();
                 claims.Add(new Claim(ClaimTypes.NameIdentifier, userselect.UserId.ToString()));
-                claims.Add(new Claim(ClaimTypes.Name,userselect.Name));
+                claims.Add(new Claim(ClaimTypes.Name, userselect.Name));
                 claims.Add(new Claim(ClaimTypes.Email, userselect.Email));
                 claims.Add(new Claim(ClaimTypes.Role, "user"));
                 ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 ClaimsPrincipal principal = new ClaimsPrincipal(identity);
                 HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, new AuthenticationProperties
                 {
-                    ExpiresUtc = DateTime.UtcNow.AddMinutes(30),//過期時間;30分鐘
-
+                    ExpiresUtc = DateTime.UtcNow.AddMinutes(30),
                 }).Wait();
 
                 return Redirect("/Home/Index");
             }
             else
             {
-                base.ViewBag.Msg = "用戶或密碼錯誤";
+                ViewBag.LoginFailed = true;
+                return View("Login");
             }
-
-            return Redirect("/Home/Index");
         }
+
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
@@ -165,11 +160,11 @@ namespace TravelProject1._0.Controllers
         {
             return View();
         }
-    }
-
-
-
-
+        public IActionResult UserOrder()
+        {
+            return View();
+        }
+	}
 }
 
 

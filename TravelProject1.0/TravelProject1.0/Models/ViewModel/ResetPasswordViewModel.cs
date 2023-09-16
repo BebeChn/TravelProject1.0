@@ -7,6 +7,5 @@ namespace TravelProject1._0.Models.ViewModel
         public string Email { get; set; }
 
         public string NewPassword { get; set; }
- 
     }
 }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Win32;
+using NToastNotify.Helpers;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -10,6 +11,7 @@ using TravelProject1._0.Areas.Admin.Models.DTO;
 using TravelProject1._0.Areas.Admin.Models.ViewModel;
 using TravelProject1._0.Models;
 using TravelProject1._0.Models.DTO;
+using TravelProject1._0.Services;
 
 namespace TravelProject1._0.Areas.Admin.Controllers.Api
 {
@@ -19,62 +21,96 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
     public class AdminApiController : ControllerBase
     {
         private readonly TravelProjectAzureContext _context;
-        public AdminApiController(TravelProjectAzureContext context)
+        private readonly IUserSearchService _userSearchService;
+        private readonly IUserIdentityService _userIdentityService;
+        public AdminApiController(TravelProjectAzureContext context, IUserSearchService userSearchService, IUserIdentityService userIdentityService)
         {
             _context = context;
+            _userSearchService = userSearchService;
+            _userIdentityService = userIdentityService;
         }
 
         [HttpGet]
-        public IEnumerable<AdminGetUserViewModel> AdminGetUser()
+        public IEnumerable<AdminGetUserDTO> AdminGetUser()
         {
-            return _context.Users.Select(x => new AdminGetUserViewModel
+            return _context.Users.Select(x => new AdminGetUserDTO
 
-			{
-                Id = x.UserId,
+            {
+                UserId = x.UserId,
                 Email = x.Email,
                 Gender = x.Gender,
                 Name = x.Name,
                 Phone = x.Phone,
-                Birthday=x.Birthday.Value.ToString("yyyy-MM-dd"),
+                Birthday = x.Birthday.Value.ToString("yyyy-MM-dd"),
             });
 
         }
-
-
-        [HttpPost]
-        public bool AdminManageUser(AdmminManageUserDTO amuDTO)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<GetUserDetailDTO>> GetUserDetail(int id)
         {
+            try
+            {
+                var user = await _context.Users.FindAsync(id);
+
+                if (user == null)
+                {
+                    return NotFound();
+                }
+
+                GetUserDetailDTO gud = new GetUserDetailDTO
+                {
+                    UserId = user.UserId,
+                    Email = user.Email,
+                    Gender = user.Gender,
+                    Name = user.Name,
+                    Phone = user.Phone,
+                    Birthday = user.Birthday?.ToString("yyyy-MM-dd HH:mm:ss")
+                };
+
+                return Ok(gud);
+            }
+            catch (Exception ex)
+            {
+
+                return NotFound();
+            }
+        }
+            
+        [HttpPost]
+        public IActionResult AdminManageUser(AdmminManageUserDTO amuDTO)
+        {
+           
             var salt = GenerateSalt();
 
             var passwordhash = HashPassword(amuDTO.Password, salt);
 
             User insertuser = new User
             {
+
                 Name = amuDTO.Name,
                 Email = amuDTO.Email,
                 PasswordHash = passwordhash,
                 Gender = amuDTO.Gender,
                 Phone = amuDTO.Phone,
-                Birthday= amuDTO.Birthday,
+                Birthday = amuDTO.Birthday,
             };
             try
             {
                 _context.Users.AddAsync(insertuser);
                 _context.SaveChanges();
+                List<Claim> claims = new List<Claim>();
+                claims.Add(new Claim(ClaimTypes.NameIdentifier, amuDTO.Id.ToString()));
+                claims.Add(new Claim(ClaimTypes.Name, $"{amuDTO.Name}"));
+                claims.Add(new Claim("Email", amuDTO.Email));
+                claims.Add(new Claim(ClaimTypes.Role, "user"));
+                ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                ClaimsPrincipal principal = new ClaimsPrincipal(identity);
+                return Ok(insertuser);
             }
-            catch (Exception ex)
+            catch 
             {
-                return false;
+                return BadRequest();
             }
-
-            List<Claim> claims = new List<Claim>();
-            claims.Add(new Claim(ClaimTypes.NameIdentifier, amuDTO.Id.ToString()));
-            claims.Add(new Claim(ClaimTypes.Name, $"{amuDTO.Name}"));
-            claims.Add(new Claim("Email", amuDTO.Email));
-            claims.Add(new Claim(ClaimTypes.Role, "user"));
-            ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            ClaimsPrincipal principal = new ClaimsPrincipal(identity);
-            return true;
         }
         private string GenerateSalt()
         {
@@ -95,8 +131,9 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
                 return Convert.ToBase64String(psaswordhash);
             }
         }
-        [HttpPut]
-        public async Task<string> AdminPutUser(int id, AdminPutUserDTO apuDTO) {
+        [HttpPut("{id}")]
+        public async Task<string> AdminPutUser(int id, AdminPutUserDTO apuDTO)
+        {
 
             var admin = await _context.Users.FindAsync(id);
             admin.Name = apuDTO.Name;
@@ -105,7 +142,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
             admin.Birthday = apuDTO.Birthday;
             admin.Phone = apuDTO.Phone;
 
-            _context.Entry(User).State = EntityState.Modified;
+            _context.Entry(admin).State = EntityState.Modified;
             try
             {
                 await _context.SaveChangesAsync();
@@ -116,28 +153,58 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
             }
             return "成功";
         }
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<string> AdminDeleteUser(int id)
         {
-            if (_context.Users == null)
+            var users = await _context.Users.FindAsync(id);
+            if (users == null)
             {
-                return "刪除失敗";
-            }
-            var Users = await _context.Users.FindAsync(id);
-            if (Users == null)
-            {
-                return "刪除失敗";
+                return "找不到該用戶";
             }
             try
             {
-                _context.Users.Remove(Users);
+                _context.Users.Remove(users);
                 await _context.SaveChangesAsync();
+                return "刪除成功";
             }
             catch
             {
                 return "刪除關聯失敗";
             }
-            return "刪除成功";
+        }
+        [HttpGet]
+        public async Task<IQueryable<AdminGetUserDTO>> OrderByAge()
+        {
+            return _context.Users.OrderBy(u => u.Age).Select(u => new AdminGetUserDTO
+            {
+                UserId = u.UserId,
+                Email = u.Email,
+                Gender = u.Gender,
+                Name = u.Name,
+                Phone = u.Phone,
+                Birthday = u.Birthday.Value.ToString("yyyy-MM-dd"),
+
+            });
+        }
+        //排序年紀
+        [HttpGet]
+        public async Task<IQueryable<AdminGetUserDTO>> OrderByDescendingAge()
+        {
+            return _context.Users.OrderByDescending(u => u.Age).Select(u => new AdminGetUserDTO
+            {
+                UserId = u.UserId,
+                Email = u.Email,
+                Gender = u.Gender,
+                Name = u.Name,
+                Phone = u.Phone,
+                Birthday = u.Birthday.Value.ToString("yyyy-MM-dd"),
+            });
+        }
+        [HttpGet]
+        public IActionResult AdminSearchUser(string query)
+        {
+            var searchResults = _userSearchService.SearchUsers(query);
+            return Ok(searchResults);
         }
 
     }

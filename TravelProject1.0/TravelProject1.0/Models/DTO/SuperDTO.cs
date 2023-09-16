@@ -1,22 +1,24 @@
 ﻿
 namespace TravelProject1._0.Models.DTO
 {
-	public class SuperDTO
-	{
-		public int Id { get; set; }
+    public class SuperDTO
+    {
+        public int Id { get; set; }
 
-		public string Name { get; set; } = null!;
-		public string Account { get; set; } = null!;
+        public string Name { get; set; } = null!;
 
-		public string Password { get; set; } = null!;
+        public string Account { get; set; } = null!;
 
-		public string Role { get; set; } = null!;
-		public string Describe { get; set; } = null!;
+        public string Password { get; set; } = null!;
 
-		public DateTime? CreateDate { get; set; }
+        public string Role { get; set; } = null!;
 
-		public DateTime? LoginDate { get; set; }
+        public string Describe { get; set; } = null!;
 
-		public int? RoleId { get; set; }
-	}
+        public DateTime? CreateDate { get; set; }
+
+        public DateTime? LoginDate { get; set; }
+
+        public int? RoleId { get; set; }
+    }
 }

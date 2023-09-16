@@ -1,5 +1,4 @@
 ﻿@section Styles{
-    <link href="~/css/planetk.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
     <link href="~/css/admindashboard.css" rel="stylesheet" />
@@ -33,17 +32,18 @@
     </div>
     <br>
     <!--第三段-->
-    <div class="container-fluid row">
+    <div class="container-fluid ">
         <!--管理選單-->
-        <div class="col-1">
-        </div>
+@*        <div class="col-1">
+        </div>*@
         <!--管理內容-->
-        <div class="col-11">
-            <table class="table table-bordered">
+        <div class=" table-responsive"  >
+            <table class="table table-bordered "  >
                 <thead>
                     <tr>
-                        <th>訂單ID</th>
-                        <th>商品ID</th>
+                        <th >訂單ID</th>
+                        <th>商品方案ID</th>
+                        <th>名稱</th>
                         <th>數量</th>
                         <th>折扣</th>
                         <th>商品價格</th>
@@ -53,10 +53,11 @@
                 </thead>
                 <tbody>
 
-                    <tr v-for="item in OrderDTOes ">
-                        <template v-if="item.Edit==true">
+                    <tr v-for="item in OrderDTOes "  >
+                        <template v-if="item.Edit==true" class="text-center">
                             <td><label>{{item.orderId}}</label></td>
                             <td><label>{{item.planId}}</label></td>
+                            <td><label>{{item.name}}</label></td>
                             <td><input v-model="item.quantity" /></td>
                             <td><input v-model="item.discount" /></td>
                             <td><label>{{item.unitPrice}}</label></td>
@@ -76,9 +77,10 @@
                                 </div>
                             </td>
                         </template>
-                        <template v-else>
+                        <template v-else class="text-center">
                             <td><label>{{item.orderId}}</label></td>
                             <td><label>{{item.planId}}</label></td>
+                            <td><label>{{item.name}}</label></td>
                             <td><label>{{item.quantity}}</label> </td>
                             <td><label>{{item.discount}}</label></td>
                             <td><label>{{item.unitPrice}}</label></td>
@@ -86,7 +88,7 @@
                             <td>
                                 <div class="d-flex justify-content-around">
                                     <button :disabled="notchange" type="button" class="btn  btn-warning" @@click="edit(item.orderId,item.planId)">
-                                        <div class="horizontal-text">
+                                        <div class="horizontal-text ">
                                             <span>修改</span>
                                         </div>
                                     </button>

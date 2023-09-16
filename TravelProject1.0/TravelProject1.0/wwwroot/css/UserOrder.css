@@ -1,0 +1,54 @@
+﻿.eachfield {
+    background-color: #faf9f9;
+}
+
+    .eachfield h2 {
+        text-align: center;
+        font-size: 36px
+    }
+
+.groundfield {
+    background-color: #eeeeee;
+}
+
+.favorites {
+    list-style-type: none;
+    padding: 0;
+    text-align: center;
+}
+
+.favorite-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 20px;
+}
+
+    .favorite-title label {
+        font-size: 24px;
+        font-weight: bold;
+        margin-right: 45px;
+    }
+
+.favorite-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 20px;
+}
+
+    .favorite-item p {
+        width: 100px;
+    }
+
+.single_sidebar_widget div {
+    text-align: center;
+}
+
+    .single_sidebar_widget div img {
+        border-radius: 50%;
+        width: 150px;
+        height: 150px
+    }

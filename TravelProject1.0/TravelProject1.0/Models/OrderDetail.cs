@@ -15,8 +15,6 @@ public partial class OrderDetail
 
     public short? Quantity { get; set; }
 
-    public float? Discount { get; set; }
-
     public DateTime? UseDate { get; set; }
 
     public string? Odimg { get; set; }

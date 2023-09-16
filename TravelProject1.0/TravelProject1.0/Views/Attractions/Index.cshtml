@@ -103,7 +103,6 @@
     <script src="https://unpkg.com/vuejs-paginate@0.9.0"></script>
     <script>
         Vue.component('paginate', VuejsPaginate)
-        var baseAddress = "https://localhost:7025";
         var app = new Vue({
             el: '#app',
             data: {
@@ -115,7 +114,7 @@
             },
             mounted: function () {
                 let _this = this;
-                fetch(`${baseAddress}/api/AttractionsApi/GetCategoryByAttractions`, { method: 'GET' })
+                fetch(`/api/AttractionsApi/GetCategoryByAttractions`, { method: 'GET' })
                     .then(response => {
                         if (response.ok) return response.json();
                     }).then(data => {
@@ -130,7 +129,7 @@
                     let _this = this;
                     _this.count++;
                     if (_this.count % 2 != 0) {
-                        fetch(`${baseAddress}/api/AttractionsApi/OrderByPrice`, { method: "GET" })
+                        fetch(`/api/AttractionsApi/OrderByPrice`, { method: "GET" })
                             .then(response => {
                                 if (response.ok) return response.json();
                             }).then(data => {
@@ -139,7 +138,7 @@
                                 alert(error);
                             })
                     } else {
-                        fetch(`${baseAddress}/api/AttractionsApi/OrderByDescendingPrice`, { method: "GET" })
+                        fetch(`/api/AttractionsApi/OrderByDescendingPrice`, { method: "GET" })
                             .then(response => {
                                 if (response.ok) return response.json();
                             }).then(data => {
@@ -163,7 +162,6 @@
                         this.search = category;
                     }
                 }
-                
             },
             computed: {
                 //關鍵字搜尋
@@ -184,6 +182,15 @@
                     let _this = this;
                     return Math.ceil(_this.attractions.length / _this.itemPage);
                 },
+
+                //列表關鍵字
+                filterByCategory: function (category) {
+                    if (this.search === category) {
+                        this.search = "";
+                    } else {
+                        this.search = category;
+                    }
+                }
             },
             filters: {
                 //貨幣格式
