@@ -57,17 +57,9 @@
             border-collapse: collapse;
         }
 
-        .table tbody tr:nth-child(odd) {
-            background-color: #ffffff;
-        }
+        
 
-        .table tbody tr:nth-child(even) {
-            background-color: #caf0f8;
-        }
-
-        .table tbody tr:hover {
-            background-color: #edf2fb;
-        }
+       
 
         .morewidth {
             width: 200px;
@@ -99,14 +91,12 @@
             max-width: 200px;
         }
 
-        textarea{
-            resize:none;
+        textarea {
+            resize: none;
         }
     </style>
 }
 <div id="app">
-    <br>
-    <br>
     <div>
         <div class="row">
             @* 搜尋 *@
@@ -135,59 +125,6 @@
                 <button type="button" class="btn btn-success" data-toggle="modal" data-target="#createProductModal">新增商品</button>
             </div>
         </div>
-        @* 新增商品modal *@
-        <div class="modal" id="createProductModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">新增商品</h5>
-                        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">X</button>
-                    </div>
-                    <div class="modal-body">
-                       <div class="container">
-                            
-                            <div class="form-group">
-                                <label for="email" v-model="newProduct.id">種類編號</label>
-                                <select class="form-control" id="exampleFormControlSelect1">
-                                    <option value="1">機票</option>
-                                    <option value="2">住宿</option>
-                                    <option value="3">交通</option>
-                                    <option value="4">景點</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="productName">商品名稱:</label>
-                                <input type="email" class="form-control" id="productName" v-model="newProduct.productName">
-                            </div>
-                            <div class="form-group">
-                                <label for="price">商品價格:</label>
-                                <input type="text" class="form-control" id="price" v-model="newProduct.price">
-                            </div>
-                            <div class="form-group">
-                                <label for="mainDescribe">主要敘述:</label>
-                                <textarea class="form-control" id="mainDescribe" v-model="newProduct.mainDescribe" rows="3"></textarea>
-                            </div>
-                            <div class="form-group">
-                                <label for="subDescribe">更多敘述:</label>
-                                <input type="text" class="form-control" id="subDescribe" v-model="newProduct.subDescribe">
-                            </div>
-                            <div class="form-group">
-                                <label for="shortDescribe">補充說明:</label>
-                                <input type="text" class="form-control" id="shortDescribe" v-model="newProduct.shortDescribe">
-                            </div>
-                            <div>
-                                <input class="beauty-input" type="file" @@change="chooseFile" />
-                                <button type="submit" @@click="uploadFile">上傳</button>
-                            </div>
-                       </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" @@click="createProduct">新增</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
     @* 商品資訊 *@
     <div class="table-responsive">
@@ -204,105 +141,162 @@
             <tbody>
                 <tr v-for="pp in putProduct">
                     <td>{{pp.productId}}</td>
-                    <td>{{pp.id}}</td>
+                    <td>{{pp.id |categoryFormat}}</td>
                     <td>{{pp.productName}}</td>
                     <td>{{pp.price}}</td>
                     <td class="ellipsis">{{pp.mainDescribe}}</td>
                     <td>
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#UserDetail"
-                                @@click="display(pp.productId)">
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#UserDetail" @@click="display(pp)">
                             詳細資料
                         </button>
+
                     </td>
                 </tr>
             </tbody>
         </table>
     </div>
 
-    @* 商品詳細資訊 *@
-    <div id="UserDetail" class="modal" tabindex="-1">
-        <div class="modal-dialog beauty-width text-center  fade">
+    @* 新增商品modal *@
+    <div class="modal" id="createProductModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title d-flex justify-content-center">商品詳細資料</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">新增商品</h5>
                     <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">X</button>
                 </div>
-                <div class="modal-body" style="max-height: 400px; overflow-y: auto;">
-                    <table class="table table-striped table-hover">
-                        <tbody>
-                            @* 修改使用者資訊視窗 *@
-                            <template v-if="editOpen">
-                                <tr>
-                                    <td><label>商品編號:</label><input class="beauty-input" v-model="UpdateProduct.productId" disabled /></td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <label>
-                                            種類編號:
-                                            <select v-model="UpdateProduct.id">
-                                                <option value="1">機票</option>
-                                                <option value="2">住宿</option>
-                                                <option value="3">交通</option>
-                                                <option value="4">景點</option>
-                                            </select>
-                                        </label>
-                                </tr>
-                                <tr>
-                                    <td><label>商品名稱:</label><input class="beauty-input" v-model="UpdateProduct.productName" /> </td>
-                                </tr>
-                                <tr>
-                                    <td><label>主要敘述:</label><input class="beauty-input" v-model="UpdateProduct.mainDescribe" /> </td>
-                                </tr>
-                                <tr>
-                                    <td><label>更多敘述:</label><input class="beauty-input" v-model="UpdateProduct.subDescribe" /></td>
-                                </tr>
-                                <tr>
-                                    <td><label>補充說明:</label><input class="beauty-input" v-model="UpdateProduct.shortDescribe" /></td>
-                                </tr>
-                            </template>
-                            @* 修改使用者資訊視窗 *@
-                            @* 顯示使用者資訊視窗 *@
-                            <template v-else>
-                                <tr>
-                                    <td><label>商品編號:</label>{{UpdateProduct.productId}}</td>
-                                </tr>
-                                <tr>
-                                    <td><label>種類編號:</label>{{UpdateProduct.id}}</td>
-                                </tr>
-                                <tr>
-                                    <td><label>商品名稱:</label>{{UpdateProduct.productName}}</td>
-                                </tr>
-                                <tr>
-                                    <td><label>主要敘述:</label>{{UpdateProduct.mainDescribe}}</td>
-                                </tr>
-                                <tr>
-                                    <td><label>更多敘述:</label>{{UpdateProduct.subDescribe}}</td>
-                                </tr>
-                                <tr>
-                                    <td><label>補充說明:</label>{{UpdateProduct.shortDescribe}}</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <label>商品照片:</label>
-                                        <img :src="UpdateProduct.imagePath" style="width:200px;" />
-                                    </td>
-                                </tr>
-                            </template>
-                            @* 顯示產品資訊視窗 *@
-                        </tbody>
-                    </table>
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="form-group">
+                            <label for="exampleFormControlSelect1">種類編號</label>
+                            <select class="form-control" id="exampleFormControlSelect1" v-model="newProduct.id">
+                                <option value="1">機票</option>
+                                <option value="2">住宿</option>
+                                <option value="3">交通</option>
+                                <option value="4">景點</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="productName">商品名稱:</label>
+                            <input type="text" class="form-control" id="productName" v-model="newProduct.productName">
+                        </div>
+                        <div class="form-group">
+                            <label for="price">商品價格:</label>
+                            <input type="text" class="form-control" id="price" v-model="newProduct.price">
+                        </div>
+                        <div class="form-group">
+                            <label for="mainDescribe">主要敘述:</label>
+                            <textarea class="form-control" id="mainDescribe" v-model="newProduct.mainDescribe" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="subDescribe">更多敘述:</label>
+                            <textarea class="form-control" id="subDescribe" v-model="newProduct.subDescribe" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="shortDescribe">補充說明:</label>
+                            <textarea class="form-control" id="shortDescribe" v-model="newProduct.shortDescribe" rows="3"></textarea>
+                        </div>
+                        <div>
+                            <input class="form-control" type="file" @@change="chooseFile" />
+                        </div>
+                        <div class="text-center pt-3" v-show="newProduct.previewImgUrl != ''">
+                            <h3>預覽</h3>
+                            <img :src="newProduct.previewImgUrl"
+                                 class="rounded" alt="..." style="object-fit:contain; width:400px;height:400px">
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-warning" @@click="UpdateProductInfo(UpdateProduct.productId)" v-if="editOpen">更新</button>
-                    <button type="button" class="btn btn-danger" @@click="deleteUser(UpdateProduct.productId)" v-if="editOpen">刪除</button>
-                    <button type="button" class="btn btn-warning" @@click="edit" v-else>修改</button>
+                    <button type="button" class="btn btn-primary" @@click="createProduct">新增</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
                 </div>
             </div>
         </div>
     </div>
+    @* 商品詳細資訊 *@
+    <div class="modal fade" id="UserDetail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">商品詳細資料</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" style="max-height: 400px; overflow-y: auto;">
+                        <table class="table table-striped table-hover">
+                            <tbody>
+                                @* 修改使用者資訊視窗 *@
+                                <template v-if="editOpen">
+                                    <tr>
+                                        <td><label>商品編號:</label><input class="form-control" v-model="UpdateProduct.productId" disabled /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label>
+                                                種類編號:
+                                                <select v-model="UpdateProduct.id">
+                                                    <option value="1">機票</option>
+                                                    <option value="2">住宿</option>
+                                                    <option value="3">交通</option>
+                                                    <option value="4">景點</option>
+                                                </select>
+                                            </label>
+                                    </tr>
+                                    <tr>
+                                        <td><label>商品名稱:</label><input class="form-control" v-model="UpdateProduct.productName" /> </td>
+                                    </tr>
+                                          <td><label>主要敘述:</label><textarea class="form-control" id="shortDescribe" v-model="UpdateProduct.mainDescribe" rows="3"></textarea></td>
+                                    <tr>
+                                        <td><label>更多敘述:</label><textarea class="form-control" v-model="UpdateProduct.subDescribe" /></textarea></td>
+                                    </tr>
+                                    <tr>
+                                        <td><label>補充說明:</label><textarea class="form-control" v-model="UpdateProduct.shortDescribe" /></textarea></td>
+                                    </tr>
+                                </template>
+                                @* 修改使用者資訊視窗 *@
+                                @* 顯示使用者資訊視窗 *@
+                                <template v-else>
+                                    <tr>
+                                        <td><label>商品編號:</label>{{UpdateProduct.productId}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><label>種類編號:</label>{{UpdateProduct.id}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><label>商品名稱:</label>{{UpdateProduct.productName}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><label>主要敘述:</label>{{UpdateProduct.mainDescribe}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><label>更多敘述:</label>{{UpdateProduct.subDescribe}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><label>補充說明:</label>{{UpdateProduct.shortDescribe}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label>商品照片:</label>
+                                            <img :src="UpdateProduct.imagePath" style="width:200px;" />
+                                        </td>
+                                    </tr>
+                                </template>
+                                @* 顯示產品資訊視窗 *@
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-warning" @@click="UpdateProductInfo(UpdateProduct.productId)" v-if="editOpen">更新</button>
+                        <button type="button" class="btn btn-danger" @@click="deleteUser(UpdateProduct.productId)" v-if="editOpen">刪除</button>
+                        <button type="button" class="btn btn-warning" @@click="edit" v-else>修改</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-
 @section Scripts{
     <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
     <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -322,6 +316,8 @@
                     price: '',
                     subDescribe: '',
                     shortDescribe: '',
+                    file: {},
+                    previewImgUrl: ''
                 },
                 searchQuery: '',
                 form: [],
@@ -337,10 +333,26 @@
                     alert("資料讀取失敗");
                 })
             },
+            filters: {
+                categoryFormat: function (id) {
+                    if (id == 1) return "機票";
+                    if (id == 2) return "住宿";
+                    if (id == 3) return "交通";
+                    if (id == 4) return "景點";
+                }
+            },
             methods: {
                 chooseFile: function (event) {
                     let _this = this;
-                    _this.selectFile = event.target.files[0];
+                    if (event.target.files[0]) {
+                        _this.newProduct.file = event.target.files[0];
+                        _this.newProduct.previewImgUrl = URL.createObjectURL(event.target.files[0]);
+                    } else {
+                        _this.newProduct.file = {};
+                        _this.newProduct.previewImgUrl = "";
+                    }
+
+
                 },
                 uploadFile: function () {
                     let _this = this;
@@ -353,7 +365,7 @@
                             headers: {
                                 'Content-Type': 'multipart/form-data'
                             }
-                            })
+                        })
                             .then(response => {
                                 if (response.ok) return response.json();
                             })
@@ -365,9 +377,8 @@
                                 alert("照片上傳失敗.請再重新選擇一次");
                             });
                     }
-                    else
-                    {
-                         alert("請再選擇一次")
+                    else {
+                        alert("請再選擇一次")
                     }
                 },
                 //金額低到高
@@ -399,18 +410,18 @@
                 //新增商品
                 createProduct: function () {
                     let _this = this;
-                    var form = {
-                        Id: _this.newProduct.id,
-                        ProductName: _this.newProduct.productName,
-                        MainDescribe: _this.newProduct.mainDescribe,
-                        Price: _this.newProduct.price,
-                        SubDescribe: _this.newProduct.subDescribe,
-                        ShortDescribe: _this.newProduct.shortDescribe,
-                    };
+                    var data = new FormData();
+                    data.append("Id", _this.newProduct.id,);
+                    data.append("ProductName", _this.newProduct.productName);
+                    data.append("MainDescribe", _this.newProduct.mainDescribe);
+                    data.append("Price", _this.newProduct.price);
+                    data.append("SubDescribe", _this.newProduct.subDescribe);
+                    data.append("ShortDescribe", _this.newProduct.shortDescribe);
+                    data.append("File", _this.newProduct.file);
+
                     fetch(`/api/ProductApi/AdminPostProduct`, {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(form),
+                        body: data,
                     }).then((response) => {
                         if (response.ok) return response.json();
                     }).then((data) => {
@@ -421,19 +432,10 @@
                     });
                 },
                 //商品詳細資訊
-                display: function (productId) {
+                display: function (product) {
                     let _this = this;
                     _this.editOpen = false;
-                    fetch(`/api/ProductApi/GetProductDetails/${productId}`)
-                        .then(response => {
-                            if (response.ok) return response.json();
-                        })
-                        .then(data => {
-                            _this.UpdateProduct = data;
-                            console.log(_this.UpdateProduct);
-                        }).catch(err => {
-                            alert("資料讀取失敗");
-                        });
+                    _this.UpdateProduct = Object.assign({}, product);;
                 },
                 edit: function () {
                     let _this = this;
@@ -458,11 +460,14 @@
                             },
                             body: JSON.stringify(request)
                         })
-                            .then((response) => { response.json() })
+                            .then(response => response.json())
                             .then(data => {
-                                _this.editOpen = false;
-                                // _this.newProduct = data;
-                                console.log(data);
+                                if (data) {
+                                    _this.editOpen = false;
+                                }
+                                else {
+                                    alert("更新失敗")
+                                }
                             })
                             .catch(err => {
                                 alert("修改失敗,請檢查必填有無填寫")

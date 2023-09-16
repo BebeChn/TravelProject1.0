@@ -17,24 +17,30 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
     {
         private readonly TravelProjectAzureContext _context;
         private readonly IProductSearchService _searchService;
-        public ProductApiController(TravelProjectAzureContext context, IProductSearchService searchService)
+        private readonly IWebHostEnvironment _webHostEnvironment;
+
+        public ProductApiController(TravelProjectAzureContext context, IProductSearchService searchService, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
             _searchService = searchService;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         //商品
         [HttpGet]
-        public IEnumerable<GetProductDTO> AdminGetProduct()
+        public List<GetProductDTO> AdminGetProduct()
         {
-            return _context.Products.Select(p => new GetProductDTO
+            return _context.Products.AsNoTracking().Select(p => new GetProductDTO
             {
                 ProductId = p.ProductId,
                 Id = p.Id,
                 ProductName = p.ProductName,
                 MainDescribe = p.MainDescribe,
                 Price = p.Price,
-            });
+                SubDescribe = p.SubDescribe,
+                ShortDescribe = p.ShortDescribe,
+                ImagePath = string.IsNullOrEmpty(p.Img) ? "" : Path.Combine("//", p.Img)
+            }).ToList();
         }
 
         //商品明細
@@ -69,54 +75,68 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 
         //新增商品
         [HttpPost]
-        public async Task<IActionResult> AdminPostProduct([FromBody] PostProductViewModel pp)
+        public async Task<IActionResult> AdminPostProduct([FromForm] PostProductViewModel pp)
         {
-            Product insertproduct = new Product
-            {
-                Id = pp.Id,
-                ProductName = pp.ProductName,
-                Price = pp.Price,
-                MainDescribe = pp.MainDescribe,
-                SubDescribe = pp.SubDescribe,
-                ShortDescribe = pp.ShortDescribe,
-            };
-
             try
             {
+                var categorys = new string[] { "", "planeTK", "Books", "Transport", "Attractions" };
+                var path = "";
+                if (pp.File != null)
+                {
+                    if (pp.File.Length > 0)
+                    {
+                        path = @$"/images/Images.Project/{categorys[pp.Id]}/{DateTime.Now.Ticks}_{pp.File.FileName}";
+
+                        using (var fs = new FileStream($"{_webHostEnvironment.WebRootPath}/{path}", FileMode.Create))
+                        {
+                            await pp.File.CopyToAsync(fs);
+                        }
+                    }
+                }
+
+                Product insertproduct = new Product
+                {
+                    Id = pp.Id,
+                    ProductName = pp.ProductName,
+                    Price = pp.Price,
+                    MainDescribe = pp.MainDescribe,
+                    SubDescribe = pp.SubDescribe,
+                    ShortDescribe = pp.ShortDescribe,
+                    Img = path
+                };
                 await _context.Products.AddAsync(insertproduct);
                 await _context.SaveChangesAsync();
+                return Ok(insertproduct);
             }
             catch (Exception ex)
             {
                 return BadRequest();
             }
-            return Ok(insertproduct);
-        }
 
+        }
         //修改商品
         [HttpPut("{id}")]
-        public async Task<string> PutProduct(int id, PutProductVIewModel ppvm)
+        public async Task<bool> PutProduct(int id, PutProductVIewModel ppvm)
         {
-            var product = await _context.Products.FindAsync(id);
-
-            product.Id = ppvm.Id;
-            product.ProductName = ppvm.ProductName;
-            product.Price = ppvm.Price;
-            product.MainDescribe = ppvm.MainDescribe;
-            product.SubDescribe = ppvm.SubDescribe;
-            product.ShortDescribe = ppvm.ShortDescribe;
-
-            _context.Entry(product).State = EntityState.Modified;
-
             try
             {
+                var product = await _context.Products.FindAsync(id);
+
+                product.Id = ppvm.Id;
+                product.ProductName = ppvm.ProductName;
+                product.Price = ppvm.Price;
+                product.MainDescribe = ppvm.MainDescribe;
+                product.SubDescribe = ppvm.SubDescribe;
+                product.ShortDescribe = ppvm.ShortDescribe;
+
+                _context.Entry(product).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                throw;
+                return false;
             }
-            return "成功";
+            return true;
         }
 
         //刪除
@@ -124,9 +144,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
         public async Task<string> DeleteProduct(int id)
         {
             var product = await _context.Products.FindAsync(id);
-
             if (product == null) return "找不到該商品";
-
             try
             {
                 _context.Products.Remove(product);
