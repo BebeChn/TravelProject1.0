@@ -56,19 +56,22 @@
             @RenderBody()
         </main>
     </div>
+   
     <!--客服按鈕-->
-    <div class="position-relative" style="z-index:100">
+    <div class="position-relative" style="z-index:1">
         <div class="position-fixed bottom-0 end-0">
-            <button class="btn box" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">
-                <img src="~/img/footericon/customer-support.png" />
-            </button>
+            <a class="box" data-bs-toggle="offcanvas" href="#offcanvasWithBothOptions" role="button" aria-controls="offcanvasWithBothOptions">
+                <img src="~/img/footericon/customer-support.png" style="padding-bottom: 20px;padding-right: 30px;" />
+            </a>
         </div>
     </div>
     <!--客服按鈕-->
     <!--返回最上面-->
     <div class="position-relative" style="z-index:100">
         <div class="position-absolute bottom-0 end-0" style="margin-right:30px;margin-bottom:30px">
-            <a href="#" class="box"><img src="~/img/footericon/chevron.png" /></a>
+            <a href="#" class="box">
+                <img src="~/img/footericon/chevron.png" />
+            </a>
         </div>
     </div>
     <!--返回最上面-->
