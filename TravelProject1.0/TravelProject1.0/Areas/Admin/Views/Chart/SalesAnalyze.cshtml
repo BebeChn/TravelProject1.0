@@ -179,7 +179,18 @@
 						// 圖例設定
 					},
 					tooltip: {
-						text: '萬',
+						theaderFormat: '<span style="font-size:10px">{point.key}</span><table>',
+						pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+							'<td style="padding:0"><b>{point.y:.1f}萬</b></td></tr><br/>',
+						footerFormat: '</table>',
+						shared: true,
+						useHTML: true
+					},
+					plotOptions: {
+						column: {
+							pointPadding: 0.2,
+							borderWidth: 0
+						}
 					},
 					xAxis: {
 						categories: xTitle,
@@ -385,7 +396,18 @@
 						// 圖例設定
 					},
 					tooltip: {
-						text: '萬',
+						theaderFormat: '<span style="font-size:10px">{point.key}</span><table>',
+						pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+							'<td style="padding:0"><b>{point.y:.1f}萬</b></td></tr><br/>',
+						footerFormat: '</table>',
+						shared: true,
+						useHTML: true
+					},
+					plotOptions: {
+						column: {
+							pointPadding: 0.2,
+							borderWidth: 0
+						}
 					},
 					xAxis: {
 						categories: xTitle,
@@ -587,7 +609,18 @@
 						// 圖例設定
 					},
 					tooltip: {
-						text: '萬',
+						theaderFormat: '<span style="font-size:10px">{point.key}</span><table>',
+						pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+							'<td style="padding:0"><b>{point.y:.1f}萬</b></td></tr><br/>',
+						footerFormat: '</table>',
+						shared: true,
+						useHTML: true
+					},
+					plotOptions: {
+						column: {
+							pointPadding: 0.2,
+							borderWidth: 0
+						}
 					},
 					xAxis: {
 						categories: xTitle,
@@ -650,7 +683,18 @@
 						// 圖例設定
 					},
 					tooltip: {
-						text: '萬',
+						theaderFormat: '<span style="font-size:10px">{point.key}</span><table>',
+						pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+							'<td style="padding:0"><b>{point.y:.1f}萬</b></td></tr><br/>',
+						footerFormat: '</table>',
+						shared: true,
+						useHTML: true
+					},
+					plotOptions: {
+						column: {
+							pointPadding: 0.2,
+							borderWidth: 0
+						}
 					},
 					xAxis: {
 						categories: xTitle,

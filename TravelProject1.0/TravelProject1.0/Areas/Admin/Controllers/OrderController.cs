@@ -55,38 +55,60 @@ namespace TravelProject1._0.Areas.Admin.Controllers
         
         public async Task<IEnumerable<OrderDTO>> OrderSeachL(OrderDTO order )
         {
-            if (order.OrderId != 0)
-            {
-                return _db.OrderDetails.Include(t => t.Plan)                   
-                    .Where(y =>
-                    y.OrderId == (order.OrderId)
-                    || y.PlanId == (order.PlanId)
-                    //|| y.OrderDate == (order.OrderDate)
-                    )
-                    .OrderBy(o => o.Id)
-                    .Select(x => new OrderDTO
-                    {
-                        Id = x.Id,
-                        OrderId = x.OrderId,                        
-                        PlanId = x.PlanId,
-                        Quantity = x.Quantity,
-                        UnitPrice = x.UnitPrice,
-                        UseDate = x.UseDate,
-                        Name= x.Plan.Name,
-                    }
-                    );
-            }
+            //if (order.OrderId != 0)
+            //{
+            //    return _db.OrderDetails.Include(t => t.Plan)                   
+            //        .Where(y =>
+            //        y.OrderId == (order.OrderId)
+            //        || y.PlanId == (order.PlanId)
+            //        //|| y.OrderDate == (order.OrderDate)
+            //        )
+            //        .OrderByDescending(o => o.Id)
+            //        .Select(x => new OrderDTO
+            //        {
+            //            Id = x.Id,
+            //            OrderId = x.OrderId,                        
+            //            PlanId = x.PlanId,
+            //            Quantity = x.Quantity,
+            //            UnitPrice = x.UnitPrice,
+            //            UseDate = x.UseDate,
+            //            Name= x.Plan.Name,
+            //        }
+            //        );
+            //}
 
-            return _db.OrderDetails.Include(t => t.Plan).OrderBy(o=>o.Id).Select(x => new OrderDTO
-            {
-                Id = x.Id,
-                OrderId = x.OrderId,
-                PlanId = x.PlanId,
-                Quantity = x.Quantity,
-                UnitPrice = x.UnitPrice,
-                UseDate = x.UseDate,
-                Name = x.Plan.Name,
-            });
+            //return _db.OrderDetails.Include(t => t.Plan).OrderByDescending(o => o.Id).Select(x => new OrderDTO
+            //{
+            //    Id = x.Id,
+            //    OrderId = x.OrderId,
+            //    PlanId = x.PlanId,
+            //    Quantity = x.Quantity,
+            //    UnitPrice = x.UnitPrice,
+            //    UseDate = x.UseDate,
+            //    Name = x.Plan.Name,
+            //});
+
+
+
+            return _db.OrderDetails
+                .Include(t => t.Plan)
+                .OrderByDescending(o => o.Id)
+                .GroupBy(x => x.OrderId)
+                .Select(group => new OrderDTO
+                {
+                    Id = group.Select(x => x.Id).SingleOrDefault(),
+                    OrderId = group.Key,
+                    PlanId = group.Select(x => x.PlanId).SingleOrDefault(), // 将多个 PlanId 添加到列表中
+                    Quantity = (short?)group.Sum(x => x.Quantity),
+                    UnitPrice = group.Average(x => x.UnitPrice),
+                    UseDate = group.Max(x => x.UseDate),
+                    Name = group.Select(x => x.Plan.Name).SingleOrDefault() // 使用 FirstOrDefault() 获取名称
+                })
+                .ToList();
+
+
+
+
 
         }
 

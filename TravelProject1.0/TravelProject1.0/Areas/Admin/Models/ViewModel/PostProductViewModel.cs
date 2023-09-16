@@ -14,5 +14,7 @@
 
     public string? ShortDescribe { get; set; }
 
+    public IFormFile File { get; set; }
+
     }
 }
