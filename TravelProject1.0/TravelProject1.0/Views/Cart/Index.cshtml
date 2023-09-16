@@ -17,7 +17,7 @@
                 <th>數量</th>
                 <th>總金額</th>
                 <th>使用時間</th>
-                <th></th>
+                <th>刪除</th>
             </tr>
         </thead>
         <tbody class="cart" v-for="(c,index) in cartItem" :key="c.cartId">
@@ -75,7 +75,8 @@
                 resultPrice: 0,
                 remove: [],
                 orderId: "",
-                orderDetail: []
+                orderDetail: [],
+                cartCount: 0
             },
             mounted: function () {
                 let _this = this;

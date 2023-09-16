@@ -1,23 +1,39 @@
 ﻿<ul class="navbar-nav">
     @{if (User.Identity.IsAuthenticated)
 {
-    <a asp-Controller="Cart" asp-action="Index">
-    <button class="btn btn-outline-dark me-2">
-        <i class="bi-cart-fill me-1"></i>
-        購物車
-        <span class="badge bg-dark text-white  rounded-pill">0</span>
-    </button>
-    </a>
+        <a asp-Controller="Cart" asp-action="Index">
+        <button class="btn btn-outline-dark me-2">
+            <i class="bi-cart-fill me-1"></i>
+            購物車
+            <span id="cartCountNumber" class="badge bg-dark text-white  rounded-pill">0</span>
+        </button>
+        </a>
+
+        <script>
+                var connection = new signalR.HubConnectionBuilder().withUrl("/userHub").build();
+                connection.on("ReviceCartCount", function (num) {
+                    document.getElementById("cartCountNumber").innerText = num;
+                });
+
+                connection.start().then(function () {
+                    console.log("connection scuess");
+                    connection.invoke("UserCartCount").catch(function (err) {
+                        return console.error(err.toString());
+                    });
+                }).catch(function (err) {
+                    return console.error(err.toString());
+                });
+        </script>
 }
 else
 {
-<a asp-Controller="User" asp-action="Login">
-    <button class="btn btn-outline-dark me-2" style="margin-top:8px">
-        <i class="bi-cart-fill me-1"></i>
-        購物車
-        <span class="badge bg-dark text-white  rounded-pill">0</span>
-    </button>
-</a>
+    <a asp-Controller="User" asp-action="Login">
+        <button class="btn btn-outline-dark me-2" style="margin-top:8px">
+            <i class="bi-cart-fill me-1"></i>
+            購物車
+            <span class="badge bg-dark text-white  rounded-pill">0</span>
+        </button>
+    </a>
 
 }
 }
@@ -25,33 +41,52 @@ else
     @{
         if (User.Identity.IsAuthenticated)
         {
-            <div class="btn-group">
-                <button asp-page="/User/Login" type="button" class="btn btn-outline-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                    Hello @User.Identity?.Name!
-                </button>
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" asp-controller="User" asp-action="UpdateUser">會員資料</a></li>
-                    <li><a class="dropdown-item" asp-controller="User" asp-action="UserOrder">歷史訂單</a></li>
-                    <li><a class="dropdown-item" asp-controller="User" asp-action="UserCollect">收藏夾</a></li>
-                    <li><a class="dropdown-item" asp-controller="User" asp-action="UserPoint">點數</a></li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li><a asp-controller="User" asp-action="Logout" class="dropdown-item" >登出</a></li>
-                </ul>
-            </div>
+                <div class="btn-group">
+                    <button asp-page="/User/Login" type="button" class="btn btn-outline-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        Hello @User.Identity?.Name!
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" asp-controller="User" asp-action="UpdateUser">會員資料</a></li>
+                        <li><a class="dropdown-item" asp-controller="User" asp-action="UserOrder">歷史訂單</a></li>
+                        <li><a class="dropdown-item" asp-controller="User" asp-action="UserCollect">收藏夾</a></li>
+                        <li><a class="dropdown-item" asp-controller="User" asp-action="UserPoint">點數</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a asp-controller="User" asp-action="Logout" class="dropdown-item" >登出</a></li>
+                    </ul>
+                </div>
         }
         else
         {
-            <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Login">
-                    <button class="btn btn-outline-dark" type="submit" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                        <i class="fa-solid fa-user"></i>
-                        登入
-                        <span class="badge bg-dark text-white rounded-pill"></span>
-                    </button>
-                </a>
-            </li>
+                <li class="nav-item">
+                    <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Login">
+                        <button class="btn btn-outline-dark" type="submit" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                            <i class="fa-solid fa-user"></i>
+                            登入
+                            <span class="badge bg-dark text-white rounded-pill"></span>
+                        </button>
+                    </a>
+                </li>
         }
     }
 
     
  </ul>
+
+
+@section Scripts
+{
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14"></script>
+    <script>
+
+        var authenticationCookie = getCookie("CookieAuthenticationDefaults.AuthenticationScheme");
+        var app = new Vue({
+            el: '#app'
+                    data: {
+                count = 0;
+            },
+            methods:{
+                userCartCount:function
+            }
+        });
+    </script>
+}
