@@ -86,7 +86,6 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 
             User insertuser = new User
             {
-
                 Name = amuDTO.Name,
                 Email = amuDTO.Email,
                 PasswordHash = passwordhash,

@@ -111,6 +111,7 @@
 					axios.post(`${baseAddress}/api/UserApi/PostUser`, form)
 						.then(response => {
 							if (response.data) {
+								alert("註冊成功")
 								window.location.href = "/Home/Index";
 							}
 						}).catch(err => {
