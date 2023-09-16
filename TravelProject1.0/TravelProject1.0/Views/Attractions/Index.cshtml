@@ -153,8 +153,15 @@
                 changePage: function (num) {
                     let _this = this;
                     _this.currentPage = num;
+                },
+                //列表關鍵字
+                filterByCategory: function (category) {
+                    if (this.search === category) {
+                        this.search = "";
+                    } else {
+                        this.search = category;
+                    }
                 }
-
             },
             computed: {
                 //關鍵字搜尋
