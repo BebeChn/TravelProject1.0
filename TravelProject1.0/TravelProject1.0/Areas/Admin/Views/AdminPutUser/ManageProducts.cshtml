@@ -98,6 +98,10 @@
             text-overflow: ellipsis;
             max-width: 200px;
         }
+
+        textarea{
+            resize:none;
+        }
     </style>
 }
 <div id="app">
@@ -105,9 +109,11 @@
     <br>
     <div>
         <div class="row">
+            @* 搜尋 *@
             <div class="col-4">
                 <input class="beauty-input" type="text" placeholder="Search..." v-model="searchQuery" @@keyup="search">
             </div>
+            @* 排序 *@
             <div class="col-6 ">
                 <div class="sort d-flex align-items-center">
                     <div>
@@ -124,53 +130,66 @@
                     </h4>
                 </div>
             </div>
+            @* 新增商品 *@
             <div class="col-2 ">
-                <button type="button" class="btn btn-success" @@click="createProductModal">新增商品</button>
+                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#createProductModal">新增商品</button>
             </div>
         </div>
-        <div class="modal fade" id="createProductModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog beauty-width text-center">
+        @* 新增商品modal *@
+        <div class="modal" id="createProductModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">新增商品</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">X</button>
+                        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">X</button>
                     </div>
                     <div class="modal-body">
-                        <div class="form-group">
-                            <label for="email">種類編號:</label>
-                            <input type="text" class="beauty-input" id="email" v-model="newProduct.id">
-                        </div>
-                        <div class="form-group">
-                            <label for="productName">商品名稱:</label>
-                            <input type="text" class="beauty-input" id="productName" v-model="newProduct.productName">
-                        </div>
-                        <div class="form-group">
-                            <label for="price">商品價格:</label>
-                            <input type="text" class="beauty-input" id="price" v-model="newProduct.price">
-                        </div>
-                        <div class="form-group">
-                            <label for="mainDescribe">主要敘述:</label>
-                            <input type="text" class="fatbeauty-input" id="mainDescribe" v-model="newProduct.mainDescribe">
-                        </div>
-                        <div class="form-group">
-                            <label for="subDescribe">更多敘述:</label>
-                            <input type="text" class="fatbeauty-input" id="subDescribe" v-model="newProduct.subDescribe">
-                        </div>
-                        <div class="form-group">
-                            <label for="shortDescribe">補充說明:</label>
-                            <input type="text" class="fatbeauty-input" id="shortDescribe" v-model="newProduct.shortDescribe">
-                        </div>
-
+                       <div class="container">
+                            
+                            <div class="form-group">
+                                <label for="email" v-model="newProduct.id">種類編號</label>
+                                <select class="form-control" id="exampleFormControlSelect1">
+                                    <option value="1">機票</option>
+                                    <option value="2">住宿</option>
+                                    <option value="3">交通</option>
+                                    <option value="4">景點</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="productName">商品名稱:</label>
+                                <input type="email" class="form-control" id="productName" v-model="newProduct.productName">
+                            </div>
+                            <div class="form-group">
+                                <label for="price">商品價格:</label>
+                                <input type="text" class="form-control" id="price" v-model="newProduct.price">
+                            </div>
+                            <div class="form-group">
+                                <label for="mainDescribe">主要敘述:</label>
+                                <textarea class="form-control" id="mainDescribe" v-model="newProduct.mainDescribe" rows="3"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="subDescribe">更多敘述:</label>
+                                <input type="text" class="form-control" id="subDescribe" v-model="newProduct.subDescribe">
+                            </div>
+                            <div class="form-group">
+                                <label for="shortDescribe">補充說明:</label>
+                                <input type="text" class="form-control" id="shortDescribe" v-model="newProduct.shortDescribe">
+                            </div>
+                            <div>
+                                <input class="beauty-input" type="file" @@change="chooseFile" />
+                                <button type="submit" @@click="uploadFile">上傳</button>
+                            </div>
+                       </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" @@click="createProduct">新增</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
+    @* 商品資訊 *@
     <div class="table-responsive">
         <table class="table table-striped table-hover">
             <thead>
@@ -190,7 +209,7 @@
                     <td>{{pp.price}}</td>
                     <td class="ellipsis">{{pp.mainDescribe}}</td>
                     <td>
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#UserDetail"
                                 @@click="display(pp.productId)">
                             詳細資料
                         </button>
@@ -199,12 +218,14 @@
             </tbody>
         </table>
     </div>
+
+    @* 商品詳細資訊 *@
     <div id="UserDetail" class="modal" tabindex="-1">
-        <div class="modal-dialog beauty-width text-center">
+        <div class="modal-dialog beauty-width text-center  fade">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title d-flex justify-content-center">商品詳細資料</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">X</button>
+                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">X</button>
                 </div>
                 <div class="modal-body" style="max-height: 400px; overflow-y: auto;">
                     <table class="table table-striped table-hover">
@@ -215,7 +236,16 @@
                                     <td><label>商品編號:</label><input class="beauty-input" v-model="UpdateProduct.productId" disabled /></td>
                                 </tr>
                                 <tr>
-                                    <td><label>種類編號:</label><input class="beauty-input" v-model="UpdateProduct.id" /></td>
+                                    <td>
+                                        <label>
+                                            種類編號:
+                                            <select v-model="UpdateProduct.id">
+                                                <option value="1">機票</option>
+                                                <option value="2">住宿</option>
+                                                <option value="3">交通</option>
+                                                <option value="4">景點</option>
+                                            </select>
+                                        </label>
                                 </tr>
                                 <tr>
                                     <td><label>商品名稱:</label><input class="beauty-input" v-model="UpdateProduct.productName" /> </td>
@@ -229,8 +259,6 @@
                                 <tr>
                                     <td><label>補充說明:</label><input class="beauty-input" v-model="UpdateProduct.shortDescribe" /></td>
                                 </tr>
-
-
                             </template>
                             @* 修改使用者資訊視窗 *@
                             @* 顯示使用者資訊視窗 *@
@@ -268,25 +296,17 @@
                     <button type="button" class="btn btn-warning" @@click="UpdateProductInfo(UpdateProduct.productId)" v-if="editOpen">更新</button>
                     <button type="button" class="btn btn-danger" @@click="deleteUser(UpdateProduct.productId)" v-if="editOpen">刪除</button>
                     <button type="button" class="btn btn-warning" @@click="edit" v-else>修改</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-
-
-
-
-
-
-@section Scripts
-    {
+@section Scripts{
     <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.min.js" integrity="sha384-lpyLfhYuitXl2zRZ5Bn2fqnhNAKOAaM/0Kr9laMspuaMiZfGmfwRNFh8HlMy49eQ" crossorigin="anonymous"></script>
+    <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js" integrity="sha512-uKQ39gEGiyUJl4AI6L+ekBdGKpGw4xJ55+xyJG7YFlJokPNYegn9KwQ3P8A7aFQAUtUsAQHep+d/lrGqrbPIDQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
         var baseAddress = "https://localhost:7025";
         var app = new Vue({
@@ -305,9 +325,7 @@
                 },
                 searchQuery: '',
                 form: [],
-            },
-            computed: {
-
+                selectFile: '',
             },
             mounted: function () {
                 let _this = this;
@@ -320,6 +338,39 @@
                 })
             },
             methods: {
+                chooseFile: function (event) {
+                    let _this = this;
+                    _this.selectFile = event.target.files[0];
+                },
+                uploadFile: function () {
+                    let _this = this;
+                    if (_this.selectFile) {
+                        var formData = new FormData();
+                        formData.append("file", _this.selectFile);
+                        fetch(`/api/PictureApi/UploadPhoto`, {
+                            method: 'POST',
+                            body: formData,
+                            headers: {
+                                'Content-Type': 'multipart/form-data'
+                            }
+                            })
+                            .then(response => {
+                                if (response.ok) return response.json();
+                            })
+                            .then(data => {
+                                _this.selectFile = data;
+                                alert("照片上傳成功");
+                            })
+                            .catch(err => {
+                                alert("照片上傳失敗.請再重新選擇一次");
+                            });
+                    }
+                    else
+                    {
+                         alert("請再選擇一次")
+                    }
+                },
+                //金額低到高
                 OrderByPrice: function () {
                     let _this = this;
                     fetch(`/api/ProductApi/OrderByPrice`, {
@@ -332,6 +383,7 @@
                         alert(error);
                     });
                 },
+                //金額高到低
                 OrderByDescendingPrice: function () {
                     let _this = this;
                     fetch(`/api/ProductApi/OrderByDescendingPrice`, {
@@ -344,18 +396,7 @@
                         alert(error);
                     });
                 },
-                createProductModal() {
-                    let _this = this
-                    _this.newProduct= {
-                        Id: 4,
-                        ProductName: '',
-                        MainDescribe: '',
-                        Price: 0,
-                        SubDescribe: '',
-                        ShortDescribe: '',
-                    }
-                    $('#createProductModal').modal('show');
-                },
+                //新增商品
                 createProduct: function () {
                     let _this = this;
                     var form = {
@@ -368,32 +409,28 @@
                     };
                     fetch(`/api/ProductApi/AdminPostProduct`, {
                         method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
+                        headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(form),
-                    })
-                        .then((response) => {
-                            if (response.ok) return response.json();
-                        })
-                        .then((data) => {
-                            alert("商品成功新增");
-                            window.location.href = "/Admin/AdminPutUser/ManageProducts";
-                            $('#createProductModal').modal('hide');
-                        })
-                        .catch((err) => {
-                            alert("新增失敗：" + err.message);
-                        });
+                    }).then((response) => {
+                        if (response.ok) return response.json();
+                    }).then((data) => {
+                        alert("商品成功新增");
+                        window.location.href = "/Admin/AdminPutUser/ManageProducts";
+                    }).catch((err) => {
+                        alert("新增失敗：" + err.message);
+                    });
                 },
+                //商品詳細資訊
                 display: function (productId) {
                     let _this = this;
                     _this.editOpen = false;
-                    $('#exampleModal').modal('show');
                     fetch(`/api/ProductApi/GetProductDetails/${productId}`)
-                        .then(response => response.json())
+                        .then(response => {
+                            if (response.ok) return response.json();
+                        })
                         .then(data => {
-                            $('#UserDetail').modal('show');
                             _this.UpdateProduct = data;
+                            console.log(_this.UpdateProduct);
                         }).catch(err => {
                             alert("資料讀取失敗");
                         });
@@ -484,6 +521,5 @@
                 },
             }
         });
-
     </script>
 }
