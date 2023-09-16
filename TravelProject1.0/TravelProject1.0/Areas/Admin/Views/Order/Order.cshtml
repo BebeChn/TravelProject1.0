@@ -45,7 +45,6 @@
                         <th>商品方案ID</th>
                         <th>名稱</th>
                         <th>數量</th>
-                        <th>折扣</th>
                         <th>商品價格</th>
                         <th>成立日期</th>
                         <th>操作 </th>
@@ -59,7 +58,6 @@
                             <td><label>{{item.planId}}</label></td>
                             <td><label>{{item.name}}</label></td>
                             <td><input v-model="item.quantity" /></td>
-                            <td><input v-model="item.discount" /></td>
                             <td><label>{{item.unitPrice}}</label></td>
                             <td><input type="date" v-model="item.useDate" /></td>
                             <td>
@@ -82,7 +80,6 @@
                             <td><label>{{item.planId}}</label></td>
                             <td><label>{{item.name}}</label></td>
                             <td><label>{{item.quantity}}</label> </td>
-                            <td><label>{{item.discount}}</label></td>
                             <td><label>{{item.unitPrice}}</label></td>
                             <td><label>{{item.useDate}}</label></td>
                             <td>
@@ -142,7 +139,7 @@
                     //originalorderDate: '',
                     //
                     originalquantity: '',
-                    originaldiscount: '',
+                    //originaldiscount: '',
                     originaluseDate: '',
 
                 };
@@ -224,7 +221,7 @@
 
                             //_this.originalorderDate = item.orderDate;
                             _this.originalquantity = item.quantity;
-                            _this.originaldiscount = item.discount;
+                            //_this.originaldiscount = item.discount;
                             _this.originaluseDate = item.useDate;
 
                         }
@@ -239,7 +236,7 @@
                             item.Edit = false;
                             //item.orderDate = _this.originalorderDate;
                             item.quantity = _this.originalquantity;
-                            item.discount = _this.originaldiscount;
+                            //item.discount = _this.originaldiscount;
                             item.useDate = _this.originaluseDate;
 
                         }
@@ -253,7 +250,7 @@
                     //request.userId = item.userId;
                     //request.orderDate = item.orderDate;
                     request.quantity = item.quantity;
-                    request.discount = item.discount;
+                    //request.discount = item.discount;
                     request.useDate = item.useDate;
 
                     axios.put(`${baseAddress}/api/Order/OrderPUT/${item.orderId}/${item.planId}`, request).then(response => {

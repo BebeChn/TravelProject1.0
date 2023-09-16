@@ -11,6 +11,11 @@
         public string? MainDescribe { get; set; }
 
         public int Id { get; set; }
+        public string? SubDescribe { get; set; }
+
+        public string? ShortDescribe { get; set; }
+
+        public string ImagePath { get; set; }
 
     }
 }
