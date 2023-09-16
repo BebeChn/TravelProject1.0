@@ -1,0 +1,51 @@
+﻿.upperLayer {
+    margin-top: 50px;
+}
+
+.inp-search {
+    width: 200px;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    outline: none;
+}
+
+table {
+    table-layout: auto;
+    border-collapse: collapse;
+    text-align: center;
+}
+
+
+.table tbody tr:hover {
+    background-color: #edf2fb;
+}
+
+.modal-header {
+    background-color: #52c5fd;
+}
+
+.modal-title {
+    color: white;
+}
+
+.fa-xmark {
+    color: white;
+}
+
+.lab-required {
+    font-size: 14px;
+    color: #c1121f;
+}
+
+.text-valid {
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+.form-group label {
+    font-weight: bold;
+}
