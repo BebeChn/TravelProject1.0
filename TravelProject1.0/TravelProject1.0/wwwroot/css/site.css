@@ -3327,8 +3327,8 @@ h1, h2, h3, h4, h5, h6 {
     color: #f3c300;
 }
 .box{
-  width: 100px;
-  height: 100px;
+  width: auto;
+  height: auto;
   overflow: hidden;
 }
 img{

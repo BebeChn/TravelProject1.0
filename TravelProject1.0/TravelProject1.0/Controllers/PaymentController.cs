@@ -45,7 +45,7 @@ namespace TravelProject1._0.Controllers
                     Odname = x.PlanName,
                     Quantity = (short?)x.Quantity,
                     UnitPrice = x.UnitPrice,
-                    UseDate = DateTime.Now,
+                    UseDate = DateTime.Now.AddDays(7),
                 }).ToList(),
             };
 
