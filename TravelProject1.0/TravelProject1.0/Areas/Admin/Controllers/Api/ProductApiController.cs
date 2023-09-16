@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using TravelProject1._0.Areas.Admin.Models.DTO;
@@ -116,10 +117,12 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
         }
         //修改商品
         [HttpPut("{id}")]
-        public async Task<bool> PutProduct(int id, PutProductVIewModel ppvm)
+        public async Task<IActionResult> PutProduct(int id, [FromForm] PutProductVIewModel ppvm)
         {
             try
             {
+                var path = "";
+
                 var product = await _context.Products.FindAsync(id);
 
                 product.Id = ppvm.Id;
@@ -129,14 +132,37 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
                 product.SubDescribe = ppvm.SubDescribe;
                 product.ShortDescribe = ppvm.ShortDescribe;
 
+                if (ppvm.imageFile != null)
+                {
+                 
+                    if (!string.IsNullOrEmpty(product.Img))
+                    {
+                        var oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, product.Img);
+                        if (System.IO.File.Exists(oldImagePath))
+                        {
+                            System.IO.File.Delete(oldImagePath);
+                        }
+                    }
+                    var tempPath = Path.GetTempFileName();
+                    using (var fs = new FileStream(tempPath, FileMode.Create))
+                    {
+                        await ppvm.imageFile.CopyToAsync(fs);
+                    }
+                    var categorys = new string[] { "", "planeTK", "Books", "Transport", "Attractions" };
+                    path = $"Images.Project/{categorys[ppvm.Id]}/{DateTime.Now.Ticks}_{ppvm.imageFile.FileName}";
+                    var newPath = Path.Combine(_webHostEnvironment.WebRootPath, "images", path);
+                    System.IO.File.Move(tempPath, newPath);
+                    product.Img = newPath;
+
+                }
                 _context.Entry(product).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
+                return Ok(product);
             }
             catch (DbUpdateConcurrencyException)
             {
-                return false;
+                return BadRequest();
             }
-            return true;
         }
 
         //刪除

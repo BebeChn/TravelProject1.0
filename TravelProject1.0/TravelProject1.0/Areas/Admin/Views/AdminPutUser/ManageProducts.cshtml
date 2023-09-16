@@ -248,10 +248,19 @@
                                     </tr>
                                           <td><label>主要敘述:</label><textarea class="form-control" id="shortDescribe" v-model="UpdateProduct.mainDescribe" rows="3"></textarea></td>
                                     <tr>
-                                        <td><label>更多敘述:</label><textarea class="form-control" v-model="UpdateProduct.subDescribe" /></textarea></td>
+                                        <td><label>更多敘述:</label><textarea class="form-control" v-model="UpdateProduct.subDescribe" ></textarea></td>
                                     </tr>
                                     <tr>
-                                        <td><label>補充說明:</label><textarea class="form-control" v-model="UpdateProduct.shortDescribe" /></textarea></td>
+                                        <td><label>補充說明:</label><textarea class="form-control" v-model="UpdateProduct.shortDescribe" ></textarea></td>
+                                    </tr>
+                                    <tr> 
+                                        <td>
+                                            <input type="file" ref="fileInput" @@change="chooseFile" />
+                                          <div class="text-center pt-3" v-if="UpdateProduct.previewImgUrl !== ''">
+                                             <h3>Preview</h3>
+                                               <img :src="UpdateProduct.previewImgUrl" class="rounded" alt="..." style="object-fit: contain; width: 200px; height: 200px">
+                                         </div>
+                                        </td>
                                     </tr>
                                 </template>
                                 @* 修改使用者資訊視窗 *@
@@ -277,7 +286,6 @@
                                     </tr>
                                     <tr>
                                         <td>
-                                            <label>商品照片:</label>
                                             <img :src="UpdateProduct.imagePath" style="width:200px;" />
                                         </td>
                                     </tr>
@@ -344,15 +352,21 @@
             methods: {
                 chooseFile: function (event) {
                     let _this = this;
+                    //檢查使用者是否已選擇檔案
                     if (event.target.files[0]) {
+                        //將檔案儲存在物件中
                         _this.newProduct.file = event.target.files[0];
+                        _this.UpdateProduct.file = event.target.files[0];
+                        //且預覽影像
                         _this.newProduct.previewImgUrl = URL.createObjectURL(event.target.files[0]);
+                        _this.UpdateProduct.previewImgUrl = URL.createObjectURL(event.target.files[0]);
                     } else {
+                        //未選擇則會清空物件
                         _this.newProduct.file = {};
                         _this.newProduct.previewImgUrl = "";
+                        _this.UpdateProduct.file = {};
+                        _this.UpdateProduct.previewImgUrl = "";
                     }
-
-
                 },
                 uploadFile: function () {
                     let _this = this;
@@ -435,7 +449,8 @@
                 display: function (product) {
                     let _this = this;
                     _this.editOpen = false;
-                    _this.UpdateProduct = Object.assign({}, product);;
+                    _this.UpdateProduct = Object.assign({}, product);
+                    // _this.UpdateProduct.previewImgUrl = `/images/Images.Project/${product.category}/${product.img}`;
                 },
                 edit: function () {
                     let _this = this;
@@ -445,32 +460,31 @@
                     let _this = this;
                     let result = confirm(`確定要更新產品名稱為${_this.UpdateProduct.productId}的產品資訊？`)
                     if (result == true) {
-                        let request = {
-                            Id: _this.UpdateProduct.id,
-                            ProductName: _this.UpdateProduct.productName,
-                            MainDescribe: _this.UpdateProduct.mainDescribe,
-                            Price: _this.UpdateProduct.price,
-                            SubDescribe: _this.UpdateProduct.subDescribe,
-                            ShortDescribe: _this.UpdateProduct.shortDescribe,
-                        };
+                        let formData = new FormData();
+                        formData.append("Id", _this.UpdateProduct.id);
+                        formData.append("ProductName", _this.UpdateProduct.productName);
+                        formData.append("MainDescribe", _this.UpdateProduct.mainDescribe);
+                        formData.append("Price", _this.UpdateProduct.price);
+                        formData.append("SubDescribe", _this.UpdateProduct.subDescribe);
+                        formData.append("ShortDescribe", _this.UpdateProduct.shortDescribe);
+                        if (_this.UpdateProduct.file) {
+                            formData.append("imageFile", _this.UpdateProduct.file);
+                        }
                         fetch(`/api/ProductApi/PutProduct/${productId}`, {
                             method: "PUT",
-                            headers: {
-                                "Content-Type": "application/json",
-                            },
-                            body: JSON.stringify(request)
+                            body: formData,
                         })
                             .then(response => response.json())
                             .then(data => {
                                 if (data) {
                                     _this.editOpen = false;
-                                }
-                                else {
-                                    alert("更新失敗")
+                                    alert("更新成功");
+                                } else {
+                                    alert("更新失敗");
                                 }
                             })
                             .catch(err => {
-                                alert("修改失敗,請檢查必填有無填寫")
+                                alert("修改失敗,請檢查必填有無填寫或伺服器錯誤");
                             });
                     }
                 },
@@ -490,6 +504,8 @@
                         });
                     }
                 },
+
+
                 search: function () {
                     let _this = this;
                     if (_this.searchQuery.trim() == '') {

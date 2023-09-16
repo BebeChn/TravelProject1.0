@@ -234,22 +234,22 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 		[HttpGet]
 		public async Task<IEnumerable<HighChart3DGraph>> GetIsPayAndNoPaying()
 		{
-			var userIds = await _db.Users.AsNoTracking().Include(u => u.Orders).Select(u => u.UserId).ToListAsync();
+			var userIds = await _db.Users.AsNoTracking().Select(u => u.UserId).ToListAsync();
 			var orderUserIds = await _db.Orders.AsNoTracking().Select(o => o.UserId).ToListAsync();
-			var paying = userIds.Intersect(orderUserIds);
-			var noPaying = userIds.Except(orderUserIds);
+			var paying = userIds.Intersect(orderUserIds).Count();
+			var noPaying = userIds.Except(orderUserIds).Count();
 
 			var result = new List<HighChart3DGraph>
 			{
 				new HighChart3DGraph
 				{
 					Name = "已消費會員",
-					y = paying.Count(),
+					y = paying
 				},
 				new HighChart3DGraph
 				{
 					Name = "未消費會員",
-					y = noPaying.Count(),
+					y = noPaying
 				}
 			};
 
