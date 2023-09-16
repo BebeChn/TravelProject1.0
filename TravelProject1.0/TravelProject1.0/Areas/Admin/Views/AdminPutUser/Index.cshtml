@@ -1,82 +1,18 @@
-﻿@section Styles
-    {
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    @*  <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"> *@
-    <style>
-        .beauty-label {
-            font-family: Arial, sans-serif;
-            font-size: 16px;
-            color: #333;
-            margin-bottom: 5px;
-            margin-left: 40px;
-        }
-
-        .beauty-input {
-            width: 200px;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-family: Arial, sans-serif;
-            font-size: 14px;
-            outline: none;
-        }
-
-            .beauty-input:hover {
-                border-color: #007bff;
-            }
-
-
-            .beauty-input:focus {
-                border-color: #007bff;
-            }
-
-        .table tbody tr:nth-child(odd) {
-            background-color: #ffffff;
-        }
-
-        .table tbody tr:nth-child(even) {
-            background-color: #caf0f8;
-        }
-
-        .table tbody tr:hover {
-            background-color: #edf2fb;
-        }
-
-
-
-        table {
-            table-layout: auto;
-            border-collapse: collapse;
-            text-align: center;
-        }
-
-
-        .morewidth {
-            width: 200px;
-        }
-
-        .beauty-width {
-            max-width: 400px;
-            width: 100%;
-            margin: 0 auto;
-            height: 400px;
-        }
-
-        .second-beauty-width {
-            max-width: 400px;
-            width: 100%;
-            margin: 0 auto;
-            height: 475px;
-        }
-    </style>
+﻿@{
+    ViewData["Title"] = "會員管理";
 }
+
+@section Styles{
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="~/css/manageuser.css" rel="stylesheet" />
+}
+
 <div id="app">
     <div>
-        <div class="row">
+        <div class="row upperLayer">
             @* 搜尋 *@
             <div class="col-4">
-                <input class="beauty-input" type="text" placeholder="Search..." v-model="searchQuery" @@keyup="search">
+                <input class="inp-search" type="text" placeholder="Search..." v-model="searchQuery" @@keyup="search">
             </div>
             @* 排序 *@
             <div class="col-6 ">
@@ -97,64 +33,9 @@
             </div>
             @* 新增會員 *@
             <div class="col-2 ">
-                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createUserModal">新增會員</button>
+                <button class="btn btn-success" data-toggle="modal" data-target="#createUserModal">新增會員</button>
             </div>
         </div>
-        @* 新增會員modal *@
-        <div class="modal fade" id="createUserModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog beauty-width text-center">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">新增會員</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">X</button>
-                    </div>
-                    <div class="modal-body">
-                        <label style="font-size:14px; color:#c1121f">*必填</label>
-                        <div class="form-group">
-                            <label style="font-size:14px; color:#c1121f">*</label>
-                            <label for="name">名稱</label>
-                            <input type="text" class="beauty-input" id="name" v-model="newUser.name">
-                            <div style="font-size:14px;" class=" text-danger" v-if="newUser.name && !isValid(newUser.name,validType.name)" id="emailError">您輸入的格式不正確</div>
-                        </div>
-                        <div class="form-group">
-                            <label style="font-size:14px; color:#c1121f">*</label>
-                            <label for="email">信箱</label>
-                            <input type="email" class="beauty-input" id="email" v-model="newUser.email">
-                            <div style="font-size:14px;" class="text-danger" v-if="newUser.email && !isValid(newUser.email,validType.email)" id="emailError">您輸入的格式不正確</div>
-                            <div class="form-group">
-                                <label for="gender">性別</label>
-                                <select v-model="newUser.gender" class="beauty-input">
-                                    <option value="M">男</option>
-                                    <option value="F">女</option>
-                                    <option value="N">不指定</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label style="font-size:14px; color:#c1121f">*</label>
-                                <label for="password">密碼</label>
-                                <input type="password" class="beauty-input" id="password" v-model="newUser.password">
-                                <div style="font-size:14px;" class="text-danger" v-if="newUser.password && !isValid(newUser.password,validType.password)" id="emailError">您輸入的格式不正確</div>
-                            </div>
-                            <div class="form-group">
-                                <label for="birthday">生日</label>
-                                <input type="date" class="beauty-input" id="birthday" v-model="newUser.birthday">
-                            </div>
-                            <div class="form-group">
-                                <label style="font-size:14px; color:#c1121f">*</label>
-                                <label for="phone">電話</label>
-                                <input type="text" class="beauty-input" id="phone" v-model="newUser.phone">
-                                <div style="font-size:14px;" class="text-danger" v-if="newUser.phone && !isValid(newUser.phone,validType.phone)" id="emailError">您輸入的格式不正確</div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" @@click="createUser">新增</button>
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         @* 會員資訊 *@
         <div class="table-responsive">
             <table class="table table-striped table-hover">
@@ -174,11 +55,11 @@
                         <td>{{pu.userId}}</td>
                         <td>{{pu.name}}</td>
                         <td>{{pu.email}}</td>
-                        <td>{{pu.gender}}</td>
+                        <td>{{pu.gender | formatGender}}</td>
                         <td>{{pu.birthday  | formatDate}}</td>
                         <td>{{pu.phone}}</td>
                         <td>
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#UserDetail" @@click="display(pu)">編輯</button>
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#UserDetail" v-on:click="display(pu)">編輯</button>
                         </td>
                     </tr>
                 </tbody>
@@ -186,74 +67,139 @@
         </div>
 
         @* 編輯會員資訊 *@
-        <div id="UserDetail" class="modal" tabindex="-1">
-            <div class="modal-dialog beauty-width text-center">
+        <div class="modal fade" id="UserDetail" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title d-flex justify-content-center">使用者詳細資料</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">X</button>
+                        <h5 class="modal-title d-flex justify-content-center">會員詳細資料</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true"><i class="fa-solid fa-xmark"></i></span>
+                        </button>
                     </div>
-                    <div class="modal-body second-beauty-width">
-                        <table class="table table-striped table-hover">
-                            <tbody>
-                                @* 修改使用者資訊視窗 *@
-                                <template v-if="editOpen">
-                                    <tr>
-                                        <td><label>會員編號:</label><input class="beauty-input" v-model="UpdateUser.userId" disabled /></td>
-                                    </tr>
-                                    <tr>
-                                        <td><label>會員名稱:</label><input class="beauty-input" v-model="UpdateUser.name" /></td>
-                                    </tr>
-                                    <tr>
-                                        <td><label>信箱:</label><input class="beauty-input" v-model="UpdateUser.email" /> </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <label>性別:</label><select v-model="UpdateUser.gender" class="beauty-input">
-                                                <option value="M">男</option>
-                                                <option value="F">女</option>
-                                                <option value="N">不指定</option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td><label>生日:</label><input class="beauty-input" type="date" v-model="UpdateUser.birthday" /></td>
-                                    </tr>
-                                    <tr>
-                                        <td><label>電話:</label><input class="beauty-input" v-model="UpdateUser.phone" disabled /></td>
-                                    </tr>
-                                </template>
-                                @* 修改使用者資訊視窗 *@
-                                @* 顯示使用者資訊視窗 *@
-                                <template v-else>
-                                    <tr>
-                                        <td><label>會員編號:</label>{{UpdateUser.userId}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td><label>會員名稱:</label>{{UpdateUser.name}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td><label>信箱:</label>{{UpdateUser.email}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td><label>性別:</label>{{UpdateUser.gender}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td><label>生日:</label>{{UpdateUser.birthday | formatDate}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td><label>電話:</label>{{UpdateUser.phone}}</td>
-                                    </tr>
-                                </template>
-                                @* 顯示產品資訊視窗 *@
-                            </tbody>
-                        </table>
+                    <div class="modal-body">
+                        <div class="container">
+                            @* 修改會員資訊視窗 *@
+                            <template v-if="editOpen">
+                                <div class="form-group">
+                                    <label>會員編號:</label>
+                                    <input class="form-control" v-model="UpdateUser.userId" disabled />
+                                </div>
+                                <div class="form-group">
+                                    <label>會員名稱:</label>
+                                    <input class="form-control" v-model="UpdateUser.name" />
+                                </div>
+                                <div class="form-group">
+                                    <label>信箱:</label>
+                                    <input class="form-control" v-model="UpdateUser.email" />
+                                </div>
+                                <div class="form-group">
+                                    <label>性別:</label>
+                                    <select class="form-control" v-model="UpdateUser.gender">
+                                        <option value="M">男性</option>
+                                        <option value="F">女性</option>
+                                        <option value="N">不指定</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>生日:</label>
+                                    <input type="date" class="form-control" v-model="UpdateUser.birthday" />
+                                </div>
+                                <div class="form-group">
+                                    <label>電話:</label>
+                                    <input class="form-control" v-model="UpdateUser.phone" disabled />
+                                </div>
+                            </template>
+                            @* 顯示會員資訊視窗 *@
+                            <template v-else>
+                                <div class="form-group">
+                                    <label>會員編號:</label>
+                                    <span>{{UpdateUser.userId}}</span>
+                                </div>
+                                <div class="form-group">
+                                    <label>會員名稱:</label>
+                                    <span>{{UpdateUser.name}}</span>
+                                </div>
+                                <div class="form-group">
+                                    <label>信箱:</label>
+                                    <span>{{UpdateUser.email}}</span>
+                                </div>
+                                <div class="form-group">
+                                    <label>性別:</label>
+                                    <span>{{UpdateUser.gender}}</span>
+                                </div>
+                                <div class="form-group">
+                                    <label>生日:</label>
+                                    <span>{{UpdateUser.birthday | formatDate}}</span>
+                                </div>
+                                <div class="form-group">
+                                    <label>電話:</label>
+                                    <span>{{UpdateUser.phone}}</span>
+                                </div>
+                            </template>
+                        </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-warning" @@click="updateUser(UpdateUser)" v-if="editOpen">更新</button>
-                        <button type="button" class="btn btn-danger" @@click="deleteUser(UpdateUser.userId)" v-if="editOpen">刪除</button>
-                        <button type="button" class="btn btn-warning" @@click="edit" v-else>修改</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-primary" v-on:click="updateUser(UpdateUser)" v-if="editOpen">更新</button>
+                        <button type="button" class="btn btn-danger" v-on:click="deleteUser(UpdateUser.userId)" v-if="editOpen">刪除</button>
+                        <button type="button" class="btn btn-primary" v-on:click="edit" v-else>修改</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* 新增會員modal *@
+    <div class="modal fade" id="createUserModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">新增會員</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"><i class="fa-solid fa-xmark"></i></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <label class="lab-required">*必填</label>
+                    <div class="form-group">
+                        <label class="lab-required">*</label>
+                        <label for="name">會員名稱:</label>
+                        <input type="text" class="form-control" id="name" v-model="newUser.name">
+                        <div class="text-danger text-valid" v-if="newUser.name && !isValid(newUser.name,validType.name)">您輸入的名稱格式不正確</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="lab-required">*</label>
+                        <label for="email">信箱:</label>
+                        <input type="email" class="form-control" id="email" v-model="newUser.email">
+                        <div class="text-danger text-valid" v-if="newUser.email && !isValid(newUser.email,validType.email)">您輸入的信箱格式不正確</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="gender">性別:</label>
+                        <select class="form-control" id="gender" v-model="newUser.gender">
+                            <option value="M">男性</option>
+                            <option value="F">女性</option>
+                            <option value="N">不指定</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="lab-required">*</label>
+                        <label for="password">密碼:</label>
+                        <input type="password" class="form-control" id="password" v-model="newUser.password">
+                        <div class="text-danger text-valid" v-if="newUser.password && !isValid(newUser.password,validType.password)">您輸入的密碼格式不正確</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="birthday">生日:</label>
+                        <input type="date" class="form-control" id="birthday" v-model="newUser.birthday" @@input="dateValid">
+                    </div>
+                    <div class="form-group">
+                        <label class="lab-required">*</label>
+                        <label for="phone">電話:</label>
+                        <input type="text" class="form-control" id="phone" v-model="newUser.phone">
+                        <div class="text-danger text-valid" v-if="newUser.phone && !isValid(newUser.phone,validType.phone)">您輸入的電話格式不正確</div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" v-on:click="createUser">新增</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
                     </div>
                 </div>
             </div>
@@ -263,7 +209,7 @@
 
 @section Scripts{
     <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.min.js" integrity="sha384-lpyLfhYuitXl2zRZ5Bn2fqnhNAKOAaM/0Kr9laMspuaMiZfGmfwRNFh8HlMy49eQ" crossorigin="anonymous"></script>
+    <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js" integrity="sha512-uKQ39gEGiyUJl4AI6L+ekBdGKpGw4xJ55+xyJG7YFlJokPNYegn9KwQ3P8A7aFQAUtUsAQHep+d/lrGqrbPIDQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="~/js/validation.min.js"></script>
@@ -280,15 +226,15 @@
                     gender: '',
                     birthday: '',
                     phone: '',
-                    password: '',
+                    password: ''
                 },
                 searchQuery: '',
-                validType: validType,
+                validType: validType
             },
             mounted: function () {
                 let _this = this;
                 //會員資訊
-                fetch(`/api/adminApi/AdminGetUser`)
+                fetch(`/api/adminApi/AdminGetUser`, { method: "GET" })
                     .then(response => {
                         if (response.ok) return response.json();
                     }).then(data => {
@@ -298,7 +244,6 @@
                     })
             },
             methods: {
-                //正規化
                 isValid: function (str, type) {
                     return window.validation(str, type);
                 },
@@ -345,11 +290,10 @@
                     }).then(response => {
                         if (response.ok) return response.json();
                     }).then((data) => {
-                        alert("使用者成功新增");
+                        alert("會員新增成功");
                         window.location.href = "/Admin/AdminPutUser/Index";
-                        _this.putUser = data;
                     }).catch((err) => {
-                        alert("新增失敗：有必填未填寫");
+                        alert("會員新增失敗");
                     });
                 },
                 //會員資訊modal
@@ -392,7 +336,7 @@
                 //刪除使用者
                 deleteUser: function (userId) {
                     let _this = this;
-                    let result = confirm(`確定要刪除產品編號為${userId}的商品嗎？`);
+                    let result = confirm(`確定要刪除會員編號${userId}?`);
                     if (result == true) {
                         fetch(`/api/adminApi/AdminDeleteUser/${userId}`, { method: "DELETE" })
                             .then((response) => {
@@ -434,6 +378,17 @@
                         });
                     }
                 },
+                //日期限制
+                dateValid: function (date) {
+                    let _this = this;
+                    let today = new Date();
+                    let formattedToday = today.getFullYear() + '-' + (today.getMonth() + 1).toString().padStart(2, '0') + '-' + today.getDate().toString().padStart(2, '0');
+                    let originalDate = _this.UpdateUser.birthday;
+                    if (date.target.value > formattedToday) {
+                        alert("您選擇的日期不正確");
+                        _this.newUser.birthday = "";
+                    }
+                }
             },
             filters: {
                 //日期格式
@@ -441,6 +396,13 @@
                     if (!str) return "";
                     var d = new Date(str);
                     return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+                },
+
+                //性別
+                formatGender: function (str) {
+                    if (str == "M") return "男性";
+                    if (str == "F") return "女性";
+                    if (str == "N") return "未指定";
                 }
             },
         });
