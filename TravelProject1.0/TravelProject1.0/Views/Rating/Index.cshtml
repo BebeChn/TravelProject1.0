@@ -10,7 +10,7 @@
 
 <div id="app" class="container">
     <div class="row">
-        <div class="col-xl-8">
+        <div class="col-8">
             <h1>商品評價</h1>
             <div class="rating-date">
                 <h4>評價日期:</h4>
@@ -39,7 +39,7 @@
                 <button class="btn btn-submit info" v-on:click="addRating">送出</button>
             </div>
         </div>
-        <div class="col-xl-3 productInfo" offset-1>
+        <div class="col-3 productInfo" offset-1>
             <div>
                 <img :src="od[0].odimg" />
             </div>
@@ -55,7 +55,7 @@
                     {{od[0].quantity}}
                 </div>
                 <div>
-                    <spna class="product-title">金額:</spna>
+                    <span class="product-title">金額:</span>
                     {{od[0].unitPrice}}
                 </div>
             </div>
@@ -76,6 +76,7 @@
                 selectedStar: -1,
                 queries: "",
                 od: @result,
+                rating: []
             },
             methods: {
                 //商品評價
@@ -129,4 +130,4 @@
             }
         })
     </script>
-}
+    }
