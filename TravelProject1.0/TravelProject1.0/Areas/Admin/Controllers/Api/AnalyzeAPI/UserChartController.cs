@@ -50,7 +50,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 
 		private string GetAgeGroup(int? age)
 		{
-			string str = "未分類群組";
+			string str = "未分類族群";
 			foreach (var ageGroup in ageGroups)
 			{
 				var range = ageGroup.Split("-");
