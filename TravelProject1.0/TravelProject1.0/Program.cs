@@ -1,19 +1,15 @@
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
-using NToastNotify;
 using TravelProject1._0.Models;
-
-using AspNetCoreHero.ToastNotification.Extensions;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using TravelProject1._0.Services;
-using Microsoft.Extensions.DependencyInjection;
+using TravelProject1._0.Hubs;
 
 namespace TravelProject1._0
 {
     public class Program
     {
-
+                    
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
@@ -24,6 +20,8 @@ namespace TravelProject1._0
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("TravelProject"));
             });
+
+            builder.Services.AddSignalR();
 
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
             builder.Services.AddHttpContextAccessor();
@@ -58,8 +56,6 @@ namespace TravelProject1._0
                 options.SlidingExpiration = true;
                 options.Cookie.SameSite = SameSiteMode.None;
             });
-
-            builder.Services.AddSession();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -79,8 +75,7 @@ namespace TravelProject1._0
 
             app.UseRouting();
 
-            app.UseSession();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(
@@ -91,6 +86,7 @@ namespace TravelProject1._0
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
+            app.MapHub<UserHub>("/userHub");
 
             app.Run();
         }
