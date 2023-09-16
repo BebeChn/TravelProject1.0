@@ -22,19 +22,22 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
             _context = context;
             _searchService = searchService;
         }
+
+        //商品
         [HttpGet]
         public IEnumerable<GetProductDTO> AdminGetProduct()
         {
             return _context.Products.Select(p => new GetProductDTO
             {
-              ProductId = p.ProductId,
-              Id = p.Id,
-              ProductName = p.ProductName,
-              MainDescribe = p.MainDescribe,
-              Price = p.Price,
+                ProductId = p.ProductId,
+                Id = p.Id,
+                ProductName = p.ProductName,
+                MainDescribe = p.MainDescribe,
+                Price = p.Price,
             });
-
         }
+
+        //商品明細
         [HttpGet("{id}")]
         public async Task<ActionResult<GetProdcutDetailDTO>> GetProductDetails(int id)
         {
@@ -42,10 +45,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
             {
                 var product = await _context.Products.FindAsync(id);
 
-                if (product == null)
-                {
-                    return NotFound();
-                }
+                if (product == null) return NotFound();
 
                 GetProdcutDetailDTO gpd = new GetProdcutDetailDTO
                 {
@@ -56,34 +56,35 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
                     Price = product.Price,
                     SubDescribe = product.SubDescribe,
                     ShortDescribe = product.ShortDescribe,
-                    ImagePath= Path.Combine("//", product.Img)
+                    ImagePath = Path.Combine("//", product.Img)
                 };
 
                 return Ok(gpd);
             }
             catch (Exception ex)
             {
-
                 return NotFound();
             }
         }
-        [HttpPost]
-        public async Task <IActionResult> AdminPostProduct([FromBody] PostProductViewModel pp)
-        {
 
+        //新增商品
+        [HttpPost]
+        public async Task<IActionResult> AdminPostProduct([FromBody] PostProductViewModel pp)
+        {
             Product insertproduct = new Product
             {
-              Id=pp.Id,
-              ProductName=pp.ProductName,
-              Price = pp.Price,
-              MainDescribe = pp.MainDescribe,
-              SubDescribe=pp.SubDescribe,
-              ShortDescribe=pp.ShortDescribe,
+                Id = pp.Id,
+                ProductName = pp.ProductName,
+                Price = pp.Price,
+                MainDescribe = pp.MainDescribe,
+                SubDescribe = pp.SubDescribe,
+                ShortDescribe = pp.ShortDescribe,
             };
+
             try
             {
-               await _context.Products.AddAsync(insertproduct);
-               await _context.SaveChangesAsync();
+                await _context.Products.AddAsync(insertproduct);
+                await _context.SaveChangesAsync();
             }
             catch (Exception ex)
             {
@@ -91,11 +92,13 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
             }
             return Ok(insertproduct);
         }
- 
+
+        //修改商品
         [HttpPut("{id}")]
         public async Task<string> PutProduct(int id, PutProductVIewModel ppvm)
         {
             var product = await _context.Products.FindAsync(id);
+
             product.Id = ppvm.Id;
             product.ProductName = ppvm.ProductName;
             product.Price = ppvm.Price;
@@ -104,6 +107,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
             product.ShortDescribe = ppvm.ShortDescribe;
 
             _context.Entry(product).State = EntityState.Modified;
+
             try
             {
                 await _context.SaveChangesAsync();
@@ -114,14 +118,15 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
             }
             return "成功";
         }
+
+        //刪除
         [HttpDelete("{id}")]
         public async Task<string> DeleteProduct(int id)
         {
             var product = await _context.Products.FindAsync(id);
-            if (product == null)
-            {
-                return "找不到該商品";
-            }
+
+            if (product == null) return "找不到該商品";
+
             try
             {
                 _context.Products.Remove(product);
@@ -133,6 +138,8 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
                 return "刪除關聯失敗";
             }
         }
+
+        //價格低到高
         [HttpGet]
         public async Task<IQueryable<ProductOrderDTO>> OrderByPrice()
         {
@@ -159,6 +166,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
                 ProductId = p.ProductId,
             });
         }
+
         [HttpGet]
         public IActionResult AdminSearchProducut(string query)
         {
