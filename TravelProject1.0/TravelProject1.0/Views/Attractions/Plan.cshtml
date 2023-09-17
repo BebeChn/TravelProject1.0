@@ -166,9 +166,7 @@
             },
             mounted: function () {
                 let _this = this;
-                //queryString
                 _this.queries = window.location.pathname.slice("18");
-
                 //方案
                 fetch(`/api/AttractionsApi/GetPlan/${_this.queries}`, { method: "GET" })
                     .then(response => {
