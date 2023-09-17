@@ -193,7 +193,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 
         //價格低到高
         [HttpGet]
-        public async Task<IQueryable<ProductOrderDTO>> OrderByPrice()
+        public IQueryable<ProductOrderDTO> OrderByPrice()
         {
             return _context.Products.OrderBy(p => p.Price).Select(p => new ProductOrderDTO
             {
@@ -207,7 +207,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
         }
         //價格高到低
         [HttpGet]
-        public async Task<IQueryable<ProductOrderDTO>> OrderByDescendingPrice()
+        public IQueryable<ProductOrderDTO> OrderByDescendingPrice()
         {
             return _context.Products.OrderByDescending(p => p.Price).Select(p => new ProductOrderDTO
             {
