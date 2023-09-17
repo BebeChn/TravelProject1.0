@@ -32,7 +32,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
         [HttpGet]
         public List<GetProductDTO> AdminGetProduct()
         {
-            return _context.Products.AsNoTracking().Select(p => new GetProductDTO
+            var query = _context.Products.AsNoTracking().Select(p => new GetProductDTO
             {
                 ProductId = p.ProductId,
                 Id = p.Id,
@@ -41,8 +41,10 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
                 Price = p.Price,
                 SubDescribe = p.SubDescribe,
                 ShortDescribe = p.ShortDescribe,
-                ImagePath = string.IsNullOrEmpty(p.Img) ? "" : Path.Combine("//", p.Img)
+                //ImagePath = string.IsNullOrEmpty(p.Img) ? "" : Path.Combine("//", p.Img)
+                ImagePath = p.Img.Replace(@"\", "/"),
             }).ToList();
+            return query;
         }
 
         //商品明細
@@ -64,7 +66,8 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
                     Price = product.Price,
                     SubDescribe = product.SubDescribe,
                     ShortDescribe = product.ShortDescribe,
-                    ImagePath = Path.Combine("//", product.Img)
+                    //ImagePath = Path.Combine("//", product.Img)
+                    ImagePath = product.Img.Replace(@"\","/"),
                 };
 
                 return Ok(gpd);
@@ -117,105 +120,59 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
             }
 
         }
-        //修改商品
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> PutProduct(int id, [FromForm] PutProductVIewModel ppvm)
-        //{
-        //    try
-        //    {
-        //        var path = "";
 
-        //        var product = await _context.Products.FindAsync(id);
-
-        //        product.Id = ppvm.Id;
-        //        product.ProductName = ppvm.ProductName;
-        //        product.Price = ppvm.Price;
-        //        product.MainDescribe = ppvm.MainDescribe;
-        //        product.SubDescribe = ppvm.SubDescribe;
-        //        product.ShortDescribe = ppvm.ShortDescribe;
-
-        //        if (ppvm.imageFile != null)
-        //        {
-
-        //            string oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, product.Img);
-
-        //            if (System.IO.File.Exists(oldImagePath))
-        //            {
-        //                System.IO.File.Delete(oldImagePath);
-        //            }
-
-        //            var tempPath = Path.GetTempFileName();
-        //            using (var fs = new FileStream(tempPath, FileMode.Create))
-        //            {
-
-        //                await ppvm.imageFile.CopyToAsync(fs);
-        //            }
-        //            var categorys = new string[] { "", "planeTK", "Books", "Transport", "Attractions" };
-        //            path = @$"\images\Images.Project\{categorys[ppvm.Id]}\{DateTime.Now.Ticks}_{ppvm.imageFile.FileName}";
-        //            var newPath = Path.Combine(_webHostEnvironment.WebRootPath, "images", path);
-        //            System.IO.File.Move(tempPath, newPath);
-        //            product.Img = newPath;
-
-        //        }
-        //        _context.Entry(product).State = EntityState.Modified;
-        //        await _context.SaveChangesAsync();
-        //        return Ok(product);
-        //    }
-        //    catch (IOException)
-        //    {
-        //        return BadRequest();
-        //    }
-        //}
         [HttpPut("{id}")]
         public async Task<IActionResult> PutProduct(int id, [FromForm] PutProductVIewModel ppvm)
         {
             try
             {
-                if (ppvm != null)
+                var path = "";
+
+                var product = await _context.Products.FindAsync(id);
+
+                product.Id = ppvm.Id;
+                product.ProductName = ppvm.ProductName;
+                product.Price = ppvm.Price;
+                product.MainDescribe = ppvm.MainDescribe;
+                product.SubDescribe = ppvm.SubDescribe;
+                product.ShortDescribe = ppvm.ShortDescribe;
+
+                if (ppvm.imageFile != null)
                 {
-                    var path = "";
-                    var product = await _context.Products.FindAsync(id);
-                    if (product != null)
+
+                    string oldImagePath = Path.Combine(@$"{_webHostEnvironment.WebRootPath}{product.Img}");
+
+                    if (System.IO.File.Exists(oldImagePath))
                     {
-                        if (ppvm.imageFile != null)
-                        {
-                            if (!string.IsNullOrEmpty(product.Img))
-                            {
-                                var oldImagePath = Path.Combine(@$"{_webHostEnvironment.WebRootPath}{product.Img}");
-                                if (System.IO.File.Exists(oldImagePath))
-                                {
-
-                                    var categorys = new string[] { "", "planeTK", "Books", "Transport", "Attractions" };
-                                    var newImagePath = @$"/images/Images.Project/{categorys[ppvm.Id]}/{DateTime.Now.Ticks}_{ppvm.imageFile.FileName}";
-                                    using (var fs = new FileStream($"{_webHostEnvironment.WebRootPath}{newImagePath}", FileMode.Create))
-                                    {
-                                        await ppvm.imageFile.CopyToAsync(fs);
-                                    }
-                                    System.IO.File.Delete(oldImagePath.ToString());
-                                    product.Id = ppvm.Id;
-                                    product.ProductName = ppvm.ProductName;
-                                    product.Price = ppvm.Price;
-                                    product.MainDescribe = ppvm.MainDescribe;
-                                    product.SubDescribe = ppvm.SubDescribe;
-                                    product.ShortDescribe = ppvm.ShortDescribe;
-                                    product.Img = newImagePath;
-
-                                    _context.Entry(product).State = EntityState.Modified;
-                                    await _context.SaveChangesAsync();
-                                    return Ok(product);
-                                }
-                            }
-                        }
+                        System.IO.File.Delete(oldImagePath);
                     }
+
+                    var tempPath = Path.GetTempFileName();
+                    using (var fs = new FileStream(tempPath, FileMode.Create))
+                    {
+
+                        await ppvm.imageFile.CopyToAsync(fs);
+                    }
+
+                    var categorys = new string[] { "", "planeTK", "Books", "Transport", "Attractions" };
+
+                    path = @$"\images\Images.Project\{categorys[ppvm.Id]}\{DateTime.Now.Ticks}_{ppvm.imageFile.FileName}";
+                    using (var fs = new FileStream($"{_webHostEnvironment.WebRootPath}/{path}", FileMode.Create))
+                    {
+                        await ppvm.imageFile.CopyToAsync(fs);
+                    }
+                    product.Img = path;
+
                 }
-                return BadRequest();
+                _context.Entry(product).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                return Ok(product);
             }
-            catch (DbUpdateConcurrencyException)
+            catch (IOException)
             {
                 return BadRequest();
             }
         }
-
         //刪除
         [HttpDelete("{id}")]
         public async Task<string> DeleteProduct(int id)
