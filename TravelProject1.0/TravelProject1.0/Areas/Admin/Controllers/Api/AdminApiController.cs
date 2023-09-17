@@ -79,7 +79,8 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
         [HttpPost]
         public IActionResult AdminManageUser(AdmminManageUserDTO amuDTO)
         {
-           
+            if (amuDTO == null) return BadRequest();
+
             var salt = GenerateSalt();
 
             var passwordhash = HashPassword(amuDTO.Password, salt);
@@ -93,6 +94,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
                 Phone = amuDTO.Phone,
                 Birthday = amuDTO.Birthday,
             };
+
             try
             {
                 _context.Users.AddAsync(insertuser);

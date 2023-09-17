@@ -51,7 +51,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="pu in putUser">
+                    <tr v-for="pu in showUser">
                         <td>{{pu.userId}}</td>
                         <td>{{pu.name}}</td>
                         <td>{{pu.email}}</td>
@@ -64,14 +64,28 @@
                     </tr>
                 </tbody>
             </table>
+            <nav class="blog-pagination justify-content-center d-flex">
+                <ul class="pagination">
+                    <paginate :page-count="total"
+                              :click-handler="changePage"
+                              :page-class="'page-item'"
+                              :page-link-class="'page-link'"
+                              :prev-class="'page-link'"
+                              :prev-link-class="'lnr lnr-chevron-left'"
+                              :next-class="'page-link'"
+                              :next-link-class="'lnr lnr-chevron-right'"
+                              :container-class="'pagination'">
+                    </paginate>
+                </ul>
+            </nav>
         </div>
 
         @* 編輯會員資訊 *@
         <div class="modal fade" id="UserDetail" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title d-flex justify-content-center">會員詳細資料</h5>
+                    <div class="modal-header text-center">
+                        <h5 class="modal-title w-100">會員詳細資料</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true"><i class="fa-solid fa-xmark"></i></span>
                         </button>
@@ -102,7 +116,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label>生日:</label>
-                                    <input type="date" class="form-control" v-model="UpdateUser.birthday" />
+                                    <input type="date" class="form-control" v-model="UpdateUser.birthday" @@input="dateValid" />
                                 </div>
                                 <div class="form-group">
                                     <label>電話:</label>
@@ -153,8 +167,8 @@
     <div class="modal fade" id="createUserModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">新增會員</h5>
+                <div class="modal-header text-center">
+                    <h5 class="modal-title w-100" id="exampleModalLabel">新增會員</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true"><i class="fa-solid fa-xmark"></i></span>
                     </button>
@@ -199,7 +213,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" v-on:click="createUser">新增</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" v-on:click="formClear">取消</button>
                     </div>
                 </div>
             </div>
@@ -213,7 +227,9 @@
     <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js" integrity="sha512-uKQ39gEGiyUJl4AI6L+ekBdGKpGw4xJ55+xyJG7YFlJokPNYegn9KwQ3P8A7aFQAUtUsAQHep+d/lrGqrbPIDQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="~/js/validation.min.js"></script>
+    <script src="https://unpkg.com/vuejs-paginate@0.9.0"></script>
     <script>
+        Vue.component('paginate', VuejsPaginate)
         var app = new Vue({
             el: '#app',
             data: {
@@ -223,13 +239,15 @@
                 newUser: {
                     name: '',
                     email: '',
-                    gender: '',
+                    gender: "N",
                     birthday: '',
                     phone: '',
                     password: ''
                 },
                 searchQuery: '',
-                validType: validType
+                validType: validType,
+                currentPage: 1,
+                itemPage: 5
             },
             mounted: function () {
                 let _this = this;
@@ -288,11 +306,13 @@
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(form)
                     }).then(response => {
-                        if (response.ok) return response.json();
-                    }).then((data) => {
-                        alert("會員新增成功");
-                        window.location.href = "/Admin/AdminPutUser/Index";
-                    }).catch((err) => {
+                        if (response.ok) {
+                            alert("會員新增成功");
+                            window.location.href = "/Admin/AdminPutUser/Index";
+                        } else {
+                            alert("會員新增失敗");
+                        }
+                    }).catch(err => {
                         alert("會員新增失敗");
                     });
                 },
@@ -387,6 +407,23 @@
                     if (date.target.value > formattedToday) {
                         alert("您選擇的日期不正確");
                         _this.newUser.birthday = "";
+                        _this.UpdateUser.birthday = "";
+                    }
+                },
+                //分頁
+                changePage: function (num) {
+                    let _this = this;
+                    _this.currentPage = num;
+                },
+                //清除新增會員model資料
+                formClear: function () {
+                    this.newUser = {
+                        name: "",
+                        email: "",
+                        gender: "N",
+                        birthday: "",
+                        phone: "",
+                        password: ""
                     }
                 }
             },
@@ -405,6 +442,19 @@
                     if (str == "N") return "未指定";
                 }
             },
+            computed: {
+                //分頁
+                showUser: function () {
+                    let _this = this;
+                    var start = (_this.currentPage - 1) * _this.itemPage;
+                    var end = start + _this.itemPage;
+                    return this.putUser.slice(start, end);
+                },
+                total: function () {
+                    let _this = this;
+                    return Math.ceil(_this.putUser.length / _this.itemPage);
+                }
+            }
         });
     </script>
 }
