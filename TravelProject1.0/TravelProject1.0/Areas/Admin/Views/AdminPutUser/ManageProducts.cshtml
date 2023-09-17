@@ -470,7 +470,7 @@
                         if (_this.UpdateProduct.file) {
                             formData.append("imageFile", _this.UpdateProduct.file);
                         }
-                        fetch(`/api/ProductApi/PutProduct/${productId}`, {
+                        fetch(`/api/ProductApi/PutProduct2/${productId}`, {
                             method: "PUT",
                             body: formData,
                         })

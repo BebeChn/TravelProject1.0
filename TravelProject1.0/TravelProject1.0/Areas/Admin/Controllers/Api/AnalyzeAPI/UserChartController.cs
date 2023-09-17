@@ -1,13 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json.Linq;
-using System.Configuration;
-using System.Security.Permissions;
-using TravelProject1._0.Areas.Admin.Models.ChartViewModel.HotelChartDTO;
+using Microsoft.Identity.Client.Extensions.Msal;
+using NuGet.Packaging;
 using TravelProject1._0.Areas.Admin.Models.ChartViewModel.UserChartDTO;
 using TravelProject1._0.Models;
+using static NuGet.Packaging.PackagingConstants;
 
 namespace TravelProject1._0.Areas.Admin.Controllers.Api
 {
@@ -157,7 +154,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 			return _db.Users.AsNoTracking().Where(x => !string.IsNullOrEmpty(x.Gender))
 			.Select(x => x.Gender).GroupBy(x => x).Select(x => new HighChart3DGraph
 			{
-				Name = x.Key == "F" ? "女性" : "男性",
+				Name = x.Key == "N" ? "不指定" : (x.Key == "F" ? "女性" : "男性"),
 				y = x.Count()
 			});
 
@@ -209,7 +206,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 			{
 				int endAge = startAge + rangeAge - 1;
 
-				var ageGroup = _db.Users.AsNoTracking()
+				var result = _db.Users.AsNoTracking()
 					.Where(u => u.Age.HasValue && u.Age >= startAge && u.Age <= endAge)
 					.Select(u => u.Age)
 					.ToList()
@@ -225,9 +222,8 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 					})
 					.ToList();
 
-				ageGroups.AddRange(ageGroup);
+				ageGroups.AddRange(result);
 			}
-
 			return ageGroups;
 		}
 
@@ -253,6 +249,84 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 				}
 			};
 
+			return result;
+		}
+
+		[HttpGet]
+		public async Task<GetUsersAnalyzeDTO> GetUsers2()
+		{
+			var userCount = 0;
+			var Male = new Dictionary<string, int>();
+			var Female = new Dictionary<string, int>();
+			var payingMemberAgeGroup = new Dictionary<string, int>();
+			var nonPayingMemberAgeGroup = new Dictionary<string, int>();
+			var NotSpecifyGroup = new Dictionary<string, int>();
+			var ageGroupDic = new List<string>();
+
+			var NotSpecify = "未指定";
+			int minAge = 18;
+			int maxAge = 97;
+			int addAgeRange = 5;
+			for (int startAge = minAge; startAge < maxAge; startAge += addAgeRange)
+			{
+				int endAge = startAge + addAgeRange - 1;
+				ageGroupDic.Add($"{startAge}-{endAge}歲");
+			}
+			var users = await _db.Users.AsNoTracking().Include(u => u.Orders)
+			.Select(u => new
+			{
+				UserId = u.UserId,
+				Gender = u.Gender,
+				Age = u.Age,
+				OrderUserId = u.Orders.Select(u => u.UserId)
+			}).ToListAsync();
+			
+			foreach (var user in users)
+			{
+				var isPayingMember = user.OrderUserId.Any();
+				if (user.Gender == "F")
+				{
+					if (!Female.ContainsKey(ageGroupDic))
+					{
+						Female[ageGroupDic] = 0;
+					}
+					Female[ageGroupDic]++;
+				}
+				else
+				{
+					if (!Male.ContainsKey(ageGroupDic))
+					{
+						Male[ageGroupDic] = 0;
+					}
+					Male[ageGroupDic]++;
+				}
+
+				if (isPayingMember)
+				{
+					if (!payingMemberAgeGroup.ContainsKey(ageGroupDic))
+					{
+						payingMemberAgeGroup[ageGroupDic] = 0;
+					}
+					payingMemberAgeGroup[ageGroupDic]++;
+				}
+				else
+				{
+					if (!nonPayingMemberAgeGroup.ContainsKey(ageGroupDic))
+					{
+						nonPayingMemberAgeGroup[ageGroupDic] = 0;
+					}
+					nonPayingMemberAgeGroup[ageGroupDic]++;
+				}
+			}
+
+			var result = new GetUsersAnalyzeDTO
+			{
+				TotalMember = users.Count(),
+				Male = Male,
+				Female = Female,
+				NonPayingMemberAgeGroup = nonPayingMemberAgeGroup,
+				PayingMemberAgeGroup = payingMemberAgeGroup
+			};
 			return result;
 		}
 	}
