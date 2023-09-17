@@ -71,6 +71,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 				return null;
 			}
 
+	
 			TravelProject1._0.Models.Admin add = new TravelProject1._0.Models.Admin
 			{
 				Id = SuperDTO.Id,

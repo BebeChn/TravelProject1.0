@@ -11,10 +11,12 @@
 
 
 <div class="app-container element">
+    @if (ViewData["LoginFailed"] != null)
+    {
+        <p class="alert alert-danger text-center">帳號或密碼錯誤</p>
+    }
     <h1>會員登入</h1>
     <form action="@Url.Action("Login")" method="post" class="login">
-        <br>
-        <br>
         <div class="inputbox">
             <input type="text" asp-for="@Model.Email" required value="AAA@gmail.com" />
             <span asp-validation-for="@Model.Email">帳號</span>
@@ -72,8 +74,9 @@
                 e.preventDefault();
                 var email = document.querySelector('input[name="Email"]').value;
                 var password = document.querySelector('input[name="Password"]').value;
-                if (email === "AAA@gmail.com" && password === "Abcd1234!") {
+                if (email == "AAA@gmail.com" && password == "Abcd1234!") {
                     document.querySelector("form").submit();
+
                 } else {
                     $('#errorModal').modal('show');
                 }
