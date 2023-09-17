@@ -2,38 +2,32 @@
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel;
 using System.Linq;
+using TravelProject1._0.Areas.Admin.Models.DTO;
 using TravelProject1._0.Models;
-using TravelProject1._0.Models.DTO;
 
 namespace TravelProject1._0.Areas.Admin.Controllers
 {
-
     [Area("Admin")]
     [Route("api/[controller]/[action]")]
     [ApiController]
-
     public class MerchandiseController : Controller
     {
         private readonly TravelProjectAzureContext _db;
-
         public MerchandiseController(TravelProjectAzureContext db)
         {
             _db = db;
         }
-
 
         public IActionResult Merchandise()
         {
             return View();
         }
 
-
         [HttpGet]
         public async Task<IEnumerable<MerchandiseDTO>> MerchandiseGET()
         {
             return _db.Products.Select(x => new MerchandiseDTO
             {
-
                 ProductId = x.ProductId,
                 Id = x.Id,
                 ProductName = x.ProductName,
@@ -43,9 +37,6 @@ namespace TravelProject1._0.Areas.Admin.Controllers
                 ShortDescribe = x.ShortDescribe,
             });
         }
-
-
-
 
         [HttpPost]
         public async Task<IEnumerable<MerchandiseDTO>> MerchandiseSearch(MerchandiseDTO MchDTO)
@@ -57,7 +48,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers
             y.Price == MchDTO.Price ||
             y.MainDescribe.Contains(MchDTO.MainDescribe) ||
             y.SubDescribe.Contains(MchDTO.SubDescribe) ||
-            y.ShortDescribe.Contains(MchDTO.ShortDescribe)            
+            y.ShortDescribe.Contains(MchDTO.ShortDescribe)
             ).Select(x => new MerchandiseDTO
             {
                 ProductId = x.ProductId,
@@ -70,8 +61,6 @@ namespace TravelProject1._0.Areas.Admin.Controllers
             });
         }
 
-
-        
         [HttpPut("{id}")]
         public async Task<string> MerchandisePUT(int id, MerchandiseDTO MchDTO)
         {
@@ -79,16 +68,14 @@ namespace TravelProject1._0.Areas.Admin.Controllers
             {
                 return "修改失敗";
             }
-
-                var Mch = await _db.Products.FindAsync(id);
-                Mch.Id = MchDTO.Id;
-                Mch.ProductName = MchDTO.ProductName;
-                Mch.ProductName = MchDTO.ProductName;
-                Mch.MainDescribe = MchDTO.MainDescribe;
-                Mch.SubDescribe = MchDTO.SubDescribe;
-                Mch.ShortDescribe = MchDTO.ShortDescribe;
-                _db.Entry(Mch).State = EntityState.Modified;
-
+            var Mch = await _db.Products.FindAsync(id);
+            Mch.Id = MchDTO.Id;
+            Mch.ProductName = MchDTO.ProductName;
+            Mch.ProductName = MchDTO.ProductName;
+            Mch.MainDescribe = MchDTO.MainDescribe;
+            Mch.SubDescribe = MchDTO.SubDescribe;
+            Mch.ShortDescribe = MchDTO.ShortDescribe;
+            _db.Entry(Mch).State = EntityState.Modified;
 
             try
             {
@@ -97,14 +84,10 @@ namespace TravelProject1._0.Areas.Admin.Controllers
             catch (DbUpdateConcurrencyException)
             {
 
-                    throw;
-
+                throw;
             }
-
             return "成功";
         }
-
-
 
         //DELETE
         [HttpDelete("{id}")]
@@ -131,8 +114,6 @@ namespace TravelProject1._0.Areas.Admin.Controllers
             return "刪除成功";
         }
 
-
-
         //insert
         [HttpPost]
         public async Task<string> MerchandiseADD(MerchandiseDTO MchDTO)
@@ -141,53 +122,27 @@ namespace TravelProject1._0.Areas.Admin.Controllers
             {
                 return null;
             }
-
-                Product Mch = new Product
-                {
-                    ProductId = MchDTO.ProductId,
-                    Id = MchDTO.Id,
-                    ProductName = MchDTO.ProductName,
-                    Price = MchDTO.Price,
-                    MainDescribe = MchDTO.MainDescribe,
-                    SubDescribe = MchDTO.SubDescribe,
-                    ShortDescribe = MchDTO.ShortDescribe,
-                };
-                _db.Products.Add(Mch);
-                await _db.SaveChangesAsync();
-                MchDTO.ProductId = Mch.ProductId;
-                 
+            Product Mch = new Product
+            {
+                ProductId = MchDTO.ProductId,
+                Id = MchDTO.Id,
+                ProductName = MchDTO.ProductName,
+                Price = MchDTO.Price,
+                MainDescribe = MchDTO.MainDescribe,
+                SubDescribe = MchDTO.SubDescribe,
+                ShortDescribe = MchDTO.ShortDescribe,
+            };
+            _db.Products.Add(Mch);
+            await _db.SaveChangesAsync();
+            MchDTO.ProductId = Mch.ProductId;
             return "成功";
-            //
         }
-
 
         //id
-        
         [HttpGet("{id}")]
-        public async Task<IEnumerable<MerchandiseDTO>> MerchandiseOption(int id )
+        public async Task<IEnumerable<MerchandiseDTO>> MerchandiseOption(int id)
         {
-
             return _db.Products.Where(p => p.Id == id)
-                .Select(op => new MerchandiseDTO
-            {
-                ProductId = op.ProductId,
-                Id = op.Id,
-                ProductName = op.ProductName,
-                Price = op.Price,
-                MainDescribe = op.MainDescribe,
-                SubDescribe = op.SubDescribe,
-                ShortDescribe = op.ShortDescribe,
-            });
-
-        }
-
-
-        //lc
-        [HttpGet("{lc}")]
-        public async Task<IEnumerable<MerchandiseDTO>> Merchandiselocation(string lc)
-        {
-
-            return _db.Products.Where(p => p.ProductName.Contains(lc))
                 .Select(op => new MerchandiseDTO
                 {
                     ProductId = op.ProductId,
@@ -201,6 +156,22 @@ namespace TravelProject1._0.Areas.Admin.Controllers
 
         }
 
+        //lc
+        [HttpGet("{lc}")]
+        public async Task<IEnumerable<MerchandiseDTO>> Merchandiselocation(string lc)
+        {
+            return _db.Products.Where(p => p.ProductName.Contains(lc))
+                .Select(op => new MerchandiseDTO
+                {
+                    ProductId = op.ProductId,
+                    Id = op.Id,
+                    ProductName = op.ProductName,
+                    Price = op.Price,
+                    MainDescribe = op.MainDescribe,
+                    SubDescribe = op.SubDescribe,
+                    ShortDescribe = op.ShortDescribe,
+                });
+        }
 
         [HttpGet]
         //LH
@@ -232,13 +203,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers
                     MainDescribe = z.MainDescribe,
                     SubDescribe = z.SubDescribe,
                     ShortDescribe = z.ShortDescribe,
-
-
                 });
         }
-
-
-
-
     }
 }

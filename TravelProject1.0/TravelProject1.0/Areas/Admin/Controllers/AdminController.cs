@@ -5,8 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Globalization;
 using System.Linq;
+using TravelProject1._0.Areas.Admin.Models.DTO;
 using TravelProject1._0.Models;
-using TravelProject1._0.Models.DTO;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace TravelProject1._0.Areas.Admin.Controllers
@@ -18,7 +18,6 @@ namespace TravelProject1._0.Areas.Admin.Controllers
     public class AdminController : Controller
     {
         private readonly TravelProjectAzureContext _db;
-
         public AdminController(TravelProjectAzureContext db)
         {
             _db = db;
@@ -45,8 +44,6 @@ namespace TravelProject1._0.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IEnumerable<AdminDTO>> AdminSearch(AdminDTO AdminDTO)
         {
-
-
             return _db.Users.Where(y =>
             //y.UserId == AdminDTO.UserId ||
             y.Name.Contains(AdminDTO.Name) ||
@@ -155,38 +152,6 @@ namespace TravelProject1._0.Areas.Admin.Controllers
             AdmDTO.UserId = ADM.UserId;
             return "成功";
         }
-        //UserID  Name   Phone    Email   PasswordHash   不能為空
-
-        //[HttpPost]
-        //public async Task<string> ADDAdmin(AdminDTO AdmDTO)
-        //{
-        //    if (_db.Users == null)
-        //    {
-        //        return null;
-        //    }
-        //    User ADM = new User
-        //    {
-        //        UserId = AdmDTO.UserId,
-        //        Name = AdmDTO.Name,
-        //        Gender = AdmDTO.Gender,
-        //        Address = AdmDTO.Address,
-        //        Email = AdmDTO.Email,
-        //        Birthday = AdmDTO.Birthday,
-        //        Password = AdmDTO.Password,
-        //    };
-        //    _db.Users.Add(ADM);
-
-        //    try
-        //    {
-        //        await _db.SaveChangesAsync();
-        //        AdmDTO.UserId = ADM.UserId;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine(ex.Message);
-        //    }
-        //    return "成功";
-        //}
 
         //日期低高
         public async Task<IEnumerable<AdminDTO>> Datelower()
