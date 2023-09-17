@@ -67,7 +67,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
                     SubDescribe = product.SubDescribe,
                     ShortDescribe = product.ShortDescribe,
                     //ImagePath = Path.Combine("//", product.Img)
-                    ImagePath = product.Img.Replace(@"\","/"),
+                    ImagePath = product.Img.Replace(@"\", "/"),
                 };
 
                 return Ok(gpd);
@@ -163,7 +163,6 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
                         await ppvm.imageFile.CopyToAsync(fs);
                     }
                     product.Img = path;
-
                 }
                 _context.Entry(product).State = EntityState.Modified;
                 await _context.SaveChangesAsync();

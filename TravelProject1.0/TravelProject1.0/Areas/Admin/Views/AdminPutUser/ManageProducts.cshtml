@@ -102,6 +102,11 @@
         .modal-title {
             color: white;
         }
+
+        .lab-required {
+            font-size: 14px;
+            color: #c1121f;
+        }
     </style>
 }
 <div id="app">
@@ -189,8 +194,10 @@
                     </button>
                 </div>
                 <div class="modal-body">
+                    <label class="lab-required">*必填</label>
                     <div class="container">
                         <div class="form-group">
+                            <label class="lab-required">*</label>
                             <label for="exampleFormControlSelect1">種類編號</label>
                             <select class="form-control" id="exampleFormControlSelect1" v-model="newProduct.id">
                                 <option value="1">機票</option>
@@ -200,10 +207,12 @@
                             </select>
                         </div>
                         <div class="form-group">
+                            <label class="lab-required">*</label>
                             <label for="productName">商品名稱:</label>
                             <input type="text" class="form-control" id="productName" v-model="newProduct.productName">
                         </div>
                         <div class="form-group">
+                            <label class="lab-required">*</label>
                             <label for="price">商品價格:</label>
                             <input type="text" class="form-control" id="price" v-model="newProduct.price">
                         </div>
@@ -231,7 +240,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" @@click="createProduct">新增</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" @@click="clearInfo">取消</button>
                 </div>
             </div>
         </div>
@@ -300,24 +309,26 @@
                                     {{UpdateProduct.mainDescribe}}
                                 </div>
                             </div>
-                            <div class="form-group"><label>更多敘述:</label>
+                            <div class="form-group">
+                                <label>更多敘述:</label>
                                 <div style="text-indent:2em;border:1px solid gray;">
                                     {{UpdateProduct.subDescribe}}
                                 </div>
                             </div>
-                            <div class="form-group"><label>補充說明:</label>
+                            <div class="form-group">
+                                <label>補充說明:</label>
                                 <div style="text-indent:2em;border:1px solid gray;">
                                     {{UpdateProduct.shortDescribe}}
-                                </div>  
+                                </div>
                             </div>
 
                             <div class="form-group">
-                                    <img :src="UpdateProduct.imagePath" style="width:200px;" />
+                                <img :src="UpdateProduct.imagePath" style="width:200px;" />
                             </div>
-                            
+
                         </template>
                         @* 顯示產品資訊視窗 *@
-                       
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-warning" @@click="UpdateProductInfo(UpdateProduct.productId)" v-if="editOpen">更新</button>
@@ -465,12 +476,14 @@
                         method: 'POST',
                         body: data,
                     }).then((response) => {
-                        if (response.ok) return response.json();
-                    }).then((data) => {
-                        alert("商品成功新增");
-                        window.location.href = "/Admin/AdminPutUser/ManageProducts";
-                    }).catch((err) => {
-                        alert("新增失敗：" + err.message);
+                        if (response.ok) {
+                            alert("商品新增成功");
+                            window.location.href = "/Admin/AdminPutUser/Index";
+                        } else {
+                            alert("商品新增失敗,請填寫必填欄位");
+                        }
+                    }).catch(err => {
+                        alert("商品新增失敗");
                     });
                 },
                 //商品詳細資訊
@@ -506,10 +519,10 @@
                             .then(data => {
                                 if (data) {
                                     _this.editOpen = false;
-                                    alert("更新成功");
+                                    alert("商品更新成功");
                                     window.location.href = "/Admin/AdminPutUser/ManageProducts";
                                 } else {
-                                    alert("更新失敗");
+                                    alert("商品更新失敗");
                                 }
                             })
                             .catch(err => {
@@ -533,7 +546,6 @@
                         });
                     }
                 },
-
 
                 search: function () {
                     let _this = this;
@@ -568,7 +580,20 @@
                     let _this = this;
                     _this.currentPage = num;
                 },
-            }, 
+
+                clearInfo: function () {
+                    this.newProduct = {
+                        id: "",
+                        productName: "",
+                        mainDescribe: "",
+                        price: "",
+                        subDescribe: "",
+                        shortDescribe: "",
+                        file: "",
+                        previewImgUrl: "",
+                    }
+                }
+            },
             computed: {
                 showProduct: function () {
                     let _this = this;
@@ -580,7 +605,7 @@
                     let _this = this;
                     return Math.ceil(_this.putProduct.length / _this.itemPage);
                 },
-            
+
             }
 
         });
