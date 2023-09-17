@@ -96,9 +96,9 @@
         }
     </style>
 }
-<div id="app">
+<div id="app" >
     <div>
-        <div class="row">
+        <div class="row" style="margin-top:50px">
             @* 搜尋 *@
             <div class="col-4">
                 <input class="beauty-input" type="text" placeholder="Search..." v-model="searchQuery" @@keyup="search">
@@ -213,7 +213,7 @@
         </div>
     </div>
     @* 商品詳細資訊 *@
-    <div class="modal fade" id="UserDetail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="UserDetail" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-content">

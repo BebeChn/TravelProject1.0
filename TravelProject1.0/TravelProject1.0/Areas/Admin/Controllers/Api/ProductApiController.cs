@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Drawing;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
@@ -86,10 +87,11 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
                 {
                     if (pp.File.Length > 0)
                     {
-                        path = @$"/images/Images.Project/{categorys[pp.Id]}/{DateTime.Now.Ticks}_{pp.File.FileName}";
+                        path = @$"\images\Images.Project\{categorys[pp.Id]}\{DateTime.Now.Ticks}_{pp.File.FileName}";
 
                         using (var fs = new FileStream($"{_webHostEnvironment.WebRootPath}/{path}", FileMode.Create))
                         {
+                            //It copies the contents of the uploaded file to the destination stream represented by `fs`
                             await pp.File.CopyToAsync(fs);
                         }
                     }
@@ -116,48 +118,97 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 
         }
         //修改商品
+        //[HttpPut("{id}")]
+        //public async Task<IActionResult> PutProduct(int id, [FromForm] PutProductVIewModel ppvm)
+        //{
+        //    try
+        //    {
+        //        var path = "";
+
+        //        var product = await _context.Products.FindAsync(id);
+
+        //        product.Id = ppvm.Id;
+        //        product.ProductName = ppvm.ProductName;
+        //        product.Price = ppvm.Price;
+        //        product.MainDescribe = ppvm.MainDescribe;
+        //        product.SubDescribe = ppvm.SubDescribe;
+        //        product.ShortDescribe = ppvm.ShortDescribe;
+
+        //        if (ppvm.imageFile != null)
+        //        {
+
+        //            string oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, product.Img);
+
+        //            if (System.IO.File.Exists(oldImagePath))
+        //            {
+        //                System.IO.File.Delete(oldImagePath);
+        //            }
+
+        //            var tempPath = Path.GetTempFileName();
+        //            using (var fs = new FileStream(tempPath, FileMode.Create))
+        //            {
+
+        //                await ppvm.imageFile.CopyToAsync(fs);
+        //            }
+        //            var categorys = new string[] { "", "planeTK", "Books", "Transport", "Attractions" };
+        //            path = @$"\images\Images.Project\{categorys[ppvm.Id]}\{DateTime.Now.Ticks}_{ppvm.imageFile.FileName}";
+        //            var newPath = Path.Combine(_webHostEnvironment.WebRootPath, "images", path);
+        //            System.IO.File.Move(tempPath, newPath);
+        //            product.Img = newPath;
+
+        //        }
+        //        _context.Entry(product).State = EntityState.Modified;
+        //        await _context.SaveChangesAsync();
+        //        return Ok(product);
+        //    }
+        //    catch (IOException)
+        //    {
+        //        return BadRequest();
+        //    }
+        //}
         [HttpPut("{id}")]
         public async Task<IActionResult> PutProduct(int id, [FromForm] PutProductVIewModel ppvm)
         {
             try
             {
-                var path = "";
-
-                var product = await _context.Products.FindAsync(id);
-
-                product.Id = ppvm.Id;
-                product.ProductName = ppvm.ProductName;
-                product.Price = ppvm.Price;
-                product.MainDescribe = ppvm.MainDescribe;
-                product.SubDescribe = ppvm.SubDescribe;
-                product.ShortDescribe = ppvm.ShortDescribe;
-
-                if (ppvm.imageFile != null)
+                if (ppvm != null)
                 {
-                 
-                    if (!string.IsNullOrEmpty(product.Img))
+                    var path = "";
+                    var product = await _context.Products.FindAsync(id);
+                    if (product != null)
                     {
-                        var oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, product.Img);
-                        if (System.IO.File.Exists(oldImagePath))
+                        if (ppvm.imageFile != null)
                         {
-                            System.IO.File.Delete(oldImagePath);
+                            if (!string.IsNullOrEmpty(product.Img))
+                            {
+                                var oldImagePath = Path.Combine(@$"{_webHostEnvironment.WebRootPath}{product.Img}");
+                                if (System.IO.File.Exists(oldImagePath))
+                                {
+
+                                    var categorys = new string[] { "", "planeTK", "Books", "Transport", "Attractions" };
+                                    var newImagePath = @$"/images/Images.Project/{categorys[ppvm.Id]}/{DateTime.Now.Ticks}_{ppvm.imageFile.FileName}";
+                                    using (var fs = new FileStream($"{_webHostEnvironment.WebRootPath}{newImagePath}", FileMode.Create))
+                                    {
+                                        await ppvm.imageFile.CopyToAsync(fs);
+                                    }
+                                    System.IO.File.Delete(oldImagePath.ToString());
+                                    product.Id = ppvm.Id;
+                                    product.ProductName = ppvm.ProductName;
+                                    product.Price = ppvm.Price;
+                                    product.MainDescribe = ppvm.MainDescribe;
+                                    product.SubDescribe = ppvm.SubDescribe;
+                                    product.ShortDescribe = ppvm.ShortDescribe;
+                                    product.Img = newImagePath;
+
+                                    _context.Entry(product).State = EntityState.Modified;
+                                    await _context.SaveChangesAsync();
+                                    return Ok(product);
+                                }
+                            }
                         }
                     }
-                    var tempPath = Path.GetTempFileName();
-                    using (var fs = new FileStream(tempPath, FileMode.Create))
-                    {
-                        await ppvm.imageFile.CopyToAsync(fs);
-                    }
-                    var categorys = new string[] { "", "planeTK", "Books", "Transport", "Attractions" };
-                    path = $"Images.Project/{categorys[ppvm.Id]}/{DateTime.Now.Ticks}_{ppvm.imageFile.FileName}";
-                    var newPath = Path.Combine(_webHostEnvironment.WebRootPath, "images", path);
-                    System.IO.File.Move(tempPath, newPath);
-                    product.Img = newPath;
-
                 }
-                _context.Entry(product).State = EntityState.Modified;
-                await _context.SaveChangesAsync();
-                return Ok(product);
+                return BadRequest();
             }
             catch (DbUpdateConcurrencyException)
             {
