@@ -82,6 +82,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
         [HttpPost]
         public async Task<IActionResult> AdminPostProduct([FromForm] PostProductViewModel pp)
         {
+            if (pp == null) return BadRequest();
             try
             {
                 var categorys = new string[] { "", "planeTK", "Books", "Transport", "Attractions" };
