@@ -34,7 +34,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers
         {
             return _db.OrderDetails.Select(x => new OrderDTO
             {
-                Id=x.Id,
+                Id = x.Id,
                 OrderId = x.OrderId,
                 PlanId = x.PlanId,
                 Quantity = x.Quantity,
@@ -52,61 +52,35 @@ namespace TravelProject1._0.Areas.Admin.Controllers
 
 
 
-        
-        public async Task<IEnumerable<OrderDTO>> OrderSeachL(OrderDTO order )
+
+        public async Task<object> OrderSeachL()
         {
-            //if (order.OrderId != 0)
-            //{
-            //    return _db.OrderDetails.Include(t => t.Plan)                   
-            //        .Where(y =>
-            //        y.OrderId == (order.OrderId)
-            //        || y.PlanId == (order.PlanId)
-            //        //|| y.OrderDate == (order.OrderDate)
-            //        )
-            //        .OrderByDescending(o => o.Id)
-            //        .Select(x => new OrderDTO
-            //        {
-            //            Id = x.Id,
-            //            OrderId = x.OrderId,                        
-            //            PlanId = x.PlanId,
-            //            Quantity = x.Quantity,
-            //            UnitPrice = x.UnitPrice,
-            //            UseDate = x.UseDate,
-            //            Name= x.Plan.Name,
-            //        }
-            //        );
-            //}
-
-            //return _db.OrderDetails.Include(t => t.Plan).OrderByDescending(o => o.Id).Select(x => new OrderDTO
-            //{
-            //    Id = x.Id,
-            //    OrderId = x.OrderId,
-            //    PlanId = x.PlanId,
-            //    Quantity = x.Quantity,
-            //    UnitPrice = x.UnitPrice,
-            //    UseDate = x.UseDate,
-            //    Name = x.Plan.Name,
-            //});
-
-
-
-            return _db.OrderDetails
-                .Include(t => t.Plan)
-                .OrderByDescending(o => o.Id)
+            var result = await _db.OrderDetails.AsNoTracking()
+                .Include(t => t.Order)
                 .GroupBy(x => x.OrderId)
-                .Select(group => new OrderDTO
+                .Select(x => new
                 {
-                    Id = group.Select(x => x.Id).SingleOrDefault(),
-                    OrderId = group.Key,
-                    PlanId = group.Select(x => x.PlanId).SingleOrDefault(), // 将多个 PlanId 添加到列表中
-                    Quantity = (short?)group.Sum(x => x.Quantity),
-                    UnitPrice = group.Average(x => x.UnitPrice),
-                    UseDate = group.Max(x => x.UseDate),
-                    Name = group.Select(x => x.Plan.Name).SingleOrDefault() // 使用 FirstOrDefault() 获取名称
+                    OrderId = x.Key,
+                    TotalPrice = x.First().Order.TotalPrice,
+                    Status = x.First().Order.Status,
+                    NewPoint = x.First().Order.NewPoint,
+                    OrderDate = x.First().Order.OrderDate,
+                    UserId = x.First().Order.UserId,
+
+                    od = x.Select(z => new
+                    {
+                        z.Odname,
+                        z.PlanId,
+                        z.Id,
+                        z.Odimg,
+                        z.Quantity,
+                        z.UnitPrice,
+                        z.UseDate,
+                    })
                 })
-                .ToList();
+                .ToListAsync();
 
-
+            return result;
 
 
 
@@ -121,7 +95,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers
                 return "修改失敗";
             }
 
-            var ORD = await _db.OrderDetails.Where(od=>od.OrderId== orderId && od.PlanId == planId).FirstOrDefaultAsync();
+            var ORD = await _db.OrderDetails.Where(od => od.OrderId == orderId && od.PlanId == planId).FirstOrDefaultAsync();
 
             ORD.OrderId = order.OrderId;            //至少要有orderId  跟要改項目
             //ORD.PlanId=order.PlanId;
@@ -145,29 +119,23 @@ namespace TravelProject1._0.Areas.Admin.Controllers
 
 
 
-        [HttpDelete("{orderId}/{planId}")]
-        public async Task<string> OrderDELETE(int orderId,int planId)
+        [HttpDelete("{orderId}")]
+        public async Task<bool> OrderDELETE(int orderId)
         {
-
-            if (_db.OrderDetails == null)
-            {
-                return "刪除失敗";
-            }
-            var ORD = await _db.OrderDetails.Where(od => od.OrderId == orderId && od.PlanId == planId).FirstOrDefaultAsync();
-            if (ORD == null)
-            {
-                return "刪除失敗";
-            }
             try
             {
-                _db.OrderDetails.Remove(ORD);
+                var od = _db.OrderDetails.Where(x => x.OrderId == orderId);
+                _db.OrderDetails.RemoveRange(od);
+                var order = _db.Orders.First(x => x.OrderId == orderId);
+                _db.Orders.Remove(order);
                 await _db.SaveChangesAsync();
+                return true;
             }
-            catch
+            catch (Exception)
             {
-                return "刪除關聯失敗";
+                return false;
             }
-            return "刪除成功";
+            
         }
 
 
