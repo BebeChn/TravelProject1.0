@@ -4,7 +4,6 @@
     <link href="~/css/admindashboard.css" rel="stylesheet" />
 }
 
-
 <!--app-->
 <div id="app">
     <!--app-->
@@ -24,50 +23,52 @@
     </div>
     <br>
     <!--第二段-->
-    <div class="container-fluid  row  ">
+    <div class="container-fluid  row">
         <div class="col-9"></div>
-        <div class="col-3  " style="width:25%; color: gray; ">
+        <div class="col-3" style="width:25%; color: gray; ">
             關鍵字搜尋：<input type="text" v-model="Filter" class="form-control" placeholder="請輸入篩選關鍵字" @@keyup="filterorder" />
         </div>
     </div>
     <br>
     <!--第三段-->
     <div class="container-fluid ">
-        <!--管理選單-->
-@*        <div class="col-1">
-        </div>*@
-        <!--管理內容-->
-        <div class=" table-responsive"  >
-            <table class="table table-bordered "  >
+        <div class=" table-responsive">
+            <table class="table table-bordered ">
                 <thead>
                     <tr>
-                        <th >訂單ID</th>
-                        <th>商品方案ID</th>
-                        <th>名稱</th>
-                        <th>數量</th>
-                        <th>商品價格</th>
-                        <th>成立日期</th>
+                        <th>訂單ID</th>
+                        <th>總價</th>
+                        <th>訂單狀態</th>
+                        <th>訂單日期</th>
+                        <th>訂購人ID</th>
+                        <th>獲得點數</th>
                         <th>操作 </th>
                     </tr>
                 </thead>
                 <tbody>
-
-                    <tr v-for="item in OrderDTOes "  >
+                    <tr v-for="item in order ">
                         <template v-if="item.Edit==true" class="text-center">
-                            <td><label>{{item.orderId}}</label></td>
-                            <td><label>{{item.planId}}</label></td>
-                            <td><label>{{item.name}}</label></td>
-                            <td><input v-model="item.quantity" /></td>
-                            <td><label>{{item.unitPrice}}</label></td>
-                            <td><input type="date" v-model="item.useDate" /></td>
+                            <td>{{item.orderId}}</td>
+                            <td>{{item.totalPrice}}</td>
+                            <td>
+                                <select class="w-100 form-control" v-model="editOrder.status">
+                                    <option value="false">false</option>
+                                    <option value="success">success</option>
+                                </select>
+                            </td>
+                            <td>
+                                <input class="w-100 form-control" type="date" v-model="editOrder.orderDate">
+                            </td>
+                            <td>{{item.userId}}</td>
+                            <td>{{item.newPoint}}</td>
                             <td>
                                 <div class="d-flex justify-content-around">
-                                    <button type="button" class="btn btn-success" @@click="update(item)">
+                                    <button type="button" class="btn btn-success" @@click="UpdateOrder(item)">
                                         <div class="horizontal-text">
                                             <span>儲存</span>
                                         </div>
                                     </button>
-                                    <button type="button" class="btn btn-info" @@click="cancel">
+                                    <button type="button" class="btn btn-info" @@click="cancelChangeOrder(item)">
                                         <div class="horizontal-text">
                                             <span>取消</span>
                                         </div>
@@ -76,21 +77,25 @@
                             </td>
                         </template>
                         <template v-else class="text-center">
-                            <td><label>{{item.orderId}}</label></td>
-                            <td><label>{{item.planId}}</label></td>
-                            <td><label>{{item.name}}</label></td>
-                            <td><label>{{item.quantity}}</label> </td>
-                            <td><label>{{item.unitPrice}}</label></td>
-                            <td><label>{{item.useDate}}</label></td>
+                            <td>{{item.orderId }}</td>
+                            <td>{{item.totalPrice }}</td>
+                            <td>{{item.status }}</td>
+                            <td>{{item.orderDate }}</td>
+                            <td>{{item.userId }}</td>
+                            <td>{{item.newPoint }}</td>
                             <td>
                                 <div class="d-flex justify-content-around">
-                                    <button :disabled="notchange" type="button" class="btn  btn-warning" @@click="edit(item.orderId,item.planId)">
+                                    <button :disabled="notchange" type="button" class="btn btn-primary" data-toggle="modal" data-target="#detailModal" @@click="openOrderDetail(item)">
+                                        <div class="horizontal-text ">
+                                            <span>查看</span>
+                                        </div>
+                                    </button>
+                                    <button :disabled="notchange" type="button" class="btn  btn-warning" @@click="openChangeOrder(item)">
                                         <div class="horizontal-text ">
                                             <span>修改</span>
                                         </div>
                                     </button>
-
-                                    <button :disabled="notchange" type="button" class="btn btn-danger" @@click="deleteOrder(item.orderId,item.planId)">
+                                    <button :disabled="notchange" type="button" class="btn btn-danger" @@click="deleteOrder(item.orderId)">
                                         <div class="horizontal-text">
                                             <span>刪除</span>
                                         </div>
@@ -99,215 +104,211 @@
                             </td>
                         </template>
                     </tr>
-
                 </tbody>
             </table>
         </div>
     </div>
-    <!--app-->
+
+    <div class="modal fade" id="detailModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid ">
+                        <div class=" table-responsive">
+                            <table class="table table-bordered ">
+                                <thead>
+                                    <tr>
+                                        <th>明細ID</th>
+                                        <th>圖片</th>
+                                        <th>名稱</th>
+                                        <th>數量</th>
+                                        <th>價錢</th>
+                                        <th>使用日期</th>
+                                        <th>操作 </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="item in detail ">
+                                        <template v-if="item.Edit==true" class="text-center">
+                                            <td>{{item.id}}</td>
+                                            <td style="width:200px"><img class="w-100" :src="item.odimg" /></td>
+                                            <td>{{item.odname}}</td>
+                                            <td>{{item.quantity}}</td>
+                                            <td>{{item.unitPrice}}</td>
+                                            <td><input type="date" v-model="editDetail.useDate" /></td>
+                                            <td>
+                                                <div class="d-flex justify-content-around">
+                                                    <button type="button" class="btn btn-success" @@click="UpdateDetail(item)">
+                                                        <div class="horizontal-text">
+                                                            <span>儲存</span>
+                                                        </div>
+                                                    </button>
+                                                    <button type="button" class="btn btn-info" @@click="cancelChangeDetail(item)">
+                                                        <div class="horizontal-text">
+                                                            <span>取消</span>
+                                                        </div>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </template>
+                                        <template v-else class="text-center">
+                                            <td>{{item.id}}</td>
+                                            <td style="width:200px"><img class="w-100" :src="item.odimg" /></td>
+                                            <td>{{item.odname}}</td>
+                                            <td>{{item.quantity}}</td>
+                                            <td>{{item.unitPrice}}</td>
+                                            <td>{{item.useDate}}</td>
+                                            <td>
+                                                <div class="d-flex justify-content-around">
+                                                    <button :disabled="notchange" type="button" class="btn  btn-warning" @@click="openChangeDetail(item)">
+                                                        <div class="horizontal-text ">
+                                                            <span>修改</span>
+                                                        </div>
+                                                    </button>
+                                                    <button :disabled="notchange" type="button" class="btn btn-danger" @@click="deleteDetail(item)">
+                                                        <div class="horizontal-text">
+                                                            <span>刪除</span>
+                                                        </div>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </template>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
-<!--app-->
-<br />
-<br />
-
-
-
-
-
-
 
 @section Scripts{
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js" integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://unpkg.com/vue@next"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous">
+    <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     </script>
     <script src="https://kit.fontawesome.com/ea5c2c7c03.js" crossorigin="anonymous"></script>
-
-
-
-
-
     <script>
-        var baseAddress = "https://localhost:7025";
-        var vueApp = {
+        var app = Vue.createApp({
             data() {
                 return {
-                    OrderDTOes: [],
-                    Filter: '',
-                    //
-                    //originalorderDate: '',
-                    //
-                    originalquantity: '',
-                    //originaldiscount: '',
-                    originaluseDate: '',
-
+                    order: [],
+                    detail:[],
+                    editOrder: {
+                        status: "",
+                        orderDate: ""
+                    },
+                    editDetail: {
+                        useDate: ""
+                    }
                 };
             },
             mounted: function () {
-                let _this = this;
-                //alert("mouned");
-                _this.filterorder();
+                this.getApiOrder();
             },
-            computed: {               
-                notchange: function () {
-                    return this.OrderDTOes.some(x => x.Edit);
-                },
+            computed: {
+
             },
             methods: {
-
-
-                filterorder: function () {
-                    let _this = this;
-                    //alert("篩選");
-                    var request = {};
-
-                    //查詢
-                    //request.OrderId  = _this.Filter;
-                    request.OrderId = isNaN(Number(_this.Filter)) ? -1 : Number(_this.Filter);
-                    request.UserId = request.OrderId;
-                    //request.OrderDate = _this.Filter;
-                    axios.post(`${baseAddress}/api/Order/OrderSeachL`, request)
-                        .then(response => {
-                            _this.OrderDTOes = response.data;
-                            for (var i = 0; i < _this.OrderDTOes.length; i++) {
-                                var item = _this.OrderDTOes[i];
-                                item.Edit = false;
-                                if (_this.OrderDTOes[i].useDate) {
-                                    var d = new Date(_this.OrderDTOes[i].useDate);
-                                    var m = (d.getMonth() + 1).toString();
-                                    var dy = (d.getDate()).toString();      
-                                    _this.OrderDTOes[i].useDate = `${d.getFullYear()}-${m.length == 1 ? m.padStart(2, "0") : m}-${dy.length == 1 ? dy.padStart(2, "0") : dy}`
-                                } else {
-                                    _this.OrderDTOes[i].useDate = "";
-                                }
-                                
+                getApiOrder: function () {
+                    let self = this;
+                    fetch("/api/order/OrderSeachL").then(x => x.json()).then(x => self.order = x.map(z => ({...z,Edit:false})));
+                },
+                deleteDetail: function (od) {
+                    let self = this;
+                    fetch("/api/order/OrderDetailDELETE/" + od.id, { method: "delete" }).then(x => x.json())
+                        .then(x => {
+                            if (x) {
+                                alert("刪除成功");
+                                var idx = this.order.findIndex(x => x.orderId == od.orderId);
+                                var odIdx = this.order[idx].od.findIndex(x=> x.id == od.id);
+                                this.order[idx].od.splice(odIdx, 1);
+                            } else {
+                                alert("刪除成功");
                             }
-
-
-
-
-                        })
-                        .catch(err => {
-                            alert(err);
                         });
-
-
- 
-
-                    //直接GET
-                    //axios.get(`${baseAddress}/api/Order/OrderGET`)
-                    //    .then(response => {
-                    //        _this.OrderDTOes = response.data;
-                    //        for (var i = 0; i < _this.OrderDTOes.length; i++) {
-                    //            var item = _this.OrderDTOes[i];
-                    //            item.Edit = false;
-                    //        }
-                    //    })
-                    //    .catch(err => {
-                    //        alert(err);
-                    //    });
-
                 },
-
-                //edit
-                edit: function (orderId, planId) {
-                    //alert("edit");
-                    let _this = this;
-                    for (var i = 0; i < _this.OrderDTOes.length; i++) {
-                        var item = _this.OrderDTOes[i];
-                        if (item.orderId == orderId && item.planId == planId) {
-                            item.Edit = true;
-
-                            //_this.originalorderDate = item.orderDate;
-                            _this.originalquantity = item.quantity;
-                            //_this.originaldiscount = item.discount;
-                            _this.originaluseDate = item.useDate;
-
-                        }
-                    }
+                openOrderDetail: function (order) {
+                    this.detail = order.od;
                 },
-                //
-                cancel: function () {
-                    let _this = this;
-                    for (var i = 0; i < _this.OrderDTOes.length; i++) {
-                        var item = _this.OrderDTOes[i];
-                        if (item.Edit == true) {
-                            item.Edit = false;
-                            //item.orderDate = _this.originalorderDate;
-                            item.quantity = _this.originalquantity;
-                            //item.discount = _this.originaldiscount;
-                            item.useDate = _this.originaluseDate;
-
-                        }
-                    }
-                },
-                //
-                update: function (item) {
-                    let _this = this;
-                    var request = {};
-                    request.orderId = item.orderId;         //至少要有orderId  跟要改項目
-                    //request.userId = item.userId;
-                    //request.orderDate = item.orderDate;
-                    request.quantity = item.quantity;
-                    //request.discount = item.discount;
-                    request.useDate = item.useDate;
-
-                    axios.put(`${baseAddress}/api/Order/OrderPUT/${item.orderId}/${item.planId}`, request).then(response => {
-                        alert(response.data);
-                        _this.filterorder();
-                    }).catch(err => {
-                        alert(err);
-                    });
-                },
-                //
-                deleteOrder: function (orderId, planId) {
-                    var ret = confirm('確定要刪除嗎');
-                    let _this = this;
-
-                    if (ret == true) {
-                        axios.delete(`${baseAddress}/api/Order/OrderDELETE/${orderId}/${planId}`).then(response => {
-                            alert(response.data);
-                            _this.filterorder();
-                        }).catch(err => {
-                            alert(err);
+                UpdateDetail: function (od) {
+                    fetch("/api/order/DetailPUT/" + od.id, { method: "put", headers: { "Content-Type": "application/json" }, body: JSON.stringify(this.editDetail) })
+                        .then(x => x.json()).then(x => {
+                            if (x) {
+                                alert("修改成功");
+                                console.log(this.order);
+                                var idx = this.order.findIndex(x => x.orderId == od.orderId);
+                                var odIdx = this.order[idx].od.findIndex(x => x.id == od.id);
+                                this.order[idx].od[odIdx].useDate = this.editDetail.useDate;
+                                od.Edit = false;
+                            } else {
+                                alert("修改失敗");
+                            }
                         })
-                    }
-
                 },
+                UpdateOrder: function (or) {
+                    fetch("/api/order/OrderPUT/" + or.orderId, { method: "put", headers: { "Content-Type": "application/json" }, body: JSON.stringify(this.editOrder) })
+                        .then(x => x.json()).then(x => {
+                            if (x) {
+                                alert("修改成功");
+                                console.log(this.order);
+                                for (var i = 0; i < this.order.length; i++) {
+                                    if (this.order[i].orderId == or.orderId) {
+                                        this.order[i].status = this.editOrder.status;
+                                        this.order[i].orderDate = this.editOrder.orderDate;
+                                        this.order[i].Edit = false;
+                                        return;
+                                    }
+                                }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                            } else {
+                                alert("修改失敗");
+                            }
+                        })
+                },
+                openChangeDetail: function (item) {
+                    item.Edit = true;
+                    this.editDetail.useDate = item.useDate;
+                },
+                openChangeOrder: function (item) {
+                    item.Edit = true;
+                    this.editOrder.status = item.status;
+                    this.editOrder.orderDate = item.orderDate;
+                },
+                cancelChangeOrder: function (item) {
+                    item.Edit = false;
+                    this.editOrder.status = ""
+                    this.editOrder.orderDate = ""
+                },
+                cancelChangeDetail: function (item) {
+                    item.Edit = false;
+                    this.editDetail.useDate ="";
+                },
+                deleteOrder: function (id) {
+                    let self = this;
+                    fetch("/api/order/OrderDELETE/" + id, { method: "delete" }).then(x => x.json())
+                        .then(x => {
+                            if (x) {
+                                alert("刪除成功");
+                                var idx = this.order.findIndex(x => x.orderId == id);
+                                this.order.splice(idx, 1);
+                            } else {
+                                alert("刪除成功");
+                            }
+                        });
+                }
             }
-
-        };
-        var app = Vue.createApp(vueApp).mount("#app");
-
+        }).mount("#app");
     </script>
-
-
-
-
-
-
-
-
-
-
-
 }

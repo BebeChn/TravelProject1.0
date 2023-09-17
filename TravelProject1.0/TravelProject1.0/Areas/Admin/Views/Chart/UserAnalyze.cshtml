@@ -136,6 +136,7 @@
 				response.data.forEach(item => {
 					if (item.name === "男性") maleCount = item.y;
 					if (item.name === "女性") femaleCount = item.y;
+					if (item.name === "不指定") noGroupCount = item.y;
 				});
 				Highcharts.chart('genderGroup', {
 					chart: {
@@ -151,7 +152,7 @@
 						align: 'center'
 					},
 					subtitle: {
-						text: `男性會員:${maleCount}<br/>女性會員:${femaleCount}`,
+						text: `男性會員:${maleCount}<br/>女性會員:${femaleCount}<br/>未指定:${noGroupCount}`,
 						align: 'left'
 					},
 					accessibility: {

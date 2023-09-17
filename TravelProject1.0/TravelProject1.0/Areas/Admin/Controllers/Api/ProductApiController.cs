@@ -1,8 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Drawing;
-using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using TravelProject1._0.Areas.Admin.Models.DTO;
@@ -32,7 +31,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
         [HttpGet]
         public List<GetProductDTO> AdminGetProduct()
         {
-            var query = _context.Products.AsNoTracking().Select(p => new GetProductDTO
+            return _context.Products.AsNoTracking().Select(p => new GetProductDTO
             {
                 ProductId = p.ProductId,
                 Id = p.Id,
@@ -41,10 +40,8 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
                 Price = p.Price,
                 SubDescribe = p.SubDescribe,
                 ShortDescribe = p.ShortDescribe,
-                //ImagePath = string.IsNullOrEmpty(p.Img) ? "" : Path.Combine("//", p.Img)
-                ImagePath = p.Img.Replace(@"\", "/"),
+                ImagePath = string.IsNullOrEmpty(p.Img) ? "" : Path.Combine("//", p.Img)
             }).ToList();
-            return query;
         }
 
         //商品明細
@@ -66,8 +63,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
                     Price = product.Price,
                     SubDescribe = product.SubDescribe,
                     ShortDescribe = product.ShortDescribe,
-                    //ImagePath = Path.Combine("//", product.Img)
-                    ImagePath = product.Img.Replace(@"\", "/"),
+                    ImagePath = Path.Combine("//", product.Img)
                 };
 
                 return Ok(gpd);
@@ -82,7 +78,6 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
         [HttpPost]
         public async Task<IActionResult> AdminPostProduct([FromForm] PostProductViewModel pp)
         {
-            if (pp == null) return BadRequest();
             try
             {
                 var categorys = new string[] { "", "planeTK", "Books", "Transport", "Attractions" };
@@ -91,11 +86,10 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
                 {
                     if (pp.File.Length > 0)
                     {
-                        path = @$"\images\Images.Project\{categorys[pp.Id]}\{DateTime.Now.Ticks}_{pp.File.FileName}";
+                        path = @$"/images/Images.Project/{categorys[pp.Id]}/{DateTime.Now.Ticks}_{pp.File.FileName}";
 
                         using (var fs = new FileStream($"{_webHostEnvironment.WebRootPath}/{path}", FileMode.Create))
                         {
-                            //It copies the contents of the uploaded file to the destination stream represented by `fs`
                             await pp.File.CopyToAsync(fs);
                         }
                     }
@@ -121,14 +115,12 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
             }
 
         }
-
+        //修改商品
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutProduct(int id, [FromForm] PutProductVIewModel ppvm)
+        public async Task<bool> PutProduct(int id, PutProductVIewModel ppvm)
         {
             try
             {
-                var path = "";
-
                 var product = await _context.Products.FindAsync(id);
 
                 product.Id = ppvm.Id;
@@ -138,41 +130,16 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
                 product.SubDescribe = ppvm.SubDescribe;
                 product.ShortDescribe = ppvm.ShortDescribe;
 
-                if (ppvm.imageFile != null)
-                {
-
-                    string oldImagePath = Path.Combine(@$"{_webHostEnvironment.WebRootPath}{product.Img}");
-
-                    if (System.IO.File.Exists(oldImagePath))
-                    {
-                        System.IO.File.Delete(oldImagePath);
-                    }
-
-                    var tempPath = Path.GetTempFileName();
-                    using (var fs = new FileStream(tempPath, FileMode.Create))
-                    {
-
-                        await ppvm.imageFile.CopyToAsync(fs);
-                    }
-
-                    var categorys = new string[] { "", "planeTK", "Books", "Transport", "Attractions" };
-
-                    path = @$"\images\Images.Project\{categorys[ppvm.Id]}\{DateTime.Now.Ticks}_{ppvm.imageFile.FileName}";
-                    using (var fs = new FileStream($"{_webHostEnvironment.WebRootPath}/{path}", FileMode.Create))
-                    {
-                        await ppvm.imageFile.CopyToAsync(fs);
-                    }
-                    product.Img = path;
-                }
                 _context.Entry(product).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
-                return Ok(product);
             }
-            catch (IOException)
+            catch (DbUpdateConcurrencyException)
             {
-                return BadRequest();
+                return false;
             }
+            return true;
         }
+
         //刪除
         [HttpDelete("{id}")]
         public async Task<string> DeleteProduct(int id)
@@ -225,6 +192,54 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
             var searchResults = _searchService.SearchUsers(query);
             return Ok(searchResults);
         }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutProduct2(int id, [FromForm] PutProductVIewModel ppvm)
+        {
+            try
+            {
+                if (ppvm != null)
+                {
+                    var path = "";
+                    var product = await _context.Products.FindAsync(id);
+                    if (product != null)
+                    {
+                        if (ppvm.imageFile != null)
+                        {
+                            if (!string.IsNullOrEmpty(product.Img))
+                            {
+                                var oldImagePath = Path.Combine(@$"{_webHostEnvironment.WebRootPath}{product.Img}");
+                                if (System.IO.File.Exists(oldImagePath))
+                                {
 
+                                    var categorys = new string[] { "", "planeTK", "Books", "Transport", "Attractions" };
+                                    var newImagePath = @$"/images/Images.Project/{categorys[ppvm.Id]}/{DateTime.Now.Ticks}{ppvm.imageFile.FileName}";
+                                    using (var fs = new FileStream($"{_webHostEnvironment.WebRootPath}{newImagePath}", FileMode.Create))
+                                    {
+                                        await ppvm.imageFile.CopyToAsync(fs);
+                                    }
+                                    System.IO.File.Delete(oldImagePath.ToString());
+                                    product.Id = ppvm.Id;
+                                    product.ProductName = ppvm.ProductName;
+                                    product.Price = ppvm.Price;
+                                    product.MainDescribe = ppvm.MainDescribe;
+                                    product.SubDescribe = ppvm.SubDescribe;
+                                    product.ShortDescribe = ppvm.ShortDescribe;
+                                    product.Img = newImagePath;
+
+                                    _context.Entry(product).State = EntityState.Modified;
+                                    await _context.SaveChangesAsync();
+                                    return Ok(product);
+                                }
+                            }
+                        }
+                    }
+                }
+                return BadRequest();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return BadRequest();
+            }
+        }
     }
 }

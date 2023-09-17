@@ -34,7 +34,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers
         {
             return _db.OrderDetails.Select(x => new OrderDTO
             {
-                Id=x.Id,
+                Id = x.Id,
                 OrderId = x.OrderId,
                 PlanId = x.PlanId,
                 Quantity = x.Quantity,
@@ -52,122 +52,116 @@ namespace TravelProject1._0.Areas.Admin.Controllers
 
 
 
-        
-        public async Task<IEnumerable<OrderDTO>> OrderSeachL(OrderDTO order )
+
+        public async Task<object> OrderSeachL()
         {
-            //if (order.OrderId != 0)
-            //{
-            //    return _db.OrderDetails.Include(t => t.Plan)                   
-            //        .Where(y =>
-            //        y.OrderId == (order.OrderId)
-            //        || y.PlanId == (order.PlanId)
-            //        //|| y.OrderDate == (order.OrderDate)
-            //        )
-            //        .OrderByDescending(o => o.Id)
-            //        .Select(x => new OrderDTO
-            //        {
-            //            Id = x.Id,
-            //            OrderId = x.OrderId,                        
-            //            PlanId = x.PlanId,
-            //            Quantity = x.Quantity,
-            //            UnitPrice = x.UnitPrice,
-            //            UseDate = x.UseDate,
-            //            Name= x.Plan.Name,
-            //        }
-            //        );
-            //}
-
-            //return _db.OrderDetails.Include(t => t.Plan).OrderByDescending(o => o.Id).Select(x => new OrderDTO
-            //{
-            //    Id = x.Id,
-            //    OrderId = x.OrderId,
-            //    PlanId = x.PlanId,
-            //    Quantity = x.Quantity,
-            //    UnitPrice = x.UnitPrice,
-            //    UseDate = x.UseDate,
-            //    Name = x.Plan.Name,
-            //});
-
-
-
-            return _db.OrderDetails
-                .Include(t => t.Plan)
-                .OrderByDescending(o => o.Id)
+            var result = await _db.OrderDetails.AsNoTracking()
+                .Include(t => t.Order)
                 .GroupBy(x => x.OrderId)
-                .Select(group => new OrderDTO
+                .Select(x => new
                 {
-                    Id = group.Select(x => x.Id).SingleOrDefault(),
-                    OrderId = group.Key,
-                    PlanId = group.Select(x => x.PlanId).SingleOrDefault(), // 将多个 PlanId 添加到列表中
-                    Quantity = (short?)group.Sum(x => x.Quantity),
-                    UnitPrice = group.Average(x => x.UnitPrice),
-                    UseDate = group.Max(x => x.UseDate),
-                    Name = group.Select(x => x.Plan.Name).SingleOrDefault() // 使用 FirstOrDefault() 获取名称
+                    OrderId = x.Key,
+                    TotalPrice = x.First().Order.TotalPrice,
+                    Status = x.First().Order.Status,
+                    NewPoint = x.First().Order.NewPoint,
+                    OrderDate = x.First().Order.OrderDate.GetValueOrDefault().ToString("yyyy-MM-dd"),
+                    UserId = x.First().Order.UserId,
+
+                    od = x.Select(z => new
+                    {
+                        z.OrderId,
+                        z.Odname,
+                        z.PlanId,
+                        z.Id,
+                        z.Odimg,
+                        z.Quantity,
+                        z.UnitPrice,
+                        UseDate = z.UseDate.HasValue ? z.UseDate.Value.ToString("yyyy-MM-dd"): "",
+                    })
                 })
-                .ToList();
+                .ToListAsync();
 
-
+            return result;
 
 
 
         }
+        [HttpPut("{Id}")]
+        public async Task<bool> DetailPUT(int Id, DetailUpdateDTO data)
+        {
+            try
+            {
+                var od = _db.OrderDetails.FirstOrDefault(x => x.Id == Id);
+                if (od == null) return false;
+                od.UseDate = data.UseDate;
+                await _db.SaveChangesAsync();
+                return true;
 
-        [HttpPut("{orderId}/{planId}")]
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+        
+        [HttpPut("{orderId}")]
         //PUT
-        public async Task<string> OrderPUT(int orderId, int planId, OrderDTO order)
+        public async Task<bool> OrderPUT(int orderId, OrderUpdateDTO data)
         {
-            if (orderId != order.OrderId)
-            {
-                return "修改失敗";
-            }
-
-            var ORD = await _db.OrderDetails.Where(od=>od.OrderId== orderId && od.PlanId == planId).FirstOrDefaultAsync();
-
-            ORD.OrderId = order.OrderId;            //至少要有orderId  跟要改項目
-            //ORD.PlanId=order.PlanId;
-            ORD.Quantity = order.Quantity;
-            ORD.UseDate = order.UseDate;
-
-            _db.Entry(ORD).State = EntityState.Modified;
-
             try
             {
-                await _db.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                throw;
-            }
+                var order = _db.Orders.FirstOrDefault(x => x.OrderId == orderId);
+                if (order == null) return false;
 
-            return "成功";
+                order.OrderDate = data.OrderDate;
+                order.Status = data.Status;
+                await _db.SaveChangesAsync();
+                return true;
+                  
+            }
+            catch (Exception)
+            {
+                return false;                
+            }
         }
 
 
-
-
-        [HttpDelete("{orderId}/{planId}")]
-        public async Task<string> OrderDELETE(int orderId,int planId)
+        
+[HttpDelete("{id}")]
+        public async Task<bool> OrderDetailDELETE(int id)
         {
-
-            if (_db.OrderDetails == null)
-            {
-                return "刪除失敗";
-            }
-            var ORD = await _db.OrderDetails.Where(od => od.OrderId == orderId && od.PlanId == planId).FirstOrDefaultAsync();
-            if (ORD == null)
-            {
-                return "刪除失敗";
-            }
             try
             {
-                _db.OrderDetails.Remove(ORD);
+                var od = _db.OrderDetails.FirstOrDefault(x => x.Id == id);
+                if (od == null) return false;
+                _db.OrderDetails.Remove(od);
                 await _db.SaveChangesAsync();
+                return true;
             }
-            catch
+            catch (Exception)
             {
-                return "刪除關聯失敗";
+                return false;
             }
-            return "刪除成功";
+
+        }
+
+        [HttpDelete("{orderId}")]
+        public async Task<bool> OrderDELETE(int orderId)
+        {
+            try
+            {
+                var od = _db.OrderDetails.Where(x => x.OrderId == orderId);
+                _db.OrderDetails.RemoveRange(od);
+                var order = _db.Orders.First(x => x.OrderId == orderId);
+                _db.Orders.Remove(order);
+                await _db.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            
         }
 
 
