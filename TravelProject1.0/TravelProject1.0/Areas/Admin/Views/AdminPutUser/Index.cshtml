@@ -213,7 +213,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" v-on:click="createUser">新增</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" v-on:click="formClear">取消</button>
                     </div>
                 </div>
             </div>
@@ -414,6 +414,17 @@
                 changePage: function (num) {
                     let _this = this;
                     _this.currentPage = num;
+                },
+                //清除新增會員model資料
+                formClear: function () {
+                    this.newUser = {
+                        name: "",
+                        email: "",
+                        gender: "N",
+                        birthday: "",
+                        phone: "",
+                        password: ""
+                    }
                 }
             },
             filters: {
