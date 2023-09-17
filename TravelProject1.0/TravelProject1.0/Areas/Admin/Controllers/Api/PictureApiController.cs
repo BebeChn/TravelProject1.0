@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Storage;
 using System.Drawing;
 
-namespace TravelProject1._0.Areas.Admin.Controllers
+namespace TravelProject1._0.Areas.Admin.Controllers.Api
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -12,26 +12,23 @@ namespace TravelProject1._0.Areas.Admin.Controllers
         public PictureApiController() { }
 
         [HttpPost]
-        public async Task<IActionResult> UploadPhoto ([FromForm] IFormFile file) 
-        {       
+        public async Task<IActionResult> UploadPhoto([FromForm] IFormFile file)
+        {
             if (file.Length > 0)
             {
                 string filename = Path.GetFileName(file.FileName);
-                string filedata=Path.Combine("uploads",filename);
+                string filedata = Path.Combine("uploads", filename);
                 if (file.ContentType == "Image/jpeg" && file.ContentType == "Image/png")
                 {
-                    using (var stream = new FileStream(filedata,FileMode.Create)) 
+                    using (var stream = new FileStream(filedata, FileMode.Create))
                     {
-                      await file.CopyToAsync(stream);
+                        await file.CopyToAsync(stream);
                     }
                     return Ok();
                 }
                 return BadRequest();
             }
-
             return BadRequest();
-
-
         }
     }
 }
