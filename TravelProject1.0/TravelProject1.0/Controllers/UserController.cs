@@ -44,21 +44,24 @@ namespace TravelProject1._0.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(string email, string password)
         {
-            var userselect = await _context.Users.SingleOrDefaultAsync(u => u.Email == email);
+            ViewData["LoginFailed"] = true;
+            User user = await _context.Users
+                .Where(u => u.Email == email)
+                .FirstOrDefaultAsync();
 
-            if (userselect == null)
+            if (user == null)
             {
                 return View("Login");
             }
 
-            string hashedPassword = HashPassword(password, userselect.Salt);
+            string hashedPassword = HashPassword(password, user.Salt);
 
-            if (userselect.PasswordHash == hashedPassword)
+            if (user.PasswordHash == hashedPassword)
             {
                 var claims = new List<Claim>();
-                claims.Add(new Claim(ClaimTypes.NameIdentifier, userselect.UserId.ToString()));
-                claims.Add(new Claim(ClaimTypes.Name, userselect.Name));
-                claims.Add(new Claim(ClaimTypes.Email, userselect.Email));
+                claims.Add(new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()));
+                claims.Add(new Claim(ClaimTypes.Name, user.Name));
+                claims.Add(new Claim(ClaimTypes.Email, user.Email));
                 claims.Add(new Claim(ClaimTypes.Role, "user"));
                 ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 ClaimsPrincipal principal = new ClaimsPrincipal(identity);
@@ -66,7 +69,7 @@ namespace TravelProject1._0.Controllers
                 {
                     ExpiresUtc = DateTime.UtcNow.AddMinutes(30),
                 }).Wait();
-
+                TempData["SuccessMessage"] = "登入成功";
                 return Redirect("/Home/Index");
             }
             else
