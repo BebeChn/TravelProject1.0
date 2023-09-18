@@ -3,11 +3,14 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using TravelProject1._0.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TravelProject1._0.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Route("[area]/Manage/[action]")]
+    [Authorize(policy:"admin")]
+
     public class AdminManageController : Controller
     {
         private readonly TravelProjectAzureContext _context;
@@ -16,32 +19,30 @@ namespace TravelProject1._0.Areas.Admin.Controllers
         {
             _context = context;
         }
-
+       
         public IActionResult Index()
         {
             return View();
         }
-
+        [AllowAnonymous]
         public IActionResult Login()
         {
             return View();
         }
-
+       
         public IActionResult User()
         {
             return View();
         }
-
         public IActionResult Products()
         {
             return View();
         }
-
         public IActionResult Orders()
         {
             return View();
         }
-
+        [AllowAnonymous]
         [HttpPost]
         public IActionResult Login(string account, string password)
         {
