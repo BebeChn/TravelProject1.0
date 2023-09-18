@@ -64,12 +64,12 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 		[HttpGet]
 		public async Task<GetUsersAnalyzeDTO> GetUsers()
 		{
-			var users = _db.Users.Select(u => new
+			var users = await _db.Users.Select(u => new
 			{
 				UserId = u.UserId,
 				Gender = u.Gender,
 				Age = u.Age
-			}).ToList();
+			}).ToListAsync();
 			var orders = _db.Orders.Select(o => o.UserId).ToList();
 
 			var Male = AgeGroupDictionary(ageGroups);
@@ -129,12 +129,12 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 		[HttpGet]
 		public async Task<IEnumerable<HighChart3DGraph>> GetUserGender()
 		{
-			return _db.Users.AsNoTracking().Where(x => !string.IsNullOrEmpty(x.Gender))
+			return await _db.Users.AsNoTracking().Where(x => !string.IsNullOrEmpty(x.Gender))
 			.Select(x => x.Gender).GroupBy(x => x).Select(x => new HighChart3DGraph
 			{
 				Name = x.Key == "N" ? "不指定" : (x.Key == "F" ? "女性" : "男性"),
 				y = x.Count()
-			});
+			}).ToListAsync();
 		}
 
 		[HttpGet]
@@ -149,7 +149,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 			{
 				int endAge = startAge + rangeAge - 1;
 
-				var result = _db.Users.AsNoTracking()
+				var result =  _db.Users.AsNoTracking()
 					.Where(u => u.Age.HasValue && u.Age >= startAge && u.Age <= endAge)
 					.Select(u => u.Age)
 					.ToList()

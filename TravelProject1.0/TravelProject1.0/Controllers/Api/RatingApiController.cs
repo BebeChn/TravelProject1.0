@@ -1,18 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.DotNet.Scaffolding.Shared.Messaging;
-using Microsoft.EntityFrameworkCore;
-using System.Collections;
-using System.Security.Claims;
+﻿using Microsoft.AspNetCore.Mvc;
 using TravelProject1._0.Models;
 using TravelProject1._0.Models.DTO;
-using TravelProject1._0.Models.ViewModel;
 using TravelProject1._0.Services;
 
 namespace TravelProject1._0.Controllers.Api
 {
-    [Route("api/[controller]/[action]")]
+    [Route("api/Rating/[action]")]
     [ApiController]
     public class RatingApiController : ControllerBase
     {
@@ -25,34 +18,28 @@ namespace TravelProject1._0.Controllers.Api
         }
 
         //商品評價
-        [HttpPost]
-        [Route("{id}")]
-        public async Task<IActionResult> PostRating([FromBody] RatingAddDto model)
+        [HttpPost("{id}")]
+        public async Task<bool> PostRating([FromBody] RatingAddDTO model)
         {
-            if (model == null) return BadRequest();
-
+            if (model == null) return false;
             int userId = _userIdentityService.GetUserId();
-
-            Rating rating = new Rating
-            {
-                UserId = userId,
-                ProductId = model.ProductId,
-                RatingScore = model.RatingScore,
-                Describe = model.Describe,
-                RatingDate = model.RatingDate,
-            };
-
-            await _dbContext.AddAsync(rating);
-
             try
             {
+                await _dbContext.AddAsync(new Rating
+                {
+                    UserId = userId,
+                    ProductId = model.ProductId,
+                    RatingScore = model.RatingScore,
+                    Describe = model.Describe,
+                    RatingDate = model.RatingDate,
+                });
                 await _dbContext.SaveChangesAsync();
+                return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return BadRequest(ex);
+                return false;
             }
-            return Ok();
         }
     }
 }
