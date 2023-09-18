@@ -6,28 +6,46 @@ using TravelProject1._0.Models;
 
 namespace TravelProject1._0.Areas.Admin.Controllers
 {
-	[Area("Admin")]
-	[Route("[area]/Manage/[action]")]
-	public class AdminManageController : Controller
-	{
+    [Area("Admin")]
+    [Route("[area]/Manage/[action]")]
+    public class AdminManageController : Controller
+    {
         private readonly TravelProjectAzureContext _context;
 
         public AdminManageController(TravelProjectAzureContext context)
         {
             _context = context;
         }
-		public IActionResult Index()
-		{
-			return View();
-		}
+
+        public IActionResult Index()
+        {
+            return View();
+        }
+
         public IActionResult Login()
         {
             return View();
         }
-        [HttpPost]
-        public IActionResult Login(string account,string password)
+
+        public IActionResult User()
         {
-            var admin = _context.Admins.FirstOrDefault(a=>a.Account==account&&a.Password==password);
+            return View();
+        }
+
+        public IActionResult Products()
+        {
+            return View();
+        }
+
+        public IActionResult Orders()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Login(string account, string password)
+        {
+            var admin = _context.Admins.FirstOrDefault(a => a.Account == account && a.Password == password);
             if (admin == null)
             {
                 return View();
