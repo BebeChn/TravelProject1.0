@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace TravelProject1._0.Models.DTO
+namespace TravelProject1._0.Areas.Admin.Models.DTO
 {
     public class AdminDTO
     {

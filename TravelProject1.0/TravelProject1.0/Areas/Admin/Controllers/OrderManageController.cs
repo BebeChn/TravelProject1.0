@@ -3,14 +3,12 @@
 namespace TravelProject1._0.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class HomeController : Controller
+    [Route("[area]/Manage/[action]")]
+    public class OrderManageController : Controller
     {
-        public IActionResult Index()
+        public IActionResult Orders()
         {
             return View();
         }
-
-        
-
     }
 }

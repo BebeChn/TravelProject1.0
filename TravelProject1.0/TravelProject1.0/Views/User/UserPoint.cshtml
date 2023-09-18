@@ -148,7 +148,6 @@
     <script src="https://unpkg.com/vuejs-paginate@0.9.0"></script>
     <script>
         Vue.component('paginate', VuejsPaginate)
-        var baseAddress = "https://localhost:7025";
         var vueApp = new Vue({
             el: '#app',
             data: {
@@ -170,14 +169,14 @@
             },
             mounted: function () {
                 let _this=this
-                fetch(`${baseAddress}/api/Orderapi/GetPoint`).then(response => {
+                fetch(`/api/Orderapi/GetPoint`).then(response => {
                     if (response.ok) return response.text();
                 }).then(data => {
                     _this.now = data;
                 }).catch(err => {
                     alert("讀取點數錯誤")
                 });
-                fetch(`${baseAddress}/api/Orderapi/OrderDetailsGetPoint`).then(response => {
+                fetch(`/api/Orderapi/OrderDetailsGetPoint`).then(response => {
                     if (response.ok) return response.json();
                 }).then(data => {
                     _this.Order = data;
