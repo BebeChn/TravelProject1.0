@@ -197,14 +197,14 @@
 
 
                     _this.PlaneTK_catgoryDTOes = _this.xxx;
-                    console.log(_this.PlaneTK_catgoryDTOes)
+                    //console.log(_this.PlaneTK_catgoryDTOes)
                     if (id == 1) {
                         var arr = ["韓國","首爾"];
                         _this.PlaneTK_catgoryDTOes = _this.PlaneTK_catgoryDTOes.filter(item => arr.some(z => item.productName.includes(z)));
                     }
                     if (id == 2) {
                         var arr = ["日本", "京都","富士山","東京"];
-                        _this.PlaneTK_catgoryDTOes = _this.PlaneTK_catgoryDTOes.filter(item => arr.some(z => item.mainDescribe.includes(z)));
+                        _this.PlaneTK_catgoryDTOes = _this.PlaneTK_catgoryDTOes.filter(item => arr.some(z => item.productName.includes(z)));
                     }
                     if (id == 3) {
                         var arr = ["越南"];
