@@ -3,14 +3,14 @@
 namespace TravelProject1._0.Areas.Admin.Controllers
 {
 	[Area("Admin")]
-    [Route("AdminPutUser/[action]")]
+    [Route("[area]/Manage/[action]")]
 	public class AdminPutUserController : Controller
     {
-        public IActionResult Index()
+        public IActionResult User()
         {
             return View();
         }
-        public IActionResult ManageProducts()
+        public IActionResult Products()
         {
             return View();
         }
