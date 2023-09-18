@@ -159,11 +159,18 @@ namespace TravelProject1._0.Controllers
                 var orderDetail = _db.OrderDetails.FirstOrDefault(o => o.OrderId == no);
                 var cartItem = _db.Carts.FirstOrDefault(c => c.PlanId == orderDetail.PlanId && c.CartName == orderDetail.Odname && c.CartPrice == orderDetail.UnitPrice && c.CartQuantity == orderDetail.Quantity);
 
+                bool isCartItem = cartItem != null;
+
                 if (od == null) return View("Fail");
 
                 user.Points += od.NewPoint;
                 od.Status = "success";
-                _db.Carts.Remove(cartItem);
+
+                if (isCartItem)
+                {
+                    _db.Carts.Remove(cartItem);
+                }
+
                 _db.SaveChanges();
 
                 ViewBag.Info = new
