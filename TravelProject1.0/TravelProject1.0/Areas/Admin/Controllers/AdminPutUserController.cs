@@ -3,6 +3,7 @@
 namespace TravelProject1._0.Areas.Admin.Controllers
 {
 	[Area("Admin")]
+    [Route("AdminPutUser/[action]")]
 	public class AdminPutUserController : Controller
     {
         public IActionResult Index()

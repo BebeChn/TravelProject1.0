@@ -3,10 +3,10 @@
 namespace TravelProject1._0.Areas.Admin.Controllers
 {
 	[Area("Admin")]
-	[Route("api/[controller]/[action]")]
-	public class SuperController : Controller
+	[Route("AdminManage/[action]")]
+	public class AdminManageController : Controller
 	{
-		public IActionResult Super()
+		public IActionResult Index()
 		{
 			return View();
 		}
