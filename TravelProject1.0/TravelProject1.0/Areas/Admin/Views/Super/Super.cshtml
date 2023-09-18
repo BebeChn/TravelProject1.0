@@ -20,13 +20,9 @@
 
 <div id="app">
     <div>
-        <div class="row upperLayer">
-            @* 搜尋 *@
-            <div class="col-10">
-                <input class="inp-search" type="text" placeholder="Search...">
-            </div>
+
             @* 新增管理人 *@
-            <div class="col-2">
+            <div class="col-2 ">
                 <button class="btn btn-success" data-toggle="modal" data-target="#newAdmin">新增管理人</button>
             </div>
         </div>
@@ -53,7 +49,7 @@
                         <td>{{pa.createDate | formatDate}}</td>
                         <td>{{pa.loginDate | formatDate}}</td>
                         <td>
-                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#UpdateAdmin" @@click="updateAdmin">編輯</button>
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#UpdateAdmin" @@click="Edit(pa)">編輯</button>
                             <button type="button" class="btn btn-danger" @@click="deleteAdmin(pa.id)">刪除</button>
                         </td>
                     </tr>
@@ -91,20 +87,19 @@
                     <div class="form-group">
                         <label class="form-label">名稱：</label>
                         <input v-model.trim="newAdmin.name" type="text" class="form-control" required />
-                        <div v-if="!isValid(newAdmin.name,validType.name)" class="formatError">您輸入的格式錯誤</div>
                     </div>
                     <div class="form-group">
                         <label class="form-label">帳號：</label>
                         <input v-model.trim="newAdmin.account" type="email" class="form-control" required />
-                        <div class="formatError" v-if="!isValid(newAdmin.account,validType.email)">您輸入的格式不正確</div>
+                        <div v-if="!isValid(newAdmin.account,validType.name)" class="formatError">您輸入的格式錯誤</div>
                     </div>
                     <div class="form-group">
                         <label class="form-label">密碼：</label>
-                        <input v-model.trim="newAdmin.password" type="email" class="form-control" required />
+                        <input v-model.trim="newAdmin.password" type="password" class="form-control" required />
                         <div class="formatError" v-if="!isValid(newAdmin.password,validType.password)">您輸入的格式不正確</div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">管理權限描述：</label>
+                        <label class="form-label">管理權限：</label>
                         <select class="form-control" v-model="newAdmin.describe">
                             <option value="manage">修改</option>
                             <option value="view">觀看</option>
@@ -131,7 +126,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label class="form-label">管理人：</label>
+                        <label class="form-label">姓名：</label>
                         <input v-model.trim="UpdateAdmin.name" type="text" class="form-control" required />
                     </div>
                     <div class="form-group">
@@ -140,10 +135,11 @@
                     </div>
                     <div class="form-group">
                         <label class="form-label">密碼：</label>
-                        <input v-model.trim="UpdateAdmin.password" type="text" class="form-control" required />
+                        <input v-model.trim="UpdateAdmin.password" type="password" class="form-control" required />
+                        <div class="formatError" v-if="!isValid(UpdateAdmin.password,validType.password)">您輸入的格式不正確</div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">管理權限描述：</label>
+                        <label class="form-label">管理權限：</label>
                         <select class="form-control" v-model="UpdateAdmin.describe">
                             <option value="manage">修改</option>
                             <option value="view">觀看</option>
@@ -152,7 +148,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" @@click="updateAdmin(UpdateAdmin)">修改</button>
-                    <button type="button" data-dismiss="modal" class="btn btn-primary" @@click="formClear">取消</button>
+                    <button type="button" data-dismiss="modal" class="btn btn-secondary" @@click="formClear">取消</button>
                 </div>
             </div>
         </div>
@@ -174,7 +170,7 @@
                     account: '',
                     password: '',
                     describe: '',
-                    loginDate: ''
+                    loginDate: '',
                 },
                 searchQuery: '',
                 validType: validType,
@@ -184,7 +180,7 @@
             mounted: function () {
                 let _this = this;
                 //管理員資訊
-                fetch(`/api/SuperApi/SuperGET`, { method: "GET" })
+                fetch(`/api/SuperApi/GetAdmin`, { method: "GET" })
                     .then(response => {
                         if (response.ok) return response.json();
                     }).then(data => {
@@ -207,8 +203,9 @@
                         password: _this.newAdmin.password,
                         describe: _this.newAdmin.describe,
                         loginDate: new Date(),
+                        CreateDate: new Date()
                     };
-                    fetch(`/api/SuperApi/SuperPost`, {
+                    fetch(`/api/SuperApi/AdminManage`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(form)
@@ -227,7 +224,7 @@
                     let _this = this;
                     let result = confirm(`確定要刪除會員編號${id}?`);
                     if (result == true) {
-                        fetch(`/api/SuperApi/SuperDel/${id}`, { method: "DELETE" })
+                        fetch(`/api/SuperApi/AdminDelete/${id}`, { method: "DELETE" })
                             .then((response) => {
                                 if (response.ok) return response.text();
                             }).then(data => {
@@ -240,18 +237,16 @@
                 //修改管理員
                 updateAdmin: function (model) {
                     let _this = this;
-                    console.log(model);
                     let result = confirm(`確定要更新管理員名稱為${_this.UpdateAdmin.name}的管理員資訊？`);
                     if (result == true) {
                         let request = {
+                            id:model.id,
                             name: model.name,
                             account: model.account,
                             password: model.password,
                             describe: model.describe,
-                            createDate: new Date(),
-                            loginDate: new Date(),
                         };
-                        fetch(`/api/adminApi/AdminPutUser/${model.id}`, {
+                        fetch(`/api/SuperApi/AdminPut/${model.id}`, {
                             method: "PUT",
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify(request)
@@ -274,6 +269,11 @@
                         phone: '',
                         password: ''
                     }
+                },
+                //編輯modal
+                Edit: function (model) {
+                    let _this = this;
+                    _this.UpdateAdmin = Object.assign({}, model);
                 },
                 //分頁
                 changePage: function (num) {
