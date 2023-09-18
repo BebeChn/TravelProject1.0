@@ -18,32 +18,11 @@
         border-color: #007bff;
     }
 
-
-/*#app {
-    position: relative;
-}*/
-
-/*h1 {
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 10px 20px;
-    font-weight: bold;
-    color:black;
-}*/
-
-/*.center {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-   
-}*/
 .element {
-    /*background-image: url('../img/footericon/register.jpg');*/
-    background-size: cover;
+    background-image: url('../img/201207-24309-10-q31kv.jpg');
+    background-size:cover;
     background-repeat: no-repeat;
+    height: 500px;
 }
 
 .inputbox {
@@ -94,13 +73,6 @@
         border: 1px solid deepskyblue;
     }
 
-/*.center {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-}*/
-
 .dup {
     display: block;
     margin: 20px 80px;
@@ -120,9 +92,3 @@
     .dup:hover {
         border: 1.5px solid black;
     }
-
-/*.labelstyle {
-    text-align: center;
-    width: 750px;
-    justify-content: center;
-}*/
