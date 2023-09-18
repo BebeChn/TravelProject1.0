@@ -64,5 +64,14 @@ namespace TravelProject1._0.Areas.Admin.Controllers
             TempData["SuccessMessage"] = "登入成功";
             return Redirect("/Admin/Manage/User");
         }
+        public IActionResult UserAnalyze()
+        {
+            return View();
+        }
+
+        public IActionResult SalesAnalyze()
+        {
+            return View();
+        }
     }
 }
