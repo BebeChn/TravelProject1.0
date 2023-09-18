@@ -38,10 +38,10 @@ namespace TravelProject1._0.Controllers.Api
 
         [HttpGet]
         [Authorize]
-        public async Task<List<UserOrderDTO>> UserOrder()
+        public async Task<List<UserOrderDto>> UserOrder()
         {
             var userId = _userIdentityService.GetUserId();
-            return await _context.Orders.Where(o => o.UserId == userId).Select(o => new UserOrderDTO
+            return await _context.Orders.Where(o => o.UserId == userId).Select(o => new UserOrderDto
             {
                 OrderDate = o.OrderDate.HasValue ? o.OrderDate.Value.ToString("yyyy-MM-dd") : "",
                 OrderId = o.OrderId,
@@ -51,11 +51,11 @@ namespace TravelProject1._0.Controllers.Api
         }
 
         [HttpGet]
-        public async Task<List<OrderGetPointDTO>> OrderDetailsGetPoint()
+        public async Task<List<OrderGetPointDto>> OrderDetailsGetPoint()
         {
             var userId = _userIdentityService.GetUserId();
             return await _context.Orders.Include(o => o.OrderDetails).ThenInclude(o => o.Plan).Where(o => o.UserId == userId)
-                .Select(o => new OrderGetPointDTO
+                .Select(o => new OrderGetPointDto
                 {
                     NewPoint = o.NewPoint,
                     TotalPrice = o.TotalPrice,
