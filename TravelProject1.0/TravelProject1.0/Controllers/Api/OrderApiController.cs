@@ -1,17 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Concurrent;
-using System.Drawing;
 using TravelProject1._0.Models;
 using TravelProject1._0.Models.DTO;
 using TravelProject1._0.Services;
 
 namespace TravelProject1._0.Controllers.Api
 {
-    [Route("api/OrderApi/[Action]")]
+    [Route("api/Order/[action]")]
     [ApiController]
     public class OrderApiController : ControllerBase
     {
@@ -24,11 +20,10 @@ namespace TravelProject1._0.Controllers.Api
         }
 
         [HttpGet("{id}")]
-        public IEnumerable<OrderInfo> OrderDetails(int id)
+        public async Task<List<OrderInfo>> OrderDetails(int id)
         {
             var userId = _userIdentityService.GetUserId();
-
-            return _context.OrderDetails.Include(od => od.Order).Include(od => od.Plan).Where(od => od.Order.UserId == userId && od.OrderId == id).Select(od => new OrderInfo
+            return await _context.OrderDetails.Include(od => od.Order).Include(od => od.Plan).Where(od => od.Order.UserId == userId && od.OrderId == id).Select(od => new OrderInfo
             {
                 PlanId = od.PlanId,
                 OrderId = od.OrderId,
@@ -38,35 +33,35 @@ namespace TravelProject1._0.Controllers.Api
                 Quantity = od.Quantity,
                 UnitPrice = od.UnitPrice,
                 ProductId = od.Plan.ProductId
-            });
+            }).ToListAsync();
         }
 
-        [Authorize]
         [HttpGet]
-        public IEnumerable<UserOrderDTO> UserOrder()
+        [Authorize]
+        public async Task<List<UserOrderDTO>> UserOrder()
         {
             var userId = _userIdentityService.GetUserId();
-            return _context.Orders.Where(o => o.UserId == userId).Select(o => new UserOrderDTO
+            return await _context.Orders.Where(o => o.UserId == userId).Select(o => new UserOrderDTO
             {
-                OrderDate = o.OrderDate.Value.ToString("yyyy-MM-dd"),
+                OrderDate = o.OrderDate.HasValue ? o.OrderDate.Value.ToString("yyyy-MM-dd") : "",
                 OrderId = o.OrderId,
                 Status = o.Status,
                 UserId = userId
-            });
+            }).ToListAsync();
         }
 
         [HttpGet]
-        public IEnumerable<OrderGetPointDTO> OrderDetailsGetPoint()
+        public async Task<List<OrderGetPointDTO>> OrderDetailsGetPoint()
         {
             var userId = _userIdentityService.GetUserId();
-            return _context.Orders.Include(o => o.OrderDetails).ThenInclude(o => o.Plan).Where(o => o.UserId == userId)
+            return await _context.Orders.Include(o => o.OrderDetails).ThenInclude(o => o.Plan).Where(o => o.UserId == userId)
                 .Select(o => new OrderGetPointDTO
                 {
                     NewPoint = o.NewPoint,
                     TotalPrice = o.TotalPrice,
                     OrderDate = o.OrderDate,
                     OrderId = o.OrderId,
-                });
+                }).ToListAsync();
         }
 
         [HttpGet]
@@ -74,6 +69,7 @@ namespace TravelProject1._0.Controllers.Api
         {
             var userId = _userIdentityService.GetUserId();
             var point = await _context.Users.FindAsync(userId);
+            if (point == null) return 0;
             return point.Points.GetValueOrDefault();
         }
     }
