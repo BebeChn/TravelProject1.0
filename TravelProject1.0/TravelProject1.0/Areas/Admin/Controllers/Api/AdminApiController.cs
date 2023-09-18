@@ -1,212 +1,165 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Win32;
-using NToastNotify.Helpers;
-using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
 using TravelProject1._0.Areas.Admin.Models.DTO;
-using TravelProject1._0.Areas.Admin.Models.ViewModel;
 using TravelProject1._0.Models;
-using TravelProject1._0.Models.DTO;
 using TravelProject1._0.Services;
 
-namespace TravelProject1._0.Areas.Admin.Controllers.Api
+namespace TravelProject1._0.Areas.Admin.Controllers.Api;
+
+[Area("Admin")]
+[Route("api/Admin/[action]")]
+[ApiController]
+public class AdminApiController : ControllerBase
 {
-    [Area("Admin")]
-    [Route("api/AdminApi/[action]")]
-    [ApiController]
-    public class AdminApiController : ControllerBase
+    private readonly TravelProjectAzureContext _context;
+    private readonly IUserSearchService _userSearchService;
+
+    public AdminApiController(TravelProjectAzureContext context, IUserSearchService userSearchService)
     {
-        private readonly TravelProjectAzureContext _context;
-        private readonly IUserSearchService _userSearchService;
-        private readonly IUserIdentityService _userIdentityService;
-        public AdminApiController(TravelProjectAzureContext context, IUserSearchService userSearchService, IUserIdentityService userIdentityService)
+        _context = context;
+        _userSearchService = userSearchService;
+    }
+
+    [HttpGet]
+    public IEnumerable<AdminGetUserDTO> AdminGetUser()
+    {
+        return _context.Users.Select(x => new AdminGetUserDTO
+
         {
-            _context = context;
-            _userSearchService = userSearchService;
-            _userIdentityService = userIdentityService;
-        }
+            UserId = x.UserId,
+            Email = x.Email,
+            Gender = x.Gender,
+            Name = x.Name,
+            Phone = x.Phone,
+            Birthday = x.Birthday.HasValue ? x.Birthday.Value.ToString("yyyy-MM-dd") : ""
+        });
+    }
 
-        [HttpGet]
-        public IEnumerable<AdminGetUserDTO> AdminGetUser()
+    [HttpGet("{id}")]
+    public async Task<ActionResult<GetUserDetailDTO>> GetUserDetail(int id)
+    {
+        try
         {
-            return _context.Users.Select(x => new AdminGetUserDTO
+            var user = await _context.Users.FindAsync(id);
 
+            if (user == null) return NotFound();
+
+            var gud = new GetUserDetailDTO
             {
-                UserId = x.UserId,
-                Email = x.Email,
-                Gender = x.Gender,
-                Name = x.Name,
-                Phone = x.Phone,
-                Birthday = x.Birthday.Value.ToString("yyyy-MM-dd"),
-            });
-
-        }
-        [HttpGet("{id}")]
-        public async Task<ActionResult<GetUserDetailDTO>> GetUserDetail(int id)
-        {
-            try
-            {
-                var user = await _context.Users.FindAsync(id);
-
-                if (user == null)
-                {
-                    return NotFound();
-                }
-
-                GetUserDetailDTO gud = new GetUserDetailDTO
-                {
-                    UserId = user.UserId,
-                    Email = user.Email,
-                    Gender = user.Gender,
-                    Name = user.Name,
-                    Phone = user.Phone,
-                    Birthday = user.Birthday?.ToString("yyyy-MM-dd HH:mm:ss")
-                };
-
-                return Ok(gud);
-            }
-            catch (Exception ex)
-            {
-
-                return NotFound();
-            }
-        }
-            
-        [HttpPost]
-        public IActionResult AdminManageUser(AdmminManageUserDTO amuDTO)
-        {
-            if (amuDTO == null) return BadRequest();
-
-            var salt = GenerateSalt();
-
-            var passwordhash = HashPassword(amuDTO.Password, salt);
-
-            User insertuser = new User
-            {
-                Name = amuDTO.Name,
-                Email = amuDTO.Email,
-                PasswordHash = passwordhash,
-                Gender = amuDTO.Gender,
-                Phone = amuDTO.Phone,
-                Birthday = amuDTO.Birthday,
+                UserId = user.UserId,
+                Email = user.Email,
+                Gender = user.Gender,
+                Name = user.Name,
+                Phone = user.Phone,
+                Birthday = user.Birthday?.ToString("yyyy-MM-dd HH:mm:ss")
             };
 
-            try
-            {
-                _context.Users.AddAsync(insertuser);
-                _context.SaveChanges();
-                List<Claim> claims = new List<Claim>();
-                claims.Add(new Claim(ClaimTypes.NameIdentifier, amuDTO.Id.ToString()));
-                claims.Add(new Claim(ClaimTypes.Name, $"{amuDTO.Name}"));
-                claims.Add(new Claim("Email", amuDTO.Email));
-                claims.Add(new Claim(ClaimTypes.Role, "user"));
-                ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                ClaimsPrincipal principal = new ClaimsPrincipal(identity);
-                return Ok(insertuser);
-            }
-            catch 
-            {
-                return BadRequest();
-            }
+            return Ok(gud);
         }
-        private string GenerateSalt()
+        catch (Exception)
         {
-            Byte[] bytes = new Byte[16];
-            using (var ran = RandomNumberGenerator.Create())
-            {
-                ran.GetBytes(bytes);
-            }
-            return Convert.ToBase64String(bytes);
+            return NotFound();
         }
-        private string HashPassword(string paswword, string salt)
-        {
-            using (var sha256 = SHA256.Create())
-            {
-                string paswwordsalt = paswword + salt;
-                byte[] passwordhash = Encoding.UTF8.GetBytes(paswwordsalt);
-                byte[] psaswordhash = sha256.ComputeHash(passwordhash);
-                return Convert.ToBase64String(psaswordhash);
-            }
-        }
-        [HttpPut("{id}")]
-        public async Task<string> AdminPutUser(int id, AdminPutUserDTO apuDTO)
-        {
+    }
 
+    [HttpPost]
+    public bool AdminManageUser(AdmminManageUserDTO? amuDto)
+    {
+        if (amuDto == null) return false;
+        try
+        {
+            _context.Users.AddAsync(new User
+            {
+                Name = amuDto.Name,
+                Email = amuDto.Email,
+                PasswordHash = amuDto.Password,
+                Gender = amuDto.Gender,
+                Phone = amuDto.Phone,
+                Birthday = amuDto.Birthday
+            });
+            _context.SaveChanges();
+
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    [HttpPut("{id}")]
+    public async Task<bool> AdminPutUser(int id, AdminPutUserDTO apuDto)
+    {
+        try
+        {
             var admin = await _context.Users.FindAsync(id);
-            admin.Name = apuDTO.Name;
-            admin.Gender = apuDTO.Gender;
-            admin.Email = apuDTO.Email;
-            admin.Birthday = apuDTO.Birthday;
-            admin.Phone = apuDTO.Phone;
+            if (admin == null) return false;
+            admin.Name = apuDto.Name;
+            admin.Gender = apuDto.Gender;
+            admin.Email = apuDto.Email;
+            admin.Birthday = apuDto.Birthday;
+            admin.Phone = apuDto.Phone;
 
-            _context.Entry(admin).State = EntityState.Modified;
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                throw;
-            }
-            return "成功";
+            await _context.SaveChangesAsync();
         }
-        [HttpDelete("{id}")]
-        public async Task<string> AdminDeleteUser(int id)
+        catch (Exception)
         {
-            var users = await _context.Users.FindAsync(id);
-            if (users == null)
-            {
-                return "找不到該用戶";
-            }
-            try
-            {
-                _context.Users.Remove(users);
-                await _context.SaveChangesAsync();
-                return "刪除成功";
-            }
-            catch
-            {
-                return "刪除關聯失敗";
-            }
-        }
-        [HttpGet]
-        public async Task<IQueryable<AdminGetUserDTO>> OrderByAge()
-        {
-            return _context.Users.OrderBy(u => u.Age).Select(u => new AdminGetUserDTO
-            {
-                UserId = u.UserId,
-                Email = u.Email,
-                Gender = u.Gender,
-                Name = u.Name,
-                Phone = u.Phone,
-                Birthday = u.Birthday.Value.ToString("yyyy-MM-dd"),
-
-            });
-        }
-        //排序年紀
-        [HttpGet]
-        public async Task<IQueryable<AdminGetUserDTO>> OrderByDescendingAge()
-        {
-            return _context.Users.OrderByDescending(u => u.Age).Select(u => new AdminGetUserDTO
-            {
-                UserId = u.UserId,
-                Email = u.Email,
-                Gender = u.Gender,
-                Name = u.Name,
-                Phone = u.Phone,
-                Birthday = u.Birthday.Value.ToString("yyyy-MM-dd"),
-            });
-        }
-        [HttpGet]
-        public IActionResult AdminSearchUser(string query)
-        {
-            var searchResults = _userSearchService.SearchUsers(query);
-            return Ok(searchResults);
+            return false;
         }
 
+        return true;
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<string> AdminDeleteUser(int id)
+    {
+        var users = await _context.Users.FindAsync(id);
+        if (users == null) return "找不到該用戶";
+        try
+        {
+            _context.Users.Remove(users);
+            await _context.SaveChangesAsync();
+            return "刪除成功";
+        }
+        catch
+        {
+            return "刪除關聯失敗";
+        }
+    }
+
+    [HttpGet]
+    public async Task<List<AdminGetUserDTO>> OrderByAge()
+    {
+        return await _context.Users.OrderBy(u => u.Age).Select(u => new AdminGetUserDTO
+        {
+            UserId = u.UserId,
+            Email = u.Email,
+            Gender = u.Gender,
+            Name = u.Name,
+            Phone = u.Phone,
+            Birthday = u.Birthday.HasValue ? u.Birthday.Value.ToString("yyyy-MM-dd") : ""
+        }).ToListAsync();
+    }
+
+    //排序年紀
+    [HttpGet]
+    public async Task<List<AdminGetUserDTO>> OrderByDescendingAge()
+    {
+        return await _context.Users.OrderByDescending(u => u.Age).Select(u => new AdminGetUserDTO
+        {
+            UserId = u.UserId,
+            Email = u.Email,
+            Gender = u.Gender,
+            Name = u.Name,
+            Phone = u.Phone,
+            Birthday = u.Birthday.HasValue ? u.Birthday.Value.ToString("yyyy-MM-dd") : ""
+        }).ToListAsync();
+    }
+
+    [HttpGet]
+    public IActionResult AdminSearchUser(string query)
+    {
+        var searchResults = _userSearchService.SearchUsers(query);
+        return Ok(searchResults);
     }
 }

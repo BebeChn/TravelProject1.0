@@ -15,8 +15,8 @@
     {
         <p class="alert alert-danger text-center">帳號或密碼錯誤</p>
     }
-    <h1>會員登入</h1>
     <form action="@Url.Action("Login")" method="post" class="login">
+        <h1 class="text-light text-center">會員登入</h1>
         <div class="inputbox">
             <input type="text" asp-for="@Model.Email" required value="AAA@gmail.com" />
             <span asp-validation-for="@Model.Email">帳號</span>

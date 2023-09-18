@@ -45,15 +45,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api.AnalyzeAPI
 					})
 				})
 				.ToDictionaryAsync(od => od.CategoryId, od =>
-				//				od.Details.ToDictionary(
-				//	od => od.OrderDate,
-				//	od => Convert.ToDecimal(od.UnitPrice * od.Quantity))
-				//.DefaultIfEmpty()
-				//.ToDictionary(
-				//	od => od.Key,
-				//	od => od.Value
-				//	));
-			{
+				{
 				int currentYear = Convert.ToInt32(DateTime.Now.ToString("yyyy"));
 				var dic = new Dictionary<string, decimal>();
 				for (var i = 1; i < 13; i++)
@@ -67,14 +59,14 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api.AnalyzeAPI
 			var result = new AllTicktesSaleDTO()
 			{
 				OneyearSale = currentYearSale,
-				Airplane = resultList[1].OrderBy(r => r.Key).Select(r => new HighChart3DGraphDTO { Name = r.Key, y = r.Value }).ToList(),
-				Hotel = resultList[2].OrderBy(r => r.Key).Select(r => new HighChart3DGraphDTO { Name = r.Key, y = r.Value }).ToList(),
-				Transportation = resultList[3].OrderBy(r => r.Key).Select(r => new HighChart3DGraphDTO { Name = r.Key, y = r.Value }).ToList(),
-				Attractions = resultList[4].OrderBy(r => r.Key).Select(r => new HighChart3DGraphDTO { Name = r.Key, y = r.Value }).ToList(),
-				AirplaneOneYearSale = resultList[1],
-				HotelOneYearSale = resultList[2],
-				TransportationOneYearSale = resultList[3],
-				AttractionsOneYearSale = resultList[4]
+				Airplane = resultList.ContainsKey(1) ? resultList[1].OrderBy(r => r.Key).Select(r => new HighChart3DGraphDTO { Name = r.Key, y = r.Value }).ToList() : null,
+				Hotel = resultList.ContainsKey(2) ? resultList[2].OrderBy(r => r.Key).Select(r => new HighChart3DGraphDTO { Name = r.Key, y = r.Value }).ToList() : null,
+				Transportation = resultList.ContainsKey(3) ? resultList[3].OrderBy(r => r.Key).Select(r => new HighChart3DGraphDTO { Name = r.Key, y = r.Value }).ToList() : null,
+				Attractions = resultList.ContainsKey(4) ? resultList[4].OrderBy(r => r.Key).Select(r => new HighChart3DGraphDTO { Name = r.Key, y = r.Value }).ToList() : null,
+				AirplaneOneYearSale = resultList.ContainsKey(1) ? resultList[1] : null,
+				HotelOneYearSale = resultList.ContainsKey(1) ? resultList[1] : null,
+				TransportationOneYearSale = resultList.ContainsKey(1) ? resultList[1] : null,
+				AttractionsOneYearSale = resultList.ContainsKey(1) ? resultList[1] : null,
 			};
 
 			return result;
@@ -90,7 +82,8 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api.AnalyzeAPI
 								EF.Functions.DateDiffYear(od.Order.OrderDate, DateTime.Now) >= 1).
 								SumAsync(od => (decimal)(od.UnitPrice * od.Quantity) / 10000);
 
-			var resultList = _db.OrderDetails.AsNoTracking().Include(od => od.Plan).ThenInclude(od => od.Product)
+			var spareDic = new Dictionary<string, decimal>();
+			var resultList = await _db.OrderDetails.AsNoTracking().Include(od => od.Plan).ThenInclude(od => od.Product)
 				.Where(od => EF.Functions.DateDiffYear(od.Order.OrderDate, DateTime.Now) <= 1 &&
 							EF.Functions.DateDiffYear(od.Order.OrderDate, DateTime.Now) >= 1)
 				.GroupBy(od => od.Plan.Product.Id)
@@ -111,6 +104,10 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api.AnalyzeAPI
 					for (var i = 1; i < 13; i++)
 					{
 						var lastYearMonth = new DateTime(lastYear, i, 1).ToString("yyyy-MM");
+						if (spareDic.ContainsKey(lastYearMonth))
+						{
+							spareDic.Add(lastYearMonth, 0);
+						}
 						dic.Add(lastYearMonth, od.Details.Where(od => od.OrderDate == lastYearMonth).Sum(od => Convert.ToDecimal(od.UnitPrice * od.Quantity) / 10000));
 					}
 					return dic;
@@ -119,35 +116,19 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api.AnalyzeAPI
 			var result = new AllTicktesSaleDTO()
 			{
 				OneyearSale = lastYearSale,
-				Airplane = resultList.Result[1].OrderBy(r => r.Key).Select(r => new HighChart3DGraphDTO { Name = r.Key, y = r.Value }).ToList(),
-				Hotel = resultList.Result[2].OrderBy(r => r.Key).Select(r => new HighChart3DGraphDTO { Name = r.Key, y = r.Value }).ToList(),
-				Transportation = resultList.Result[3].OrderBy(r => r.Key).Select(r => new HighChart3DGraphDTO { Name = r.Key, y = r.Value }).ToList(),
-				Attractions = resultList.Result[4].OrderBy(r => r.Key).Select(r => new HighChart3DGraphDTO { Name = r.Key, y = r.Value }).ToList(),
-				AirplaneOneYearSale = resultList.Result[1],
-				HotelOneYearSale = resultList.Result[2],
-				TransportationOneYearSale = resultList.Result[3],
-				AttractionsOneYearSale = resultList.Result[4]
+				Airplane = resultList.ContainsKey(1) ? resultList[1].OrderBy(r => r.Key).Select(r => new HighChart3DGraphDTO { Name = r.Key, y = r.Value }).ToList() : null,
+				Hotel = resultList.ContainsKey(2) ? resultList[1].OrderBy(r => r.Key).Select(r => new HighChart3DGraphDTO { Name = r.Key, y = r.Value }).ToList() : null,
+				Transportation = resultList.ContainsKey(3) ? resultList[1].OrderBy(r => r.Key).Select(r => new HighChart3DGraphDTO { Name = r.Key, y = r.Value }).ToList() : null,
+				Attractions = resultList.ContainsKey(4) ? resultList[1].OrderBy(r => r.Key).Select(r => new HighChart3DGraphDTO { Name = r.Key, y = r.Value }).ToList() : null,
+				AirplaneOneYearSale = resultList.ContainsKey(1) ? resultList[1] : spareDic,
+				HotelOneYearSale = resultList.ContainsKey(2) ? resultList[2] : spareDic,
+				TransportationOneYearSale = resultList.ContainsKey(3) ? resultList[3] : spareDic,
+				AttractionsOneYearSale = resultList.ContainsKey(4) ? resultList[4] : spareDic,
 			};
 
 			return result;
 		}
 		//前年度銷售數據
-
-		public async Task<Dictionary<int,Dictionary<string,decimal>>> CurrenWeekDate(int categoryId)
-		{
-			var currentDate = DateTime.Now;
-			var currentWeek = (DayOfWeek.Monday - currentDate.DayOfWeek) % 7;
-			var outerDic = new Dictionary<int, Dictionary<string,decimal>>();
-
-			for (var i = 0; i < 7; i++)
-			{
-				var innerDic = new Dictionary<string,decimal>();
-				var finalDate = currentDate.AddDays(currentWeek + i).ToString("MM-dd");
-				innerDic.Add(finalDate,0);
-				outerDic.Add(categoryId, innerDic);
-			}
-			return outerDic;
-		}
 
 		//當週銷售數據
 		[HttpGet]
