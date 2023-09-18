@@ -20,9 +20,9 @@ namespace TravelProject1._0.Controllers.Api
 
         //取得交通種類的商品
         [HttpGet]
-        public async Task<IEnumerable<TransportDTO>> GetCategoryByTransport()
+        public async Task<IEnumerable<TransportDto>> GetCategoryByTransport()
         {
-            return _dbContext.Products.Where(p => p.Id == 3).Select(p => new TransportDTO
+            return _dbContext.Products.Where(p => p.Id == 3).Select(p => new TransportDto
             {
                 ProductId = p.ProductId,
                 ProductName = p.ProductName,
@@ -35,9 +35,9 @@ namespace TravelProject1._0.Controllers.Api
         //排序商品的價格
         //低到高
         [HttpGet]
-        public async Task<IEnumerable<TransportDTO>> TransportOrderbyPrice()
+        public async Task<IEnumerable<TransportDto>> TransportOrderbyPrice()
         {
-            return _dbContext.Products.Where(p => p.Id == 3).OrderBy(p => p.Price).Select(p => new TransportDTO
+            return _dbContext.Products.Where(p => p.Id == 3).OrderBy(p => p.Price).Select(p => new TransportDto
             {
                 ProductId = p.ProductId,
                 ProductName = p.ProductName,
@@ -48,9 +48,9 @@ namespace TravelProject1._0.Controllers.Api
         }
         //高到低
         [HttpGet]
-        public async Task<IEnumerable<TransportDTO>> TransportOrderByDescendingPrice()
+        public async Task<IEnumerable<TransportDto>> TransportOrderByDescendingPrice()
         {
-            return _dbContext.Products.Where(p => p.Id == 3).OrderByDescending(p => p.Price).Select(p => new TransportDTO
+            return _dbContext.Products.Where(p => p.Id == 3).OrderByDescending(p => p.Price).Select(p => new TransportDto
             {
                 ProductId = p.ProductId,
                 ProductName = p.ProductName,
@@ -63,9 +63,9 @@ namespace TravelProject1._0.Controllers.Api
         //取得商品方案
         [HttpGet]
         [Route("{id}")]
-        public async Task<IQueryable<TransportPlanDTO>> GetPlan(int id)
+        public async Task<IQueryable<TransportPlanDto>> GetPlan(int id)
         {
-            return _dbContext.Plans.Where(p => p.ProductId == id).Select(p => new TransportPlanDTO
+            return _dbContext.Plans.Where(p => p.ProductId == id).Select(p => new TransportPlanDto
             {
                 PlanId = p.PlanId,
                 Name = p.Name,
@@ -78,9 +78,9 @@ namespace TravelProject1._0.Controllers.Api
         //取得單一商品資訊
         [HttpGet]
         [Route("{id}")]
-        public async Task<IQueryable<TransportPlanDTO>> GetProduct(int id)
+        public async Task<IQueryable<TransportPlanDto>> GetProduct(int id)
         {
-            return _dbContext.Products.Where(p => p.ProductId == id).Select(p => new TransportPlanDTO
+            return _dbContext.Products.Where(p => p.ProductId == id).Select(p => new TransportPlanDto
             {
                 ProductName = p.ProductName,
                 MainDescribe = p.MainDescribe,
@@ -93,9 +93,9 @@ namespace TravelProject1._0.Controllers.Api
         //商品評價
         [HttpGet]
         [Route("{id}")]
-        public async Task<IQueryable<RatingDTO>> GetRating(int id)
+        public async Task<IQueryable<RatingDto>> GetRating(int id)
         {
-            return _dbContext.Ratings.Include(r => r.User).Where(r => r.ProductId == id).Select(r => new RatingDTO
+            return _dbContext.Ratings.Include(r => r.User).Where(r => r.ProductId == id).Select(r => new RatingDto
             {
                 Name = r.User.Name,
                 RatingScore = r.RatingScore,

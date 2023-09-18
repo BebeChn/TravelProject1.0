@@ -43,10 +43,10 @@ namespace TravelProject1._0.Controllers.Api
 
         [Authorize]
         [HttpGet]
-        public IEnumerable<UserOrderDTO> UserOrder()
+        public IEnumerable<UserOrderDto> UserOrder()
         {
             var userId = _userIdentityService.GetUserId();
-            return _context.Orders.Where(o => o.UserId == userId).Select(o => new UserOrderDTO
+            return _context.Orders.Where(o => o.UserId == userId).Select(o => new UserOrderDto
             {
                 OrderDate = o.OrderDate.Value.ToString("yyyy-MM-dd"),
                 OrderId = o.OrderId,
@@ -56,11 +56,11 @@ namespace TravelProject1._0.Controllers.Api
         }
 
         [HttpGet]
-        public IEnumerable<OrderGetPointDTO> OrderDetailsGetPoint()
+        public IEnumerable<OrderGetPointDto> OrderDetailsGetPoint()
         {
             var userId = _userIdentityService.GetUserId();
             return _context.Orders.Include(o => o.OrderDetails).ThenInclude(o => o.Plan).Where(o => o.UserId == userId)
-                .Select(o => new OrderGetPointDTO
+                .Select(o => new OrderGetPointDto
                 {
                     NewPoint = o.NewPoint,
                     TotalPrice = o.TotalPrice,

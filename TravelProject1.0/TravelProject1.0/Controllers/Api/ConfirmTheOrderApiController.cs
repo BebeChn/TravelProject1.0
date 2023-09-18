@@ -23,11 +23,11 @@ namespace TravelProject1._0.Controllers.Api
 
         //取得聯絡人資訊
         [HttpGet]
-        public async Task<IQueryable<ConfirmTheOrderDTO>> GetUser()
+        public async Task<IQueryable<ConfirmTheOrderDto>> GetUser()
         {
             int userId = _userIdentityService.GetUserId();
 
-            return _dbContext.Users.Where(u => u.UserId == userId).Select(u => new ConfirmTheOrderDTO
+            return _dbContext.Users.Where(u => u.UserId == userId).Select(u => new ConfirmTheOrderDto
             {
                 UserId = userId,
                 Name = u.Name,
@@ -48,7 +48,7 @@ namespace TravelProject1._0.Controllers.Api
             {
                 OrderId = o.OrderId,
                 OrderDate = o.OrderDate,
-                ConfirmTheOrderDetails = o.OrderDetails.Select(od => new ConfirmTheOrderDetailDTO
+                ConfirmTheOrderDetails = o.OrderDetails.Select(od => new ConfirmTheOrderDetailDto
                 {
                     Odname = od.Odname,
                     Quantity = od.Quantity,

@@ -18,9 +18,9 @@ namespace TravelProject1._0.Controllers.Api
 
         //取得住宿資料
         [HttpGet]
-        public IEnumerable<BookDTO> GetBooks()
+        public IEnumerable<BookDto> GetBooks()
         {
-            return _dbContext.Products.Where(b => b.Id == 2).Select(b => new BookDTO
+            return _dbContext.Products.Where(b => b.Id == 2).Select(b => new BookDto
             {
                 ProductId = b.ProductId,
                 ProductName = b.ProductName,
@@ -32,9 +32,9 @@ namespace TravelProject1._0.Controllers.Api
 
         //商品價格排序低到高
         [HttpGet]
-        public IEnumerable<BookDTO> BookOrderByPrice() 
+        public IEnumerable<BookDto> BookOrderByPrice() 
         {
-            return _dbContext.Products.Where(b => b.Id == 2).OrderBy(b => b.Price).Select(b => new BookDTO
+            return _dbContext.Products.Where(b => b.Id == 2).OrderBy(b => b.Price).Select(b => new BookDto
             {
                 ProductId=b.ProductId,
                 ProductName=b.ProductName,
@@ -45,9 +45,9 @@ namespace TravelProject1._0.Controllers.Api
         }
         //商品價格排序高到低
         [HttpGet]
-        public IEnumerable<BookDTO> BookOrderByDescendingPrice() 
+        public IEnumerable<BookDto> BookOrderByDescendingPrice() 
         {
-            return _dbContext.Products.Where(b => b.Id == 2).OrderByDescending(b => b.Price).Select(b => new BookDTO
+            return _dbContext.Products.Where(b => b.Id == 2).OrderByDescending(b => b.Price).Select(b => new BookDto
             {
                 ProductId= b.ProductId,
                 ProductName=b.ProductName,
@@ -60,9 +60,9 @@ namespace TravelProject1._0.Controllers.Api
         //取得單一商品
         [HttpGet]
         [Route("{id}")]
-        public IEnumerable<BookPlanDTO> GetProduct(int id)
+        public IEnumerable<BookPlanDto> GetProduct(int id)
         {
-            return _dbContext.Products.Where(b => b.ProductId == id).Select(b => new BookPlanDTO
+            return _dbContext.Products.Where(b => b.ProductId == id).Select(b => new BookPlanDto
             {
                 ProductId = b.ProductId,
                 ProductName = b.ProductName,
@@ -76,9 +76,9 @@ namespace TravelProject1._0.Controllers.Api
         //取得商品的方案
         [HttpGet]
         [Route("{id}")]
-        public IEnumerable<BookPlanDTO> GetPlan(int id)
+        public IEnumerable<BookPlanDto> GetPlan(int id)
         {
-            return _dbContext.Plans.Where(c => c.ProductId == id).Select(c => new BookPlanDTO
+            return _dbContext.Plans.Where(c => c.ProductId == id).Select(c => new BookPlanDto
             {
                 PlanId = c.PlanId,
                 Name = c.Name,
@@ -91,9 +91,9 @@ namespace TravelProject1._0.Controllers.Api
         //商品評價
         [HttpGet]
         [Route("{id}")]
-        public async Task<IQueryable<RatingDTO>> GetRating(int id)
+        public async Task<IQueryable<RatingDto>> GetRating(int id)
         {
-            return _dbContext.Ratings.Include(r => r.User).Where(r => r.ProductId == id).Select(r => new RatingDTO
+            return _dbContext.Ratings.Include(r => r.User).Where(r => r.ProductId == id).Select(r => new RatingDto
             {
                 Name = r.User.Name,
                 RatingScore = r.RatingScore,

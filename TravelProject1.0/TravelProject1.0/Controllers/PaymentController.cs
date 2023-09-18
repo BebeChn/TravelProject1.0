@@ -24,7 +24,7 @@ namespace TravelProject1._0.Controllers
         }
 
         [HttpPost]
-        public IActionResult Pay([FromBody] PaymentDTO payment)
+        public IActionResult Pay([FromBody] PaymentDto payment)
         {
             int userId = _userIdentityService.GetUserId();
 

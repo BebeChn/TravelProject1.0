@@ -28,14 +28,14 @@ namespace TravelProject1._0.Controllers.Api
             _userIdentityService = userIdentityService;
         }
         [HttpGet]
-        public async Task<ActionResult<List<CollectProductDTO>>> GetCollect()
+        public async Task<ActionResult<List<CollectProductDto>>> GetCollect()
         { 
             int userId = _userIdentityService.GetUserId();
             if (_context.CollectTables == null)
             {
                 return NotFound();
             }
-            var collects = await _context.CollectTables.Where(c => c.UserId == userId).Select(c => new CollectProductDTO
+            var collects = await _context.CollectTables.Where(c => c.UserId == userId).Select(c => new CollectProductDto
             {
                  CollectId = c.CollectId,
                  ProductId = c.ProductId,

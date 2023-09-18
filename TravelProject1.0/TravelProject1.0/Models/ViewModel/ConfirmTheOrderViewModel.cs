@@ -16,6 +16,6 @@ namespace TravelProject1._0.Models.ViewModel
 
         public decimal? UnitPrice { get; set; }
 
-        public IEnumerable<ConfirmTheOrderDetailDTO> ConfirmTheOrderDetails { get; set; }
+        public IEnumerable<ConfirmTheOrderDetailDto> ConfirmTheOrderDetails { get; set; }
     }
 }

@@ -27,7 +27,7 @@ namespace TravelProject1._0.Controllers.Api
         //商品評價
         [HttpPost]
         [Route("{id}")]
-        public async Task<IActionResult> PostRating([FromBody] RatingAddDTO model)
+        public async Task<IActionResult> PostRating([FromBody] RatingAddDto model)
         {
             if (model == null) return BadRequest();
 

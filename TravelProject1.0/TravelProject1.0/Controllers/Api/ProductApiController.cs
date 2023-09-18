@@ -28,9 +28,9 @@ namespace TravelProject1._0.Controllers.Api
             }).Take(4);
         }
         [HttpGet]
-        public async Task<IQueryable<ProductPlanDTO>> GetProductPlan()
+        public async Task<IQueryable<ProductPlanDto>> GetProductPlan()
         {
-            return _db.Products.Where(x => x.Id == 2).Select(x => new ProductPlanDTO
+            return _db.Products.Where(x => x.Id == 2).Select(x => new ProductPlanDto
             {
                 ProductId = x.ProductId,
                 ProductName = x.ProductName,
@@ -38,9 +38,9 @@ namespace TravelProject1._0.Controllers.Api
             }).Take(3);
         }
         [HttpGet]
-        public IQueryable<AttractionDTO> GetAttractionPlan()
+        public IQueryable<AttractionDto> GetAttractionPlan()
         {
-            return  _db.Products.Where(x => x.Id == 3).Select(x => new AttractionDTO
+            return  _db.Products.Where(x => x.Id == 3).Select(x => new AttractionDto
             {
                 ProductId = x.ProductId,
                 ProductName = x.ProductName,
