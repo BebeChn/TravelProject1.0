@@ -4,12 +4,13 @@ using TravelProject1._0.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using TravelProject1._0.Services;
 using TravelProject1._0.Hubs;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TravelProject1._0
 {
     public class Program
     {
-                    
+
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
@@ -33,17 +34,30 @@ namespace TravelProject1._0
 
             builder.Services.AddControllersWithViews();
 
-            builder.Services.AddAuthentication(option =>
-            {
-                option.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                option.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                option.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                option.DefaultForbidScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                option.DefaultSignOutScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-            }).AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, option =>
+            builder.Services.AddAuthentication(opt => { 
+                opt.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            })
+                .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, option =>
             {
                 option.LoginPath = "/User/Login";
                 option.AccessDeniedPath = "/Home/NoAuthority";
+            }).AddCookie("Admin", option =>
+            {
+                option.LoginPath = "/Admin/Manage/Login";
+                option.AccessDeniedPath = "/Home/NoAuthority";
+            });
+            builder.Services.AddAuthorization(opt =>
+            {
+                var adminPolicy = new AuthorizationPolicyBuilder()
+                .RequireAuthenticatedUser()
+                .AddAuthenticationSchemes("Admin").Build();
+                var userPolicy = new AuthorizationPolicyBuilder()
+                .RequireAuthenticatedUser()
+                .AddAuthenticationSchemes(CookieAuthenticationDefaults.AuthenticationScheme).Build();
+                opt.AddPolicy("admin", adminPolicy);
+                opt.AddPolicy("user", userPolicy);
+                opt.DefaultPolicy = userPolicy;
+
             });
 
             builder.Services.ConfigureApplicationCookie(options =>

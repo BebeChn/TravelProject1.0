@@ -429,11 +429,6 @@ class HttpConnection {
         if (!Utils_1.Platform.isBrowser) {
             throw new Error(`Cannot resolve '${url}'.`);
         }
-        // Setting the url to the href propery of an anchor tag handles normalization
-        // for us. There are 3 main cases.
-        // 1. Relative path normalization e.g "b" -> "http://localhost:5000/a/b"
-        // 2. Absolute path normalization e.g "/a/b" -> "http://localhost:5000/a/b"
-        // 3. Networkpath reference normalization e.g "//localhost:5000/a/b" -> "http://localhost:5000/a/b"
         const aTag = window.document.createElement("a");
         aTag.href = url;
         this._logger.log(ILogger_1.LogLevel.Information, `Normalizing '${url}' to '${aTag.href}'.`);

@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/TravelProject1.0.styles.css" asp-append-version="true" />
     <link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet" asp-append-version="true" />
-    @* <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" /> *@
 	<script src="~/lib/microsoft/signalr/dist/browser/signalr.min.js"></script>
     @await RenderSectionAsync("Styles", required: false)
 </head>
@@ -19,6 +18,7 @@
             <nav class="navbar navbar-expand-lg navbar-light">
                 <a class="navbar-brand logo_h" asp-controller="Home" asp-action="Index">
                     <img src="~/img/2023-08-31_143701.png" style="width:50px;height:50px;" />
+                    <span>TibaGo</span>
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
@@ -42,7 +42,7 @@
                             <a class="nav-link" asp-controller="Transport" asp-action="Index">交通</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="Admin" asp-controller="Admin" asp-action="Admin">管理員</a>
+                            <a class="nav-link" asp-area="Admin" asp-controller="Manage" asp-action="Login">管理員</a>
                         </li>
                     </ul>
                     <partial name="_LoginPartial" />
@@ -151,7 +151,6 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
-    @* <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js" integrity="sha512-uKQ39gEGiyUJl4AI6L+ekBdGKpGw4xJ55+xyJG7YFlJokPNYegn9KwQ3P8A7aFQAUtUsAQHep+d/lrGqrbPIDQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> *@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

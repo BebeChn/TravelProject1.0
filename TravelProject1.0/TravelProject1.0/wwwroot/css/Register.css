@@ -70,7 +70,7 @@
         font-size: 1em;
         color: grey;
         text-transform: uppercase;
-        transition: 0.5s;
+        transition: 1s;
     }
 
     .inputbox input:valid ~ span, .inputbox input:focus ~ span {
@@ -83,11 +83,13 @@
         border-right: 1px solid deepskyblue;
         letter-spacing: 0.2em;
     }
-    /*    .inputbox:nth-child(2) input:valid ~ span, .inputboxx:nth-child(2) input:valid ~ span {
+
+    .inputbox:nth-child(2) input:valid ~ span, .inputboxx:nth-child(2) input:valid ~ span {
         background-color: deepskyblue;
-        color:black;
-        border-radius:2px;
-    }*/
+        color: black;
+        border-radius: 2px;
+    }
+
     .inputbox input:valid, .inputbox input:focus {
         border: 1px solid deepskyblue;
     }

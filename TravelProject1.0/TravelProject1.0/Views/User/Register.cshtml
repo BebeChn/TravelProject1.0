@@ -33,8 +33,8 @@
 			</div>
 		</div>
 		<div class="inputbox mb-3">
-			<input id="" v-model.trim="birthday" type="date" required @@focus="showBirthDayaSpan" @@blur="hideBirthDaySpan" />
-			<span v-if="bithDaySpan">生日</span>
+			<input id="" v-model.trim="birthday" type="date" required @@focus="bithDaySpan = true" @@blur="bithDaySpan = false" />
+			<span v-if="bithDaySpan"><label style="font-size:14px; color:#c1121f">*</label>生日</span>
 			<div class="fs-6 text-danger" v-if="birthday && !isValid(birthday,validType.birthday)">您輸入的格式不正確</div>
 		</div>
 		<div class="row">
@@ -75,7 +75,6 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js" integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 	<script src="~/js/validation.min.js"></script>
 	<script>
-		var baseAddress = "https://localhost:7025";
 		var vueApp = new Vue({
 			el: '#app',
 			data: {
@@ -108,7 +107,7 @@
 						Email: _this.email,
 						Password: _this.password
 					};
-					axios.post(`${baseAddress}/api/UserApi/PostUser`, form)
+					axios.post(`/api/UserApi/PostUser`, form)
 						.then(response => {
 							if (response.data) {
 								alert("註冊成功")
@@ -117,14 +116,6 @@
 						}).catch(err => {
 							alert("輸入的格式有錯");
 						});
-				},
-				showBirthDayaSpan: function () {
-					let _this = this;
-					_this.bithDaySpan = true;
-				},
-				hideBirthDaySpan: function () {
-					let _this = this;
-					_this.bithDaySpan = false;
 				},
 			},
 			computed: {

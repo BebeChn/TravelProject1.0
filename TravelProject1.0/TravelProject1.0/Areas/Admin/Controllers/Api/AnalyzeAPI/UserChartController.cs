@@ -1,13 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json.Linq;
-using System.Configuration;
-using System.Security.Permissions;
-using TravelProject1._0.Areas.Admin.Models.ChartViewModel.HotelChartDTO;
+using Microsoft.Identity.Client.Extensions.Msal;
+using NuGet.Packaging;
 using TravelProject1._0.Areas.Admin.Models.ChartViewModel.UserChartDTO;
 using TravelProject1._0.Models;
+using static NuGet.Packaging.PackagingConstants;
 
 namespace TravelProject1._0.Areas.Admin.Controllers.Api
 {
@@ -43,14 +40,14 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 				"93-97歲"
 			};
 
-		private Dictionary<string, int> AgeGroupDictionart(List<string> ageGroups)
+		private Dictionary<string, int> AgeGroupDictionary(List<string> ageGroups)
 		{
 			return ageGroups.ToDictionary(group => group, _ => 0);
 		}
 
 		private string GetAgeGroup(int? age)
 		{
-			string str = "未分類族群";
+			string str = "未填寫年齡族群";
 			foreach (var ageGroup in ageGroups)
 			{
 				var range = ageGroup.Split("-");
@@ -75,33 +72,11 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 			}).ToList();
 			var orders = _db.Orders.Select(o => o.UserId).ToList();
 
-			var Male = AgeGroupDictionart(ageGroups);
-			var Female = AgeGroupDictionart(ageGroups);
-			var payingMemberAgeGroup = AgeGroupDictionart(ageGroups);
-			var nonPayingMemberAgeGroup = AgeGroupDictionart(ageGroups);
+			var Male = AgeGroupDictionary(ageGroups);
+			var Female = AgeGroupDictionary(ageGroups);
+			var payingMemberAgeGroup = AgeGroupDictionary(ageGroups);
+			var nonPayingMemberAgeGroup = AgeGroupDictionary(ageGroups);
 
-			//foreach (var user in users)
-			//{
-			//	switch (user.Age)
-			//	{
-			//		case int age when age >= 18 && age <= 22:
-			//			if (user.Gender == "F")
-			//			{
-			//				Female["18-22歲"]++;
-			//			}
-			//			else
-			//			{
-			//				Male["18-22歲"]++;
-			//			}
-			//			if (orders.Any(order => order.UserId == user.UserId))
-			//			{
-			//				payingMemberAgeGroup["18-22歲"]++;
-			//			}
-			//			else
-			//			{
-			//				nonPayingMemberAgeGroup["18-22歲"]++;
-			//			}
-			//			break;
 			foreach (var user in users)
 			{
 				var ageGroup = GetAgeGroup(user.Age);
@@ -157,44 +132,9 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 			return _db.Users.AsNoTracking().Where(x => !string.IsNullOrEmpty(x.Gender))
 			.Select(x => x.Gender).GroupBy(x => x).Select(x => new HighChart3DGraph
 			{
-				Name = x.Key == "F" ? "女性" : "男性",
+				Name = x.Key == "N" ? "不指定" : (x.Key == "F" ? "女性" : "男性"),
 				y = x.Count()
 			});
-
-			//var female = new Dictionary<string, int>();
-			//var male = new Dictionary<string, int>();
-			//var users = _db.Users.Select(u => u.Gender).ToList();
-
-			//foreach (var user in users)
-			//{
-			//	if (user.Gender == "F")
-			//	{
-			//		if (female.ContainsKey(user.Gender))
-			//		{
-			//			female[user.Gender]++;
-			//		}
-			//		else
-			//		{
-			//			female[user.Gender] = 1;
-			//		}
-			//	}
-			//	else
-			//	{
-			//		if (male.ContainsKey(user.Gender))
-			//		{
-			//			male[user.Gender]++;
-			//		}
-			//		else
-			//		{
-			//			male[user.Gender] = 1;
-			//		}
-			//	}
-			//}
-
-			//GetUserGenderDTO guDTO = new GetUserGenderDTO();
-			//guDTO.Female = female;
-			//guDTO.Male = male;
-			//return guDTO;
 		}
 
 		[HttpGet]
@@ -209,7 +149,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 			{
 				int endAge = startAge + rangeAge - 1;
 
-				var ageGroup = _db.Users.AsNoTracking()
+				var result = _db.Users.AsNoTracking()
 					.Where(u => u.Age.HasValue && u.Age >= startAge && u.Age <= endAge)
 					.Select(u => u.Age)
 					.ToList()
@@ -225,9 +165,8 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 					})
 					.ToList();
 
-				ageGroups.AddRange(ageGroup);
+				ageGroups.AddRange(result);
 			}
-
 			return ageGroups;
 		}
 

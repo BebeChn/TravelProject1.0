@@ -104,7 +104,6 @@
 	<script src="https://unpkg.com/vuejs-paginate@0.9.0"></script>
 	<script>
 		Vue.component('paginate', VuejsPaginate)
-		var baseAddress = "https://localhost:7025";
 		var app = new Vue({
 			el: '#app',
 			data: {
@@ -116,7 +115,7 @@
 			},
 			mounted: function () {
 				let _this = this;
-				fetch(`${baseAddress}/api/BookApi/GetBooks`, { method: 'GET' })
+				fetch(`/api/BookApi/GetBooks`, { method: 'GET' })
 					.then(response => {
 						if (response.ok) return response.json();
 					}).then(data => {
@@ -131,7 +130,7 @@
 					let _this = this;
 					_this.count++;
 					if (_this.count % 2 != 0) {
-						fetch(`${baseAddress}/api/BookApi/BookOrderbyPrice`, { method: "GET" })
+						fetch(`/api/BookApi/BookOrderbyPrice`, { method: "GET" })
 							.then(response => {
 								if (response.ok) return response.json();
 							}).then(data => {
@@ -141,7 +140,7 @@
 							});
 					}
 					else {
-						fetch(`${baseAddress}/api/BookApi/BookOrderByDescendingPrice`, { method: "GET" })
+						fetch(`/api/BookApi/BookOrderByDescendingPrice`, { method: "GET" })
 							.then(response => {
 								if (response.ok) return response.json();
 							}).then(data => {

@@ -10,5 +10,6 @@
 		public Dictionary<string, decimal> TransportationSale { get; set; }
 
 		public Dictionary<string, decimal> AttractionsSale { get; set; }
+
 	}
 }
