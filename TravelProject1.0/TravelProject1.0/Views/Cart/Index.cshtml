@@ -39,7 +39,6 @@
             <button class="btn theme_btn button_hover info" v-on:click="addOrder(cartItem)">確認訂購資訊</button>
         </div>
     </div>
-
     @* 刪除提示modal *@
     <div class="modal fade" id="deleteItem" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -80,10 +79,9 @@
             },
             mounted: function () {
                 let _this = this;
-                fetch(`/api/CartApi/GetCart`, { method: "GET" })
-                    .then(response => {
-                        if (response.ok) return response.json();
-                    }).then(data => {
+                fetch(`/api/Cart/GetCart`, { method: "GET" })
+                    .then(response => response.json())
+                    .then(data => {
                         _this.cartItem = data.map(x => ({ ...x, checked: false }));
                     }).catch(error => {
                         alert(error);
@@ -96,7 +94,6 @@
                     var d = new Date(str);
                     return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
                 },
-
                 //貨幣格式
                 formatCurrency: function (val) {
                     if (typeof val !== "number") return val;
@@ -112,20 +109,23 @@
                 //刪除商品項目
                 removeItem: function (model) {
                     let _this = this;
-                    fetch(`/api/CartApi/RemoveFromCart`,
+                    fetch(`/api/Cart/RemoveFromCart`,
                         {
                             method: "DELETE",
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify(_this.remove)
-                        }).then(response => {
-                            if (response.ok) alert("商品項目刪除成功!");
-                            location.href = "/cart";
-                        }).catch(error => {
+                        }).then(response => response.json())
+                        .then(data=>{
+                            if(data){
+                                alert("商品項目刪除成功!");
+                                location.href = "/cart";
+                            }
+                        })
+                        .catch(error => {
                             alert("商品項目刪除失敗!");
                         })
                 },
-
-                //加至訂單
+                //到訂單
                 addOrder: function (model) {
                     let _this = this;
                     let selectedItems = model.filter(i => i.checked);
@@ -156,7 +156,6 @@
                         form.submit();
                     }
                 },
-
                 //全選
                 selectAll: function () {
                     let _this = this;
@@ -172,7 +171,6 @@
                         return check;
                     }
                 },
-
                 //合計
                 totalPrice: function (model) {
                     let _this = this;

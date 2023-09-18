@@ -81,7 +81,6 @@
                 </div>
             </div>
         </div>
-
         @* 分頁 *@
         <nav class="blog-pagination justify-content-center d-flex">
             <ul class="pagination">
@@ -116,10 +115,9 @@
             mounted: function () {
                 //取得交通種類的商品
                 var _this = this;
-                fetch(`/api/TransportApi/GetCategoryByTransport`, { method: "GET" })
-                    .then(response => {
-                        if (response.ok) return response.json();
-                    }).then(data => {
+                fetch(`/api/Transport/GetCategoryByTransport`, { method: "GET" })
+                    .then(response => response.json())
+                    .then(data => {
                         _this.transport = data;
                     }).catch(error => {
                         alert(error);
@@ -131,31 +129,27 @@
                     var _this = this;
                     _this.count++;
                     if (_this.count % 2 != 0) {
-                        fetch(`/api/TransportApi/TransportOrderbyPrice`, { method: "GET" })
-                            .then(response => {
-                                if (response.ok) return response.json();
-                            }).then(data => {
+                        fetch(`/api/Transport/TransportOrderbyPrice`, { method: "GET" })
+                            .then(response => response.json())
+                            .then(data => {
                                 _this.transport = data;
                             }).catch(error => {
                                 alert(error);
                             })
                     } else {
-                        fetch(`/api/TransportApi/TransportOrderByDescendingPrice`, { method: "GET" })
-                            .then(response => {
-                                if (response.ok) return response.json();
-                            }).then(data => {
+                        fetch(`/api/Transport/TransportOrderByDescendingPrice`, { method: "GET" })
+                            .then(response => response.json())
+                            .then(data => {
                                 _this.transport = data;
                             }).catch(error => {
                                 alert(error);
                             })
                     }
                 },
-
                 //分頁
                 changePage: function (num) {
                     this.currentPage = num;
                 },
-
                 //列表關鍵字
                 filterByCategory: function (category) {
                     if (this.search === category) {
@@ -170,7 +164,6 @@
                 transportFilter: function () {
                     return this.transport.filter(f => f.productName.includes(this.search));
                 },
-
                 //分頁
                 showProduct: function () {
                     var start = (this.currentPage - 1) * this.itemPage;

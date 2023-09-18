@@ -39,7 +39,6 @@
 					</aside>
 				</div>
 			</div>
-
 			<div class="col-xl-10">
 				<div class="filter-panel d-flex justify-content-between">
 					@* 商品名稱搜尋 *@
@@ -81,7 +80,6 @@
 				</div>
 			</div>
 		</div>
-
 		@* 分頁 *@
 		<nav class="blog-pagination justify-content-center d-flex">
 			<ul class="pagination">
@@ -115,10 +113,9 @@
 			},
 			mounted: function () {
 				let _this = this;
-				fetch(`/api/BookApi/GetBooks`, { method: 'GET' })
-					.then(response => {
-						if (response.ok) return response.json();
-					}).then(data => {
+				fetch(`/api/Book/GetBooks`, { method: 'GET' })
+					.then(response => response.json())
+					.then(data => {
 						_this.books = data;
 					}).catch(error => {
 						alert(error);
@@ -130,27 +127,24 @@
 					let _this = this;
 					_this.count++;
 					if (_this.count % 2 != 0) {
-						fetch(`/api/BookApi/BookOrderbyPrice`, { method: "GET" })
-							.then(response => {
-								if (response.ok) return response.json();
-							}).then(data => {
+						fetch(`/api/Book/BookOrderbyPrice`, { method: "GET" })
+							.then(response => response.json())
+							.then(data => {
 								_this.books = data;
 							}).catch(error => {
 								alert(error);
 							});
 					}
 					else {
-						fetch(`/api/BookApi/BookOrderByDescendingPrice`, { method: "GET" })
-							.then(response => {
-								if (response.ok) return response.json();
-							}).then(data => {
+						fetch(`/api/Book/BookOrderByDescendingPrice`, { method: "GET" })
+							.then(response => response.json())
+							.then(data => {
 								_this.books = data;
 							}).catch(error => {
 								alert(error);
 							})
 					}
 				},
-
 				//分頁
 				changePage: function (num) {
 					let _this = this;
@@ -172,7 +166,6 @@
 					_this.currentPage = 1;
 					return _this.books.filter(b => b.productName.includes(_this.search));
 				},
-
 				//分頁
 				showProduct: function () {
 					let _this = this;
@@ -183,7 +176,7 @@
 				total: function () {
 					let _this = this;
 					return Math.ceil(_this.books.length / _this.itemPage)
-				},
+				}
 			},
 			filters: {
 				//貨幣格式

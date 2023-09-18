@@ -32,7 +32,6 @@
         </div>
     </div>
 </section>
-
 @* 熱門商品 *@
 <div id="app">
     <section class="accomodation_area section_gap">
@@ -56,7 +55,6 @@
             </div>
         </div>
     </section>
-
     @* 商品種類 *@
     <section class="facilities_area section_gap">
         <div class="overlay bg-parallax" data-stellar-ratio="0.8" data-stellar-vertical-offset="0" data-background="">
@@ -89,15 +87,12 @@
                         <h4 class="sec_h4">交通</h4>
                         <p>
                             一根弦若是繃得太緊，總有一天會斷裂，一顆心若是禁錮得太久，總有一天會失去平衡，我們需要放飛心靈，讓心翱翔在自由的天空。
-
                         </p>
                     </div>
                 </div>
             </div>
-
         </div>
     </section>
-
     @* 商品銷售王 *@
     <section class="about_history_area section_gap">
         <div class="container">
@@ -114,11 +109,9 @@
                         <img class="img-fluid" :src="att.img" />
                     </a>
                 </div>
-
             </div>
         </div>
     </section>
-
     @* 推薦商品 *@
     <section class="latest_blog_area section_gap">
         <div class="container">
@@ -156,6 +149,7 @@
         </div>
     </section>
 </div>
+
 @section Scripts {
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>
@@ -178,17 +172,19 @@
             },
             mounted: function () {
                 let _this = this;
-                fetch(`/api/ProductApi/GetAttractionPlan`)
-                    .then(response => {
-                        if (response.ok) return response.json();
-                    }).then(data => {
+                fetch(`/api/Product/GetAttractionPlan`)
+                    .then(response => response.json())
+                    .then(data => {
                         _this.attraction = data;
+                    }).catch(error=>{
+                        alert(error);
                     });
-                fetch(`/api/ProductApi/GetProduct`)
-                    .then(response => {
-                        if (response.ok) return response.json();
-                    }).then(data => {
+                fetch(`/api/Product/GetProduct`)
+                    .then(response => response.json())
+                    .then(data => {
                         _this.products = data;
+                    }).catch(error=>{
+                        alert(error);
                     });
                 var task = [_this.getProductPlanApi()];
                 if (isLogin) task.push(_this.getCollectOfProductIdApi());
@@ -199,15 +195,14 @@
             },
             methods: {
                 getProductPlanApi: async function () {
-                    return await fetch(`/api/ProductApi/GetProductPlan`).then(x => x.json());
+                    return await fetch(`/api/Product/GetProductPlan`).then(x => x.json());
                 },
                 getCollectOfProductIdApi: async function () {
-                    return await fetch(`/api/CollectApi/GetCollectOfProductId`).then(x => x.json());
+                    return await fetch(`/api/Collect/GetCollectOfProductId`).then(x => x.json());
                 },
                 ShowMessage: function () {
                     toastr["success"]("商品已加入收藏夾！");
                 },
-
                 toggleHeart: function (pp) {
                     let _this = this;
                     if (!isLogin) return toastr["error"]("商品無法加入收藏夾請先登入！");;
@@ -218,13 +213,17 @@
                             CollectName: pp.productName,
                             CollectImage: pp.img,
                         };
-                        fetch(`/api/CollectApi/PostCollect`, {
+                        fetch(`/api/Collect/PostCollect`, {
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify(dom)
-                        }).then(response => {
-                            if (response.ok)
+                        }).then(response => response.json())
+                        .then(data=>{
+                            if(data){
                                 toastr["success"]("商品已加入收藏夾！");
+                            }else{
+                                toastr["error"]("商品加入收藏夾失敗！");
+                            }
                         }).catch(err => {
                             toastr["error"]("商品加入收藏夾失敗！");
                         })
@@ -236,14 +235,17 @@
                             CollectName: pp.productName,
                             CollectImage: pp.img,
                         };
-                        fetch(`/api/CollectApi/DeleteCollect`, {
+                        fetch(`/api/Collect/DeleteCollect`, {
                             method: "DELETE",
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify(dom)
-                        })
-                            .then(response => {
-                                if (response.ok)
+                        }).then(response => response.json())
+                        .then(data=>{
+                                if(data){
                                     toastr["success"]("商品已移除收藏夾！");
+                                }else{
+                                    toastr["error"]("商品移除收藏夾失敗！");
+                                }
                             }).catch(err => {
                                 toastr["error"]("商品移除收藏夾失敗！");
                             })
