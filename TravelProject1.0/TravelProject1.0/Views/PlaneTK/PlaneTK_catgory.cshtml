@@ -70,7 +70,7 @@
                 @* 商品 *@
                 <div class="row product-items" v-for="item in showProduct">
                     <div class="col-md-3">
-                        <img class="w-100 , h-30" :src="item.img" id="i"/>
+                        <img class="w-100" style="height:200px;object-fit:cover" :src="item.img" id="i"/>
                     </div>
                     <div class="col-md-7 d_flex align-items-center">
                         <div class="about_content ">
@@ -197,18 +197,22 @@
 
 
                     _this.PlaneTK_catgoryDTOes = _this.xxx;
-
+                    console.log(_this.PlaneTK_catgoryDTOes)
                     if (id == 1) {
-                        _this.PlaneTK_catgoryDTOes = _this.PlaneTK_catgoryDTOes.filter(item => item.productName.match("韓國"));
+                        var arr = ["韓國","首爾"];
+                        _this.PlaneTK_catgoryDTOes = _this.PlaneTK_catgoryDTOes.filter(item => arr.some(z => item.productName.includes(z)));
                     }
                     if (id == 2) {
-                        _this.PlaneTK_catgoryDTOes = _this.PlaneTK_catgoryDTOes.filter(item => item.productName.match("日本"));
+                        var arr = ["日本", "京都","富士山","東京"];
+                        _this.PlaneTK_catgoryDTOes = _this.PlaneTK_catgoryDTOes.filter(item => arr.some(z => item.mainDescribe.includes(z)));
                     }
                     if (id == 3) {
-                        _this.PlaneTK_catgoryDTOes = _this.PlaneTK_catgoryDTOes.filter(item => item.productName.match("越南"));
+                        var arr = ["越南"];
+                        _this.PlaneTK_catgoryDTOes = _this.PlaneTK_catgoryDTOes.filter(item => arr.some(z => item.productName.includes(z)));
                     }
                     if (id == 4) {
-                        _this.PlaneTK_catgoryDTOes = _this.PlaneTK_catgoryDTOes.filter(item => item.productName.match("泰國"));
+                        var arr = ["泰國"];
+                        _this.PlaneTK_catgoryDTOes = _this.PlaneTK_catgoryDTOes.filter(item => arr.some(z => item.productName.includes(z)));                         
                     }
 
                 },
