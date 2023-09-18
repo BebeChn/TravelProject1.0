@@ -63,23 +63,6 @@
         </div>
     </div>
     <br>
-    <!-----------------------------------------------第三段------------------------------------>
-    <!--第四段-->
-    @* <div class="container-fluid row">*@
-    <!--管理選單-->
-    @*        <div class="col-2">
-    <ul class="list-group">
-    <!--管理選單列--> <!--改道layout用-->
-    <a class="btn" href="https://localhost:7025/api/Admin/Admin">使用者管理</a>
-    <a class="btn" href="https://localhost:7025/api/Order/Order">訂單管理</a>
-    <a class="btn" href="http://127.0.0.1:5500/admin.html">數據分析</a>
-    <a class="btn" href="https://localhost:7025/api/Merchandise/Merchandise">商品管理</a>
-    <!--管理選單底-->
-    </ul>
-    </div>*@
-    <!--管理內容-->
-    <!--這段吃完-->
-    <!----------------------------------------------------按鍵----------------------------------->
     <!--新增刪除修改-->
     <div class="container-fluid   row">
         <div class="col-1"></div>
@@ -90,10 +73,7 @@
         <div class="col-3"></div>
         <div class="col-3"></div>
     </div>
-    <!--這段吃完-->
-    <!--換下一行-->
-    <!------------------------------------------顯示管理內容--------------------------------------->
-    <div class="container-fluid   row">
+      <div class="container-fluid   row">
         <div class="table-responsive">
             <table class="table table-bordered  ">
                 <thead>
@@ -109,9 +89,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!--迴圈-->
                     <tr v-for="item in MerchandiseDTOes" class="text-center">
-                        <!--修改-->
                         <template v-if="item.Edit==true">
                             <td>{{item.productId}}</td>
                             <td><input v-model="item.id" /></td>
@@ -136,7 +114,6 @@
                                 </div>
                             </td>
                         </template>
-                        <!--正常-->
                         <template v-else>
                             <td>{{item.productId}}</td>
                             <td>{{item.id}}</td>
@@ -167,9 +144,6 @@
         </div>
     </div>
 
-    <!------------------------------------------新增紀錄的畫面--------------------------------------->
-    <!-- Modal Body -->
-    <!-- if you want to close by clicking outside the modal, delete the last endpoint:data-bs-backdrop and data-bs-keyboard -->
     <div class="modal fade" id="insertModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered " role="document">
             <div class="modal-content">
@@ -213,12 +187,7 @@
             </div>
         </div>
     </div>
-    <!------------------------------------------新增紀錄的畫面底--------------------------------------->
-    @*</div>*@
-    <!--app-->
 </div>
-<!--app-->
-<!--第四段 就是最後整段完-->
 @section Scripts{
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js" integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://unpkg.com/vue@next"></script>
@@ -226,7 +195,6 @@
 
 
     <script>
-        var baseAddress = "https://localhost:7025"
         var vueApp = {
             data() {
                 return {
@@ -272,7 +240,7 @@
                     var request = {};
                     request.ProductId = isNaN(Number(_this.Filter)) ? -1 : Number(_this.Filter);
                     request.ProductName = request.MainDescribe = request.SubDescribe = _this.ShortDescribe = _this.Filter;
-                    axios.post(`${baseAddress}/api/Merchandise/MerchandiseSearch`, request)
+                    axios.post(`/api/Merchandise/MerchandiseSearch`, request)
                         .then(response => {
                             _this.MerchandiseDTOes = response.data;
                             for (var i = 0; i < _this.MerchandiseDTOes.length; i++) {
@@ -285,8 +253,6 @@
                             alert(err);
                         });
                 },
-
-
 
 
                 //取消
@@ -337,7 +303,7 @@
                     request.MainDescribe = item.mainDescribe;
                     request.SubDescribe = item.subDescribe;
                     request.ShortDescribe = item.shortDescribe;
-                    axios.put(`${baseAddress}/api/Merchandise/MerchandisePUT/${item.productId}`, request).then(response => {
+                    axios.put(`/api/Merchandise/MerchandisePUT/${item.productId}`, request).then(response => {
                         alert(response.data);
                         _this.filterMerchandise();
                     }).catch(err => {
@@ -351,7 +317,7 @@
                     let _this = this;
 
                     if (ret == true) {
-                        axios.delete(`${baseAddress}/api/Merchandise/MerchandiseDELETE/${productId}`).then(response => {
+                        axios.delete(`/api/Merchandise/MerchandiseDELETE/${productId}`).then(response => {
                             alert(response.data);
                             _this.filterMerchandise();
                         }).catch(err => {
@@ -380,7 +346,7 @@
                         SubDescribe: _this.subDescribe,
                         ShortDescribe: _this.shortDescribe,
                     };
-                    axios.post(`${baseAddress}/api/Merchandise/MerchandiseADD`, request).then(response => {
+                    axios.post(`/api/Merchandise/MerchandiseADD`, request).then(response => {
                         alert(response.data);
                         //$('#insertModal').modal("hide");
                         _this.filterMerchandise();
@@ -399,7 +365,7 @@
                         return;
                     }
 
-                    axios.get(`${baseAddress}/api/Merchandise/MerchandiseOption/${opvalue}`)
+                    axios.get(`/api/Merchandise/MerchandiseOption/${opvalue}`)
                         .then(response => {
                             _this.MerchandiseDTOes = response.data;
                             for (var i = 0; i < _this.MerchandiseDTOes.length; i++) {
@@ -424,7 +390,7 @@
                         return;
                     }
 
-                    axios.get(`${baseAddress}/api/Merchandise/Merchandiselocation/${locationvalue}`)
+                    axios.get(`/api/Merchandise/Merchandiselocation/${locationvalue}`)
                         .then(response => {
                             _this.MerchandiseDTOes = response.data;
                             for (var i = 0; i < _this.MerchandiseDTOes.length; i++) {
@@ -443,7 +409,7 @@
                 //由小到大
                 pricelower: function () {
                     let _this = this;
-                    axios.get(`${baseAddress}/api/Merchandise/pricelower`)
+                    axios.get(`/api/Merchandise/pricelower`)
                         .then(response => {
                             _this.MerchandiseDTOes = response.data;
                             for (var i = 0; i < _this.MerchandiseDTOes.length; i++) {
@@ -458,7 +424,7 @@
                 //由大到小
                 pricehigh: function () {
                     let _this = this;
-                    axios.get(`${baseAddress}/api/Merchandise/pricehigh`)
+                    axios.get(`/api/Merchandise/pricehigh`)
                         .then(response => {
                             _this.MerchandiseDTOes = response.data;
                             for (var i = 0; i < _this.MerchandiseDTOes.length; i++) {
