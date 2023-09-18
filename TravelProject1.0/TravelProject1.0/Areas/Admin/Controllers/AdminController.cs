@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Cors;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -22,7 +23,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers
         {
             _db = db;
         }
-
+        [Authorize(AuthenticationSchemes ="Admin")]
         public IActionResult Admin()
         {
             return View();

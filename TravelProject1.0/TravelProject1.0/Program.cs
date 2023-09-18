@@ -9,7 +9,7 @@ namespace TravelProject1._0
 {
     public class Program
     {
-                    
+
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
@@ -33,16 +33,14 @@ namespace TravelProject1._0
 
             builder.Services.AddControllersWithViews();
 
-            builder.Services.AddAuthentication(option =>
-            {
-                option.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                option.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                option.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                option.DefaultForbidScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                option.DefaultSignOutScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-            }).AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, option =>
+            builder.Services.AddAuthentication()
+                .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, option =>
             {
                 option.LoginPath = "/User/Login";
+                option.AccessDeniedPath = "/Home/NoAuthority";
+            }).AddCookie("Admin", option =>
+            {
+                option.LoginPath = "/Admin/Manage/Login";
                 option.AccessDeniedPath = "/Home/NoAuthority";
             });
 
