@@ -39,16 +39,7 @@
     <!--第三段-->
     <div class="container-fluid  ">
         <!--管理選單-->
-        @*        <div class="col-2">
-        <ul class="list-group">
-        <!--管理選單列-->  <!--改道layout用-->
-        <a class="btn" href="https://localhost:7025/api/Admin/Admin">使用者管理</a>
-        <a class="btn" href="https://localhost:7025/api/Order/Order">訂單管理</a>
-        <a class="btn" href="http://127.0.0.1:5500/admin.html">數據分析</a>
-        <a class="btn" href="https://localhost:7025/api/Merchandise/Merchandise">商品管理</a>
-        <!--管理選單底-->
-        </ul>
-        </div>*@
+        
         <!--顯示管理內容-->
         <div class="table-responsive">
             <table class="table table-bordered">
@@ -159,9 +150,6 @@
     <script src="https://unpkg.com/vue@next"></script>
     <script src="~/js/planetk.js"></script>
     <script>
-        var baseAddress = "https://localhost:7025"
-
-
         var vueApp = {
             data() {
                 return {
@@ -211,7 +199,7 @@
                     //axios.get(`${baseAddress}/api/Admin/AdminGET`)
                     //request.UserId = isNaN(_this.filter) ? -1 : Number(_this.filter);
                     request.Name = request.Email = _this.filter;
-                    axios.post(`${baseAddress}/api/Admin/AdminSearch`, request)
+                    axios.post(`/api/Admin/AdminSearch`, request)
                         .then(response => {
                             _this.AdminDTOes = response.data;
                             for (var i = 0; i < _this.AdminDTOes.length; i++) {
@@ -259,7 +247,7 @@
                     request.Gender = item.gender;
                     request.Email = item.email;
                     request.Birthday = item.birthday;
-                    axios.put(`${baseAddress}/api/Admin/AdminPUT/${item.userId}`, request).then(response => {
+                    axios.put(`/api/Admin/AdminPUT/${item.userId}`, request).then(response => {
                         alert(response.data);
                         _this.filterUser();
                     }).catch(err => {
@@ -290,7 +278,7 @@
                     let _this = this;
 
                     if (ret == true) {
-                        axios.delete(`${baseAddress}/api/Admin/AdminDELETE/${userId}`).then(response => {
+                        axios.delete(`/api/Admin/AdminDELETE/${userId}`).then(response => {
                             alert(response.data);
                             _this.filterUser();
                         }).catch(err => {
@@ -337,7 +325,7 @@
                         PasswordHash: _this.addpasswordHash,
                         Birthday: '1980-09-21T00:00:00',
                     };
-                    axios.post(`${baseAddress}/api/Admin/ADDAdmin`, request).then(response => {
+                    axios.post(`/api/Admin/ADDAdmin`, request).then(response => {
                         alert(response.data);
                         //$('#insertModal').modal("hide");
                         _this.filterUser();

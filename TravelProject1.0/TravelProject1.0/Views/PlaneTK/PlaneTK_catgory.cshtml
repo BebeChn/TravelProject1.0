@@ -125,7 +125,6 @@
 
 
     <script>
-        var baseAddress = "https://localhost:7025"
         var vueApp = {
             data() {
                 return {
@@ -155,7 +154,7 @@
                     let _this = this;
                     //alert("篩選");
                     var request = {};
-                    axios.get(`${baseAddress}/api/PlaneTK/PlaneTK_catgoryGET`)
+                    axios.get(`/api/PlaneTK/PlaneTK_catgoryGET`)
                         .then(response => {
                             _this.PlaneTK_catgoryDTOes = response.data;
                             _this.xxx = response.data;
@@ -173,7 +172,7 @@
                     var _this = this;
                     _this.count++;
                     if (_this.count % 2 != 0) {
-                        axios.get(`${baseAddress}/api/PlaneTK/pricelower`)
+                        axios.get(`/api/PlaneTK/pricelower`)
                             .then(response => {
                                 _this.PlaneTK_catgoryDTOes = response.data;
                             })
@@ -181,7 +180,7 @@
                                 alert(err);
                             });
                     } else {
-                        axios.get(`${baseAddress}/api/PlaneTK/priceheigh`)
+                        axios.get(`/api/PlaneTK/priceheigh`)
                             .then(response => {
                                 _this.PlaneTK_catgoryDTOes = response.data;
 
@@ -225,14 +224,6 @@
 
 
                 },
-
-
-
-
-
-
-
-
             },
             computed: {
                 //篩選
