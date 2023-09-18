@@ -1,6 +1,6 @@
 ﻿namespace TravelProject1._0.Models.DTO
 {
-    public class BookDTO
+    public class BookDto
     {
         public int ProductId { get; set; }
 

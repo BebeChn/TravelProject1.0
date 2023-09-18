@@ -21,10 +21,10 @@ namespace TravelProject1._0.Controllers.Api
         }
 
         [HttpGet]
-        public async Task<List<CollectProductDTO>> GetCollect()
+        public async Task<List<CollectProductDto>> GetCollect()
         {
             int userId = _userIdentityService.GetUserId();
-            return await _context.CollectTables.Where(c => c.UserId == userId).Select(c => new CollectProductDTO
+            return await _context.CollectTables.Where(c => c.UserId == userId).Select(c => new CollectProductDto
             {
                 CollectId = c.CollectId,
                 ProductId = c.ProductId,

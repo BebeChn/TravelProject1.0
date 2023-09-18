@@ -36,7 +36,7 @@ namespace TravelProject1._0.Controllers.Api
 		}
 
 		[HttpGet]
-		public async Task<UpdateUserDTO> GetUser()
+		public async Task<UpdateUserDto> GetUser()
 		{
 			var userId = _userIdentityService.GetUserId();
 			if (_context.Users == null)
@@ -49,7 +49,7 @@ namespace TravelProject1._0.Controllers.Api
 			{
 				return null;
 			}
-			UpdateUserDTO usersDTO = new UpdateUserDTO
+			UpdateUserDto usersDTO = new UpdateUserDto
 			{
 				Name = users.Name,
 				Email = users.Email,

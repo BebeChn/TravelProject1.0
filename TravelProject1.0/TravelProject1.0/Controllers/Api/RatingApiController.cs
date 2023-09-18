@@ -19,7 +19,7 @@ namespace TravelProject1._0.Controllers.Api
 
         //商品評價
         [HttpPost("{id}")]
-        public async Task<bool> PostRating([FromBody] RatingAddDTO model)
+        public async Task<bool> PostRating([FromBody] RatingAddDto model)
         {
             if (model == null) return false;
             int userId = _userIdentityService.GetUserId();
