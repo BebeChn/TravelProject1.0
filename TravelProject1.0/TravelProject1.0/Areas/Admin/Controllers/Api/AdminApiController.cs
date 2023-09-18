@@ -1,22 +1,13 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Win32;
-using NToastNotify.Helpers;
-using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
 using TravelProject1._0.Areas.Admin.Models.DTO;
-using TravelProject1._0.Areas.Admin.Models.ViewModel;
 using TravelProject1._0.Models;
-using TravelProject1._0.Models.DTO;
 using TravelProject1._0.Services;
 
 namespace TravelProject1._0.Areas.Admin.Controllers.Api
 {
     [Area("Admin")]
-    [Route("api/AdminApi/[action]")]
+    [Route("api/Admin/[action]")]
     [ApiController]
     public class AdminApiController : ControllerBase
     {
@@ -41,7 +32,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
                 Gender = x.Gender,
                 Name = x.Name,
                 Phone = x.Phone,
-                Birthday = x.Birthday.Value.ToString("yyyy-MM-dd"),
+                Birthday = x.Birthday.HasValue ? x.Birthday.Value.ToString("yyyy-MM-dd") : "",
             });
 
         }
@@ -75,84 +66,52 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
                 return NotFound();
             }
         }
-            
+
         [HttpPost]
-        public IActionResult AdminManageUser(AdmminManageUserDTO amuDTO)
+        public bool AdminManageUser(AdmminManageUserDTO amuDTO)
         {
-            if (amuDTO == null) return BadRequest();
-
-            var salt = GenerateSalt();
-
-            var passwordhash = HashPassword(amuDTO.Password, salt);
-
-            User insertuser = new User
-            {
-                Name = amuDTO.Name,
-                Email = amuDTO.Email,
-                PasswordHash = passwordhash,
-                Gender = amuDTO.Gender,
-                Phone = amuDTO.Phone,
-                Birthday = amuDTO.Birthday,
-            };
-
+            if (amuDTO == null) return false;
             try
             {
-                _context.Users.AddAsync(insertuser);
+                _context.Users.AddAsync(new User
+                {
+                    Name = amuDTO.Name,
+                    Email = amuDTO.Email,
+                    PasswordHash = amuDTO.Password,
+                    Gender = amuDTO.Gender,
+                    Phone = amuDTO.Phone,
+                    Birthday = amuDTO.Birthday,
+                });
                 _context.SaveChanges();
-                List<Claim> claims = new List<Claim>();
-                claims.Add(new Claim(ClaimTypes.NameIdentifier, amuDTO.Id.ToString()));
-                claims.Add(new Claim(ClaimTypes.Name, $"{amuDTO.Name}"));
-                claims.Add(new Claim("Email", amuDTO.Email));
-                claims.Add(new Claim(ClaimTypes.Role, "user"));
-                ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                ClaimsPrincipal principal = new ClaimsPrincipal(identity);
-                return Ok(insertuser);
+
+                return true;
             }
-            catch 
+            catch
             {
-                return BadRequest();
+                return false;
             }
         }
-        private string GenerateSalt()
-        {
-            Byte[] bytes = new Byte[16];
-            using (var ran = RandomNumberGenerator.Create())
-            {
-                ran.GetBytes(bytes);
-            }
-            return Convert.ToBase64String(bytes);
-        }
-        private string HashPassword(string paswword, string salt)
-        {
-            using (var sha256 = SHA256.Create())
-            {
-                string paswwordsalt = paswword + salt;
-                byte[] passwordhash = Encoding.UTF8.GetBytes(paswwordsalt);
-                byte[] psaswordhash = sha256.ComputeHash(passwordhash);
-                return Convert.ToBase64String(psaswordhash);
-            }
-        }
+
         [HttpPut("{id}")]
-        public async Task<string> AdminPutUser(int id, AdminPutUserDTO apuDTO)
+        public async Task<bool> AdminPutUser(int id, AdminPutUserDTO apuDTO)
         {
-
-            var admin = await _context.Users.FindAsync(id);
-            admin.Name = apuDTO.Name;
-            admin.Gender = apuDTO.Gender;
-            admin.Email = apuDTO.Email;
-            admin.Birthday = apuDTO.Birthday;
-            admin.Phone = apuDTO.Phone;
-
-            _context.Entry(admin).State = EntityState.Modified;
             try
             {
+                var admin = await _context.Users.FindAsync(id);
+                if (admin == null) return false;
+                admin.Name = apuDTO.Name;
+                admin.Gender = apuDTO.Gender;
+                admin.Email = apuDTO.Email;
+                admin.Birthday = apuDTO.Birthday;
+                admin.Phone = apuDTO.Phone;
+
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception)
             {
-                throw;
+                return false;
             }
-            return "成功";
+            return true;
         }
         [HttpDelete("{id}")]
         public async Task<string> AdminDeleteUser(int id)
@@ -174,32 +133,31 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
             }
         }
         [HttpGet]
-        public async Task<IQueryable<AdminGetUserDTO>> OrderByAge()
+        public async Task<List<AdminGetUserDTO>> OrderByAge()
         {
-            return _context.Users.OrderBy(u => u.Age).Select(u => new AdminGetUserDTO
+            return await _context.Users.OrderBy(u => u.Age).Select(u => new AdminGetUserDTO
             {
                 UserId = u.UserId,
                 Email = u.Email,
                 Gender = u.Gender,
                 Name = u.Name,
                 Phone = u.Phone,
-                Birthday = u.Birthday.Value.ToString("yyyy-MM-dd"),
-
-            });
+                Birthday = u.Birthday.HasValue ? u.Birthday.Value.ToString("yyyy-MM-dd") : "",
+            }).ToListAsync();
         }
         //排序年紀
         [HttpGet]
-        public async Task<IQueryable<AdminGetUserDTO>> OrderByDescendingAge()
+        public async Task<List<AdminGetUserDTO>> OrderByDescendingAge()
         {
-            return _context.Users.OrderByDescending(u => u.Age).Select(u => new AdminGetUserDTO
+            return await _context.Users.OrderByDescending(u => u.Age).Select(u => new AdminGetUserDTO
             {
                 UserId = u.UserId,
                 Email = u.Email,
                 Gender = u.Gender,
                 Name = u.Name,
                 Phone = u.Phone,
-                Birthday = u.Birthday.Value.ToString("yyyy-MM-dd"),
-            });
+                Birthday = u.Birthday.HasValue ? u.Birthday.Value.ToString("yyyy-MM-dd") : "",
+            }).ToListAsync();
         }
         [HttpGet]
         public IActionResult AdminSearchUser(string query)
