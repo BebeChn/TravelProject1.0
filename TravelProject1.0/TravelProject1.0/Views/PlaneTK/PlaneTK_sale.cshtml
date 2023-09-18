@@ -157,7 +157,6 @@
 	<script src="https://unpkg.com/vue2-datepicker/index.min.js"></script>
 	<script>
 		var isLogin = ('@User.Identity.IsAuthenticated' == "True");
-		let baseAddress = "https://localhost:7025";
 		Vue.component(DatePicker);
 		var app = new Vue({
 			el: '#app',
@@ -174,7 +173,7 @@
 				_this.queries = window.location.pathname.replace('/api/PlaneTK/PlaneTK_sale/', '');
 
 				//方案
-				fetch(`${baseAddress}/api/PlaneTK/PlaneTK_salePlan/${_this.queries}`, { method: "GET" })
+				fetch(`/api/PlaneTK/PlaneTK_salePlan/${_this.queries}`, { method: "GET" })
 					.then(response => {
 						if (response.ok) return response.json();
 					}).then(data => {
@@ -183,7 +182,7 @@
 						alert(error);
 					});
 				//商品
-				fetch(`${baseAddress}/api/PlaneTK/PlaneTK_Product/${_this.queries}`, { method: "GET" })
+				fetch(`/api/PlaneTK/PlaneTK_Product/${_this.queries}`, { method: "GET" })
 					.then(response => {
 						if (response.ok) return response.json();
 					}).then(data => {
@@ -192,7 +191,7 @@
 						alert(error);
 					})
 				//評價
-				fetch(`${baseAddress}/api/PlaneTK/PlaneTK_GetRate/${_this.queries}`, { method: "GET" })
+				fetch(`/api/PlaneTK/PlaneTK_GetRate/${_this.queries}`, { method: "GET" })
 					.then(response => {
 						if (response.ok) return response.json();
 					}).then(data => {
@@ -243,7 +242,7 @@
 						cartDate: model.selected.date
 					};
 					if (model.selected.date !== "" && model.selected.num !== 0) {
-						fetch(`${baseAddress}/api/CartApi/AddToCart`, {
+						fetch(`/api/CartApi/AddToCart`, {
 							method: 'POST',
 							headers: { "Content-Type": "application/json" },
 							body: JSON.stringify(cartData)

@@ -4,6 +4,7 @@ using TravelProject1._0.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using TravelProject1._0.Services;
 using TravelProject1._0.Hubs;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TravelProject1._0
 {
@@ -33,7 +34,9 @@ namespace TravelProject1._0
 
             builder.Services.AddControllersWithViews();
 
-            builder.Services.AddAuthentication()
+            builder.Services.AddAuthentication(opt => { 
+                opt.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            })
                 .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, option =>
             {
                 option.LoginPath = "/User/Login";
@@ -42,6 +45,19 @@ namespace TravelProject1._0
             {
                 option.LoginPath = "/Admin/Manage/Login";
                 option.AccessDeniedPath = "/Home/NoAuthority";
+            });
+            builder.Services.AddAuthorization(opt =>
+            {
+                var adminPolicy = new AuthorizationPolicyBuilder()
+                .RequireAuthenticatedUser()
+                .AddAuthenticationSchemes("Admin").Build();
+                var userPolicy = new AuthorizationPolicyBuilder()
+                .RequireAuthenticatedUser()
+                .AddAuthenticationSchemes(CookieAuthenticationDefaults.AuthenticationScheme).Build();
+                opt.AddPolicy("admin", adminPolicy);
+                opt.AddPolicy("user", userPolicy);
+                opt.DefaultPolicy = userPolicy;
+
             });
 
             builder.Services.ConfigureApplicationCookie(options =>
