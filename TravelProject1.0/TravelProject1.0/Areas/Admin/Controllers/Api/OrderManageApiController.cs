@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using TravelProject1._0.Areas.Admin.Models.DTO;
 using TravelProject1._0.Models;
-
 namespace TravelProject1._0.Areas.Admin.Controllers.Api;
 
 [Route("api/OrderManage/[action]")]
