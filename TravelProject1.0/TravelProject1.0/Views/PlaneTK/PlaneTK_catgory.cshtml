@@ -70,7 +70,7 @@
                 @* 商品 *@
                 <div class="row product-items" v-for="item in showProduct">
                     <div class="col-md-3">
-                        <img class="w-100" style="height:200px;object-fit:cover" :src="item.img" id="i"/>
+                        <img class="w-100" style="height:200px;object-fit:cover" :src="item.img" id="i" />
                     </div>
                     <div class="col-md-7 d_flex align-items-center">
                         <div class="about_content ">
@@ -132,6 +132,7 @@
                     website: "https://localhost:7025/api/PlaneTK/PlaneTK_sale/",
                     count: 0,
                     search: '',
+                    productList: [],
                     //
                     currentPage: 1,   //初始是第一頁
                     itemPage: 8,   //五個商品為一頁
@@ -158,6 +159,8 @@
                         .then(response => {
                             _this.PlaneTK_catgoryDTOes = response.data;
                             _this.xxx = response.data;
+                            _this.productList = response.data;
+
                         })
                         .catch(err => {
                             alert(err);
@@ -174,7 +177,7 @@
                     if (_this.count % 2 != 0) {
                         axios.get(`/api/PlaneTK/pricelower`)
                             .then(response => {
-                                _this.PlaneTK_catgoryDTOes = response.data;
+                                _this.productList = response.data;
                             })
                             .catch(err => {
                                 alert(err);
@@ -182,7 +185,7 @@
                     } else {
                         axios.get(`/api/PlaneTK/priceheigh`)
                             .then(response => {
-                                _this.PlaneTK_catgoryDTOes = response.data;
+                                _this.productList = response.data;
 
                             })
                             .catch(err => {
@@ -199,20 +202,20 @@
                     _this.PlaneTK_catgoryDTOes = _this.xxx;
                     //console.log(_this.PlaneTK_catgoryDTOes)
                     if (id == 1) {
-                        var arr = ["韓國","首爾"];
-                        _this.PlaneTK_catgoryDTOes = _this.PlaneTK_catgoryDTOes.filter(item => arr.some(z => item.productName.includes(z)));
+                        var arr = ["韓國", "首爾"];
+                        _this.productList = _this.PlaneTK_catgoryDTOes.filter(item => arr.some(z => item.productName.includes(z)));
                     }
                     if (id == 2) {
-                        var arr = ["日本", "京都","富士山","東京"];
-                        _this.PlaneTK_catgoryDTOes = _this.PlaneTK_catgoryDTOes.filter(item => arr.some(z => item.productName.includes(z)));
+                        var arr = ["日本", "京都", "富士山", "東京"];
+                        _this.productList = _this.PlaneTK_catgoryDTOes.filter(item => arr.some(z => item.productName.includes(z)));
                     }
                     if (id == 3) {
                         var arr = ["越南", "河內", "峴港"];
-                        _this.PlaneTK_catgoryDTOes = _this.PlaneTK_catgoryDTOes.filter(item => arr.some(z => item.productName.includes(z)));
+                        _this.productList = _this.PlaneTK_catgoryDTOes.filter(item => arr.some(z => item.productName.includes(z)));
                     }
                     if (id == 4) {
                         var arr = ["泰國", "丹嫩莎朵", "邦芭茵夏宮", "普吉島", "芭堤雅", "洪島"];
-                        _this.PlaneTK_catgoryDTOes = _this.PlaneTK_catgoryDTOes.filter(item => arr.some(z => item.productName.includes(z)));                         
+                        _this.productList = _this.PlaneTK_catgoryDTOes.filter(item => arr.some(z => item.productName.includes(z)));
                     }
 
                 },
@@ -235,7 +238,7 @@
                     let _this = this;
 
 
-                    return _this.PlaneTK_catgoryDTOes.filter(item => item.productName.match(_this.search));
+                    return _this.productList.filter(item => item.productName.match(_this.search));
 
 
 
