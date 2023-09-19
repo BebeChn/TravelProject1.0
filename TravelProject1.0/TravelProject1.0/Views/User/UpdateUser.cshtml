@@ -175,7 +175,7 @@
             },
             mounted: function () {
                 let _this = this;
-                fetch(`/api/UserApi/GetUser`, {
+                fetch(`/api/User/GetUser`, {
                     method: "GET"
                 }).then(response => {
                     if (response.ok) {
@@ -201,7 +201,7 @@
                         birthday: _this.user.birthday,
                     };
 
-                    fetch(`/api/UserApi/UpdateUser`, {
+                    fetch(`/api/User/UpdateUser`, {
                         method: "PUT",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify(request)
