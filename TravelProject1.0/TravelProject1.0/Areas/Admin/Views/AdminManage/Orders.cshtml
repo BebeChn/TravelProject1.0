@@ -198,7 +198,7 @@
                 },
                 //修改訂單
                 updateOrder: function (or) {
-                    fetch("/api/OrderManageApi/UpdateOrder/" + or.orderId,
+                    fetch("/api/OrderManage/UpdateOrder/" + or.orderId,
                         {
                             method: "PUT",
                             headers: { "Content-Type": "application/json" },
@@ -223,7 +223,7 @@
                 //刪除訂單
                 deleteOrder: function (id) {
                     let self = this;
-                    fetch("/api/OrderManageApi/DeleteOrder/" + id, { method: "DELETE" })
+                    fetch("/api/OrderManage/DeleteOrder/" + id, { method: "DELETE" })
                         .then(x => x.json())
                         .then(x => {
                             if (x) {
@@ -252,7 +252,7 @@
                 },
                 //修改訂單明細
                 updateDetail: function (od) {
-                    fetch("/api/OrderManageApi/UpdateDetail/" + od.id,
+                    fetch("/api/OrderManage/UpdateDetail/" + od.id,
                         {
                             method: "PUT",
                             headers: { "Content-Type": "application/json" },
@@ -273,7 +273,7 @@
                 //刪除訂單明細
                 deleteDetail: function (od) {
                     let self = this;
-                    fetch("/api/OrderManageApi/DeleteDetail/" + od.id, { method: "DELETE" })
+                    fetch("/api/OrderManage/DeleteDetail/" + od.id, { method: "DELETE" })
                         .then(x => x.json())
                         .then(x => {
                             if (x) {
