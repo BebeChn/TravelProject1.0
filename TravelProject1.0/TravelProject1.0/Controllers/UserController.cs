@@ -24,10 +24,7 @@ public class UserController : Controller
 
     }
 
-    public IActionResult Index()
-    {
-        return View();
-    }
+
 
     public IActionResult Login()
     {
@@ -43,7 +40,7 @@ public class UserController : Controller
             .FirstOrDefaultAsync();
 
         if (user == null) return View("Login");
-
+        if (user.Salt == null) return BadRequest();
         var hashedPassword = HashPassword(password, user.Salt);
 
         if (user.PasswordHash == hashedPassword)
@@ -94,24 +91,19 @@ public class UserController : Controller
     // 使用SHA-256哈希密碼並加鹽
     private string HashPassword(string password, string salt)
     {
-        using (var SHA256 = System.Security.Cryptography.SHA256.Create())
+        using (var sha256 = System.Security.Cryptography.SHA256.Create())
         {
             // 將密碼轉換成二進位
             var passwordWithSalt = password + salt;
             var passwordBytes = Encoding.UTF8.GetBytes(passwordWithSalt);
             // 計算密碼哈希
-            var hashBytes = SHA256.ComputeHash(passwordBytes);
+            var hashBytes = sha256.ComputeHash(passwordBytes);
             // 將密碼哈希轉換為Base64编碼的字串
             return Convert.ToBase64String(hashBytes);
         }
     }
 
     public IActionResult ResetPassword()
-    {
-        return View();
-    }
-
-    public IActionResult EditProfile()
     {
         return View();
     }
@@ -133,10 +125,10 @@ public class UserController : Controller
         return View();
     }
 
-    private bool IsValidUser(string Email, string password)
+    private bool IsValidUser(string email, string password)
     {
         var user = new UserDto();
-        return Email == "user.Email" && password == "user.password";
+        return email == "user.Email" && password == "user.password";
     }
 
   
