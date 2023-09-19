@@ -20,7 +20,7 @@
                 <th>刪除</th>
             </tr>
         </thead>
-        <tbody class="cart" v-for="(c,index) in cartItem" :key="c.cartId">
+        <tbody class="cart" v-for="(c,index) in showCartItem" :key="c.cartId">
             <tr class="cart-item">
                 <td align="center" valign="middle"><input class="inp-cart" type="checkbox" v-model="c.checked" /></td>
                 <td align="center" valign="middle"><img style="width:100px;height:100px;" src="~/lib/image/mountain.jpeg" /></td>
@@ -39,6 +39,21 @@
             <button class="btn theme_btn button_hover info" v-on:click="addOrder(cartItem)">確認訂購資訊</button>
         </div>
     </div>
+    @* 分頁 *@
+    <nav class="blog-pagination justify-content-center d-flex">
+        <ul class="pagination">
+            <paginate :page-count="total"
+                      :click-handler="changePage"
+                      :page-class="'page-item'"
+                      :page-link-class="'page-link'"
+                      :prev-class="'page-link'"
+                      :prev-link-class="'lnr lnr-chevron-left'"
+                      :next-class="'page-link'"
+                      :next-link-class="'lnr lnr-chevron-right'"
+                      :container-class="'pagination'">
+            </paginate>
+        </ul>
+    </nav>
     @* 刪除提示modal *@
     <div class="modal fade" id="deleteItem" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -75,7 +90,9 @@
                 remove: [],
                 orderId: "",
                 orderDetail: [],
-                cartCount: 0
+                cartCount: 0,
+                currentPage: 1,
+                itemPage: 7
             },
             mounted: function () {
                 let _this = this;
@@ -115,8 +132,8 @@
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify(_this.remove)
                         }).then(response => response.json())
-                        .then(data=>{
-                            if(data){
+                        .then(data => {
+                            if (data) {
                                 alert("商品項目刪除成功!");
                                 location.href = "/cart";
                             }
@@ -181,6 +198,24 @@
                         }
                     }
                     return total;
+                },
+                //分頁
+                changePage: function (num) {
+                    let _this = this;
+                    _this.currentPage = num;
+                },
+            },
+            computed: {
+                //分頁
+                showCartItem: function () {
+                    let _this = this;
+                    var start = (_this.currentPage - 1) * _this.itemPage;
+                    var end = start + _this.itemPage;
+                    return this.cartItem.slice(start, end);
+                },
+                total: function () {
+                    let _this = this;
+                    return Math.ceil(_this.cartItem.length / _this.itemPage);
                 }
             }
         })

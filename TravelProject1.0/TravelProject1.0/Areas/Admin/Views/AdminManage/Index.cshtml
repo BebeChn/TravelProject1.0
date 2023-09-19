@@ -14,13 +14,20 @@
             color: #dc3545;
             font-size: .875em;
         }
+
+        .modal-header {
+            background-color: #52c5fd;
+        }
+
+        .modal-title {
+            color: white;
+        }
     </style>
 }
 
 
 <div id="app">
     <div>
-
         @* 新增管理人 *@
         <div class="col-2" style="margin-bottom:25px;margin-top:25px;">
             <button class="btn btn-success" data-toggle="modal" data-target="#newAdmin">新增管理人</button>
@@ -71,14 +78,12 @@
             </ul>
         </nav>
     </div>
-
-
     @*新增管理員記錄Bootstrap Modal畫面*@
     <div class="modal fade" id="newAdmin" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalTitleId">新增管理員</h5>
+                <div class="modal-header text-center">
+                    <h5 class="modal-title w-100" id="modalTitleId">新增管理員</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true"><i class="fa-solid fa-xmark"></i></span>
                     </button>
@@ -111,13 +116,12 @@
             </div>
         </div>
     </div>
-
     @*修改管理員記錄Bootstrap Modal畫面*@
     <div class="modal fade" id="UpdateAdmin" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalTitleId">修改管理人資料</h5>
+                <div class="modal-header text-center">
+                    <h5 class="modal-title w-100" id="modalTitleId">修改管理人資料</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true"><i class="fa-solid fa-xmark"></i></span>
                     </button>
@@ -211,6 +215,7 @@
                         .then(data => {
                             if (data) {
                                 alert("管理員新增成功");
+                                window.location.href = "/Admin/Manage/Index";
                             } else {
                                 alert("管理員新增失敗");
                             }
@@ -254,7 +259,8 @@
                     }).then(x => {
                         if (!x) alert("修改失敗,請檢查必填有無填寫");
                         alert("修改成功");
-                        $('#UpdateAdmin').modal('hide')
+                        $('#UpdateAdmin').modal('hide');
+                        window.location.href = "/Admin/Manage/Index";
                     })
                 },
                 formClear: function () {
