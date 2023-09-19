@@ -67,7 +67,7 @@ public class ProductApiController : ControllerBase
 
             return Ok(gpd);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             return NotFound();
         }
