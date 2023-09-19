@@ -138,7 +138,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 		}
 
 		[HttpGet]
-		public async Task<IEnumerable<HighChart3DGraph>> GetUserAgeGroup()
+		public  IEnumerable<HighChart3DGraph> GetUserAgeGroup()
 		{
 			var ageGroups = new List<HighChart3DGraph>();
 			int minAge = 18;
@@ -162,8 +162,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 					{
 						Name = $"{group.Key.StartAge}-{group.Key.EndAge}歲",
 						y = group.Count()
-					})
-					.ToList();
+					}).ToList();
 
 				ageGroups.AddRange(result);
 			}
