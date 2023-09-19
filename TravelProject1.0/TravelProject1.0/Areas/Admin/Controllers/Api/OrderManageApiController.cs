@@ -5,7 +5,7 @@ using TravelProject1._0.Models;
 
 namespace TravelProject1._0.Areas.Admin.Controllers.Api;
 
-[Route("api/[controller]/[action]")]
+[Route("api/OrderManage/[action]")]
 [ApiController]
 public class OrderManageApiController : ControllerBase
 {
@@ -118,5 +118,20 @@ public class OrderManageApiController : ControllerBase
         {
             return false;
         }
+    }
+
+    //搜尋
+    [HttpGet]
+    public async Task<List<SearchOrdersDTO>> SearchOrders(string query)
+    {
+        return await _dbContext.Orders.Where(o => o.OrderId.ToString().Contains(query) || o.UserId.ToString().Contains(query)).Select(o => new SearchOrdersDTO
+        {
+            OrderId = o.OrderId,
+            UserId = o.UserId,
+            TotalPrice = o.TotalPrice,
+            NewPoint = o.NewPoint,
+            OrderDate = o.OrderDate,
+            Status = o.Status
+        }).ToListAsync();
     }
 }

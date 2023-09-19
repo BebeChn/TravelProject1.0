@@ -11,7 +11,7 @@
     <div class="row upperLayer">
         @* 搜尋 *@
         <div class="col-4">
-            <input class="inp-search" type="text" placeholder="Search...">
+            <input class="inp-search" type="text" placeholder="Search..." v-model="searchQuery" @@keyup="search">
         </div>
     </div>
     @* 訂單 *@
@@ -163,33 +163,33 @@
         Vue.component('paginate', VuejsPaginate)
         var app = new Vue({
             el: "#app",
-            data() {
-                return {
-                    order: [],
-                    detail: [],
-                    editOrder: {
-                        status: "",
-                        orderDate: ""
-                    },
-                    editDetail: {
-                        useDate: ""
-                    },
-                    detailEdit: false,
-                    currentPage: 1,
-                    itemPage: 7
-                };
+            data: {
+                order: [],
+                detail: [],
+                editOrder: {
+                    status: "",
+                    orderDate: ""
+                },
+                editDetail: {
+                    useDate: ""
+                },
+                detailEdit: false,
+                currentPage: 1,
+                itemPage: 7,
+                searchQuery: ""
             },
             mounted: function () {
-                this.getOrdersApi();
+                let _this = this;
+                fetch("/api/OrderManage/GetOrders", { method: "GET" })
+                    .then(response => response.json())
+                    .then(data => {
+                        _this.order = data.map(z => ({ ...z, Edit: false }));
+                        console.log(_this.order);
+                    }).catch(error => {
+                        alert(error);
+                    });
             },
             methods: {
-                //取得訂單
-                getOrdersApi: function () {
-                    let _this = this;
-                    fetch("/api/OrderManageApi/GetOrders", { method: "GET" })
-                        .then(x => x.json())
-                        .then(x => _this.order = x.map(z => ({ ...z, Edit: false })));
-                },
                 //編輯訂單
                 openChangeOrder: function (item) {
                     item.Edit = true;
@@ -296,6 +296,32 @@
                     let _this = this;
                     _this.currentPage = num;
                 },
+                //搜尋
+                search: function () {
+                    let _this = this;
+                    if (_this.searchQuery.trim() == '') {
+                        _this.searchQuery = '';
+                        // 不執行篩選，直接獲取所有商品
+                        fetch(`/api/OrderManage/GetOrders`)
+                            .then(response => response.json())
+                            .then(data => {
+                                _this.order = data;
+                            })
+                            .catch(error => {
+                                alert(error);
+                            });
+                    } else {
+                        // 執行根據搜尋條件篩選商品
+                        fetch(`/api/OrderManage/SearchOrders?query=${_this.searchQuery}`, {
+                            method: "GET"
+                        }).then(response => response.json())
+                            .then(data => {
+                                _this.order = data;
+                            }).catch(error => {
+                                alert(error);
+                            });
+                    }
+                }
             },
             computed: {
                 //分頁
@@ -308,7 +334,7 @@
                 total: function () {
                     let _this = this;
                     return Math.ceil(_this.order.length / _this.itemPage);
-                },
+                }
             },
             filters: {
                 //貨幣格式

@@ -1,7 +1,4 @@
-﻿@section Styles
-    {
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    @*  <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"> *@
+﻿@section Styles{
     <style>
         .beauty-label {
             font-family: Arial, sans-serif;
@@ -156,13 +153,12 @@
                     <td>{{pp.productId}}</td>
                     <td>{{pp.id |categoryFormat}}</td>
                     <td>{{pp.productName}}</td>
-                    <td>{{pp.price}}</td>
+                    <td>{{pp.price | formatCurrency}}</td>
                     <td class="ellipsis">{{pp.mainDescribe}}</td>
                     <td>
                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ProductDetail" @@click="display(pp)">
                             詳細資料
                         </button>
-
                     </td>
                 </tr>
             </tbody>
@@ -182,7 +178,6 @@
             </ul>
         </nav>
     </div>
-
     @* 新增商品modal *@
     <div class="modal" id="createProductModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -299,7 +294,6 @@
                         @* 修改使用者資訊視窗 *@
                         @* 顯示使用者資訊視窗 *@
                         <template v-else>
-
                             <div class="form-group"><label>商品編號:</label>{{UpdateProduct.productId}}</div>
                             <div class="form-group"><label>種類:</label>{{UpdateProduct.id |categoryFormat}}</div>
                             <div class="form-group"><label>商品名稱:</label>{{UpdateProduct.productName}}</div>
@@ -325,10 +319,8 @@
                             <div class="form-group">
                                 <img :src="UpdateProduct.imagePath" style="width:200px;" />
                             </div>
-
                         </template>
                         @* 顯示產品資訊視窗 *@
-
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-warning" @@click="UpdateProductInfo(UpdateProduct.productId)" v-if="editOpen">更新</button>
@@ -341,11 +333,9 @@
         </div>
     </div>
 </div>
+
 @section Scripts{
     <script src="https://unpkg.com/vuejs-paginate@0.9.0"></script>
-    <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
-    <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
     <script>
         Vue.component('paginate', VuejsPaginate)
         var app = new Vue({
@@ -386,6 +376,11 @@
                     if (id == 2) return "住宿";
                     if (id == 3) return "交通";
                     if (id == 4) return "景點";
+                },
+                //貨幣格式
+                formatCurrency: function (val) {
+                    if (typeof val !== "number") return val;
+                    return val.toLocaleString('zh-TW', { style: 'currency', currency: 'TWD', minimumFractionDigits: 0 });
                 }
             },
             methods: {
@@ -543,7 +538,6 @@
                         });
                     }
                 },
-
                 search: function () {
                     let _this = this;
                     if (_this.searchQuery.trim() == '') {
@@ -572,12 +566,10 @@
                         });
                     }
                 },
-
                 changePage: function (num) {
                     let _this = this;
                     _this.currentPage = num;
                 },
-
                 clearInfo: function () {
                     this.newProduct = {
                         id: "",
@@ -604,7 +596,6 @@
                 },
 
             }
-
         });
     </script>
 }
