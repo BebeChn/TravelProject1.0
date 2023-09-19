@@ -64,9 +64,9 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api.AnalyzeAPI
 				Transportation = resultList.ContainsKey(3) ? resultList[3].OrderBy(r => r.Key).Select(r => new HighChart3DGraphDTO { Name = r.Key, y = r.Value }).ToList() : null,
 				Attractions = resultList.ContainsKey(4) ? resultList[4].OrderBy(r => r.Key).Select(r => new HighChart3DGraphDTO { Name = r.Key, y = r.Value }).ToList() : null,
 				AirplaneOneYearSale = resultList.ContainsKey(1) ? resultList[1] : null,
-				HotelOneYearSale = resultList.ContainsKey(1) ? resultList[1] : null,
-				TransportationOneYearSale = resultList.ContainsKey(1) ? resultList[1] : null,
-				AttractionsOneYearSale = resultList.ContainsKey(1) ? resultList[1] : null,
+				HotelOneYearSale = resultList.ContainsKey(2) ? resultList[2] : null,
+				TransportationOneYearSale = resultList.ContainsKey(3) ? resultList[3] : null,
+				AttractionsOneYearSale = resultList.ContainsKey(4) ? resultList[4] : null,
 			};
 
 			return result;

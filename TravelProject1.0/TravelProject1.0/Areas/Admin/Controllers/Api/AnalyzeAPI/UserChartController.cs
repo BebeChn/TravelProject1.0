@@ -45,6 +45,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 			return ageGroups.ToDictionary(group => group, _ => 0);
 		}
 
+		[NonAction]
 		private string GetAgeGroup(int? age)
 		{
 			string str = "未填寫年齡族群";
