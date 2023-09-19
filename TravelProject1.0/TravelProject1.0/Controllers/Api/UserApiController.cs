@@ -16,7 +16,7 @@ using TravelProject1._0.Services;
 
 namespace TravelProject1._0.Controllers.Api
 {
-	[Route("api/UserApi/[Action]")]
+	[Route("api/User/[Action]")]
 	[ApiController]
 	public class UserApiController : ControllerBase
 	{
@@ -224,7 +224,7 @@ namespace TravelProject1._0.Controllers.Api
 			try
 			{
 				var user = _context.Users.FirstOrDefault(u => u.Email == request.Email);
-				if (user != null) return false;
+				if (user == null) return false;
 				string password = request.NewPassword;
 				string salt = GenerateSalt();
 				string hashedPassword = HashPassword(password, salt);

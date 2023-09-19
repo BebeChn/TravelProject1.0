@@ -18,12 +18,12 @@
     <form action="@Url.Action("Login")" method="post" class="login">
         <h1 class="text-light text-center">會員登入</h1>
         <div class="inputbox">
-            <input type="text" asp-for="@Model.Email" required value="AAA@gmail.com" />
+            <input type="text" asp-for="@Model.Email" required/>
             <span asp-validation-for="@Model.Email">帳號</span>
         </div>
         <br>
         <div class="inputbox">
-            <input type="password" type="Password" asp-for="@Model.Password" required  value="Abcd1234!"/>
+            <input type="password" type="Password" asp-for="@Model.Password" required />
             <span asp-validation-for="@Model.Password" >密碼</span>
         </div>
         <div class="row">
@@ -69,19 +69,19 @@
 @section Scripts {
 
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            document.getElementById("login-button").addEventListener("click", function (e) {
-                e.preventDefault();
-                var email = document.querySelector('input[name="Email"]').value;
-                var password = document.querySelector('input[name="Password"]').value;
-                if (email == "AAA@gmail.com" && password == "Abcd1234!") {
-                    document.querySelector("form").submit();
+        // document.addEventListener("DOMContentLoaded", function () {
+        //     document.getElementById("login-button").addEventListener("click", function (e) {
+        //         e.preventDefault();
+        //         var email = document.querySelector('input[name="Email"]').value;
+        //         var password = document.querySelector('input[name="Password"]').value;
+        //         // if (email == "AAA@gmail.com" && password == "Abcd1234!") {
+        //         //     document.querySelector("form").submit();
 
-                } else {
-                    $('#errorModal').modal('show');
-                }
-            });
-        });
+        //         // } else {
+        //         //     $('#errorModal').modal('show');
+        //         // }
+        //     });
+        // });
     </script>
 }
 
