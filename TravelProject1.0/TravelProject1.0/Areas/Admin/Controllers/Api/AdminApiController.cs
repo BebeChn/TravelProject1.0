@@ -111,19 +111,19 @@ public class AdminApiController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public async Task<string> AdminDeleteUser(int id)
+    public async Task<bool> AdminDeleteUser(int id)
     {
         var users = await _context.Users.FindAsync(id);
-        if (users == null) return "找不到該用戶";
+        if (users == null) return false;
         try
         {
             _context.Users.Remove(users);
             await _context.SaveChangesAsync();
-            return "刪除成功";
+            return true;
         }
         catch
         {
-            return "刪除關聯失敗";
+            return false;
         }
     }
 

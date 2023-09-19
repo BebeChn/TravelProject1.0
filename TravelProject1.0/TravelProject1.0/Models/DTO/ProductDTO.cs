@@ -1,5 +1,4 @@
-﻿using System.Drawing;
-
+﻿
 namespace TravelProject1._0.Models.ProductDTO
 {
     public class ProductDTO

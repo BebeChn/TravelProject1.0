@@ -16,7 +16,7 @@ using TravelProject1._0.Services;
 
 namespace TravelProject1._0.Controllers.Api
 {
-	[Route("api/UserApi/[Action]")]
+	[Route("api/User/[Action]")]
 	[ApiController]
 	public class UserApiController : ControllerBase
 	{
@@ -36,7 +36,7 @@ namespace TravelProject1._0.Controllers.Api
 		}
 
 		[HttpGet]
-		public async Task<UpdateUserDTO> GetUser()
+		public async Task<UpdateUserDto> GetUser()
 		{
 			var userId = _userIdentityService.GetUserId();
 			if (_context.Users == null)
@@ -49,7 +49,7 @@ namespace TravelProject1._0.Controllers.Api
 			{
 				return null;
 			}
-			UpdateUserDTO usersDTO = new UpdateUserDTO
+			UpdateUserDto usersDTO = new UpdateUserDto
 			{
 				Name = users.Name,
 				Email = users.Email,
@@ -224,7 +224,7 @@ namespace TravelProject1._0.Controllers.Api
 			try
 			{
 				var user = _context.Users.FirstOrDefault(u => u.Email == request.Email);
-				if (user != null) return false;
+				if (user == null) return false;
 				string password = request.NewPassword;
 				string salt = GenerateSalt();
 				string hashedPassword = HashPassword(password, salt);

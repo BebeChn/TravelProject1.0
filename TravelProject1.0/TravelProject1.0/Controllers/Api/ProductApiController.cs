@@ -29,9 +29,9 @@ namespace TravelProject1._0.Controllers.Api
         }
 
         [HttpGet]
-        public async Task<List<ProductPlanDTO>> GetProductPlan()
+        public async Task<List<ProductPlanDto>> GetProductPlan()
         {
-            return await _db.Products.Where(x => x.Id == 2).Select(x => new ProductPlanDTO
+            return await _db.Products.Where(x => x.Id == 2).Select(x => new ProductPlanDto
             {
                 ProductId = x.ProductId,
                 ProductName = x.ProductName,
@@ -40,9 +40,9 @@ namespace TravelProject1._0.Controllers.Api
         }
 
         [HttpGet]
-        public async Task<List<AttractionDTO>> GetAttractionPlan()
+        public async Task<List<AttractionDto>> GetAttractionPlan()
         {
-            return await _db.Products.Where(x => x.Id == 3).Select(x => new AttractionDTO
+            return await _db.Products.Where(x => x.Id == 3).Select(x => new AttractionDto
             {
                 ProductId = x.ProductId,
                 ProductName = x.ProductName,

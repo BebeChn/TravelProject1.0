@@ -1,6 +1,6 @@
 ﻿namespace TravelProject1._0.Models.DTO
 {
-    public class RatingAddDTO
+    public class RatingAddDto
     {
         public int ProductId { get; set; }
 

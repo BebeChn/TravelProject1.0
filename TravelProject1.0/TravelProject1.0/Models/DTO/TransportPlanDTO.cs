@@ -2,7 +2,7 @@
 
 namespace TravelProject1._0.Models.DTO
 {
-    public class TransportPlanDTO
+    public class TransportPlanDto
     {
         public int ProductId { get; set; }
 

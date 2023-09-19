@@ -16,9 +16,9 @@ namespace TravelProject1._0.Controllers.Api
 
         //取得住宿資料
         [HttpGet]
-        public async Task<List<BookDTO>> GetBooks()
+        public async Task<List<BookDto>> GetBooks()
         {
-            return await _dbContext.Products.Where(b => b.Id == 2).Select(b => new BookDTO
+            return await _dbContext.Products.Where(b => b.Id == 2).Select(b => new BookDto
             {
                 ProductId = b.ProductId,
                 ProductName = b.ProductName,
@@ -30,9 +30,9 @@ namespace TravelProject1._0.Controllers.Api
 
         //商品價格排序低到高
         [HttpGet]
-        public async Task<List<BookDTO>> BookOrderByPrice()
+        public async Task<List<BookDto>> BookOrderByPrice()
         {
-            return await _dbContext.Products.Where(b => b.Id == 2).OrderBy(b => b.Price).Select(b => new BookDTO
+            return await _dbContext.Products.Where(b => b.Id == 2).OrderBy(b => b.Price).Select(b => new BookDto
             {
                 ProductId = b.ProductId,
                 ProductName = b.ProductName,
@@ -44,9 +44,9 @@ namespace TravelProject1._0.Controllers.Api
 
         //商品價格排序高到低
         [HttpGet]
-        public async Task<List<BookDTO>> BookOrderByDescendingPrice()
+        public async Task<List<BookDto>> BookOrderByDescendingPrice()
         {
-            return await _dbContext.Products.Where(b => b.Id == 2).OrderByDescending(b => b.Price).Select(b => new BookDTO
+            return await _dbContext.Products.Where(b => b.Id == 2).OrderByDescending(b => b.Price).Select(b => new BookDto
             {
                 ProductId = b.ProductId,
                 ProductName = b.ProductName,
@@ -58,9 +58,9 @@ namespace TravelProject1._0.Controllers.Api
 
         //取得單一商品
         [HttpGet("{id}")]
-        public async Task<List<BookPlanDTO>> GetProduct(int id)
+        public async Task<List<BookPlanDto>> GetProduct(int id)
         {
-            return await _dbContext.Products.Where(b => b.ProductId == id).Select(b => new BookPlanDTO
+            return await _dbContext.Products.Where(b => b.ProductId == id).Select(b => new BookPlanDto
             {
                 ProductId = b.ProductId,
                 ProductName = b.ProductName,
@@ -73,9 +73,9 @@ namespace TravelProject1._0.Controllers.Api
 
         //取得商品的方案
         [HttpGet("{id}")]
-        public async Task<List<BookPlanDTO>> GetPlan(int id)
+        public async Task<List<BookPlanDto>> GetPlan(int id)
         {
-            return await _dbContext.Plans.Where(c => c.ProductId == id).Select(c => new BookPlanDTO
+            return await _dbContext.Plans.Where(c => c.ProductId == id).Select(c => new BookPlanDto
             {
                 PlanId = c.PlanId,
                 Name = c.Name,
@@ -87,9 +87,9 @@ namespace TravelProject1._0.Controllers.Api
 
         //商品評價
         [HttpGet("{id}")]
-        public async Task<List<RatingDTO>> GetRating(int id)
+        public async Task<List<RatingDto>> GetRating(int id)
         {
-            return await _dbContext.Ratings.Include(r => r.User).Where(r => r.ProductId == id).Select(r => new RatingDTO
+            return await _dbContext.Ratings.Include(r => r.User).Where(r => r.ProductId == id).Select(r => new RatingDto
             {
                 Name = r.User.Name,
                 RatingScore = r.RatingScore,

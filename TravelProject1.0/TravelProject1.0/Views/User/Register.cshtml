@@ -101,7 +101,7 @@
 					};
 					if (_this.name && _this.gender && _this.birthday && _this.phone && _this.email && _this.password) {
 						if (_this.password !== _this.confirmPassword) return alert("兩次密碼輸入不一致")
-						axios.post(`/api/UserApi/PostUser`, form)
+						axios.post(`/api/User/PostUser`, form)
 							.then(response => {
 								if (response.data) {
 									alert("註冊成功")

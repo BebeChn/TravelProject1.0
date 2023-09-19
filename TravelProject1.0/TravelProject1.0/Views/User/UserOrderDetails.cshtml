@@ -89,7 +89,7 @@
             mounted: function () {
                 let _this = this;
                 _this.queries = window.location.pathname.slice("23");
-                fetch(`/api/OrderApi/OrderDetails/${_this.queries}`, { method: "GET", })
+                fetch(`/api/Order/OrderDetails/${_this.queries}`, { method: "GET", })
                     .then(response => {
                         if (response.ok) return response.json();
                     }).then(data => {

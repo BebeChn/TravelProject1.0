@@ -1,6 +1,6 @@
 ﻿namespace TravelProject1._0.Models.DTO
 {
-    public class CollectProductDTO
+    public class CollectProductDto
     {
         public int CollectId { get; set; }
 

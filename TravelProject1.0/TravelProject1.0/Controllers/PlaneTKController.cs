@@ -22,9 +22,6 @@ namespace TravelProject1._0.Controllers
 
 
 
-
-        //============================================就是商品目錄
-
         //商品目錄頁
         public IActionResult PlaneTK_catgory()
         {
@@ -34,14 +31,13 @@ namespace TravelProject1._0.Controllers
 
 
 
-
         //[HttpGet]
         //取得商品
-        public async Task<IEnumerable<PlaneTKDTO>> PlaneTK_catgoryGET()
+        public async Task<IEnumerable<PlaneTkdto>> PlaneTK_catgoryGET()
         {
 
             return _db.Products.Where(p => p.Id == 1)
-               .Select(x => new PlaneTKDTO
+               .Select(x => new PlaneTkdto
                {
 
                    ProductId = x.ProductId,
@@ -56,18 +52,15 @@ namespace TravelProject1._0.Controllers
         }
 
 
-        
-
-
 
 
 
         //金額低到高
-        public async Task<IEnumerable<PlaneTKDTO>> pricelower()
+        public async Task<IEnumerable<PlaneTkdto>> pricelower()
         {
             return _db.Products.Where(y => y.Id == 1).
                 OrderBy(w => w.Price)
-                .Select(x => new PlaneTKDTO
+                .Select(x => new PlaneTkdto
                 {
                     ProductId = x.ProductId,
                     Id = x.Id,
@@ -85,11 +78,11 @@ namespace TravelProject1._0.Controllers
 
 
         //金額高到低
-        public async Task<IEnumerable<PlaneTKDTO>> priceheigh()
+        public async Task<IEnumerable<PlaneTkdto>> priceheigh()
         {
             return _db.Products.Where(y => y.Id == 1).
                 OrderByDescending(w => w.Price)
-                .Select(x => new PlaneTKDTO
+                .Select(x => new PlaneTkdto
                 {
                     ProductId = x.ProductId,
                     Id = x.Id,
@@ -138,7 +131,6 @@ namespace TravelProject1._0.Controllers
 
 
 
-        //=======================================================plan   商品本身
         //商品頁
         [HttpGet]
         public IActionResult PlaneTK_sale()
@@ -160,12 +152,12 @@ namespace TravelProject1._0.Controllers
         //GET Product資料
         //取得商品一個
         [HttpGet("{id}")]
-        public async Task<IEnumerable<PlaneTKDTO>> PlaneTK_Product(int id)
+        public async Task<IEnumerable<PlaneTkdto>> PlaneTK_Product(int id)
         {
 
             return _db.Products.Where(p => p.Id == 1
                 && p.ProductId == id)
-                .Select(op => new PlaneTKDTO
+                .Select(op => new PlaneTkdto
                 {
                     ProductId = op.ProductId,
                     Id = op.Id,
@@ -183,10 +175,10 @@ namespace TravelProject1._0.Controllers
         //IQueryable就是顯示一筆紀錄  IEnumerable就是一堆紀錄 集合
         [HttpGet]
         [Route("{id}")]
-        public async Task<IQueryable<PlaneTK_salePlanDTO>> PlaneTK_salePlan(int id)
+        public async Task<IQueryable<PlaneTkSalePlanDto>> PlaneTK_salePlan(int id)
         {
             return _db.Plans.Where(p => p.ProductId == id)
-                .Select(x => new PlaneTK_salePlanDTO
+                .Select(x => new PlaneTkSalePlanDto
             {
                 PlanId = x.PlanId,
                 ProductId = x.ProductId,
@@ -203,10 +195,10 @@ namespace TravelProject1._0.Controllers
         //GET商品
         [HttpGet]
         [Route("{id}")]
-        public async Task<IQueryable<RatingDTO>> PlaneTK_GetRate(int id)
+        public async Task<IQueryable<RatingDto>> PlaneTK_GetRate(int id)
         {
             return _db.Ratings.Where(r => r.ProductId == id)
-                .Select(r => new RatingDTO
+                .Select(r => new RatingDto
             {
                 RatingScore = r.RatingScore,
                 Describe = r.Describe,
