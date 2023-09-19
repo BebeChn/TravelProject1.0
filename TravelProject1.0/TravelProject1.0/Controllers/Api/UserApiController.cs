@@ -39,25 +39,21 @@ namespace TravelProject1._0.Controllers.Api
 		public async Task<UpdateUserDto> GetUser()
 		{
 			var userId = _userIdentityService.GetUserId();
-			if (_context.Users == null)
-			{
-				return null;
-			}
+			if (_context.Users == null) return null!;
+			
 			var users = await _context.Users.FindAsync(userId);
 
-			if (users == null)
-			{
-				return null;
-			}
-			UpdateUserDto usersDTO = new UpdateUserDto
+			if (users == null)return null!;
+			
+			UpdateUserDto usersDto = new UpdateUserDto
 			{
 				Name = users.Name,
 				Email = users.Email,
-				Birthday = users.Birthday.Value.ToString("yyyy-MM-dd"),
-				Gender = users.Gender,
+				Birthday = users.Birthday.HasValue ? users.Birthday.Value.ToString("yyyy-MM-dd") : "",
+                Gender = users.Gender,
 				Phone = users.Phone,
 			};
-			return usersDTO;
+			return usersDto;
 		}
 
 		[HttpPost]
@@ -122,32 +118,32 @@ namespace TravelProject1._0.Controllers.Api
 		// 使用SHA-256哈希密碼並加鹽
 		private string HashPassword(string password, string salt)
 		{
-			using (var SHA256 = SHA256Managed.Create())
+			using (var sha256 = SHA256Managed.Create())
 			{
 				// 將密碼轉換成二進位
 				string passwordWithSalt = password + salt;
 				byte[] passwordBytes = Encoding.UTF8.GetBytes(passwordWithSalt);
 				// 計算哈希
-				byte[] hashBytes = SHA256.ComputeHash(passwordBytes);
+				byte[] hashBytes = sha256.ComputeHash(passwordBytes);
 				// 將哈希轉換為Base64編碼的字串
 				return Convert.ToBase64String(hashBytes);
 			}
 		}
 
 		[HttpPut]
-		public async Task<bool> UpdateUser(UpdateUserViewModel UpdateUser)
+		public async Task<bool> UpdateUser(UpdateUserViewModel updateUser)
 		{
 			try
 			{
 				int id = _userIdentityService.GetUserId();
-				User user = await _context.Users.FindAsync(id);
-
+				User user = (await _context.Users.FindAsync(id))!;
+                if (user == null) return false;
 				// 修改其他個資
-				user.Email = UpdateUser.Email;
-				user.Birthday = UpdateUser.Birthday;
-				user.Name = UpdateUser.Name;
-				user.Phone = UpdateUser.Phone;
-				user.Gender = UpdateUser.Gender;
+				user.Email = updateUser.Email;
+				user.Birthday = updateUser.Birthday;
+				user.Name = updateUser.Name;
+				user.Phone = updateUser.Phone;
+				user.Gender = updateUser.Gender;
 				await _context.SaveChangesAsync();
 			}
 			catch
