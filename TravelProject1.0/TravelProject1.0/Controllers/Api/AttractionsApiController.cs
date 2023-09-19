@@ -1,19 +1,15 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Drawing.Printing;
-using System.Security.Claims;
 using TravelProject1._0.Models;
 using TravelProject1._0.Models.DTO;
 
 namespace TravelProject1._0.Controllers.Api
 {
-    [Route("api/[controller]/[action]")]
+    [Route("api/Attractions/[action]")]
     [ApiController]
     public class AttractionsApiController : ControllerBase
     {
         private readonly TravelProjectAzureContext _dbContext;
-
         public AttractionsApiController(TravelProjectAzureContext dbContext)
         {
             _dbContext = dbContext;
@@ -21,9 +17,9 @@ namespace TravelProject1._0.Controllers.Api
 
         //取得種類是景點的商品
         [HttpGet]
-        public async Task<IEnumerable<AttractionsDTO>> GetCategoryByAttractions()
+        public async Task<List<AttractionsDto>> GetCategoryByAttractions()
         {
-            return _dbContext.Products.Where(c => c.Id == 4).Select(p => new AttractionsDTO
+            return await _dbContext.Products.Where(c => c.Id == 4).Select(p => new AttractionsDto
             {
                 ProductId = p.ProductId,
                 Id = p.Id,
@@ -31,58 +27,56 @@ namespace TravelProject1._0.Controllers.Api
                 Price = p.Price,
                 MainDescribe = p.MainDescribe,
                 Img = p.Img
-            });
+            }).ToListAsync();
         }
 
         //排序
         //價格低到高
         [HttpGet]
-        public async Task<IQueryable<AttractionsDTO>> OrderByPrice()
+        public async Task<List<AttractionsDto>> OrderByPrice()
         {
-            return _dbContext.Products.Where(p => p.Id == 4).OrderBy(p => p.Price).Select(p => new AttractionsDTO
+            return await _dbContext.Products.Where(p => p.Id == 4).OrderBy(p => p.Price).Select(p => new AttractionsDto
             {
                 ProductId = p.ProductId,
                 ProductName = p.ProductName,
                 Price = p.Price,
                 MainDescribe = p.MainDescribe,
                 Img = p.Img
-            });
+            }).ToListAsync();
         }
         //價格高到低
         [HttpGet]
-        public async Task<IQueryable<AttractionsDTO>> OrderByDescendingPrice()
+        public async Task<List<AttractionsDto>> OrderByDescendingPrice()
         {
-            return _dbContext.Products.Where(p => p.Id == 4).OrderByDescending(p => p.Price).Select(p => new AttractionsDTO
+            return await _dbContext.Products.Where(p => p.Id == 4).OrderByDescending(p => p.Price).Select(p => new AttractionsDto
             {
                 ProductId = p.ProductId,
                 ProductName = p.ProductName,
                 Price = p.Price,
                 MainDescribe = p.MainDescribe,
                 Img = p.Img
-            });
+            }).ToListAsync();
         }
 
         //取得商品方案
-        [HttpGet]
-        [Route("{id}")]
-        public async Task<IQueryable<AttractionsPlanDTO>> GetPlan(int id)
+        [HttpGet("{id}")]
+        public async Task<List<AttractionsPlanDto>> GetPlan(int id)
         {
-            return _dbContext.Plans.Where(p => p.ProductId == id).Select(p => new AttractionsPlanDTO
+            return await _dbContext.Plans.Where(p => p.ProductId == id).Select(p => new AttractionsPlanDto
             {
                 PlanId = p.PlanId,
                 Name = p.Name,
                 Describe = p.Describe,
                 PlanImg = p.PlanImg,
                 PlanPrice = p.PlanPrice
-            });
+            }).ToListAsync();
         }
 
         //取得單一商品資訊
-        [HttpGet]
-        [Route("{id}")]
-        public async Task<IQueryable<AttractionsPlanDTO>> GetProduct(int id)
+        [HttpGet("{id}")]
+        public async Task<List<AttractionsPlanDto>> GetProduct(int id)
         {
-            return _dbContext.Products.Where(p => p.ProductId == id).Select(p => new AttractionsPlanDTO
+            return await _dbContext.Products.Where(p => p.ProductId == id).Select(p => new AttractionsPlanDto
             {
                 ProductId = p.ProductId,
                 ProductName = p.ProductName,
@@ -90,21 +84,20 @@ namespace TravelProject1._0.Controllers.Api
                 SubDescribe = p.SubDescribe,
                 ShortDescribe = p.ShortDescribe,
                 Img = p.Img
-            });
+            }).ToListAsync();
         }
 
         //商品評價
-        [HttpGet]
-        [Route("{id}")]
-        public async Task<IQueryable<RatingDTO>> GetRating(int id)
+        [HttpGet("{id}")]
+        public async Task<List<RatingDto>> GetRating(int id)
         {
-            return _dbContext.Ratings.Include(r => r.User).Where(r => r.ProductId == id).Select(r => new RatingDTO
+            return await _dbContext.Ratings.Include(r => r.User).Where(r => r.ProductId == id).Select(r => new RatingDto
             {
                 Name = r.User.Name,
                 RatingScore = r.RatingScore,
                 Describe = r.Describe,
                 RatingDate = r.RatingDate
-            });
+            }).ToListAsync();
         }
     }
 }

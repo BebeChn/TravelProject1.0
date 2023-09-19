@@ -12,6 +12,6 @@
 
         public string? CartName { get; set; }
 
-        public string CartDate { get; set; }
+        public string? CartDate { get; set; }
     }
 }

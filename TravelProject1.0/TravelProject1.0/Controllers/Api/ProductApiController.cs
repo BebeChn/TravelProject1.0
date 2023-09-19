@@ -1,13 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System.Drawing;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using TravelProject1._0.Models;
 using TravelProject1._0.Models.DTO;
 using TravelProject1._0.Models.ProductDTO;
 
 namespace TravelProject1._0.Controllers.Api
 {
-    [Route("api/[controller]/[action]")]
+    [Route("api/Product/[action]")]
     [ApiController]
     public class ProductApiController : ControllerBase
     {
@@ -16,39 +15,40 @@ namespace TravelProject1._0.Controllers.Api
         {
             _db = db;
         }
+
         [HttpGet]
-        public async Task<IQueryable<ProductDTO>> GetProduct()
+        public async Task<List<ProductDTO>> GetProduct()
         {
-            return _db.Products.Where(x => x.Id == 4).Select(x => new ProductDTO
+            return await _db.Products.Where(x => x.Id == 4).Select(x => new ProductDTO
             {
                 ProductId = x.ProductId,
                 ProductName = x.ProductName,
                 Price = x.Price,
                 Img = x.Img
-            }).Take(4);
+            }).Take(4).ToListAsync();
         }
+
         [HttpGet]
-        public async Task<IQueryable<ProductPlanDTO>> GetProductPlan()
+        public async Task<List<ProductPlanDto>> GetProductPlan()
         {
-            return _db.Products.Where(x => x.Id == 2).Select(x => new ProductPlanDTO
+            return await _db.Products.Where(x => x.Id == 2).Select(x => new ProductPlanDto
             {
                 ProductId = x.ProductId,
                 ProductName = x.ProductName,
                 Img = x.Img
-            }).Take(3);
+            }).Take(3).ToListAsync();
         }
+
         [HttpGet]
-        public IQueryable<AttractionDTO> GetAttractionPlan()
+        public async Task<List<AttractionDto>> GetAttractionPlan()
         {
-            return  _db.Products.Where(x => x.Id == 3).Select(x => new AttractionDTO
+            return await _db.Products.Where(x => x.Id == 3).Select(x => new AttractionDto
             {
                 ProductId = x.ProductId,
                 ProductName = x.ProductName,
                 Img = x.Img,
                 MainDescribe = x.MainDescribe,
-
-            }).Take(1);
+            }).Take(1).ToListAsync();
         }
     }
 }
-

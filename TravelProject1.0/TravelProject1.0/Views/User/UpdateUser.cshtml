@@ -118,10 +118,7 @@
                         <label for="birthday" class="beauty-label">生日:</label>
                         <input type="date" id="birthday" v-model="user.birthday" placeholder="YYYY-MM-DD"class="beauty-input" @@input="isUserModified = true" >
                     </div>
-                    <button class="genric-btn"
-                            @@click="UpdateUser"
-                            :class="{ '': !isUserModified, 'info-border': isUserModified }"
-                            :disabled="!isUserModified">更新資料
+                    <button :class="{ '': !isUserModified, 'info-border': isUserModified }" :disabled="!isUserModified" @@click="UpdateUser" class="genric-btn">更新資料
                     </button>
                 </div>
             </div>
@@ -175,7 +172,7 @@
             },
             mounted: function () {
                 let _this = this;
-                fetch(`/api/UserApi/GetUser`, {
+                fetch(`/api/User/GetUser`, {
                     method: "GET"
                 }).then(response => {
                     if (response.ok) {
@@ -201,7 +198,7 @@
                         birthday: _this.user.birthday,
                     };
 
-                    fetch(`/api/UserApi/UpdateUser`, {
+                    fetch(`/api/User/UpdateUser`, {
                         method: "PUT",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify(request)

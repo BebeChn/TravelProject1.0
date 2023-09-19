@@ -4,16 +4,8 @@
 @section Styles
 	{
 	<link href="~/css/register.min.css" rel="stylesheet" />
-@* 	<style>
-		.formatError {
-			color: red;
-			font-size: .875em;
-		}
-	</style> *@
-
-  }
-
-<div id="app" class="element d-flex justify-content-center align-items-center">
+	}
+<div id="app" class="element d-flex justify-content-center align-items-center" >
 	<div class="">
 		<h1 class="text-center">註冊會員</h1>
 		<div class="row">
@@ -24,7 +16,7 @@
 				@*    <div v-if="usernameTaken">該用戶名已存在</div> *@
 			</div>
 			<div class="mb-3 col">
-				<select class="form-select" aria-label="Default select example">
+				<select v-model="gender" class="form-select" aria-label="Default select example">
 					<option selected disabled>性別</option>
 					<option value="M" >男</option>
 					<option value="F">女</option>
@@ -107,15 +99,20 @@
 						Email: _this.email,
 						Password: _this.password
 					};
-					axios.post(`/api/UserApi/PostUser`, form)
-						.then(response => {
-							if (response.data) {
-								alert("註冊成功")
-								window.location.href = "/Home/Index";
-							}
-						}).catch(err => {
-							alert("輸入的格式有錯");
-						});
+					if (_this.name && _this.gender && _this.birthday && _this.phone && _this.email && _this.password) {
+						if (_this.password !== _this.confirmPassword) return alert("兩次密碼輸入不一致")
+						axios.post(`/api/User/PostUser`, form)
+							.then(response => {
+								if (response.data) {
+									alert("註冊成功")
+									window.location.href = "/Home/Index";
+								}
+							}).catch(err => {
+								alert("輸入的格式有錯")
+							});
+					} else {
+						alert("有內容未輸入")
+					} 
 				},
 			},
 			computed: {
