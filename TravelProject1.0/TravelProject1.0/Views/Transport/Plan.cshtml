@@ -168,7 +168,7 @@
             },
             mounted: function () {
                 var _this = this;
-                _this.queries = window.location.href.slice("38");
+                _this.queries = window.location.href.slice("16");
                 //方案
                 fetch(`/api/Transport/GetPlan/${_this.queries}`, { method: "GET" })
                     .then(response => response.json())
@@ -186,7 +186,7 @@
                         alert(error);
                     });
                 //評價
-                fetch(`/api/Attractions/GetRating/${_this.queries}`, { method: "GET" })
+                fetch(`/api/Transport/GetRating/${_this.queries}`, { method: "GET" })
                     .then(response => response.json())
                     .then(data => {
                         _this.rating = data;
