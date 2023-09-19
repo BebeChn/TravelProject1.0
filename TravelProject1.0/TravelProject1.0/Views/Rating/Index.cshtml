@@ -89,16 +89,17 @@
                         ratingScore: _this.selectedStar,
                         describe: _this.describe
                     };
-                    fetch(`/api/RatingApi/PostRating/${_this.queries}`, {
+                    fetch(`/api/Rating/PostRating/${_this.queries}`, {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify(ratingData)
-                    }).then(response => {
-                        if (response.ok) {
+                    }).then(response => response.json())
+                    .then(data=>{
+                        if(data){
                             alert("商品評價成功");
                             location.href = "/User/UserOrder";
-                        } else {
-                            throw new Error("有資料未填寫");
+                        }else{
+                            alert("有資料未填寫")
                         }
                     }).catch(error => {
                         alert(error);

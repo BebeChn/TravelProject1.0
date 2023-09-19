@@ -2,7 +2,7 @@
 
 namespace TravelProject1._0.Models.DTO
 {
-    public class UpdateUserDTO
+    public class UpdateUserDto
     {
         public int Id { get; set; }
 

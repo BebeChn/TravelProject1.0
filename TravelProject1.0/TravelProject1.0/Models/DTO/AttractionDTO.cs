@@ -1,12 +1,12 @@
 ﻿namespace TravelProject1._0.Models.DTO
 {
-    public class AttractionDTO
+    public class AttractionDto
     {
         public int ProductId { get; set; }
 
         public int Id { get; set; }
 
-        public string ProductName { get; set; }
+        public string? ProductName { get; set; }
 
         public string? Img { get; set; }
 

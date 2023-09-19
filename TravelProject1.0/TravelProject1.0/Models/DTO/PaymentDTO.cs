@@ -1,14 +1,14 @@
 ﻿namespace TravelProject1._0.Models.DTO
 {
-    public class PaymentDTO
+    public class PaymentDto
     {
-        public IEnumerable<PaymentDetailDTO> detailDTOs { get; set; }
+        public IEnumerable<PaymentDetailDto> detailDTOs { get; set; }
 
         public int Points { get; set; }
 
         public int TotalPrice { get; set; }
     }
-    public class PaymentDetailDTO
+    public class PaymentDetailDto
     {
         public int PlanId { get; set; }
 

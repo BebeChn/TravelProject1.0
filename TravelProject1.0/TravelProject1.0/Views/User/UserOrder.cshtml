@@ -94,7 +94,7 @@
             },
             mounted: function () {
                 let _this = this;
-                axios.get('/api/OrderApi/UserOrder')
+                axios.get('/api/Order/UserOrder')
                     .then(response => {
                         _this.orders = response.data;
                     })

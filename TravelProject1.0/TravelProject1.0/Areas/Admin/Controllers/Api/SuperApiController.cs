@@ -30,35 +30,10 @@ public class SuperApiController : ControllerBase
         });
     }
 
-    [HttpGet("{id}")]
-    public async Task<ActionResult<GetAdminDetailDTO>> GetAdminDetail(int id)
-    {
-        try
-        {
-            var admin = await _context.Admins.FindAsync(id);
-
-            if (admin == null) return NotFound();
-
-            var gad = new GetAdminDetailDTO
-            {
-                Id = admin.Id,
-                Name = admin.Name,
-                Account = admin.Account,
-                Describe = admin.Describe,
-                CreateDate = DateTime.Now,
-                LoginDate = DateTime.Now
-            };
-
-            return Ok(gad);
-        }
-        catch (Exception)
-        {
-            return NotFound();
-        }
-    }
+   
 
     [HttpPost]
-    public async Task<bool> AdminManage(ManageAdmminDTO? maDto)
+    public async Task<bool> CreateAdmin(ManageAdmminDTO? maDto)
     {
         if (maDto == null) return false;
         try

@@ -1,6 +1,6 @@
 ﻿namespace TravelProject1._0.Models.DTO
 {
-    public class PlaneTK_salePlanDTO
+    public class PlaneTkSalePlanDto
     {
         public int PlanId { get; set; }
 

@@ -339,12 +339,14 @@
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify(request)
                     }).then(response => response.json())
-                      .then(data => {
-                          _this.editOpen = false;
-                          alert("修改成功");
-                          location.href = "/Admin/Manage/User";})
-                      .catch(err => {
-                          alert("修改失敗,請檢查必填有無填寫")});
+                        .then(data => {
+                            _this.editOpen = false;
+                            alert("修改成功");
+                            location.href = "/Admin/Manage/User";
+                        })
+                        .catch(err => {
+                            alert("修改失敗,請檢查必填有無填寫")
+                        });
                 },
                 //刪除使用者
                 deleteUser: function (userId) {
@@ -352,11 +354,10 @@
                     let result = confirm(`確定要刪除會員編號${userId}?`);
                     if (result == true) {
                         fetch(`/api/admin/AdminDeleteUser/${userId}`, { method: "DELETE" })
-                            .then((response) => {
-                                if (response.ok) return response.text();
-                            }).then(data => {
+                            .then(response => response.json())
+                            .then(data => {
                                 alert("刪除成功");
-                                window.location.href = "/AdminPutUser/Index";
+                                window.location.href = "/Admin/Manage/User";
                             }).catch(err => {
                                 alert("刪除失敗");
                             });

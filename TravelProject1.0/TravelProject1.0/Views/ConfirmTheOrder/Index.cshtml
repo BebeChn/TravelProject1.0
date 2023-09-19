@@ -60,7 +60,6 @@
             </div>
         </div>
     </div>
-
     @* 點數折抵Modal *@
     <div class="modal fade" id="pointsDiscount" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -99,10 +98,9 @@
             },
             mounted: function () {
                 let _this = this;
-                fetch(`/api/ConfirmTheOrderApi/GetUser`, { method: "GET" })
-                    .then(response => {
-                        if (response.ok) return response.json();
-                    }).then(data => {
+                fetch(`/api/ConfirmTheOrder/GetUser`, { method: "GET" })
+                    .then(response =>response.json())
+                    .then(data => {
                         _this.user = data;
                     }).catch(error => {
                         alert(error);
@@ -119,13 +117,11 @@
                     _this.total = totalAmount;
                     return totalAmount;
                 },
-
                 //不使用點數
                 showPrice: function () {
                     let _this = this;
                     return _this.resultPrice = _this.total;
                 },
-
                 //點數
                 minus: function () {
                     let _this = this;
@@ -145,13 +141,11 @@
                         }
                     }
                 },
-
                 //點數折抵後合計
                 totalPrice: function () {
                     let _this = this;
                     return _this.resultPrice = _this.total - (_this.pointNum / 300);
                 },
-
                 //金流資訊
                 addOrder: function () {
                     let _this = this;
@@ -169,7 +163,6 @@
                         }
                         orderData.detailDTOs.push(d)
                     }
-
                     fetch(`/Payment/Pay`,{
                         method:"POST",
                         headers: {"Content-Type":"application/json"},
@@ -190,7 +183,6 @@
                     if (typeof val !== "number") return val;
                     return val.toLocaleString('zh-TW', { style: 'currency', currency: 'TWD', minimumFractionDigits: 0 });
                 },
-
                 //日期格式
                 formatDate: function (str) {
                     if (!str) return "";

@@ -1,4 +1,4 @@
-﻿@model TravelProject1._0.Models.DTO.UserDTO
+﻿@model TravelProject1._0.Models.DTO.UserDto
 @section Styles
     {
     <link href="~/css/login.min.css" rel="stylesheet" />
@@ -11,19 +11,16 @@
 
 
 <div class="app-container element">
-    @if (ViewData["LoginFailed"] != null)
-    {
-        <p class="alert alert-danger text-center">帳號或密碼錯誤</p>
-    }
+   
     <form action="@Url.Action("Login")" method="post" class="login">
         <h1 class="text-light text-center">會員登入</h1>
         <div class="inputbox">
-            <input type="text" asp-for="@Model.Email" required value="AAA@gmail.com" />
+            <input type="text" asp-for="@Model.Email" required value="AAA@gmail.com"/>
             <span asp-validation-for="@Model.Email">帳號</span>
         </div>
         <br>
         <div class="inputbox">
-            <input type="password" type="Password" asp-for="@Model.Password" required  value="Abcd1234!"/>
+            <input type="password" type="Password" asp-for="@Model.Password" required value="Abcd1234!" />
             <span asp-validation-for="@Model.Password" >密碼</span>
         </div>
         <div class="row">

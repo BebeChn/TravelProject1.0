@@ -1,6 +1,6 @@
 ﻿namespace TravelProject1._0.Models.DTO
 {
-    public class UserOrderDTO
+    public class UserOrderDto
     {
         public int OrderId { get; set; }
 
