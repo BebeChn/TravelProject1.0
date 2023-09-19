@@ -22,15 +22,11 @@ namespace TravelProject1._0.Controllers
 
 
 
-
-        //============================================就是商品目錄
-
         //商品目錄頁
         public IActionResult PlaneTK_catgory()
         {
             return View();
         }
-
 
 
 
@@ -54,9 +50,6 @@ namespace TravelProject1._0.Controllers
                    Img = x.Img,
                });
         }
-
-
-        
 
 
 
@@ -138,7 +131,6 @@ namespace TravelProject1._0.Controllers
 
 
 
-        //=======================================================plan   商品本身
         //商品頁
         [HttpGet]
         public IActionResult PlaneTK_sale()
