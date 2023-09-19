@@ -132,7 +132,6 @@
                     website: "https://localhost:7025/api/PlaneTK/PlaneTK_sale/",
                     count: 0,
                     search: '',
-                    productList: [],
                     //
                     currentPage: 1,   //初始是第一頁
                     itemPage: 8,   //五個商品為一頁
@@ -159,8 +158,6 @@
                         .then(response => {
                             _this.PlaneTK_catgoryDTOes = response.data;
                             _this.xxx = response.data;
-                            _this.productList = response.data;
-
                         })
                         .catch(err => {
                             alert(err);
@@ -177,7 +174,7 @@
                     if (_this.count % 2 != 0) {
                         axios.get(`/api/PlaneTK/pricelower`)
                             .then(response => {
-                                _this.productList = response.data;
+                                _this.PlaneTK_catgoryDTOes = response.data;
                             })
                             .catch(err => {
                                 alert(err);
@@ -185,7 +182,7 @@
                     } else {
                         axios.get(`/api/PlaneTK/priceheigh`)
                             .then(response => {
-                                _this.productList = response.data;
+                                _this.PlaneTK_catgoryDTOes = response.data;
 
                             })
                             .catch(err => {
@@ -203,19 +200,19 @@
                     //console.log(_this.PlaneTK_catgoryDTOes)
                     if (id == 1) {
                         var arr = ["韓國","首爾"];
-                        _this.productList = _this.PlaneTK_catgoryDTOes.filter(item => arr.some(z => item.productName.includes(z)));
+                        _this.PlaneTK_catgoryDTOes = _this.PlaneTK_catgoryDTOes.filter(item => arr.some(z => item.productName.includes(z)));
                     }
                     if (id == 2) {
                         var arr = ["日本", "京都","富士山","東京"];
-                        _this.productList = _this.PlaneTK_catgoryDTOes.filter(item => arr.some(z => item.productName.includes(z)));
+                        _this.PlaneTK_catgoryDTOes = _this.PlaneTK_catgoryDTOes.filter(item => arr.some(z => item.productName.includes(z)));
                     }
                     if (id == 3) {
                         var arr = ["越南", "河內", "峴港"];
-                        _this.productList = _this.PlaneTK_catgoryDTOes.filter(item => arr.some(z => item.productName.includes(z)));
+                        _this.PlaneTK_catgoryDTOes = _this.PlaneTK_catgoryDTOes.filter(item => arr.some(z => item.productName.includes(z)));
                     }
                     if (id == 4) {
                         var arr = ["泰國", "丹嫩莎朵", "邦芭茵夏宮", "普吉島", "芭堤雅", "洪島"];
-                        _this.productList = _this.PlaneTK_catgoryDTOes.filter(item => arr.some(z => item.productName.includes(z)));
+                        _this.PlaneTK_catgoryDTOes = _this.PlaneTK_catgoryDTOes.filter(item => arr.some(z => item.productName.includes(z)));                         
                     }
 
                 },
@@ -238,7 +235,7 @@
                     let _this = this;
 
 
-                    return _this.productList.filter(item => item.productName.match(_this.search));
+                    return _this.PlaneTK_catgoryDTOes.filter(item => item.productName.match(_this.search));
 
 
 
