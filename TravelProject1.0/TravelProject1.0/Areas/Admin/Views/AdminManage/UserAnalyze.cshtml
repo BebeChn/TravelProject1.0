@@ -24,18 +24,7 @@
 
 	@* 各年齡層佔比 *@
 	<div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-		<figure class="highcharts-figure">
-			<div id="ageGroup"></div>
-			<p class="highcharts-description">
-				<i>*OPPO includes OnePlus since Q3 2021</i><br><br>
-				Chart demonstrating the use of a 3D pie layout.
-				The "Xiaomi" slice has been selected, and is offset from the pie.
-				Click on slices to select and unselect them.
-				Note that 3D pies, while decorative, can be hard to read, and the
-				viewing angles can make slices close to the user appear larger than they
-				are.
-			</p>
-		</figure>
+		<div id="ageGroup"></div>
 	</div>
 	@* 各年齡層佔比 *@
 
@@ -63,7 +52,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
 	<script>
 		//user柱狀圖分析
-		axios.get("/api/UserChart/GetUsers")
+		axios.get("/api/UserChart/UserAnalyze")
 			.then(response => {
 				const Age = Object.keys(response.data.payingMemberAgeGroup);
 				const paying = Object.values(response.data.payingMemberAgeGroup);
@@ -131,7 +120,7 @@
 		//user柱狀圖分析
 
 		//UserPie圓餅圖
-		axios.get("/api/UserChart/GetUserGender")
+		axios.get("/api/UserChart/UserGenderGroup")
 			.then(response => {
 				let femaleCount = 0;
 				let maleCount = 0;
@@ -188,7 +177,7 @@
 		//UserPie圓餅圖
 
 		//會員年齡層佔比
-		axios.get("/api/UserChart/GetUserAgeGroup")
+		axios.get("/api/UserChart/UserAgeGroup")
 			.then(response => {
 				Highcharts.chart('ageGroup', {
 					chart: {
@@ -238,7 +227,7 @@
 		//會員年齡層佔比
 
 		//已消費/未消費會員佔比
-		axios.get("/api/UserChart/GetIsPayAndNoPaying")
+		axios.get("/api/UserChart/IsPayAndNoPayingGroup")
 			.then(response => {
 				Highcharts.chart('getIsPayAndNoPaying', {
 					chart: {

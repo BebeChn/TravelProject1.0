@@ -39,12 +39,13 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 				"88-92歲",
 				"93-97歲"
 			};
-
+		[NonAction]
 		private Dictionary<string, int> AgeGroupDictionary(List<string> ageGroups)
 		{
 			return ageGroups.ToDictionary(group => group, _ => 0);
 		}
 
+		[NonAction]
 		private string GetAgeGroup(int? age)
 		{
 			string str = "未填寫年齡族群";
@@ -62,15 +63,15 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 		}
 
 		[HttpGet]
-		public async Task<GetUsersAnalyzeDTO> GetUsers()
+		public async Task<UsersAnalyzeColumnGraph> UserAnalyze()
 		{
-			var users = await _db.Users.Select(u => new
+			var users = await _db.Users.AsNoTracking().Select(u => new
 			{
 				UserId = u.UserId,
 				Gender = u.Gender,
 				Age = u.Age
 			}).ToListAsync();
-			var orders = _db.Orders.Select(o => o.UserId).ToList();
+			var orders = await _db.Orders.AsNoTracking().Select(o => o.UserId).ToListAsync();
 
 			var Male = AgeGroupDictionary(ageGroups);
 			var Female = AgeGroupDictionary(ageGroups);
@@ -84,40 +85,28 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 
 				if (user.Gender == "F")
 				{
-					if (!Female.ContainsKey(ageGroup))
-					{
-						Female[ageGroup] = 0;
-					}
+					if (!Female.ContainsKey(ageGroup)) Female[ageGroup] = 0;
 					Female[ageGroup]++;
 				}
 				else
 				{
-					if (!Male.ContainsKey(ageGroup))
-					{
-						Male[ageGroup] = 0;
-					}
+					if (!Male.ContainsKey(ageGroup)) Male[ageGroup] = 0;
 					Male[ageGroup]++;
 				}
 
 				if (isPayingMember)
 				{
-					if (!payingMemberAgeGroup.ContainsKey(ageGroup))
-					{
-						payingMemberAgeGroup[ageGroup] = 0;
-					}
+					if (!payingMemberAgeGroup.ContainsKey(ageGroup)) payingMemberAgeGroup[ageGroup] = 0;
 					payingMemberAgeGroup[ageGroup]++;
 				}
 				else
 				{
-					if (!nonPayingMemberAgeGroup.ContainsKey(ageGroup))
-					{
-						nonPayingMemberAgeGroup[ageGroup] = 0;
-					}
+					if (!nonPayingMemberAgeGroup.ContainsKey(ageGroup)) nonPayingMemberAgeGroup[ageGroup] = 0;
 					nonPayingMemberAgeGroup[ageGroup]++;
 				}
 			}
 
-			GetUsersAnalyzeDTO uaDTO = new GetUsersAnalyzeDTO();
+			UsersAnalyzeColumnGraph uaDTO = new UsersAnalyzeColumnGraph();
 			uaDTO.TotalMember = users.Count();
 			uaDTO.PayingMemberAgeGroup = payingMemberAgeGroup;
 			uaDTO.NonPayingMemberAgeGroup = nonPayingMemberAgeGroup;
@@ -127,7 +116,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 		}
 
 		[HttpGet]
-		public async Task<IEnumerable<HighChart3DGraph>> GetUserGender()
+		public async Task<IEnumerable<HighChart3DGraph>> UserGenderGroup()
 		{
 			return await _db.Users.AsNoTracking().Where(x => !string.IsNullOrEmpty(x.Gender))
 			.Select(x => x.Gender).GroupBy(x => x).Select(x => new HighChart3DGraph
@@ -138,7 +127,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 		}
 
 		[HttpGet]
-		public  IEnumerable<HighChart3DGraph> GetUserAgeGroup()
+		public  IEnumerable<HighChart3DGraph> UserAgeGroup()
 		{
 			var ageGroups = new List<HighChart3DGraph>();
 			int minAge = 18;
@@ -170,7 +159,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api
 		}
 
 		[HttpGet]
-		public async Task<IEnumerable<HighChart3DGraph>> GetIsPayAndNoPaying()
+		public async Task<IEnumerable<HighChart3DGraph>> IsPayAndNoPayingGroup()
 		{
 			var userIds = await _db.Users.AsNoTracking().Select(u => u.UserId).ToListAsync();
 			var orderUserIds = await _db.Orders.AsNoTracking().Select(o => o.UserId).ToListAsync();
