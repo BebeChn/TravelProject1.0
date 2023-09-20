@@ -1,6 +1,6 @@
 ﻿namespace TravelProject1._0.Areas.Admin.Models.ChartViewModel.UserChartDTO
 {
-    public class GetUsersAnalyzeDTO
+    public class UsersAnalyzeColumnGraph
     {
         public int TotalMember { get; set; }
         public Dictionary<string, int> Male { get; set; }
