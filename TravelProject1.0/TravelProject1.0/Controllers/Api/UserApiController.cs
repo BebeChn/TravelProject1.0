@@ -136,7 +136,7 @@ namespace TravelProject1._0.Controllers.Api
 			try
 			{
 				int id = _userIdentityService.GetUserId();
-				User user = (await _context.Users.FindAsync(id))!;
+				User user = await _context.Users.FindAsync(id);
                 if (user == null) return false;
 				// 修改其他個資
 				user.Email = updateUser.Email;

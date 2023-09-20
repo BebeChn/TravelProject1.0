@@ -55,10 +55,6 @@
                         </div>
                         <h4>
                             <span class="">
-                                <a href="#"><i class="fas fa-fire"></i>熱門程度</a>
-                            </span>
-                            <span> | </span>
-                            <span class="">
                                 <a href="#" v-on:click="priceOrderby">
                                     <i class="fas fa-funnel-dollar">
                                     </i>金額高低
@@ -241,13 +237,6 @@
                     return _this.productList.filter(item => item.productName.match(_this.search));
 
 
-
-
-                    // 重新獲得數據
-                    if (_this.search == '') {
-                        _this.PlaneTK_catgoryGET();
-                    }
-
                 },
                 showProduct: function () {
                     let _this = this;
@@ -267,16 +256,6 @@
                 }
 
             }
-
-
-
-
-
-
-
-
-
-
 
 
 
