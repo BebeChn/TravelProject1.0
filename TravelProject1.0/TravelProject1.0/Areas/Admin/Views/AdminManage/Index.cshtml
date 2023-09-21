@@ -241,10 +241,10 @@
                                 alert("刪除成功");
                                 window.location.reload();
                             }else{
-                                alert("刪除失敗");
+                                alert("修改失敗,請檢查必填有無填寫或者您並無權限做修改");
                             }
                         }).catch(err => {
-                            alert("刪除失敗");
+                            alert("修改失敗,請檢查必填有無填寫或者您並無權限做修改");
                         });
                 },
                 updateAdminApi: async function (id,data) {
