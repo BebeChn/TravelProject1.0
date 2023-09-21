@@ -64,6 +64,7 @@ public class SuperApiController : ControllerBase
     {
         var admin = await _context.Admins.FindAsync(id);
         if (admin == null) return false;
+        if (admin.Id == 5) return false;
         admin.Name = apDto.Name;
         admin.Account = apDto.Account;
         admin.Describe = apDto.Describe;
@@ -78,6 +79,7 @@ public class SuperApiController : ControllerBase
     {
         var admin = await _context.Admins.FindAsync(id);
         if (admin == null) return false;
+        if (admin.Id == 5) return false; 
         try
         {
             _context.Admins.Remove(admin);

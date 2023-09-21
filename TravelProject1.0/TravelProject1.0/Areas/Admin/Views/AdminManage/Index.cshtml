@@ -99,7 +99,8 @@
                     </div>
                     <div class="form-group">
                         <label class="form-label">密碼：</label>
-                        <input v-model.trim="newAdmin.password" type="password" class="form-control" required />
+                        <input v-model.trim="newAdmin.password"  type="password" class="form-control" required />
+                        <div class="formatError" v-if="newAdmin.password && !isValid(newAdmin.password,validType.password)">您輸入的格式不正確</div>
                     </div>
                     <div class="form-group">
                         <label class="form-label">管理權限：</label>
@@ -138,7 +139,7 @@
                     <div class="form-group">
                         <label class="form-label">密碼：</label>
                         <input v-model.trim="UpdateAdmin.password" type="password" class="form-control" required />
-                        <div class="formatError" v-if="!isValid(UpdateAdmin.password,validType.password)">您輸入的格式不正確</div>
+                        <div class="formatError" v-if="UpdateAdmin.password && !isValid(UpdateAdmin.password,validType.password)">您輸入的格式不正確</div>
                     </div>
                     <div class="form-group">
                         <label class="form-label">管理權限：</label>
@@ -207,21 +208,26 @@
                         loginDate: new Date(),
                         CreateDate: new Date()
                     };
-                    fetch(`/api/Super/CreateAdmin`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(form)
-                    }).then(response => response.json())
-                        .then(data => {
-                            if (data) {
-                                alert("管理員新增成功");
-                                window.location.href = "/Admin/Manage/Index";
-                            } else {
+                    if (_this.newAdmin.name && _this.newAdmin.account && _this.newAdmin.password && _this.newAdmin.describe) {
+                        if (!_this.isValid(_this.newAdmin.password, validType.password)) return alert("密碼格式輸入不正確");
+                        fetch(`/api/Super/CreateAdmin`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(form)
+                        }).then(response => response.json())
+                            .then(data => {
+                                if (data) {
+                                    alert("管理員新增成功");
+                                    window.location.href = "/Admin/Manage/Index";
+                                } else {
+                                    alert("管理員新增失敗");
+                                }
+                            }).catch(err => {
                                 alert("管理員新增失敗");
-                            }
-                        }).catch(err => {
-                            alert("管理員新增失敗");
-                        });
+                            });
+                    } else {
+                        alert("有欄位內容未輸入")
+                    } 
                 },
                 //刪除管理員
                 deleteAdmin: function (id) {
@@ -250,18 +256,24 @@
                 },
                 //修改管理員
                 updateAdmin: function (model) {
-                    if (!confirm(`確定要更新管理員名稱為${this.UpdateAdmin.name}的管理員資訊？`)) return;
-                    this.updateAdminApi(model.id,{
-                        name: model.name,
-                        account: model.account,
-                        password: model.password,
-                        describe: model.describe,
-                    }).then(x => {
-                        if (!x) alert("修改失敗,請檢查必填有無填寫");
-                        alert("修改成功");
-                        $('#UpdateAdmin').modal('hide');
-                        window.location.href = "/Admin/Manage/Index";
-                    })
+                    let _this = this;
+                    if (!_this.isValid(_this.UpdateAdmin.password, validType.password)) return alert("密碼格式輸入不正確");
+                    if (_this.UpdateAdmin.name  && _this.UpdateAdmin.account  && _this.UpdateAdmin.describe  && _this.UpdateAdmin.password ) {
+                        if (!confirm(`確定要更新管理員名稱為${this.UpdateAdmin.name}的管理員資訊？`)) return;
+                        this.updateAdminApi(model.id, {
+                            name: model.name,
+                            account: model.account,
+                            password: model.password,
+                            describe: model.describe,
+                        }).then(x => {
+                            if (!x) return alert("修改失敗,請檢查必填有無填寫或者您並無權限做修改");
+                            alert("修改成功");
+                            $('#UpdateAdmin').modal('hide');
+                            window.location.href = "/Admin/Manage/Index";
+                        })
+                    } else { 
+                        alert("有內容未輸入")
+                    } 
                 },
                 formClear: function () {
                     this.newAdmin = {

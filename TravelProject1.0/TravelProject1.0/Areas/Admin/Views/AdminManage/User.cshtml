@@ -296,21 +296,25 @@
                         Email: _this.newUser.email,
                         Password: _this.newUser.password
                     };
-                    fetch(`/api/Admin/AdminManageUser`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(form)
-                    }).then(response => response.json())
-                        .then(data => {
-                            if (data) {
-                                alert("會員新增成功");
-                                window.location.href = "/Admin/Manage/User";
-                            } else {
+                    if (_this.newUser.name && _this.newUser.gender && _this.newUser.birthday && _this.newUser.phone && _this.newUser.email && _this.newUser.password) {
+                        fetch(`/api/Admin/AdminManageUser`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(form)
+                        }).then(response => response.json())
+                            .then(data => {
+                                if (data) {
+                                    alert("會員新增成功");
+                                    window.location.href = "/Admin/Manage/User";
+                                } else {
+                                    alert("會員新增失敗");
+                                }
+                            }).catch(err => {
                                 alert("會員新增失敗");
-                            }
-                        }).catch(err => {
-                            alert("會員新增失敗");
-                        });
+                            });
+                    } else { 
+                        alert("有欄位沒有內容")
+                    }
                 },
                 //會員資訊modal
                 display: function (model) {
@@ -325,8 +329,6 @@
                 //修改使用者資訊
                 updateUser: function (model) {
                     let _this = this;
-                    let result = confirm(`確定要更新使用者名稱為${_this.UpdateUser.name}的產品資訊？`);
-                    if (result != true) return;
                     let request = {
                         Name: model.name,
                         Email: model.email,
@@ -334,19 +336,25 @@
                         Birthday: model.birthday,
                         Phone: model.phone,
                     };
-                    fetch(`/api/admin/AdminPutUser/${model.userId}`, {
-                        method: "PUT",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify(request)
-                    }).then(response => response.json())
-                        .then(data => {
-                            _this.editOpen = false;
-                            alert("修改成功");
-                            location.href = "/Admin/Manage/User";
-                        })
-                        .catch(err => {
-                            alert("修改失敗,請檢查必填有無填寫")
-                        });
+                    if (model.name && model.email && model.gender && model.birthday && model.phone) {
+                        let result = confirm(`確定要更新使用者名稱為${_this.UpdateUser.name}的產品資訊？`);
+                        if (result != true) return;
+                        fetch(`/api/admin/AdminPutUser/${model.userId}`, {
+                            method: "PUT",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(request)
+                        }).then(response => response.json())
+                            .then(data => {
+                                _this.editOpen = false;
+                                alert("修改成功");
+                                location.href = "/Admin/Manage/User";
+                            })
+                            .catch(err => {
+                                alert("修改失敗,請檢查必填有無填寫")
+                            });
+                    } else {
+                        alert("有欄位沒有內容")
+                    }
                 },
                 //刪除使用者
                 deleteUser: function (userId) {
