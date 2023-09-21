@@ -464,19 +464,24 @@
                     data.append("SubDescribe", _this.newProduct.subDescribe);
                     data.append("ShortDescribe", _this.newProduct.shortDescribe);
                     data.append("File", _this.newProduct.file);
-                    fetch(`/api/Product/AdminPostProduct`, {
-                        method: 'POST',
-                        body: data,
-                    }).then(response => response.json()).then((data) => {
-                        if (data) {
-                            alert("商品新增成功");
-                            window.location.href = "/Admin/Manage/Products";
-                        } else {
-                            alert("商品新增失敗,請填寫必填欄位");
-                        }
-                    }).catch(err => {
-                        alert("商品新增失敗");
-                    });
+                    if (_this.newProduct.productName && _this.newProduct.mainDescribe && _this.newProduct.price && _this.newProduct.subDescribe &&
+                        _this.newProduct.shortDescribe && _this.newProduct.previewImgUrl) {
+                        fetch(`/api/Product/AdminPostProduct`, {
+                            method: 'POST',
+                            body: data,
+                        }).then(response => response.json()).then((data) => {
+                            if (data) {
+                                alert("商品新增成功");
+                                window.location.href = "/Admin/Manage/Products";
+                            } else {
+                                alert("商品新增失敗,請填寫必填欄位");
+                            }
+                        }).catch(err => {
+                            alert("商品新增失敗");
+                        });
+                    } else { 
+                        alert("請確保所有欄位都有填入相應的內容以及圖片")
+                    }
                 },
                 //商品詳細資訊
                 display: function (product) {
@@ -491,35 +496,40 @@
                 },
                 UpdateProductInfo: function (productId) {
                     let _this = this;
-                    let result = confirm(`確定要更新產品名稱為${_this.UpdateProduct.productId}的產品資訊？`)
-                    if (result == true) {
-                        let formData = new FormData();
-                        formData.append("Id", _this.UpdateProduct.id);
-                        formData.append("ProductName", _this.UpdateProduct.productName);
-                        formData.append("MainDescribe", _this.UpdateProduct.mainDescribe);
-                        formData.append("Price", _this.UpdateProduct.price);
-                        formData.append("SubDescribe", _this.UpdateProduct.subDescribe);
-                        formData.append("ShortDescribe", _this.UpdateProduct.shortDescribe);
-                        if (_this.UpdateProduct.file) {
-                            formData.append("imageFile", _this.UpdateProduct.file);
-                        }
-                        fetch(`/api/Product/PutProduct/${productId}`, {
-                            method: "PUT",
-                            body: formData,
-                        })
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data) {
-                                    _this.editOpen = false;
-                                    alert("商品更新成功");
-                                    window.location.href = "/Admin/Manage/Products";
-                                } else {
-                                    alert("商品更新失敗");
-                                }
+                    if (_this.UpdateProduct.id && _this.UpdateProduct.productName && _this.UpdateProduct.mainDescribe && _this.UpdateProduct.price &&
+                        _this.UpdateProduct.subDescribe && _this.UpdateProduct.shortDescribe) {
+                        let result = confirm(`確定要更新產品名稱為${_this.UpdateProduct.productId}的產品資訊？`)
+                        if (result == true) {
+                            let formData = new FormData();
+                            formData.append("Id", _this.UpdateProduct.id);
+                            formData.append("ProductName", _this.UpdateProduct.productName);
+                            formData.append("MainDescribe", _this.UpdateProduct.mainDescribe);
+                            formData.append("Price", _this.UpdateProduct.price);
+                            formData.append("SubDescribe", _this.UpdateProduct.subDescribe);
+                            formData.append("ShortDescribe", _this.UpdateProduct.shortDescribe);
+                            if (_this.UpdateProduct.file) {
+                                formData.append("imageFile", _this.UpdateProduct.file);
+                            }
+                            fetch(`/api/Product/PutProduct/${productId}`, {
+                                method: "PUT",
+                                body: formData,
                             })
-                            .catch(err => {
-                                alert("修改失敗,請檢查必填有無填寫或伺服器錯誤");
-                            });
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data) {
+                                        _this.editOpen = false;
+                                        alert("商品更新成功");
+                                        window.location.href = "/Admin/Manage/Products";
+                                    } else {
+                                        alert("商品更新失敗");
+                                    }
+                                })
+                                .catch(err => {
+                                    alert("修改失敗,請檢查必填有無填寫或伺服器錯誤");
+                                });
+                        }
+                    } else {
+                        alert("請確保所有的欄位都有內容以及照片")
                     }
                 },
                 deleteUser: function (productId) {

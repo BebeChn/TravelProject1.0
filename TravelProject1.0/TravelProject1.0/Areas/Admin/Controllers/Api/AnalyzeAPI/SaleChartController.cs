@@ -125,13 +125,13 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api.AnalyzeAPI
 				Airplane = resultList.ContainsKey(1) ? resultList[1].OrderBy(r => r.Key).Select(r => new HighChart3DGraphDTO { Name = r.Key, y = r.Value }).ToList() 
 				: spareDic.Select(s => new HighChart3DGraphDTO { Name = s.Key, y = s.Value }).ToList(),
 
-				Hotel = resultList.ContainsKey(2) ? resultList[1].OrderBy(r => r.Key).Select(r => new HighChart3DGraphDTO { Name = r.Key, y = r.Value }).ToList() 
+				Hotel = resultList.ContainsKey(2) ? resultList[2].OrderBy(r => r.Key).Select(r => new HighChart3DGraphDTO { Name = r.Key, y = r.Value }).ToList() 
 				: spareDic.Select(s => new HighChart3DGraphDTO { Name = s.Key, y = s.Value }).ToList(),
 
-				Transportation = resultList.ContainsKey(3) ? resultList[1].OrderBy(r => r.Key).Select(r => new HighChart3DGraphDTO { Name = r.Key, y = r.Value }).ToList() 
+				Transportation = resultList.ContainsKey(3) ? resultList[3].OrderBy(r => r.Key).Select(r => new HighChart3DGraphDTO { Name = r.Key, y = r.Value }).ToList() 
 				: spareDic.Select(s => new HighChart3DGraphDTO { Name = s.Key, y = s.Value }).ToList(),
 
-				Attractions = resultList.ContainsKey(4) ? resultList[1].OrderBy(r => r.Key).Select(r => new HighChart3DGraphDTO { Name = r.Key, y = r.Value }).ToList()
+				Attractions = resultList.ContainsKey(4) ? resultList[4].OrderBy(r => r.Key).Select(r => new HighChart3DGraphDTO { Name = r.Key, y = r.Value }).ToList()
 				: spareDic.Select(s => new HighChart3DGraphDTO { Name = s.Key, y = s.Value }).ToList(),
 
 				AirplaneOneYearSale = resultList.ContainsKey(1) ? resultList[1] : spareDic,
