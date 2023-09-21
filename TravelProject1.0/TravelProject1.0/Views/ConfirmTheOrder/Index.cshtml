@@ -22,9 +22,9 @@
                             <th>金額</th>
                         </tr>
                         <tr v-for="o in orders">
-                            <td>{{o.odname}}</td>
-                            <td>{{o.quantity}}</td>
-                            <td>{{o.unitPrice | formatCurrency}}</td>
+                            <td v-cloak>{{o.odname}}</td>
+                            <td v-cloak>{{o.quantity}}</td>
+                            <td v-cloak>{{o.unitPrice | formatCurrency}}</td>
                         </tr>
                     </table>
                     <hr />
@@ -42,7 +42,7 @@
                         <input class="money" v-bind:value="resultPrice | formatCurrency" readonly />
                     </div>
                     <div class="buy">
-                        <button class="btn theme_btn button_hover info" v-on:click="addOrder">結帳</button>
+                        <button class="btn theme_btn button_hover info" v-on:click="addOrder" v-bind:disabled="!showPayBtn">結帳</button>
                     </div>
                 </div>
             </div>
@@ -94,12 +94,13 @@
                 orders: @result,
                 pointNum: 0,
                 total: "",
-                resultPrice: ""
+                resultPrice: "",
+                showPayBtn: false
             },
             mounted: function () {
                 let _this = this;
                 fetch(`/api/ConfirmTheOrder/GetUser`, { method: "GET" })
-                    .then(response =>response.json())
+                    .then(response => response.json())
                     .then(data => {
                         _this.user = data;
                     }).catch(error => {
@@ -120,6 +121,7 @@
                 //不使用點數
                 showPrice: function () {
                     let _this = this;
+                    _this.showPayBtn = true;
                     return _this.resultPrice = _this.total;
                 },
                 //點數
@@ -144,6 +146,7 @@
                 //點數折抵後合計
                 totalPrice: function () {
                     let _this = this;
+                    _this.showPayBtn = true;
                     return _this.resultPrice = _this.total - (_this.pointNum / 300);
                 },
                 //金流資訊
@@ -163,14 +166,14 @@
                         }
                         orderData.detailDTOs.push(d)
                     }
-                    fetch(`/Payment/Pay`,{
-                        method:"POST",
-                        headers: {"Content-Type":"application/json"},
+                    fetch(`/Payment/Pay`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
                         body: JSON.stringify(orderData)
                     }).then(response => {
                         if (response.ok) return response.text();
                     }).then(data => {
-                        document.body.insertAdjacentHTML("beforeend",data);
+                        document.body.insertAdjacentHTML("beforeend", data);
                         document.body.getElementsByTagName('form')[0].submit()
                     }).catch(error => {
                         alert(error);

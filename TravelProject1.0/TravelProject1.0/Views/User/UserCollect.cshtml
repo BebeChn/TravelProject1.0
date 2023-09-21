@@ -58,9 +58,9 @@
                         <span></span>
                     </li>
                     <li v-for="favorite in favorites" class="favorite-item">
-                        <img class="img-fluid" :src="favorite.collectImage" style="width:150px;height:150px;" />
-                        <span class="me-5">{{favorite.collectName}}</span>
-                        <span class="me-3">{{favorite.productId}}</span>
+                        <img v-cloak class="img-fluid" :src="favorite.collectImage" style="width:150px;height:150px;" />
+                        <span v-cloak class="me-5">{{favorite.collectName}}</span>
+                        <span v-cloak class="me-3">{{favorite.productId}}</span>
                         <button class="btn btn-delete danger" data-bs-toggle="modal" data-bs-target="#deleteItem" @@click="deleteModal(favorite)"><i class="fa-solid fa-trash-can"></i>删除</button>
                     </li>
                 </ul>
@@ -90,7 +90,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a  class="d-flex justify-content-between" asp-Controller="User" asp-action="UserPoint">
+                                <a class="d-flex justify-content-between" asp-Controller="User" asp-action="UserPoint">
                                     <p>點數</p>
                                 </a>
                             </li>
@@ -152,16 +152,16 @@
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify(_this.remove)
                     }).then(response => response.json())
-                    .then(data=>{
-                        if(data){
-                            alert("刪除成功");
-                            location.href = "/User/UserCollect";
-                        }else{
-                            alert("刪除失敗");
-                        }
-                    }).catch(err => {
-                        alert(error);
-                    })
+                        .then(data => {
+                            if (data) {
+                                alert("刪除成功");
+                                location.href = "/User/UserCollect";
+                            } else {
+                                alert("刪除失敗");
+                            }
+                        }).catch(err => {
+                            alert(error);
+                        })
                 }
             }
         });

@@ -21,9 +21,9 @@
                         <label>查看</label>
                     </div>
                     <div v-for="o in showOrder" class="favorite-item">
-                        <p>{{o.orderDate}}</p>
-                        <p>{{o.orderId}}</p>
-                        <p>{{o.status}}</p>
+                        <p v-cloak>{{o.orderDate}}</p>
+                        <p v-cloak>{{o.orderId}}</p>
+                        <p v-cloak>{{o.status}}</p>
                         <a :href="'/User/UserOrderDetails/'+o.orderId" class="theme_btn button_hover info">詳細訂單</a>
                     </div>
                 </div>
@@ -63,7 +63,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a class="d-flex justify-content-between" asp-Controller="User" asp-action="UserCollect" >
+                                <a class="d-flex justify-content-between" asp-Controller="User" asp-action="UserCollect">
                                     <p>收藏夾</p>
                                 </a>
                             </li>

@@ -31,10 +31,10 @@
             <tbody>
                 <tr v-for="item in showOrders">
                     <template class="text-center" v-if="item.Edit==true">
-                        <td>{{item.orderId}}</td>
-                        <td>{{item.userId}}</td>
-                        <td>{{item.totalPrice | formatCurrency}}</td>
-                        <td>{{item.newPoint}}</td>
+                        <td v-cloak>{{item.orderId}}</td>
+                        <td v-cloak>{{item.userId}}</td>
+                        <td v-cloak>{{item.totalPrice | formatCurrency}}</td>
+                        <td v-cloak>{{item.newPoint}}</td>
                         <td>
                             <input type="date" class="w-100 form-control" v-model="editOrder.orderDate">
                         </td>
@@ -52,12 +52,12 @@
                         </td>
                     </template>
                     <template class="text-center" v-else>
-                        <td>{{item.orderId}}</td>
-                        <td>{{item.userId}}</td>
-                        <td>{{item.totalPrice | formatCurrency}}</td>
-                        <td>{{item.newPoint}}</td>
-                        <td>{{item.orderDate}}</td>
-                        <td>{{item.status}}</td>
+                        <td v-cloak>{{item.orderId}}</td>
+                        <td v-cloak>{{item.userId}}</td>
+                        <td v-cloak>{{item.totalPrice | formatCurrency}}</td>
+                        <td v-cloak>{{item.newPoint}}</td>
+                        <td v-cloak>{{item.orderDate}}</td>
+                        <td v-cloak>{{item.status}}</td>
                         <td>
                             <div class="d-flex justify-content-around">
                                 <button type="button" class="btn btn-success" data-toggle="modal" data-target="#detailModal" @@click="openOrderDetail(item)">明細</button>
@@ -114,11 +114,11 @@
                                 <tbody>
                                     <tr v-for="item in detail">
                                         <template class="text-center" v-if="detailEdit==true">
-                                            <td>{{item.id}}</td>
-                                            <td style="width:200px"><img class="w-100" :src="item.odimg" /></td>
-                                            <td>{{item.odname}}</td>
-                                            <td>{{item.quantity}}</td>
-                                            <td>{{item.unitPrice}}</td>
+                                            <td v-cloak>{{item.id}}</td>
+                                            <td v-cloak style="width:200px"><img class="w-100" :src="item.odimg" /></td>
+                                            <td v-cloak>{{item.odname}}</td>
+                                            <td v-cloak>{{item.quantity}}</td>
+                                            <td v-cloak>{{item.unitPrice}}</td>
                                             <td>
                                                 <input type="date" v-model="editDetail.useDate" />
                                             </td>
@@ -130,12 +130,12 @@
                                             </td>
                                         </template>
                                         <template class="text-center" v-else>
-                                            <td>{{item.id}}</td>
-                                            <td style="width:200px"><img class="w-100" :src="item.odimg" /></td>
-                                            <td>{{item.odname}}</td>
-                                            <td>{{item.quantity}}</td>
-                                            <td>{{item.unitPrice}}</td>
-                                            <td>{{item.useDate}}</td>
+                                            <td v-cloak>{{item.id}}</td>
+                                            <td v-cloak style="width:200px"><img class="w-100" :src="item.odimg" /></td>
+                                            <td v-cloak>{{item.odname}}</td>
+                                            <td v-cloak>{{item.quantity}}</td>
+                                            <td v-cloak>{{item.unitPrice}}</td>
+                                            <td v-cloak>{{item.useDate}}</td>
                                             <td>
                                                 <div class="d-flex justify-content-around">
                                                     <button type="button" class="btn btn-primary" @@click="openChangeDetail(item)">修改</button>
