@@ -12,7 +12,7 @@
         table {
             border-collapse: collapse;
             width: 100%;
-            border:none;
+            border: none;
         }
 
         th, td {
@@ -55,36 +55,36 @@
                 <div class="row">
                     <div class="col-2">
                         <label for="file" style="font-weight: bold; font-size: 24px;">點數進度</label>
-                        </div>
-                        <div class="col-10">
-                            <div class="progress">
+                    </div>
+                    <div class="col-10">
+                        <div class="progress">
                             <div class="progress-bar progress-bar-striped progress-bar-animated custom-progress-bar" role="progressbar" :aria-valuenow="now" :aria-valuemin="min" :aria-valuemax="max" :style="point"></div>
                         </div>
-                            <div style="text-align:right"> {{now}} / {{max}}</div>
-                        </div>
+                        <div v-cloak style="text-align:right"> {{now}} / {{max}}</div>
                     </div>
+                </div>
                 <div class="row">
-                    <div class="row product-items outer-box" >
-                        <div class="col-12  align-items-center">    
-                                <br />
-                                <table border="1">
-                                    <thead>
-                                        <tr>
-                                            <th>訂單編號</th>                                          
-                                            <th>獲得點數</th>
-                                            <th>訂購日期</th>
-                                            <th>訂購價格</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
+                    <div class="row product-items outer-box">
+                        <div class="col-12  align-items-center">
+                            <br />
+                            <table border="1">
+                                <thead>
+                                    <tr>
+                                        <th>訂單編號</th>
+                                        <th>獲得點數</th>
+                                        <th>訂購日期</th>
+                                        <th>訂購價格</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
                                     <tr v-for="o in showOrder">
-                                            <td>{{o.orderId}}</td>                                        
-                                            <td>{{o.newPoint}}</td>
-                                            <td>{{o.orderDate | formatDate}}</td>
-                                            <td>{{o.totalPrice}}</td>
-                                        </tr>         
-                                    </tbody>
-                                </table>
+                                        <td v-cloak>{{o.orderId}}</td>
+                                        <td v-cloak>{{o.newPoint}}</td>
+                                        <td v-cloak>{{o.orderDate | formatDate}}</td>
+                                        <td v-cloak>{{o.totalPrice}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                             <nav class="blog-pagination justify-content-center d-flex">
                                 <ul class="pagination">
                                     <paginate :page-count="total"
@@ -99,7 +99,7 @@
                                     </paginate>
                                 </ul>
                             </nav>
-                            </div>                    
+                        </div>
                     </div>
 
                 </div>
@@ -151,14 +151,14 @@
         var vueApp = new Vue({
             el: '#app',
             data: {
-              max:10000,
-              min:0,
-              now:0,
-              Order: [],
-              currentPage: 1,
-              itemPage: 5,
+                max: 10000,
+                min: 0,
+                now: 0,
+                Order: [],
+                currentPage: 1,
+                itemPage: 5,
             },
-          
+
             filters: {
                 //日期格式
                 formatDate: function (str) {
@@ -168,7 +168,7 @@
                 },
             },
             mounted: function () {
-                let _this=this
+                let _this = this
                 fetch(`/api/Order/GetPoint`).then(response => {
                     if (response.ok) return response.text();
                 }).then(data => {

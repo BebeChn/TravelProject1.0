@@ -49,12 +49,12 @@
             </thead>
             <tbody>
                 <tr v-for="pa in showAdmin">
-                    <td>{{pa.id}}</td>
-                    <td>{{pa.name}}</td>
-                    <td>{{pa.account}}</td>
-                    <td>{{pa.describe}}</td>
-                    <td>{{pa.createDate | formatDate}}</td>
-                    <td>{{pa.loginDate | formatDate}}</td>
+                    <td v-cloak>{{pa.id}}</td>
+                    <td v-cloak>{{pa.name}}</td>
+                    <td v-cloak>{{pa.account}}</td>
+                    <td v-cloak>{{pa.describe}}</td>
+                    <td v-cloak>{{pa.createDate | formatDate}}</td>
+                    <td v-cloak>{{pa.loginDate | formatDate}}</td>
                     <td>
                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#UpdateAdmin" @@click="Edit(pa)">編輯</button>
                         <button type="button" class="btn btn-danger" @@click="deleteAdmin(pa.id)">刪除</button>
@@ -99,7 +99,7 @@
                     </div>
                     <div class="form-group">
                         <label class="form-label">密碼：</label>
-                        <input v-model.trim="newAdmin.password"  type="password" class="form-control" required />
+                        <input v-model.trim="newAdmin.password" type="password" class="form-control" required />
                         <div class="formatError" v-if="newAdmin.password && !isValid(newAdmin.password,validType.password)">您輸入的格式不正確</div>
                     </div>
                     <div class="form-group">
@@ -227,7 +227,7 @@
                             });
                     } else {
                         alert("有欄位內容未輸入")
-                    } 
+                    }
                 },
                 //刪除管理員
                 deleteAdmin: function (id) {
@@ -240,14 +240,14 @@
                             if (data) {
                                 alert("刪除成功");
                                 window.location.reload();
-                            }else{
+                            } else {
                                 alert("修改失敗,請檢查必填有無填寫或者您並無權限做修改");
                             }
                         }).catch(err => {
                             alert("修改失敗,請檢查必填有無填寫或者您並無權限做修改");
                         });
                 },
-                updateAdminApi: async function (id,data) {
+                updateAdminApi: async function (id, data) {
                     return await fetch(`/api/Super/AdminPut/${id}`, {
                         method: "PUT",
                         headers: { "Content-Type": "application/json" },
@@ -258,7 +258,7 @@
                 updateAdmin: function (model) {
                     let _this = this;
                     if (!_this.isValid(_this.UpdateAdmin.password, validType.password)) return alert("密碼格式輸入不正確");
-                    if (_this.UpdateAdmin.name  && _this.UpdateAdmin.account  && _this.UpdateAdmin.describe  && _this.UpdateAdmin.password ) {
+                    if (_this.UpdateAdmin.name && _this.UpdateAdmin.account && _this.UpdateAdmin.describe && _this.UpdateAdmin.password) {
                         if (!confirm(`確定要更新管理員名稱為${this.UpdateAdmin.name}的管理員資訊？`)) return;
                         this.updateAdminApi(model.id, {
                             name: model.name,
@@ -271,9 +271,9 @@
                             $('#UpdateAdmin').modal('hide');
                             window.location.href = "/Admin/Manage/Index";
                         })
-                    } else { 
+                    } else {
                         alert("有內容未輸入")
-                    } 
+                    }
                 },
                 formClear: function () {
                     this.newAdmin = {

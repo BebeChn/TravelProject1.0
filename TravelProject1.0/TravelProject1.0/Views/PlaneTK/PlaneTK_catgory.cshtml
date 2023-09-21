@@ -66,16 +66,16 @@
                 @* 商品 *@
                 <div class="row product-items" v-for="item in showProduct">
                     <div class="col-md-3">
-                        <img class="w-100" style="height:200px;object-fit:cover" :src="item.img" id="i" />
+                        <img v-cloak class="w-100" style="height:200px;object-fit:cover" :src="item.img" id="i" />
                     </div>
                     <div class="col-md-7 d_flex align-items-center">
                         <div class="about_content ">
-                            <h2 class="title title_color">{{item.productName}}</h2>
-                            <span>{{item.mainDescribe}}</span>
+                            <h2 class="title title_color" v-cloak>{{item.productName}}</h2>
+                            <span v-cloak>{{item.mainDescribe}}</span>
                         </div>
                     </div>
                     <div class="col-md-2">
-                        <span class="product-price">$ {{item.price}}起</span>
+                        <span class="product-price" v-cloak>$ {{item.price}}起</span>
                         <a :href="website+item.productId" class="button_hover theme_btn_two info">選擇方案</a>
                     </div>
                 </div>

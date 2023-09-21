@@ -51,12 +51,12 @@
                 </thead>
                 <tbody>
                     <tr v-for="pu in showUser">
-                        <td>{{pu.userId}}</td>
-                        <td>{{pu.name}}</td>
-                        <td>{{pu.email}}</td>
-                        <td>{{pu.gender | formatGender}}</td>
-                        <td>{{pu.birthday  | formatDate}}</td>
-                        <td>{{pu.phone}}</td>
+                        <td v-cloak>{{pu.userId}}</td>
+                        <td v-cloak>{{pu.name}}</td>
+                        <td v-cloak>{{pu.email}}</td>
+                        <td v-cloak>{{pu.gender | formatGender}}</td>
+                        <td v-cloak>{{pu.birthday  | formatDate}}</td>
+                        <td v-cloak>{{pu.phone}}</td>
                         <td>
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#UserDetail" v-on:click="display(pu)">編輯</button>
                         </td>
@@ -312,7 +312,7 @@
                             }).catch(err => {
                                 alert("會員新增失敗");
                             });
-                    } else { 
+                    } else {
                         alert("有欄位沒有內容")
                     }
                 },

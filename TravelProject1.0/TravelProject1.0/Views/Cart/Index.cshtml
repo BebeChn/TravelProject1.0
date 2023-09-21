@@ -12,7 +12,6 @@
         <thead class="info">
             <tr>
                 <th><input type="checkbox" v-on:click="selectAll" v-model="allCheck" /></th>
-                <th>圖片</th>
                 <th>商品名稱</th>
                 <th>數量</th>
                 <th>總金額</th>
@@ -23,11 +22,10 @@
         <tbody class="cart" v-for="(c,index) in showCartItem" :key="c.cartId">
             <tr class="cart-item">
                 <td align="center" valign="middle"><input class="inp-cart" type="checkbox" v-model="c.checked" /></td>
-                <td align="center" valign="middle"><img style="width:100px;height:100px;" src="~/lib/image/mountain.jpeg" /></td>
-                <td align="center" valign="middle">{{c.cartName}}</td>
-                <td align="center" valign="middle">{{c.cartQuantity}}</td>
-                <td align="center" valign="middle">{{c.cartPrice | formatCurrency}}</td>
-                <td align="center" valign="middle">{{c.cartDate | formatDate}}</td>
+                <td align="center" valign="middle" v-cloak>{{c.cartName}}</td>
+                <td align="center" valign="middle" v-cloak>{{c.cartQuantity}}</td>
+                <td align="center" valign="middle" v-cloak>{{c.cartPrice | formatCurrency}}</td>
+                <td align="center" valign="middle" v-cloak>{{c.cartDate | formatDate}}</td>
                 <td align="center" valign="middle"><button class="btn btn-delete danger" v-on:click="deleteModal(c)" v-bind:disabled="!c.checked" data-bs-toggle="modal" data-bs-target="#deleteItem"><i class="fa-solid fa-trash-can"></i></button></td>
             </tr>
         </tbody>

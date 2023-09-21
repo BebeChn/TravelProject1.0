@@ -62,16 +62,16 @@
                 @* 商品 *@
                 <div class="row product-items" v-for="t in showProduct">
                     <div class="col-xl-3">
-                        <img class="img-product" :src="t.img" />
+                        <img v-cloak class="img-product" :src="t.img" />
                     </div>
                     <div class="col-xl-7 d_flex align-items-center">
                         <div class="about_content ">
-                            <h2 class="title title_color">{{t.productName}}</h2>
-                            <span>{{t.mainDescribe}}</span>
+                            <h2 class="title title_color" v-cloak>{{t.productName}}</h2>
+                            <span v-cloak>{{t.mainDescribe}}</span>
                         </div>
                     </div>
                     <div class="col-xl-2">
-                        <span class="product-price">{{t.price | formatCurrency}}起</span>
+                        <span v-cloak class="product-price">{{t.price | formatCurrency}}起</span>
                         <a :href="'/Transport/Plan/'+t.productId" class="button_hover theme_btn_two info">選擇方案</a>
                     </div>
                 </div>

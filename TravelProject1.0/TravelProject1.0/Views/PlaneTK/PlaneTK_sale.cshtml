@@ -13,13 +13,13 @@
 <section id="app" class="about_history_area ">
     <div class="container" v-for="x in product">
         <div>
-            <img class="img-product " :src="x.img" />
+            <img v-cloak class="img-product " :src="x.img" />
         </div>
         <div class="product-describe">
             <div class="d_flex align-items-center">
                 <div class="about_content ">
-                    <h2 class="title title_color">{{x.productName}}</h2>
-                    <p>{{x.mainDescribe}}</p>
+                    <h2 v-cloak class="title title_color">{{x.productName}}</h2>
+                    <p v-cloak>{{x.mainDescribe}}</p>
                 </div>
             </div>
         </div>
@@ -41,12 +41,12 @@
                 <div class="card" v-for="(p,index) in plan" :key="p.planId">
                     <div class="row">
                         <div class="col-xl-3">
-                            <img class="img-plan i w-100 " style="height:200px;object-fit:cover" :src="p.planImg" />
+                            <img v-cloak class="img-plan i w-100 " style="height:200px;object-fit:cover" :src="p.planImg" />
                         </div>
                         <div class="col-xl-7">
                             <div class="card-body">
-                                <h3>{{p.name}}</h3>
-                                <p>{{p.describe}}</p>
+                                <h3 v-cloak>{{p.name}}</h3>
+                                <p v-cloak>{{p.describe}}</p>
                             </div>
                         </div>
                         <div class="col-xl-2 card-end">
@@ -68,7 +68,7 @@
                                         <div>
                                             <h4>單價：</h4>
                                             <div class="plan-price">
-                                                <span class="price">{{p.planPrice | formatCurrency}}</span>
+                                                <span v-cloak class="price">{{p.planPrice | formatCurrency}}</span>
                                             </div>
                                             <h4>數量：</h4>
                                             <div class="quantity d-flex">
@@ -106,7 +106,7 @@
                                     <img class="img-caption" src="~/images/Images.Project/planeTK/TEST.png" />
                                 </div>
                                 <div class="col-xl-8">
-                                    <p>{{x.subDescribe}}</p>
+                                    <p v-cloak>{{x.subDescribe}}</p>
                                 </div>
                             </div>
                         </div>
@@ -121,7 +121,7 @@
                         <h2>購買須知</h2>
                         <ul>
                             <li>
-                                <p>{{x.shortDescribe}}</p>
+                                <p v-cloak>{{x.shortDescribe}}</p>
                             </li>
                         </ul>
                     </div>
@@ -137,11 +137,11 @@
                                 <div class="user justify-content-between d-flex">
                                     <div class="desc">
                                         <h5><a href="#">會員</a></h5>
-                                        <p class="date">{{r.ratingDate | formatDate}}</p>
+                                        <p class="date" v-cloak>{{r.ratingDate | formatDate}}</p>
                                         <div class="star">
                                             <i class="fa-solid fa-star fa-2xl" v-for="(star,index) in r.ratingScore"></i>
                                         </div>
-                                        <p class="comment">{{r.describe}}</p>
+                                        <p class="comment" v-cloak>{{r.describe}}</p>
                                     </div>
                                 </div>
                             </div>

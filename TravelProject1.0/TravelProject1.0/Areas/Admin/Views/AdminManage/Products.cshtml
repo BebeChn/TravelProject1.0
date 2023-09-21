@@ -54,10 +54,6 @@
             border-collapse: collapse;
         }
 
-
-
-
-
         .morewidth {
             width: 200px;
         }
@@ -138,11 +134,11 @@
     </div>
     @* 商品資訊 *@
     <div class="table-responsive text-center">
-        <table class="table table-striped table-hover" >
+        <table class="table table-striped table-hover">
             <thead>
                 <tr>
                     <th style="width:125px;">商品編號</th>
-                    <th style ="width:125px;">種類編號</th>
+                    <th style="width:125px;">種類編號</th>
                     <th>商品名稱</th>
                     <th style="width:100px;">價格</th>
                     <th>主要敘述</th>
@@ -150,11 +146,11 @@
             </thead>
             <tbody>
                 <tr v-for="pp in showProduct">
-                    <td>{{pp.productId}}</td>
-                    <td>{{pp.id |categoryFormat}}</td>
-                    <td>{{pp.productName}}</td>
-                    <td>{{pp.price | formatCurrency}}</td>
-                    <td class="ellipsis">{{pp.mainDescribe}}</td>
+                    <td v-cloak>{{pp.productId}}</td>
+                    <td v-cloak>{{pp.id |categoryFormat}}</td>
+                    <td v-cloak>{{pp.productName}}</td>
+                    <td v-cloak>{{pp.price | formatCurrency}}</td>
+                    <td v-cloak class="ellipsis">{{pp.mainDescribe}}</td>
                     <td>
                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ProductDetail" @@click="display(pp)">
                             詳細資料
@@ -479,7 +475,7 @@
                         }).catch(err => {
                             alert("商品新增失敗");
                         });
-                    } else { 
+                    } else {
                         alert("請確保所有欄位都有填入相應的內容以及圖片")
                     }
                 },
