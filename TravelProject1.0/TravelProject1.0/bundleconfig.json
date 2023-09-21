@@ -64,5 +64,11 @@
     "inputFiles": [
       "wwwroot/css/Rating.css"
     ]
+  },
+  {
+    "outputFileName": "wwwroot/css/ConfirmTheOrder.min.css",
+    "inputFiles": [
+      "wwwroot/css/ConfirmTheOrder.css"
+    ]
   }
 ]
