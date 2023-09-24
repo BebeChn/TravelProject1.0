@@ -148,7 +148,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api.AnalyzeAPI
 		[HttpGet]
 		public async Task<AllTicktesSale> AllTicktesCurrentWeekSale()
 		{
-			decimal weekSale = await _db.OrderDetails
+			decimal weekSale = await _db.OrderDetails.AsNoTracking()
 				.Where(od => EF.Functions.DateDiffWeek(od.Order.OrderDate, DateTime.Now) <= 0 &&
 								EF.Functions.DateDiffWeek(od.Order.OrderDate, DateTime.Now) >= 0).
 								SumAsync(od => (decimal)(od.UnitPrice * od.Quantity) / 10000);
@@ -171,7 +171,7 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api.AnalyzeAPI
 				.ToDictionaryAsync(od => od.CategoryId, od =>
 				{
 					var currentDate = DateTime.Now;
-					var currentWeek = (DayOfWeek.Monday - currentDate.DayOfWeek) % 7;
+					var currentWeek = (DayOfWeek.Monday - currentDate.DayOfWeek);
 
 					var dic = new Dictionary<string, decimal>();
 					for (var i = 0; i < 7; i++)
@@ -251,8 +251,9 @@ namespace TravelProject1._0.Areas.Admin.Controllers.Api.AnalyzeAPI
 		public async Task<AllTicktesTop10Sales> AllTicktesCurrentWeekTop10()
 		{
 			var resultList = await _db.OrderDetails.AsNoTracking()
-				.Where(od => EF.Functions.DateDiffWeek(od.Order.OrderDate, DateTime.Now) <= 0 &&
-								EF.Functions.DateDiffWeek(od.Order.OrderDate, DateTime.Now) >= 0)
+				.Where(od => od.Order.OrderDate <= DateTime.Now &&
+								EF.Functions.DateDiffWeek(od.Order.OrderDate, DateTime.Now) <= 0 &&
+									EF.Functions.DateDiffWeek(od.Order.OrderDate, DateTime.Now) >= 0)
 				.GroupBy(od => od.Plan.Product.Id)
 				.Select(od => new
 				{
